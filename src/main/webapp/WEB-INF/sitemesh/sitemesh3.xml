@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemesh>
+	<content-processor>
+        <tag-rule-bundle class="org.sitemesh.content.tagrules.html.Sm2TagRuleBundle" />
+    </content-processor>
+    
+	<mapping path="/project/details/*" decorator="/WEB-INF/views/layout/project_default.jsp" />
+	<mapping path="/*" decorator="/WEB-INF/views/layout/default.jsp" />
+</sitemesh>

@@ -292,7 +292,7 @@
  <script type="text/javascript" src="/resources/js/common.js"></script>
  
  <!-- naver map -->
- <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=SgnlyXnzstmDsYDhele7&callback=mapApi.load"></script>
+ <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=SgnlyXnzstmDsYDhele7&submodules=visualization&callback=mapApi.load"></script>
  <script type="text/javascript" src="/resources/js/map/map-core.js"></script>
 </body>
 

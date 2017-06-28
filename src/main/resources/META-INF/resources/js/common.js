@@ -26,10 +26,10 @@ var common = function(){
 	return {
 		model: {
 			ajax: function(params) {
-				$.ajax(params.url, {
+				$.ajax(Enum.PATH + params.url, {
 					async: (params.async == null)? true : params.async,
 					beforeSend: function(xhr) {
-						if(common.view.isActiveMask()) common.view.showMask();
+						//if(common.view.isActiveMask()) common.view.showMask();
 						
 						if(params.beforeSend && typeof params.beforeSend === 'function') {
 							params.beforeSend();
@@ -40,9 +40,9 @@ var common = function(){
 					method: params.method || common.model.Enum.HttpMethod.POST,
 					complete: function() {
 						console.log("###### Ajax Completed ######");
-						var hideMask = (params.hideMask == undefined)?true:params.hideMask;
+						//var hideMask = (params.hideMask == undefined)?true:params.hideMask;
 						
-						if(common.view.isActiveMask() && hideMask) common.view.hideMask();
+						//if(common.view.isActiveMask() && hideMask) common.view.hideMask();
 					},
 					context: params.context || document.body,
 					data: params.data,

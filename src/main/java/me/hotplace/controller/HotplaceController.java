@@ -12,7 +12,7 @@ public class HotplaceController {
 
 	@GetMapping("main")
 	public String layout() {
-		return "main";
+		return "main2";
 	}
 	
 	@GetMapping("signin")

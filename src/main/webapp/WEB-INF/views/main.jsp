@@ -7,12 +7,16 @@
 		width:100%;
 		height:500px;
 	}
+	.container {
+		margin-left:5px;
+		padding-left:0px;
+	}
 </style>
 </head>
 <body>
 <div class="container">
 <div class="row">
-	<div class="col-sm-8">
+	<div class="col-sm-9">
 		<div class="panel panel-success">
 			<div class="panel-heading">
 		    	<h3 class="panel-title">지도</h3>
@@ -21,7 +25,7 @@
 		</div>
 	</div>
 	
-	<div class="col-sm-4">
+	<div class="col-sm-3">
 		<div class="panel panel-success">
 			<div class="panel-heading">
 		    	<h3 class="panel-title">내용</h3>

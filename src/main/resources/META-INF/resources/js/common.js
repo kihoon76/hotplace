@@ -5,7 +5,7 @@ var common = function(){
 	
 	function Enum() {}
 	Enum.HttpMethod = {GET: 'GET', POST: 'POST', PUT: 'PUT', DELETE: 'DELETE'};
-	Enum.PATH = 'http://localhost:8080/'; 
+	Enum.PATH = 'http://hotplace.ddns.net:8080/', //'http://localhost:8080/'; 
 	Enum.SecurityError = {ID: 'ID', PW: 'PW', AUTH: 'AUTH', ETC: 'ETC'}
 	Enum.Alert = {SUCCESS: 'success', INFO: 'info', WARNING: 'warning', DANGER: 'danger'}
 	

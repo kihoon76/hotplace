@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,13 +19,16 @@ import sample.Heatmap;
 @RequestMapping("/sample")
 public class SampleController {
 
+	@Value("#{settings['samplepath']}")
+	private String PATH;
+	
 	@PostMapping("heatmap")
 	@ResponseBody
 	public AjaxVO getHeatmapData() throws Exception  {
 		
 		Gson gson = new Gson();
 		
-		BufferedReader br = new BufferedReader(new FileReader("E:\\hoons\\workspace\\hotplace\\sample\\heatmap.json"));
+		BufferedReader br = new BufferedReader(new FileReader(PATH + "heatmap.json"));
 		
 		Heatmap obj = gson.fromJson(br, Heatmap.class);
 		

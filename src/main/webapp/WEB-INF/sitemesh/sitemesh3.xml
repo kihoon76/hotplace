@@ -3,6 +3,7 @@
 	<content-processor>
         <tag-rule-bundle class="org.sitemesh.content.tagrules.html.Sm2TagRuleBundle" />
     </content-processor>
-    
+
 	<mapping path="/*" decorator="/WEB-INF/views/layout/template2.jsp" />
+
 </sitemesh>

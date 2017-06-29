@@ -62,4 +62,5 @@
 	</bean>
 	
 	<util:properties id="dsCfg" location="classpath:/config/ds.properties" />
+	<util:properties id="settings" location="classpath:/config/settings.properties" />
 </beans>

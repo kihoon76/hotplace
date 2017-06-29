@@ -288,5 +288,32 @@
                 </configuration>
             </plugin>
         </plugins>
+        
+        <resources>
+        	<resource>
+        		<directory>src/main/resource</directory>
+        	</resource>
+        	<resource>
+        		<directory>src/main/resources-${env}</directory>
+        	</resource>
+        </resources>
     </build>
+    
+    <profiles>
+    	<profile>
+    		<id>local</id>
+    		<activation>
+    			<activeByDefault>true</activeByDefault>
+    		</activation>
+    		<properties>
+    			<env>local</env>
+    		</properties>
+    	</profile>
+    	<profile>
+    		<id>dev</id>
+    		<properties>
+    			<env>dev</env>
+    		</properties>
+    	</profile>
+    </profiles>
 </project>

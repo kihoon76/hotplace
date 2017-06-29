@@ -20,8 +20,8 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 	@Autowired
 	UserService userService;
 	
-	@Autowired
-	private HttpServletRequest request;
+	//@Autowired
+	//private HttpServletRequest request;
 	
 	@Override
 	public UserDetailsImpl loadUserByUsername(String username) throws UsernameNotFoundException {

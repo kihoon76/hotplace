@@ -25,8 +25,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider{
 	@Resource(name="userDetailsService")
 	UserDetailsServiceImpl userDetailsService;
 	
-	@Autowired 
-	private PasswordEncoder passwordEncoder;
+	//@Autowired 
+	//private PasswordEncoder passwordEncoder;
 	
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {

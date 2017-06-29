@@ -18,9 +18,14 @@ var mapApi = function($m) {
 			map = new naver.maps.Map('map', mapOptions);
 			
 			$m.ajax({
-				url: 'sample/heatmap',
+				url: 'sample/standard',
+				dataType: 'text',
 				success: function(data, textStatus, jqXHR) {
-					createHeatMap(data.datas[0].coordinates);
+					console.log(data);
+					var jo = $.parseJSON(data);
+					console.log(jo);
+					createHeatMap(jo.datas);
+					//createHeatMap(data.datas[0].coordinates);
 				},
 				fail:function() {
 					
@@ -42,6 +47,7 @@ var mapApi = function($m) {
 			
 			var heatmap = null;
 			function createHeatMap(data) {
+				console.log(data);
 				heatmap = new naver.maps.visualization.HeatMap({
 				    map: map,
 				    data: data,

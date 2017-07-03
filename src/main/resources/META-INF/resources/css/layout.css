@@ -1,1 +1,4 @@
+/* map height full*/
+html, body, #map { width: 100%; height: 98.4%; margin: 0; padding: 0; }
+#map { position: relative; }
 .navbar{margin-bottom: 0px !important;}

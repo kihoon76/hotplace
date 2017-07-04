@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 
 import me.hotplace.domain.AjaxVO;
 import me.hotplace.service.SampleService;
+import me.hotplace.utils.DataUtil;
 import sample.Heatmap;
 
 @Controller
@@ -53,7 +54,8 @@ public class SampleController {
 		/*AjaxVO ajaxVO = new AjaxVO();
 		ajaxVO.addObject(data);
 		ajaxVO.setSuccess(true);*/
-		String s = "{\"success\":true, \"datas\":" + data + "}";
+		//String s = "{\"success\":true, \"datas\":" + data + "}";
+		String s = String.format(DataUtil.getAjaxFormats(), true, "", data);
 		
 		return s;
 	}

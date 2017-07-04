@@ -1,4 +1,4 @@
-var mapApi = function($m) {
+var mapCore = function($m) {
 	var ENUM = $m.ENUM;
 	var map = null;
 	
@@ -6,70 +6,56 @@ var mapApi = function($m) {
 		load : function(mapOptions) {
 			var curZoom = 3;
 			mapOptions = mapOptions || {
-				 center: new naver.maps.LatLng(36.0207091, 127.9204629), //지도의 초기 중심 좌표
+				 //center: new naver.maps.LatLng(37.5512617, 127.0212664), //지도의 초기 중심 좌표(36.0207091, 127.9204629)
+				 	center: new naver.maps.LatLng(36.0207091, 127.9204629), //지도의 초기 중심 좌표(36.0207091, 127.9204629)
 			        zoom: curZoom, //지도의 초기 줌 레벨
-			        zoomControl: true,
-			        //minZoom: 3, //지도의 최소 줌 레벨
-			        /*zoomControl: true, //줌 컨트롤의 표시 여부
-			        zoomControlOptions: { //줌 컨트롤의 옵션
-			            position: naver.maps.Position.TOP_RIGHT
-			        }*/
+			        mapTypeControl: true,
+			        mapTypeControlOptions: {
+			        	style: naver.maps.MapTypeControlStyle.DROPDOWN
+			        }
 			};
 			map = new naver.maps.Map('map', mapOptions);
+			
+			var btn = $('#cadastral');
+			
+			//지적편집도
+			var cadastralLayer = new naver.maps.CadastralLayer();
+			naver.maps.Event.addListener(map, 'cadastralLayer_changed', function(cadastralLayer) {
+			    if (cadastralLayer) {
+			    	btn.removeClass('btn-default');
+			        btn.addClass('btn-primary');
+			    } else {
+			        btn.removeClass('btn-primary');
+			        btn.addClass('btn-default');
+			    }
+			});
+
+			//cadastralLayer.setMap(map);
+
+			btn.on("click", function(e) {
+			    e.preventDefault();
+
+			    if (cadastralLayer.getMap()) {
+			        cadastralLayer.setMap(null);
+			    } else {
+			        cadastralLayer.setMap(map);
+			    }
+			});
+			
 			
 			$m.ajax({
 				url: 'sample/standard',
 				dataType: 'text',
 				success: function(data, textStatus, jqXHR) {
-					console.log(data);
-					var jo = $.parseJSON(data);
-					console.log(jo);
-					createHeatMap(jo.datas);
-					//createHeatMap(data.datas[0].coordinates);
+					var jo = $m.parseJSON(data);
+					$(document).trigger('mapLoaded', [map, jo.datas, curZoom]);
+					
 				},
 				fail:function() {
 					
 				}
 			});
 			
-			var raiusPerZoom = {
-				3 : 10,
-				4 : 20,
-				5 : 30,
-				6 : 40,
-				7 : 50,
-				8 : 60,
-				9 : 70,
-				10 : 80
-			}
-			
-			
-			
-			var heatmap = null;
-			function createHeatMap(data) {
-				console.log(data);
-				heatmap = new naver.maps.visualization.HeatMap({
-				    map: map,
-				    data: data,
-				    opacity:0.6,
-				    radius:10
-				});
-			} 
-			
-			//zoom event
-		    naver.maps.Event.addListener(map, 'zoom_changed', function(zoom) {
-		        console.log(zoom);
-		    	
-		        heatmap.setOptions('radius', raiusPerZoom[zoom]);
-		    	if(zoom > 2) {
-		    		curZoom = zoom;
-		    	}
-		    	else {
-		    		map.setOptions('zoom', curZoom);
-		    		heatmap.setOptions('radius', raiusPerZoom[curZoom]);
-		    	}
-		    });
-
 		},
 		testClass: function() {
 			var f = function() {}

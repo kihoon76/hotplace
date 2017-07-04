@@ -5,7 +5,7 @@ var common = function(){
 	
 	function Enum() {}
 	Enum.HttpMethod = {GET: 'GET', POST: 'POST', PUT: 'PUT', DELETE: 'DELETE'};
-	Enum.PATH = 'http://localhost:8080/'; //'http://hotplace.ddns.net:8080/', //
+	Enum.PATH = 'http://192.168.0.48:8080/'; //'http://hotplace.ddns.net:8080/', //
 	Enum.SecurityError = {ID: 'ID', PW: 'PW', AUTH: 'AUTH', ETC: 'ETC'}
 	Enum.Alert = {SUCCESS: 'success', INFO: 'info', WARNING: 'warning', DANGER: 'danger'}
 	
@@ -76,6 +76,23 @@ var common = function(){
 			isNotNull: function($el) {
 				return !common.model.isNull($el)
 			},
+			parseJSON : function(src) {
+				var obj;
+				try {
+					console.log("##############################");
+					console.log("json string");
+					console.log("------------------------------")
+					console.log(src);
+					obj = $.parseJSON(src);
+				}
+				catch(e) {
+					console.log(e);
+					throw e;
+				}
+				
+				console.log("##############################");
+				return obj;
+			}
 		},
 		view: {},
 		controller: {},

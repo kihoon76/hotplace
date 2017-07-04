@@ -4,12 +4,15 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.google.gson.Gson;
 
 import me.hotplace.dao.SampleDao;
 
@@ -27,7 +30,9 @@ public class MybatisTest {
 	
 	@Test
 	public void test01_selectSample() {
-		dao.selectSample();
+		List<String> r = dao.selectSample();
+		Gson gson = new Gson();
+		System.out.println(gson.toJson(r));
 	}
 	
 }

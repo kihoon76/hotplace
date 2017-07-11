@@ -10,13 +10,13 @@
 	</appender>
 	
 	<!-- file로 log 남기기 -->
-	<appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+<!-- 	<appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>e:/hoons/testRollingFile.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<!-- d:\ testRollingFile 2015-04-07-15.log 파일 생성 -->
+			d:\ testRollingFile 2015-04-07-15.log 파일 생성 
 			<fileNamePattern>e:\hoons\testRollingFile.%d{yyyy-MM-dd-HH}.log</fileNamePattern>
 
-			<!-- 30시간 지난건 지우겠다 -->
+			30시간 지난건 지우겠다 
 			<maxHistory>30</maxHistory>
 		</rollingPolicy>
 		<encoder>
@@ -24,7 +24,7 @@
 				 ▷ %-5level %d{HH:mm:ss} %logger[%method:%line] - %msg%n
 			</pattern>
 		</encoder>
-	</appender>
+	</appender> -->
 	
 	<logger name="me.hotplace" level="info">
 		<appender-ref ref="console"/>

@@ -289,5 +289,37 @@
                 </configuration>
             </plugin>
         </plugins>
+        
+        <resources>
+        	<resource>
+        		<directory>src/main/resources</directory>
+        	</resource>
+        	<resource>
+        		<directory>src/main/resources-${environment}</directory>
+        	</resource>
+        </resources>
     </build>
+    <profiles>
+    	<profile>
+    		<id>local</id>
+    		<activation>
+    			<activeByDefault>true</activeByDefault>
+    		</activation>
+    		<properties>
+    			<environment>local</environment>
+    		</properties>
+    	</profile>
+    	<profile>
+    		<id>development</id>
+    		<properties>
+    			<environment>development</environment>
+    		</properties>
+    	</profile>
+    	<profile>
+    		<id>production</id>
+    		<properties>
+    			<environment>production</environment>
+    		</properties>
+    	</profile>
+    </profiles>
 </project>

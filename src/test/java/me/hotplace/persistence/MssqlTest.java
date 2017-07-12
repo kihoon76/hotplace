@@ -13,10 +13,11 @@ import org.junit.Test;
 
 public class MssqlTest {
 
-	//@Test
+	@Test
 	public void test01_connectionTest() throws ClassNotFoundException, SQLException {
 		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-		Connection conn = DriverManager.getConnection("jdbc:sqlserver://JNNASUS\\MSSQL2014;user=sa;password=1111");
+		//Connection conn = DriverManager.getConnection("jdbc:sqlserver://JNNASUS\\MSSQL2014;user=sa;password=1111");
+		Connection conn = DriverManager.getConnection("jdbc:sqlserver://JNNASUS;instanceName=MSSQL2014;user=sa;password=1111");
 		
 		assertThat(conn, is(notNullValue()));
 		
@@ -25,10 +26,10 @@ public class MssqlTest {
 		}
 	}
 	
-	@Test
+	//@Test
 	public void test02_queryTest() throws ClassNotFoundException, SQLException {
 		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-		Connection conn = DriverManager.getConnection("jdbc:sqlserver://JNNASUS\\MSSQL2014;user=sa;password=1111");
+		Connection conn = DriverManager.getConnection("jdbc:sqlserver://JNNASUS;instanceName=MSSQL2014;user=sa;password=1111");
 		
 		String sql = "select top 10 b.위도, b.경도, round(rand(convert(varbinary, newid()))*100, 2) [랜덤점수] ";
 		  sql += "from [표준공시지가].[dbo].[20170109표준지공시지가] a ";

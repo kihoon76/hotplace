@@ -245,7 +245,7 @@
 		    <version>${bootstrap-version}</version>
 		</dependency>  
 		
-		<!-- mustache js -->
+		<!-- handlebars js -->
 		<dependency>
 		    <groupId>org.webjars</groupId>
 		    <artifactId>handlebars</artifactId>

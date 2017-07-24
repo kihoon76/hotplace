@@ -26,7 +26,7 @@ public class MssqlTest {
 		}
 	}
 	
-	//@Test
+	@Test
 	public void test02_queryTest() throws ClassNotFoundException, SQLException {
 		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 		Connection conn = DriverManager.getConnection("jdbc:sqlserver://JNNASUS;instanceName=MSSQL2014;user=sa;password=1111");

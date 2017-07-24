@@ -7,8 +7,10 @@ import java.io.FileReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
@@ -45,12 +47,10 @@ public class SampleController {
 		return ajaxVO;
 	}
 	
-	@PostMapping("standard")
+	@GetMapping("standard")
 	@ResponseBody
-	public String getStandardData() throws Exception  {
-		
-		String data = sampleService.getSample();
-		
+	public String getStandardData(@RequestParam(name="hcode") String hcode) throws Exception  {
+		String data = sampleService.getSample(hcode);
 		/*AjaxVO ajaxVO = new AjaxVO();
 		ajaxVO.addObject(data);
 		ajaxVO.setSuccess(true);*/

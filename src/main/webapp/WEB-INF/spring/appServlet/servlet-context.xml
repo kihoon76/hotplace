@@ -26,10 +26,8 @@
 		<beans:property name="order"  value="1" />
 	</beans:bean>
 	
-	
 	<context:component-scan base-package="me.hotplace" use-default-filters="false">
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 	</context:component-scan>
-	
 	
 </beans:beans>

@@ -69,6 +69,51 @@ var common = function(){
 					timeout: params.timeout || 2000
 				});
 			},
+			getJson : function(url, params, succ) {
+				common.model.ajax({
+					url : url,
+					method: common.model.Enum.HttpMethod.GET,
+					data: params || {},
+					success : function(data, textStatus, jqXHR) {
+						succ(data);
+					},
+					error : function() {
+						
+					}
+				});
+			},
+			getPlainText: function(url, param, succ) {
+				
+				common.model.ajax({
+					url: url,
+					method: common.model.Enum.HttpMethod.GET,
+					dataType: 'text',
+					data: param || {},
+					success: function(data, textStatus, jqXHR) {
+						var jo = common.model.parseJSON(data);
+						succ(jo);
+					},
+					error:function() {
+						
+					}
+				});
+			},
+			getPlainTextFromJson: function(url, param, succ) {
+				common.model.ajax({
+					url: url,
+					method: common.model.Enum.HttpMethod.POST,
+					dataType: 'text',
+					contentType: 'application/json; charset=UTF-8',
+					data: param || {},
+					success: function(data, textStatus, jqXHR) {
+						var jo = common.model.parseJSON(data);
+						succ(jo);
+					},
+					error:function() {
+						
+					}
+				});
+			},
 			Enum: Enum,
 			isNull: function($el) {
 				return ($el.get(0) == undefined);

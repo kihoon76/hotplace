@@ -3,4 +3,7 @@
 	<title>초기화면</title>
 </head>
 <body>
+<content tag="script">
+<script type="text/javascript" src="/resources/js/main.js"></script>
+</content>
 </body>

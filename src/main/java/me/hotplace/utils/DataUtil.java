@@ -8,6 +8,20 @@ public class DataUtil {
 	
 	private static String AJAX_FORMATS = "{\"success\":%b, \"err\":\"%s\", \"datas\":%s}";
 
+	private static abstract class Make {
+		abstract void run(List<String> list, StringBuilder sb, String deli);
+		
+		String build(List<String> list, String deli) {
+			if(list == null || list.size() == 0) return "";
+			StringBuilder sb = new StringBuilder();
+			sb.append("[");
+			run(list, sb, deli);
+			sb.deleteCharAt(sb.length()-1);
+			sb.append("]");
+			return sb.toString();
+		}
+	}
+	
 	public static <T> String convertListToString(List<T> list, char deli) {
 		StringBuilder sb;
 		if(list == null || list.size() == 0) return "";
@@ -25,52 +39,68 @@ public class DataUtil {
 	}
 	
 	public static String makeLatLng(List<String> list, String deli) {
-		StringBuilder sb;
-		if(list == null || list.size() == 0) return "";
+		 Make m = new Make() {
+			
+			@Override
+			void run(List<String> list, StringBuilder sb, String deli) {
+				// TODO Auto-generated method stub
+				for(String token : list) {
+					String[] s = StringUtils.splitByWholeSeparator(token, deli);
+					sb.append("[");
+					sb.append(s[0]);
+					sb.append(",");
+					sb.append(s[1]);
+					sb.append("]");
+					sb.append(",");
+				}
+			}
+		};
 		
-		sb = new StringBuilder();
-		sb.append("[");
-		
-		for(String token : list) {
-			String[] s = StringUtils.splitByWholeSeparator(token, deli);
-			sb.append("[");
-			sb.append(s[0]);
-			sb.append(",");
-			sb.append(s[1]);
-			sb.append("]");
-			sb.append(",");
-		}
-		
-		sb.deleteCharAt(sb.length()-1);
-		sb.append("]");
-		return sb.toString();
-		
+		return m.build(list, deli);
 	}
 	
 	public static String makeLatLngWeight(List<String> list, String deli) {
-		StringBuilder sb;
-		if(list == null || list.size() == 0) return "";
 		
-		sb = new StringBuilder();
-		sb.append("[");
+		Make m = new Make() {
+			
+			@Override
+			void run(List<String> list, StringBuilder sb, String deli) {
+				// TODO Auto-generated method stub
+				for(String token : list) {
+					String[] s = StringUtils.splitByWholeSeparator(token, deli);
+					sb.append("{\"weight\":");
+					sb.append(s[2]);
+					sb.append(",");
+					sb.append("\"location\":[");
+					sb.append(s[0]);
+					sb.append(",");
+					sb.append(s[1]);
+					sb.append("]}");
+					sb.append(",");
+				}
+			}
+		};
 		
-		for(String token : list) {
-			String[] s = StringUtils.splitByWholeSeparator(token, deli);
-			sb.append("{\"weight\":");
-			sb.append(s[2]);
-			sb.append(",");
-			sb.append("\"location\":[");
-			sb.append(s[0]);
-			sb.append(",");
-			sb.append(s[1]);
-			sb.append("]}");
-			sb.append(",");
-		}
+		return m.build(list, deli);
+	}
+	
+	public static String makeAddress(List<String> list) {
+		Make m = new Make() {
+			
+			@Override
+			void run(List<String> list, StringBuilder sb, String deli) {
+				// TODO Auto-generated method stub
+				for(String token : list) {
+					String[] s = StringUtils.splitByWholeSeparator(token, deli);
+					sb.append("[");
+					sb.append(token);
+					sb.append("]");
+					sb.append(",");
+				}
+			}
+		};
 		
-		sb.deleteCharAt(sb.length()-1);
-		sb.append("]");
-		return sb.toString();
-		
+		return m.build(list, null);
 	}
 	
 	public static String getAjaxFormats() {

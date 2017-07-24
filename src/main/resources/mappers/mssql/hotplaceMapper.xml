@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.mssql.hotplaceMapper">
+
+	<select id="selectGuGun" resultType="string" parameterType="string">
+		select concat(code, ',"', name, '"') 
+		  from (
+				select distinct [시군구코드] as code,[시군구명] as name 
+				  from [지번주소].[dbo].[PNU10] 
+				 where [시도코드] = #{si}
+				   and [시군구명] != ''
+			   ) t1
+	      order by name
+	</select>
+	
+	<select id="selectRegionName" resultType="string" parameterType="Address">
+		select concat(code, ',"', name, '"') 
+		  from (
+				select distinct [읍면동코드] as code, [읍면동명] as name 
+				  from [지번주소].[dbo].[PNU10] 
+				 where [시도코드] = #{si}
+				   and [시군구코드] = #{gugun}
+				   and [읍면동명] != ''
+			   ) t1
+	      order by name
+	</select>
+	
+	<select id="selectAddress" resultType="string" parameterType="Address">
+		select concat('"',[PNU], '","', [title],'","', [buildingAddress], '",', [위도], ',', [경도], ',', [극북], ',', [극서]) 
+   		  from (
+				select  t1.[PNU],[title],[buildingAddress],t2.[위도],t2.[경도], t1.[극서], t1.[극북] 
+				  from [지번주소].[dbo].[전국지번통합] t1 
+				  left outer join [지번주소].[dbo].[DaumMap] t2
+				    on t1.PNU = t2.PNU
+			     where t1.[시도코드] = #{si}
+			       and t1.[시군구코드] = #{gugun}
+			       and t1.[읍면동코드] = #{region}
+			    ) tb1
+	</select>
+</mapper>

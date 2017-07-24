@@ -4,7 +4,7 @@ import java.util.EnumSet;
 
 public enum MapTypes {
 
-	HEAT_MAP("heatmap"), DOT_MAP("dotmap");
+	HEAT_MAP("heatmap"), DOT_MAP("dotmap"), CELL_MAP("cellmap");
 	
 	private String type;
 	

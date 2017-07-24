@@ -70,6 +70,7 @@ var mapCore = function($m) {
 			return f;
 		},
 		
+		
 	}
 }(
 	common.model

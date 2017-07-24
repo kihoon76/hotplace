@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.google.gson.Gson;
 
+import me.hotplace.dao.HotplaceDao;
 import me.hotplace.dao.SampleDao;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -28,9 +29,19 @@ public class MybatisTest {
 	@Resource(name="sampleDao")
 	SampleDao dao;
 	
-	@Test
+	@Resource(name = "hotplaceDao")
+	HotplaceDao hotplaceDao;
+	
+	//@Test
 	public void test01_selectSample() {
-		List<String> r = dao.selectSample();
+		List<String> r = dao.selectSample("11");
+		Gson gson = new Gson();
+		System.out.println(gson.toJson(r));
+	}
+	
+	@Test
+	public void test01_selectGuGun() {
+		List<String> r = hotplaceDao.selectListGuGun("11");
 		Gson gson = new Gson();
 		System.out.println(gson.toJson(r));
 	}

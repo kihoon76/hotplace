@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface SampleDao {
 
-	public List<String> selectSample();
+	public List<String> selectSample(String hcode);
 }

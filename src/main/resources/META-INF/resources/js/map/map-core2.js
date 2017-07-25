@@ -224,15 +224,14 @@ var mapCore = function($m) {
 			    }
 			});
 
-			//cadastralLayer.setMap(map);
-
 			btn.on("click", function(e) {
 			    e.preventDefault();
 
 			    if (cadastralLayer.getMap()) {
 			        cadastralLayer.setMap(null);
-			    } else {
-			        cadastralLayer.setMap(map);
+			    } 
+			    else {
+			        cadastralLayer.setMap(_map);
 			    }
 			});
 		},

@@ -12,7 +12,7 @@ public class DataUtil {
 		abstract void run(List<String> list, StringBuilder sb, String deli);
 		
 		String build(List<String> list, String deli) {
-			if(list == null || list.size() == 0) return "";
+			if(list == null || list.size() == 0) return "[]";
 			StringBuilder sb = new StringBuilder();
 			sb.append("[");
 			run(list, sb, deli);
@@ -69,12 +69,16 @@ public class DataUtil {
 				for(String token : list) {
 					String[] s = StringUtils.splitByWholeSeparator(token, deli);
 					sb.append("{\"weight\":");
-					sb.append(s[2]);
+					sb.append(s[4]);
 					sb.append(",");
 					sb.append("\"location\":[");
 					sb.append(s[0]);
 					sb.append(",");
 					sb.append(s[1]);
+					sb.append(",");
+					sb.append(s[2]);
+					sb.append(",");
+					sb.append(s[3]);
 					sb.append("]}");
 					sb.append(",");
 				}

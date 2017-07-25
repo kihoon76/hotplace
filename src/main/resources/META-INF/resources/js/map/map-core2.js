@@ -28,12 +28,11 @@ var mapCore = function($m) {
 	}
 	
 	
-	function createHeatMap(hcode) {
-		hcode = hcode || '11';
+	function createHeatMap(level) {
 		if(_map) {
 			
 			$m.getPlainText('sample/standard', {
-				hcode: hcode
+				level: level
 			}, function(json) {
 				_heatMap = new _mapVender.visualization.HeatMap({
 				    map: _map,
@@ -45,11 +44,10 @@ var mapCore = function($m) {
 		}
 	}
 	
-	function createDotMap(hcode) {
-		hcode = hcode || '11';
+	function createDotMap(level) {
 		if(_map) {
 			$m.getPlainText('sample/standard', {
-				hcode: hcode
+				level: level
 			}, function(json) {
 				_dotMap = new _mapVender.visualization.DotMap({
 				    map: _map,
@@ -61,13 +59,14 @@ var mapCore = function($m) {
 		}
 	}
 	
-	function createCellMap(hcode) {
-		hcode = hcode || '11';
+	function createCellMap(level) {
+		//console.log('oo');
 		if(_map) {
 			$m.getPlainText('sample/standard', {
-				hcode: hcode
+				level: level
 			}, function(json) {
-				createCellCircle(json.datas);
+				//createCellCircle(json.datas);
+				createCellRectangle(json.datas);
 			});
 		}
 	}
@@ -85,17 +84,48 @@ var mapCore = function($m) {
 			    //strokeOpacity: 0.5,
 			    strokeWeight: 0,
 			    fillColor: 'rgb(255,051,000)',
+			    //fillColor: getColorByWeight(obj.weight),
 			    fillOpacity: 0.3,
 			    radius: 500
 			}));
 		}
 	}
 	
+	function createCellRectangle(datas) {
+		
+		for(var i=_cells.length-1; i>=0; i--) {
+			console.log(i);
+			if(_cells[i]){
+				_cells[i].setMap(null);
+				delete _cells[i]; 
+			}
+		}
+		
+		var len = datas.length;
+		for(var i = 0; i < len; i++) {
+			var obj = datas[i];
+			_cells.push(new _mapVender.Rectangle({
+			    map: _map,
+			    bounds: new _mapVender.LatLngBounds(
+		    		new _mapVender.LatLng(obj.location[1], obj.location[0]),
+		    		new _mapVender.LatLng(obj.location[3], obj.location[2]) 
+			    ),
+			    //strokeWeight:0, //테두리 없앰
+			    strokeColor: '#5347AA',
+			    //strokeOpacity: 0.5,
+			    strokeWeight: 1,
+			    //fillColor: 'rgb(255,051,000)',
+			    fillColor: getColorByWeight(obj.weight),
+			    fillOpacity: 0.7,
+			}));
+		}
+	}
+	
 	function getColorByWeight(weight) {
-		var r = (2*(10*weight));
+		var r = (25.5*weight).toFixed(0);
 		console.log(r)
 		
-		return 'rgb(255,051,000)';
+		return 'rgb(' + r + ',051,000)';
 	}
 	
 	function createRegionMap() {
@@ -190,22 +220,22 @@ var mapCore = function($m) {
 			
 			$(document).trigger('onMaploaded', [_map]);
 		},
-		showMap : function(type) {
+		showMap : function(type, level) {
 			switch(type) {
 			case 'heatmap' :
-				createHeatMap();
+				createHeatMap(level);
 				break;
 			case 'dotmap' :
-				createDotMap();
+				createDotMap(level);
 				break;
 			case 'regionmap' :
-				createRegionMap();
+				createRegionMap(level);
 				break;
 			case 'cellmap' :
-				createCellMap();
+				createCellMap(level);
 				break;
 			default :
-				createHeatMap();
+				createHeatMap(level);
 				break;
 			}
 		},
@@ -260,25 +290,22 @@ var mapCore = function($m) {
 	                new _mapVender.LatLng(lat + size, lng + size)
 	        ));
 			
-			console.log('=================>' + _map.getZoom());
 			moveAfterFn();
-			//this.getMarker(lat, lng);
-		
 		},
 		getMarker : function(lat, lng, listeners, content) {
-			_markers.push(new _mapVender.Marker({
+			var newMarker = new _mapVender.Marker({
 			    position: new _mapVender.LatLng(lat, lng),
 			    map: _map
-			}));
+			});
 			
-			_infoWindows.push(new _mapVender.InfoWindow({
+			var newInfoWindow = new _mapVender.InfoWindow({
 		        content: '<div style="width:150px;text-align:center;padding:10px;">' + content +'</div>'
-		    }));
+		    });
+			
+			_markers.push(newMarker);
+			_infoWindows.push(newInfoWindow);
 			
 			if(listeners) {
-				var newMarker = _markers[_markers.length-1];
-				var newInfoWindow = _infoWindows[_infoWindows.length-1];
-				
 				for(var eventName in listeners) {
 					_mapVender.Event.addListener(newMarker, eventName, function(_eventName, _newInfoWindow) {
 						return function(obj) {
@@ -289,7 +316,8 @@ var mapCore = function($m) {
 				}
 			}
 			
-		}
+		},
+		
 	}
 }(
 	common.model

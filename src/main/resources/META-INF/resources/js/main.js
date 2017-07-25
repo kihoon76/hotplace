@@ -1,6 +1,7 @@
 $(document).ready(function($m, $v) {
 	var regionHeatData = {};
 	var _curZoom;
+	var _mapType = '';
 	
 	function loadHeatRegion(hcode) {
 		$m.ajax({
@@ -32,7 +33,7 @@ $(document).ready(function($m, $v) {
 	
 	mapCore.event.onMaploaded(function(map) {
 		_curZoom = map.getZoom();
-		var mapType = $('body').data('mtype');
+		_mapType = $('body').data('mtype');
 		/*naver.maps.Event.addListener(map, 'zoom_changed', function(zoom) {
 			if(zoom > 2) {
 				curZoom = zoom;
@@ -80,7 +81,7 @@ $(document).ready(function($m, $v) {
 			
 		});*/
 		
-		mapCore.showMap(mapType);
+		mapCore.showMap(_mapType, _curZoom);
 		mapCore.showLandMark();
 		//mapCore.showMap($('#mapType').data('mtype'));
 	});
@@ -105,6 +106,11 @@ $(document).ready(function($m, $v) {
 		},{			
 			'zoom_changed' : function(map, heatmap, arr) {
 				setMinZoom(2,map, arr[0]); //arr[0] : zoom
+				console.log(_mapType + ":" + arr[0]);
+				if(_mapType == 'cellmap') {
+					mapCore.showMap(_mapType, arr[0]);
+				}
+				
 			},
 			'idle' : function(map, heatmap, arr) { //지도의 움직임이 종료되었을 때(유휴 상태) 이벤트가 발생합니다.
 				console.log('stop');

@@ -49,8 +49,8 @@ public class SampleController {
 	
 	@GetMapping("standard")
 	@ResponseBody
-	public String getStandardData(@RequestParam(name="hcode") String hcode) throws Exception  {
-		String data = sampleService.getSample(hcode);
+	public String getStandardData(@RequestParam(name="level") String level) throws Exception  {
+		String data = sampleService.getSample(level);
 		/*AjaxVO ajaxVO = new AjaxVO();
 		ajaxVO.addObject(data);
 		ajaxVO.setSuccess(true);*/

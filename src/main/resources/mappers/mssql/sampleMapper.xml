@@ -3,10 +3,22 @@
 <mapper namespace="mappers.mssql.sampleMapper">
 
 	<select id="selectSample" resultType="string" parameterType="string">
-		select  top 10000 concat(b.경도, '□',b.위도,'□', round(rand(convert(varbinary, newid()))*10, 1))
+        <!-- c.센터 [경도] d.센터  [위도] -->
+		select concat(c.극서 , '□', d.극북 - 2*(d.극북 - d.센터),  '□', c.극서 + 2*(c.센터 - c.극서), '□', d.극북, '□', round(rand(convert(varbinary, newid()))*10, 1))
+		from 
+		[표준공시지가].[dbo].[20170109표준지공시지가] a
+		inner join [지번주소].[dbo].[전국지번통합] b on (b.PNU=a.PNU1)
+		inner join [좌표계].dbo.[가로축] c on (c.극서=b.극서)
+		inner join [좌표계].dbo.[세로축] d on (d.극북=b.극북)
+		where (a.PNU1 like '11%' or a.PNU1 like '42%') and 위도 is not null
+		  and c.레벨 = #{level}
+		  and d.레벨 = #{level}
+	</select>
+</mapper>
+<!-- 
+select  top 10000 concat(b.경도, '□',b.위도,'□', round(rand(convert(varbinary, newid()))*10, 1))
 		  from [표준공시지가].[dbo].[20170109표준지공시지가] a
     inner join [지번주소].[dbo].[전국지번통합] b on (b.PNU=a.PNU1)
          where (a.PNU1 like '11%' or a.PNU1 like '42%') and 위도 is not null
-         <!-- where (a.PNU1 like #{acode} + '%') and 위도 is not null -->
-	</select>
-</mapper>
+         where (a.PNU1 like #{acode} + '%') and 위도 is not null
+ -->

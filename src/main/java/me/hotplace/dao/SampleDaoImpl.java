@@ -18,9 +18,8 @@ public class SampleDaoImpl implements SampleDao {
 	SqlSession msSqlSession;
 
 	@Override
-	public List<String> selectSample(String hcode) {
-		System.out.println(hcode);
-		List<String> result = msSqlSession.selectList(namespace + ".selectSample", hcode);
+	public List<String> selectSample(String level) {
+		List<String> result = msSqlSession.selectList(namespace + ".selectSample", level);
 	
 		return result;
 	}

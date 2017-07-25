@@ -204,7 +204,14 @@
 			<td>
 			{{addr.[1]}} {{addr.[2]}}
 			</td>
-			<td><input type="radio" name="sel" data-lat="{{addr.[3]}}" data-lng="{{addr.[4]}}" data-sw="{{addr.[5]}}" data-en="{{addr.[6]}}"/></td>
+			<td>
+				<div class="funkyradio">
+        		<div class="funkyradio-info">
+					<input type="radio" name="sel" id="radio{{@index}}" data-lat="{{addr.[3]}}" data-lng="{{addr.[4]}}" data-sw="{{addr.[5]}}" data-en="{{addr.[6]}}" data-address="{{addr.[1]}} {{addr.[2]}}"/>
+ 					<label for="radio{{@index}}">선택</label>
+		        </div>
+				</div>
+			</td>
 		</tr>
 		{{/each}}
 	</tbody>

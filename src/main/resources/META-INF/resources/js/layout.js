@@ -112,7 +112,7 @@ $(document).ready(function($m, $map) {
 		var $sel = $('input:radio[name="sel"]:checked');
 		var lng = $sel.data('lng');
 		var lat = $sel.data('lat');
-		
+		var address = $sel.data('address');
 		//$map.toMove(lat, lng);
 		/*
 		 * 
@@ -127,7 +127,7 @@ $(document).ready(function($m, $map) {
 						 newInfoWindow.open(map, newMarker);
 				     }
 				}
-			}, 'test');
+			}, address);
 		});
 		modalClose('#addressSearch');
 	});

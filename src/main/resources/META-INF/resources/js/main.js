@@ -81,6 +81,7 @@ $(document).ready(function($m) {
 		});*/
 		
 		mapCore.showMap(mapType);
+		mapCore.showLandMark();
 		//mapCore.showMap($('#mapType').data('mtype'));
 	});
 	

@@ -51,7 +51,7 @@ var mapCore = function($m) {
 			$m.getPlainText('sample/standard', {
 				hcode: hcode
 			}, function(json) {
-				_heatMap = new _mapVender.visualization.DotMap({
+				_dotMap = new _mapVender.visualization.DotMap({
 				    map: _map,
 				    opacity: 0.3,
 				    radius:10,
@@ -208,6 +208,33 @@ var mapCore = function($m) {
 				createHeatMap();
 				break;
 			}
+		},
+		showLandMark: function() {
+			var btn = $('#cadastral');
+			
+			//지적편집도
+			var cadastralLayer = new _mapVender.CadastralLayer();
+			_mapVender.Event.addListener(map, 'cadastralLayer_changed', function(cadastralLayer) {
+			    if (cadastralLayer) {
+			    	btn.removeClass('btn-default');
+			        btn.addClass('btn-primary');
+			    } else {
+			        btn.removeClass('btn-primary');
+			        btn.addClass('btn-default');
+			    }
+			});
+
+			//cadastralLayer.setMap(map);
+
+			btn.on("click", function(e) {
+			    e.preventDefault();
+
+			    if (cadastralLayer.getMap()) {
+			        cadastralLayer.setMap(null);
+			    } else {
+			        cadastralLayer.setMap(map);
+			    }
+			});
 		},
 		event : {
 			onMaploaded : function(f) {

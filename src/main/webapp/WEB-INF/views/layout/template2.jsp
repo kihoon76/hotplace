@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="/resources/bootstrap/3.3.7-1/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/resources/css/layout.css" />
     
+    <!-- loading -->
+    <link rel="stylesheet" href="/resources/js/plugins/loading/waitMe.min.css" />
+	
 	<title><sitemesh:write property="title" /></title>
 	<sitemesh:write property="head" />
 	<style type="text/css">
@@ -213,11 +216,13 @@
 <script type="text/javascript" src="/resources/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
 
 <script type="text/javascript" src="/resources/js/common.js"></script>
+<script type="text/javascript" src="/resources/js/plugins/loading/waitMe.js"></script>
 <!-- <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=SgnlyXnzstmDsYDhele7&submodules=visualization&callback=mapCore.load"></script> -->
 <!-- <script type="text/javascript" src="//apis.daum.net/maps/maps3.js?apikey=576ff8ec0e48c2e85ada1c1cc30b1b7a"></script> -->
 <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCtzRob_ePM5RTujtBxE6w7W1tjbTS5mzw&callback=initMap"></script> -->
 <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=SgnlyXnzstmDsYDhele7&submodules=visualization"></script>
 <!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCtzRob_ePM5RTujtBxE6w7W1tjbTS5mzw&libraries=visualization"></script> -->
+
 <script type="text/javascript" src="/resources/js/map/map-core2.js"></script>
 
 <script type="text/javascript" src="/resources/js/layout.js"></script>

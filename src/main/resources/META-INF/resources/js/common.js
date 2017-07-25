@@ -29,7 +29,7 @@ var common = function(){
 				$.ajax(Enum.PATH + params.url, {
 					async: (params.async == null)? true : params.async,
 					beforeSend: function(xhr) {
-						//if(common.view.isActiveMask()) common.view.showMask();
+						if(common.view.isActiveMask()) common.view.showMask();
 						
 						if(params.beforeSend && typeof params.beforeSend === 'function') {
 							params.beforeSend();
@@ -40,9 +40,9 @@ var common = function(){
 					method: params.method || common.model.Enum.HttpMethod.POST,
 					complete: function() {
 						console.log("###### Ajax Completed ######");
-						//var hideMask = (params.hideMask == undefined)?true:params.hideMask;
+						var hideMask = (params.hideMask == undefined)?true:params.hideMask;
 						
-						//if(common.view.isActiveMask() && hideMask) common.view.hideMask();
+						if(common.view.isActiveMask() && hideMask) common.view.hideMask();
 					},
 					context: params.context || document.body,
 					data: params.data,
@@ -139,7 +139,82 @@ var common = function(){
 				return obj;
 			}
 		},
-		view: {},
+		view: function(){
+			var loadmask = false;
+			var $loadEl;
+			var loadTxt = 'Please wait...';
+			var loadEffects = {
+					bounce: 'bounce',
+					rotateplane: 'rotateplane',
+					stretch: 'stretch',
+					orbit: 'orbit',
+					roundBounce: 'roundBounce',
+					win8: 'win8',
+					win8_linear: 'win8_linear',
+					ios: 'ios',
+					facebook: 'facebook',
+					rotation: 'rotation',
+					timer: 'timer',
+					pulse: 'pulse',
+					progressBar: 'progressBar',
+					bouncePulse: 'bouncePulse'
+			};
+			
+			function run_waitMe(num, effect){
+				//https://github.com/vadimsva/waitMe/blob/gh-pages/index.html
+				fontSize = '';
+				switch (num) {
+					case 1:
+					maxSize = '';
+					textPos = 'vertical';
+					fontSize = '25px';
+					break;
+					case 2:
+					loadTxt = '';
+					maxSize = 30;
+					textPos = 'vertical';
+					break;
+					case 3:
+					maxSize = 30;
+					textPos = 'horizontal';
+					fontSize = '18px';
+					break;
+				}
+				
+				$loadEl.waitMe({
+					effect: effect,
+					text: loadTxt,
+					bg: 'rgba(255,255,255,0.4)',
+					color: '#000',
+					maxSize: maxSize,
+					source: 'img.svg',
+					textPos: textPos,
+					fontSize: fontSize,
+					onClose: function() {}
+				});
+			}
+			
+			return {
+				isActiveMask: function() {
+					return loadmask;
+				},
+				enableLoadMask: function(cfg) {
+					loadmask = true;
+					$loadEl = cfg.el || $('body');
+					loadTxt = cfg.msg || loadTxt; 
+				},
+				showMask: function() {
+					if(loadmask) {
+						run_waitMe(1, loadEffects.timer);
+					}
+				},
+				hideMask: function() {
+					if(loadmask) {
+						$loadEl.waitMe('hide');
+					}
+				},
+			}
+		}(),
 		controller: {},
 		err:		{}
 	}

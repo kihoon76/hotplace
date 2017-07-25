@@ -1,4 +1,4 @@
-$(document).ready(function($m) {
+$(document).ready(function($m, $v) {
 	var regionHeatData = {};
 	var _curZoom;
 	
@@ -92,6 +92,9 @@ $(document).ready(function($m) {
 			level: 3 //지도의 레벨(확대, 축소 정도)
 		});*/
 		
+		//loadmask 활성화
+		$v.enableLoadMask({el:$('body'), msg:'로딩 중입니다'});
+		
 		mapCore.load(naver.maps, {
 		 	center: new naver.maps.LatLng(36.0207091, 127.9204629), //지도의 초기 중심 좌표(36.0207091, 127.9204629)
 	        zoom: 3, //지도의 초기 줌 레벨
@@ -117,5 +120,6 @@ $(document).ready(function($m) {
 		});*/
 	}
 }(
-	common.model
+	common.model,
+	common.view
 ));

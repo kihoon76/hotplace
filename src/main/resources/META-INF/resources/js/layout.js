@@ -109,16 +109,16 @@ $(document).ready(function($m, $map) {
 	});
 	
 	$('#btnViewMapAddress').on('click', function() {
-		/*var $sel = $('input:radio[name="sel"]:checked');
+		var $sel = $('input:radio[name="sel"]:checked');
 		var lng = $sel.data('lng');
-		var lat = $sel.data('lat');*/
+		var lat = $sel.data('lat');
 		
 		//$map.toMove(lat, lng);
 		/*
 		 * 
 		 * */
-		$map.toMove(37.42829747263545, 126.76620435615891, null, function() {
-			mapCore.getMarker(37.42829747263545, 126.76620435615891, {
+		$map.toMove(lat, lng, null, function() {
+			mapCore.getMarker(lat, lng, {
 				'click' : function(map, newMarker, newInfoWindow) {
 					 if(newInfoWindow.getMap()) {
 						 newInfoWindow.close();

@@ -57,6 +57,11 @@
 		<button id="cadastral" type="button" class="btn btn-default" data-toggle="buttons" >
 			지적도
 		</button>
+		
+		<button id="btnTest" type="button" class="btn btn-default" data-toggle="buttons" data-switch="off">
+			마커보기
+		</button>
+		
 	</div>
 </div>
 
@@ -224,14 +229,15 @@
 
 <script type="text/javascript" src="/resources/js/common.js"></script>
 <script type="text/javascript" src="/resources/js/plugins/loading/waitMe.js"></script>
+
 <!-- <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=SgnlyXnzstmDsYDhele7&submodules=visualization&callback=mapCore.load"></script> -->
 <!-- <script type="text/javascript" src="//apis.daum.net/maps/maps3.js?apikey=576ff8ec0e48c2e85ada1c1cc30b1b7a"></script> -->
 <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCtzRob_ePM5RTujtBxE6w7W1tjbTS5mzw&callback=initMap"></script> -->
 <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=SgnlyXnzstmDsYDhele7&submodules=visualization"></script>
 <!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCtzRob_ePM5RTujtBxE6w7W1tjbTS5mzw&libraries=visualization"></script> -->
 
-<script type="text/javascript" src="/resources/js/map/map-core2.js"></script>
-
+<script type="text/javascript" src="/resources/js/map/map-data.js"></script>
+<script type="text/javascript" src="/resources/js/map/map-core.js"></script>
 <script type="text/javascript" src="/resources/js/layout.js"></script>
 
 <sitemesh:write property="page.script" />

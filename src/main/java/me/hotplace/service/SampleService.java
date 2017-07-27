@@ -19,7 +19,7 @@ public class SampleService {
 	public String getSample(String level) {
 		List<String> list = sampleDao.selectSample(level);
 		//return DataUtil.makeLatLng(list, "□");
-		return DataUtil.makeLatLngWeight(list, "□");
+		return DataUtil.makeLatLngWeight(list, ",");
 		//return "[[125.4,37.75],[128.56,35.42],[128.34,35.57],[125.91,33.51],[125.89,33.53],[125.92,33.52]]";
 	}
 }

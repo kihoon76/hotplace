@@ -4,7 +4,7 @@
 
 	<select id="selectSample" resultType="string" parameterType="string">
         <!-- c.센터 [경도] d.센터  [위도] -->
-		select concat(c.극서 , '□', d.극북 - 2*(d.극북 - d.센터),  '□', c.극서 + 2*(c.센터 - c.극서), '□', d.극북, '□', round(rand(convert(varbinary, newid()))*10, 1))
+		select concat(c.극서 , ',', d.극북 - 2*(d.극북 - d.센터),  ',', c.극서 + 2*(c.센터 - c.극서), ',', d.극북, ',', c.센터, ',',  d.센터, ',', round(rand(convert(varbinary, newid()))*10, 1))
 		from 
 		[표준공시지가].[dbo].[20170109표준지공시지가] a
 		inner join [지번주소].[dbo].[전국지번통합] b on (b.PNU=a.PNU1)
@@ -13,6 +13,7 @@
 		where (a.PNU1 like '11%' or a.PNU1 like '42%') and 위도 is not null
 		  and c.레벨 = #{level}
 		  and d.레벨 = #{level}
+		order by c.극서 asc
 	</select>
 </mapper>
 <!-- 

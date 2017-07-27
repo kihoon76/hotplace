@@ -69,7 +69,7 @@ public class DataUtil {
 				for(String token : list) {
 					String[] s = StringUtils.splitByWholeSeparator(token, deli);
 					sb.append("{\"weight\":");
-					sb.append(s[4]);
+					sb.append(s[6]);
 					sb.append(",");
 					sb.append("\"location\":[");
 					sb.append(s[0]);
@@ -79,6 +79,10 @@ public class DataUtil {
 					sb.append(s[2]);
 					sb.append(",");
 					sb.append(s[3]);
+					sb.append(",");
+					sb.append(s[4]);
+					sb.append(",");
+					sb.append(s[5]);
 					sb.append("]}");
 					sb.append(",");
 				}

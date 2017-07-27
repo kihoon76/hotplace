@@ -66,7 +66,7 @@ var common = function(){
 							params.error(jqXHR, textStatus, e);
 						}
 					},
-					timeout: params.timeout || 2000
+					timeout: params.timeout || 30000
 				});
 			},
 			getJson : function(url, params, succ) {

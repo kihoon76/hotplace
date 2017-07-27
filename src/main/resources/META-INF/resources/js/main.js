@@ -1,26 +1,8 @@
-$(document).ready(function($m, $v) {
+$(document).ready(function($m, $v, $mapCore) {
 	var regionHeatData = {};
 	var _curZoom;
 	var _mapType = '';
 	
-	function loadHeatRegion(hcode) {
-		$m.ajax({
-			url: 'sample/standard',
-			dataType: 'text',
-			data: {
-				acode: hcode
-			},
-			success: function(data, textStatus, jqXHR) {
-				var jo = $m.parseJSON(data);
-				regionHeatData[hcode] = jo.datas;
-				mapCore.showMap(0, jo.datas, hcode);
-			},
-			error: function() {
-				
-			}
-		});
-	}
-
 	function setMinZoom(minZoom, map, zoom) {
 		
 		if(zoom > minZoom) {
@@ -31,7 +13,7 @@ $(document).ready(function($m, $v) {
 		}
 	}
 	
-	mapCore.event.onMaploaded(function(map) {
+	$mapCore.event.onMaploaded(function(map) {
 		_curZoom = map.getZoom();
 		_mapType = $('body').data('mtype');
 		/*naver.maps.Event.addListener(map, 'zoom_changed', function(zoom) {
@@ -42,19 +24,19 @@ $(document).ready(function($m, $v) {
 				map.setOptions('zoom', curZoom);
 			}
 			
-			var heatMaps = mapCore.getHeatMaps();
+			var heatMaps = $mapCore.getHeatMaps();
 			
 			//_heatMap.setOptions('radius', getRadiusPerZoom(curZoom));
 			
-			mapCore.getData({
+			$mapCore.getData({
 				acode: '11'
 			}, function(data) {
 				//console.log(_heatMap.getData());
 				//_heatMap.setData([]);
 				//_heatMap.redraw();
 				//console.log(_heatMap.getData());
-				var heatMaps = mapCore.getHeatMaps();
-				for(var hcode in mapCore.getHeatMaps()) {
+				var heatMaps = $mapCore.getHeatMaps();
+				for(var hcode in $mapCore.getHeatMaps()) {
 					if(hcode == '11') {
 						heatMaps[hcode].setData(data);
 					}
@@ -81,22 +63,24 @@ $(document).ready(function($m, $v) {
 			
 		});*/
 		
-		mapCore.showMap(_mapType, _curZoom);
-		mapCore.showLandMark();
-		//mapCore.showMap($('#mapType').data('mtype'));
+		$mapCore.setCurrentBounds(map.getBounds());
+		$mapCore.showLayer(_mapType, _curZoom);
+		$mapCore.showJiJeokDo();
+		//$mapCore.showMap($('#mapType').data('mtype'));
 	});
 	
 	
 	return function() {
-		/*mapCore.load(daum.maps, {
+		/*$mapCore.load(daum.maps, {
 			center: new daum.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
 			level: 3 //지도의 레벨(확대, 축소 정도)
 		});*/
 		
+		//이벤트 순서 : bounds_changed > dragend > idle
 		//loadmask 활성화
 		$v.enableLoadMask({el:$('body'), msg:'로딩 중입니다'});
 		
-		mapCore.load(naver.maps, {
+		$mapCore.load(naver.maps, {
 		 	center: new naver.maps.LatLng(36.0207091, 127.9204629), //지도의 초기 중심 좌표(36.0207091, 127.9204629)
 	        zoom: 3, //지도의 초기 줌 레벨
 	        mapTypeControl: true,
@@ -104,28 +88,37 @@ $(document).ready(function($m, $v) {
 	        	style: naver.maps.MapTypeControlStyle.DROPDOWN
 	        }
 		},{			
-			'zoom_changed' : function(map, heatmap, arr) {
+			'zoom_changed' : function(map, arr) {
 				setMinZoom(2,map, arr[0]); //arr[0] : zoom
+				$mapCore.setCurrentBounds(map.getBounds());
+				
 				console.log(_mapType + ":" + arr[0]);
 				if(_mapType == 'cellmap') {
-					mapCore.showMap(_mapType, arr[0]);
+					$mapCore.showLayer(_mapType, arr[0]);
 				}
-				
+				$mapCore.testInit();
 			},
-			'idle' : function(map, heatmap, arr) { //지도의 움직임이 종료되었을 때(유휴 상태) 이벤트가 발생합니다.
-				console.log('stop');
+			'idle' : function(map, arr) { //지도의 움직임이 종료되었을 때(유휴 상태) 이벤트가 발생합니다.
+				console.log('idle');
 			},
-			'bounds_changed' : function(map, heatmap, arr) {
-				console.log(arr[0])
+			'bounds_changed' : function(map, arr) {
+				//console.log('bounds_changed');
+				//$mapCore.setCurrentBounds(arr[0]);
+			},
+			'dragend' : function(map, arr) {
+				//arr[0] : PointerEvent
+				$mapCore.setCurrentBounds(map.getBounds());
+				$mapCore.appendRectangle(_curZoom);
 			}
 		});
 		
-		/*mapCore.load(google.maps, {
+		/*$mapCore.load(google.maps, {
 			center: {lat: 36.0207091, lng: 127.9204629},
 	          zoom: 8
 		});*/
 	}
 }(
 	common.model,
-	common.view
+	common.view,
+	mapCore
 ));

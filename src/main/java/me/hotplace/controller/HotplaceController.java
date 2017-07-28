@@ -26,10 +26,16 @@ public class HotplaceController {
 	
 	@GetMapping("main")
 	public String layout(@RequestParam(name="mType", required=false) String mType, HttpServletRequest request) {
-		
 		MapTypes mapType = StringUtils.isNullOrEmpty(mType) ? MapTypes.HEAT_MAP : MapTypes.getMapTypes(mType);
 		request.setAttribute("mType", mapType.getType());
 		return "main";
+	}
+	
+	@GetMapping("daum/main")
+	public String layout2(@RequestParam(name="mType", required=false) String mType, HttpServletRequest request) {
+		MapTypes mapType = StringUtils.isNullOrEmpty(mType) ? MapTypes.HEAT_MAP : MapTypes.getMapTypes(mType);
+		request.setAttribute("mType", mapType.getType());
+		return "main2";
 	}
 	
 	@GetMapping("signin")

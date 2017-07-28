@@ -1,5 +1,4 @@
 $(document).ready(function($m, $v, $mapCore) {
-	var regionHeatData = {};
 	var _curZoom;
 	var _mapType = '';
 	

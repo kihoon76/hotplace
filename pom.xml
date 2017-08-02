@@ -28,6 +28,7 @@
 		
 		<handlebars-version>4.0.5</handlebars-version>
 		<bootstrap-version>3.3.7-1</bootstrap-version>
+		<bootstrap.toggle-version>2.2.2</bootstrap.toggle-version>
 	</properties>
 	
 	<dependencies>
@@ -243,8 +244,16 @@
 		    <groupId>org.webjars</groupId>
 		    <artifactId>bootstrap</artifactId>
 		    <version>${bootstrap-version}</version>
-		</dependency>  
+		</dependency> 
 		
+		
+		<!-- bootstrap toggle -->
+		<dependency>
+		    <groupId>org.webjars.bower</groupId>
+		    <artifactId>bootstrap-toggle</artifactId>
+		    <version>${bootstrap.toggle-version}</version>
+		</dependency>
+
 		<!-- handlebars js -->
 		<dependency>
 		    <groupId>org.webjars</groupId>

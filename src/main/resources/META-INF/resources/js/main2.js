@@ -39,7 +39,7 @@ $(document).ready(function() {
 		else {
 			hotplace.getPlainText('address/condition', _addrObj, function(data) {
 				$('#selNgugun').html(_dom.getSelectOptions(data, '시군구'));
-			});
+			},false);
 		}
 	});
 	
@@ -54,7 +54,7 @@ $(document).ready(function() {
 		else {
 			hotplace.getPlainText('address/condition', _addrObj, function(data) {
 				$('#selName').html(_dom.getSelectOptions(data, '지역명'));
-			});
+			}, false);
 		}
 		
 	});
@@ -115,9 +115,17 @@ $(document).ready(function() {
 		level: 3//12
 	}, {
 		'zoom_changed' : function(map, level) {
-			//console.log(level);
+			console.log('changed ===> ' + level);
+			//hotplace.database.initLevel(level);
 			hotplace.maps.drawBounds();
+			hotplace.maps.initHeatmap();
 			hotplace.maps.showCellsLayer();
+			
+		},
+		'zoom_start' : function(map, level) {
+			console.log('start ====> ' + level)
+			hotplace.database.initLevel(level);
+			hotplace.test.initMarker(level);
 		},
 		'dragend' : function(map, bnds) {
 			//console.log(bnds);

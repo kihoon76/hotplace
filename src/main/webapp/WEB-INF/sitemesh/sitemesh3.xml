@@ -4,7 +4,7 @@
         <tag-rule-bundle class="org.sitemesh.content.tagrules.html.Sm2TagRuleBundle" />
     </content-processor>
 
-	<mapping path="/*" decorator="/WEB-INF/views/layout/template2.jsp" />
-	<mapping path="/daum/*" decorator="/WEB-INF/views/layout/template_daum.jsp" />
+	<!-- <mapping path="/*" decorator="/WEB-INF/views/layout/template2.jsp" /> -->
+	<mapping path="/*" decorator="/WEB-INF/views/layout/template.jsp" />
 
 </sitemesh>

@@ -81,16 +81,17 @@
 		});
 	}
 	
-	hotplace.getPlainText = function(url, param, cbSucc) {
+	hotplace.getPlainText = function(url, param, cbSucc, isActiveMask) {
 			
 		hotplace.ajax({
 			url: url,
 			method: 'GET',
 			dataType: 'text',
 			data: param || {},
+			activeMask: (isActiveMask != undefined) ? isActiveMask : true,
 			success: function(data, textStatus, jqXHR) {
 				var jo = $.parseJSON(data);
-				console.log('data count : ' + jo.datas.length);
+				//console.log('data count : ' + jo.datas.length);
 				cbSucc(jo);
 			},
 			error:function() {
@@ -131,9 +132,8 @@
 	var _venderMap = null;
 	var _venderEvent = null;
 	var _initCalled = false;
-	var _currentLevel = null;
 	
-	var _events = ['zoom_changed', 'bounds_changed', 'dragend'];
+	var _events = ['zoom_changed', 'bounds_changed', 'dragend', 'zoom_start'];
 	var _vender = ['naver', 'daum'];
 	var _currentBounds = { 'swy' : 0, 'swx' : 0, 'ney' : 0,	'nex' : 0 };
 	var _marginBounds  = { 'swy' : 0, 'swx' : 0, 'ney' : 0,	'nex' : 0 };
@@ -148,6 +148,8 @@
 	var _infoWindows = [];
 	var _bndNmBnd = []; //bound와 margin bound
 	
+	var _heatMapLayer = null;
+	var _heatMapDatas = [];
 	/*
 	 * daum  zoom : [14 ~ 1]
 	 * naver zoom : [1 ~ 14]
@@ -185,8 +187,10 @@
 		_marginBounds.ney = _currentBounds.ney + marginRate;
 	}
 	
-	function _setCurrentLevel(vender) {
-		switch(vender) {
+	function _getCurrentLevel() {
+		var _currentLevel = -1;
+		
+		switch(_venderStr) {
 		case 'daum' :
 			_currentLevel = _venderMap.getLevel();
 			break;
@@ -194,13 +198,15 @@
 			_currentLevel = _venderMap.getZoom();
 			break;
 		}
+		
+		return _currentLevel;
 	}
 	
 	function _getColorByWeight(weight) {
 		//var r = (25.5*weight).toFixed(0);
 		//return 'rgb(' + r + ',051,000)';
 		var h = (1.0 - (weight/10)) * 240;
-		return "hsl(" + h + ", 100%, 50%)";
+		return '#FFFFFF' ;//hsl(" + h + ", 100%, 50%)";
 	}
 	
 	function _drawRectangle(swy, swx, ney, nex, css) {
@@ -208,6 +214,7 @@
 		
 		switch(_venderStr) {
 		case 'daum'  :
+			break;
 		case 'naver' :
 			rec = new _vender.Rectangle({
 			    map: _venderMap,
@@ -215,14 +222,20 @@
 		    		new _vender.LatLng(swy, swx),
 		    		new _vender.LatLng(ney, nex) 
 			    ),
-			    strokeWeight: (css && css.strokeWeight != undefined) ? css.strokeWeight : 0, 
+			    strokeWeight: (css && css.strokeWeight != undefined) ? css.strokeWeight : 3, 
 			    strokeColor:  (css && css.strokeColor != undefined) ? css.strokeColor : '#5347AA',
 			    strokeOpacity: (css && css.strokeOpacity != undefined) ? css.strokeOpacity : 0.5,
-			    fillColor: (css && css.fillColor != undefined) ? css.fillColor : 'rgb(255,051,000)',
-			    fillOpacity: (css && css.fillOpacity != undefined) ? css.fillOpacity : 0.1,
-			    //clickable: true
+			    //fillColor: (css && css.fillColor != undefined) ? css.fillColor : 'rgb(255,051,000)',
+			    //fillOpacity: (css && css.fillOpacity != undefined) ? css.fillOpacity : 0.1,
+			    clickable: true
 			});
+			
+			_venderEvent.addListener(rec, 'mouseover', function(e) {
+				console.log(e.overlay)
+			})
 			break;
+			
+			
 		}
 		
 		return rec;
@@ -230,6 +243,7 @@
 	
 	function _createRectangles(level, startIdx) {
 		var data = hotplace.database.getLevelData(level);
+		var logMap = hotplace.database.getLevelLogMap(level);
 		var len = data.length;
 		
 		var boundMX = _marginBounds.nex;
@@ -243,8 +257,11 @@
 			var y = data[i].location[1];
 
 			if(y >= boundmY && y <= boundMY) {
-				if(!data[i]['drawed']){
-					data[i]['drawed'] = true;
+				/*if(!data[i]['drawed']){
+					data[i]['drawed'] = true;*/
+				if(!data[i]['id'] || !logMap[data[i]['id']] ){
+					data[i]['id'] = data[i].location[0];
+					logMap[data[i].location[0]] = true;
 					drawedCnt++;
 					
 					_cells.push(
@@ -260,11 +277,38 @@
 						)
 					);
 					
+					_heatMapDatas.push({
+						'weight'   : data[i].weight,
+						'location' : [data[i].location[4], data[i].location[5]] 
+					});
 				}
 			}
 		}
 		
+		_createHeatmap();
+		
 		console.log("drawedCnt ==> " + drawedCnt);
+	}
+	
+	function _createHeatmap() {
+		if(_venderMap) {
+			if(false) {
+				_heatMapLayer.setData(_heatMapDatas);
+				//_heatMapLayer.redraw();
+			}
+			else {
+				_removeHeatmapLayer();
+				_heatMapLayer = new _vender.visualization.HeatMap({
+				    map: _venderMap,
+				    data: _heatMapDatas,
+				    opacity:0.9,
+				    radius: 40
+				});
+				
+				console.log(_heatMapDatas);
+			}
+			
+		}
 	}
 	
 	/*
@@ -279,13 +323,27 @@
 		}
 	}
 	
+	function _removeHeatmapLayer() {
+		if(_heatMapLayer) {
+			_heatMapLayer.setMap(null);
+			delete _heatMapLayer;
+			_heatMapLayer = null;
+		}
+	}
+	
+	//벤더별 벤더이벤트 전부 
 	function _convertEventObjToCustomObj(eventName, vender, obj) {
 		var returnObj;
 		switch(eventName) {
 		case 'zoom_changed' :
-			_setCurrentLevel(vender);
 			_setCurrentBounds(vender);
-			returnObj = _currentLevel;
+			returnObj = _getCurrentLevel();
+			break;
+		case 'zoom_start': //daum
+			returnObj = _venderMap.getLevel();
+			break;
+		case 'zooming' :   //naver
+			returnObj = _venderMap.getZoom();
 			break;
 		case 'dragend' : 
 			_setCurrentBounds(vender);
@@ -304,9 +362,9 @@
 		return _venderMap;
 	}
 	
-	maps.getLevel = function() {
-		return _currentLevel;
-	} 
+	maps.getCurrentLevel = function() {
+		return _getCurrentLevel();
+	}
 	
 	maps.event = {
 		addListener : function(eventName, callback, target) {
@@ -322,6 +380,10 @@
 			case 'daum'  :
 				_fnListener = _venderEvent.addListener;
 				break;
+			}
+			
+			if(eventName == 'zoom_start') {
+				eventName = (_venderStr == 'naver') ? 'zooming' : 'zoom_start';
 			}
 			
 			_fnListener(_venderMap, eventName, function(e) {
@@ -368,7 +430,6 @@
 			}
 			
 			_setCurrentBounds(venderStr);
-			_setCurrentLevel(venderStr);
 			_initJiJeokDoLayer(venderStr);
 			
 			if(listeners) {
@@ -383,7 +444,6 @@
 			throw new Error('[' + venderStr + '는(은) 지원하지 않습니다](supported : naver, daum');
 		}
 	}
-	
 
 	maps.panToBounds = function(lat, lng, size, moveAfterFn) {
 		size = size || 0.01;
@@ -454,6 +514,7 @@
 	
 	maps.appendCell = function() {
 		var db = hotplace.database;
+		var _currentLevel = _getCurrentLevel();
 		
 		if(db.hasData(_currentLevel)) {
 			var startIdx = db.getStartXIdx(_marginBounds.swx, _currentLevel);
@@ -461,17 +522,34 @@
 		}
 	};
 	
+	maps.initHeatmap = function() {
+		_heatMapDatas = [];
+		_removeHeatmapLayer();
+	}
+	
+	
+	function _showCellsLayer() {
+		var db = hotplace.database;
+		var _currentLevel = _getCurrentLevel();
+		
+		if(!db.hasData(_currentLevel)) return;
+		var startIdx = db.getStartXIdx(_marginBounds.swx, _currentLevel);
+		
+		_createRectangles(_currentLevel, startIdx);
+	}
+	
 	maps.showCellsLayer = function() {
 		
-		//_changeMapType(_mapTypes.cell);
-		
 		var db = hotplace.database;
+		var _currentLevel = _getCurrentLevel();
+		
 		if(_venderMap) {
 			
 			_removeAllCells();
+			_removeHeatmapLayer();
 			
-			if(false) {
-				
+			if(db.isCached(_currentLevel)) {
+				_showCellsLayer();
 			}
 			else {
 				hotplace.getPlainText('sample/standard', {
@@ -479,11 +557,7 @@
 				}, function(json) {
 					try {
 						db.setLevelData(_currentLevel, json.datas);
-						
-						if(!db.hasData(_currentLevel)) return;
-						var startIdx = db.getStartXIdx(_marginBounds.swx, _currentLevel);
-						
-						_createRectangles(_currentLevel, startIdx);
+						_showCellsLayer();
 					}
 					catch(e) {
 						throw e;
@@ -517,10 +591,6 @@
 			$btn.data('switch', 'on');
 			_mapTypeLayers.jijeok = 'on';
 		}
-	}
-	
-	function _changeMapType(mapType) {
-		_currentMapType = mapType;
 	}
 	
 	function _initJiJeokDoLayer(_venderStr) {
@@ -720,12 +790,14 @@
 	 * 서버에서 가져온 전 데이터를 저장
 	 * {
 	 * 	 'level' : {
-	 * 		'data' : [{"weight":2.6,"location":[126.80104492131,37.57776528544,126.80329443915,37.57956742328], "drawed":true}],
-	 *      		
+	 * 		'data' : [{"weight":2.6,"location":[126.80104492131,37.57776528544,126.80329443915,37.57956742328], id:'126.80104492131'}],
+	 *      'log' : {
+	 *      	'126.80104492131' : true  // data의 id => key
+	 *      }		
 	 *    }
 	 * }
 	 * 
-	 * data의 drawed 항목은 DB에서 가져올 때는 없는 항목이고 범위를 구하는 과정에서 추가된다. 
+	 *  
 	 * */ 
 	
 	db.isCached = function(level) {
@@ -763,7 +835,7 @@
 	}
 	
 	db.setLevelData = function (level, data) {
-		_db[level] = {}, _db[level].data = data; 
+		_db[level] = {}, _db[level].data = data, _db[level].log = {}; 
 	}
 	
 	db.hasData = function(level) {
@@ -773,6 +845,18 @@
 	
 	db.getLevelData = function(level) {
 		 return (_db[level]) ? _db[level].data : null;
+	}
+	
+	db.getLevelLogMap = function(level) {
+		return _db[level].log;
+	}
+	
+	//레벨 변경시 rectangle을 그렸던 로그를 기록한 맵을 초기화 한다.
+	db.initLevel = function(level) {
+		if(_db[level]) {
+			delete _db[level].log;
+			_db[level].log = {};
+		}
 	}
 }(
 	hotplace.database = hotplace.database || {},
@@ -790,7 +874,7 @@
 	test.showMarker = function() {
 		var vender = hotplace.maps.getVender();
 		var venderMap = hotplace.maps.getVenderMap();
-		var level = hotplace.maps.getLevel();
+		var level = hotplace.maps.getCurrentLevel();
 		var datas = hotplace.database.getLevelData(level);
 
 		console.log(datas);
@@ -813,13 +897,28 @@
 	}
 	
 	test.hideMarker = function() {
-		var level = hotplace.maps.getLevel();
+		var level = hotplace.maps.getCurrentLevel();
 		if(!_testMarker[level]) return;
 		
 		$.each(_testMarker[level], function(idx, value) {
 			value.setMap(null);
 		});
 	}
+	
+	test.initMarker = function(level) {
+		test.hideMarker();
+		_testMarker[level] = [];
+	}
+	
+	/*test.initMarkerButton = function(selector) {
+		selector = selector || '#btnTest';
+		
+		var sw = $(selector).data('switch');
+		if(sw == 'on') {
+			$(selector).trigger('change');
+		}
+		
+	}*/
 	
 }(
 	hotplace.test = hotplace.test || {},

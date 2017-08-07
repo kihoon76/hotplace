@@ -15,6 +15,15 @@
 		  and d.레벨 = #{level}
 		order by c.극서 asc
 	</select>
+	
+	<select id="selectSample2" resultType="string" parameterType="string">
+		select concat(a.극서 , ',', b.극북 - 2*(b.극북 - b.센터),  ',', a.극서 + 2*(a.센터 - a.극서), ',', b.극북, ',', a.센터, ',',  b.센터, ',', round(rand(convert(varbinary, newid()))*10, 1)) 
+		  from [좌표계].dbo.가로축 a 
+		 cross join [좌표계].dbo.세로축 b
+		 where a.센터 between (126.980355-0.01) and (126.980355+0.01) and b.센터 between (37.566207-0.01) and (37.566207+0.01)
+		   and '13' = #{level}
+		 order by a.극서 asc
+	</select>
 </mapper>
 <!-- 
 select  top 10000 concat(b.경도, '□',b.위도,'□', round(rand(convert(varbinary, newid()))*10, 1))
@@ -22,4 +31,16 @@ select  top 10000 concat(b.경도, '□',b.위도,'□', round(rand(convert(varb
     inner join [지번주소].[dbo].[전국지번통합] b on (b.PNU=a.PNU1)
          where (a.PNU1 like '11%' or a.PNU1 like '42%') and 위도 is not null
          where (a.PNU1 like #{acode} + '%') and 위도 is not null
+         
+         
+         
+         
+select a.극서, a.극서+(a.센터-a.극서)*2 [극동], b.센터 [위도], b.극북, b.극북- ((b.센터-b.극북)*2) [극남], a.센터 [경도], round(rand(convert(varbinary, newid()))*100, 2) [랜덤점수] from 
+[좌표계].dbo.가로축 a 
+cross join [좌표계].dbo.세로축 b
+where a.센터 between (126.980355-0.00625) and (126.980355+0.00625) and b.센터 between (37.566207-0.00625) and (37.566207+0.00625);
+
+
+ where a.센터  between (126.980355-0.005) and (126.980355+0.005)
+		   and b.센터  between (37.566207-0.0023)  and (37.566207+0.0023)
  -->

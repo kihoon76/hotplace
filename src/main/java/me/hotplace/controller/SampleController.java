@@ -59,4 +59,11 @@ public class SampleController {
 		
 		return s;
 	}
+	
+	@GetMapping("celldetail")
+	@ResponseBody
+	public AjaxVO getCellDetail() throws InterruptedException {
+		Thread.sleep(2000);
+		return new AjaxVO();
+	}
 }

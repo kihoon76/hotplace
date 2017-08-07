@@ -37,7 +37,7 @@
 			async: (params.async == null)? true : params.async,
 			beforeSend: function(xhr) {
 				var activeMask = (params.activeMask == undefined) ? true : params.activeMask; //전체설정 이후 마스크 개별설정
-				if(activeMask && dom.isActiveMask()) dom.showMask();
+				if(activeMask) dom.showMask(params.loadEl, params.loadMsg);
 				
 				if(params.beforeSend && typeof params.beforeSend === 'function') {
 					params.beforeSend();
@@ -63,7 +63,7 @@
 				}
 				finally {
 					var activeMask = (params.activeMask == undefined) ? true : params.activeMask; 
-					if(activeMask && dom.isActiveMask()) dom.hideMask();
+					if(activeMask) dom.hideMask();
 				}
 			},
 			error: function(jqXHR, textStatus, e) {
@@ -75,7 +75,7 @@
 				}
 				
 				var activeMask = (params.activeMask == undefined) ? true : params.activeMask; 
-				if(activeMask && dom.isActiveMask()) dom.hideMask();
+				if(activeMask) dom.hideMask();
 			},
 			timeout: params.timeout || 30000
 		});
@@ -126,7 +126,7 @@
 ));
 
 (function(maps, $) {
-	var _venderStr = null;
+	var _venderStr = '';
 	var _container = document.getElementById('map');
 	var _vender = null;
 	var _venderMap = null;
@@ -145,20 +145,24 @@
 	
 	var _cells = [];
 	var _markers = [];
-	var _infoWindows = [];
+	var _infoWindowsForMarker = [];
+	var _infoWindowsForCell = [];
+	
 	var _bndNmBnd = []; //bound와 margin bound
 	
 	var _heatMapLayer = null;
 	var _heatMapDatas = [];
+	
+	var _templateInfoWndowForCell = null;
 	/*
 	 * daum  zoom : [14 ~ 1]
 	 * naver zoom : [1 ~ 14]
 	 * */
 	
-	function _setCurrentBounds(vender) {
+	function _setCurrentBounds() {
 		var bnds = null;
 		
-		switch(vender) {
+		switch(_venderStr) {
 		case 'daum' :
 			bnds = _venderMap.getBounds();
 			_currentBounds = {
@@ -209,7 +213,22 @@
 		return '#FFFFFF' ;//hsl(" + h + ", 100%, 50%)";
 	}
 	
-	function _drawRectangle(swy, swx, ney, nex, css) {
+	function _getTemplateInfoWndowForCell() {
+		_templateInfoWndowForCell = hotplace.dom.getTemplate('cellForm');
+	}
+	
+	function _makeInfoWndowForCell(data) {
+		var newInfoWindow = new _vender.InfoWindow({
+	        //content: '<div style="width:150px;text-align:center;padding:10px;">' + data.weight +'</div>'
+	        content: _templateInfoWndowForCell({'weight' : data.weight})
+	    });
+		
+		_infoWindowsForCell.push(newInfoWindow);
+		//hotplace.dom.createChart('canvas');
+		return newInfoWindow;
+	}
+	
+	function _drawRectangle(swy, swx, ney, nex, css, cellData) {
 		var rec = null;
 		
 		switch(_venderStr) {
@@ -222,7 +241,7 @@
 		    		new _vender.LatLng(swy, swx),
 		    		new _vender.LatLng(ney, nex) 
 			    ),
-			    strokeWeight: (css && css.strokeWeight != undefined) ? css.strokeWeight : 3, 
+			    strokeWeight: (css && css.strokeWeight != undefined) ? css.strokeWeight : 0, 
 			    strokeColor:  (css && css.strokeColor != undefined) ? css.strokeColor : '#5347AA',
 			    strokeOpacity: (css && css.strokeOpacity != undefined) ? css.strokeOpacity : 0.5,
 			    //fillColor: (css && css.fillColor != undefined) ? css.fillColor : 'rgb(255,051,000)',
@@ -230,9 +249,47 @@
 			    clickable: true
 			});
 			
-			_venderEvent.addListener(rec, 'mouseover', function(e) {
-				console.log(e.overlay)
-			})
+			rec.data = cellData;
+			
+			/*_venderEvent.addListener(rec, 'mouseover', function(e) {
+				var r = e.overlay;
+				console.log(r);
+				if(!r._toggle || r._toggle == 'off') {
+					r.setOptions('strokeWeight', 3);
+					r._toggle = 'on'
+				}
+				else {
+					r.setOptions('strokeWeight', 0);
+					r._toggle = 'off'
+				}
+				
+			});*/
+			
+			_venderEvent.addListener(rec, 'click', function(e) {
+				var r = e.overlay;
+				console.log(e);
+				var location = new _vender.LatLng(r.data.location[5], r.data.location[4]);
+				_makeInfoWndowForCell(r.data).open(_venderMap, location);
+				
+				hotplace.ajax({
+					url: 'sample/celldetail',
+					method: 'GET',
+					//async: false,
+					dataType: 'json',
+					data: {},
+					loadEl: '#dvCellDetail',
+					success: function(data, textStatus, jqXHR) {
+						//var jo = $.parseJSON(data);
+						//console.log('data count : ' + jo.datas.length);
+						//cbSucc(jo);
+						hotplace.dom.createChart('canvas');
+					},
+					error:function() {
+						
+					}
+				});
+			});
+			
 			break;
 			
 			
@@ -250,7 +307,7 @@
 		var boundmY = _marginBounds.swy;
 		var boundMY = _marginBounds.ney;
 		var drawedCnt = 0;
-		
+		var d = [];
 		for(var i = startIdx; i < len; i++) {
 			
 			if(data[i].location[0] > boundMX) break;
@@ -264,7 +321,7 @@
 					logMap[data[i].location[0]] = true;
 					drawedCnt++;
 					
-					_cells.push(
+					/*_cells.push(
 						_drawRectangle(
 							  data[i].location[1],
 							  data[i].location[0],
@@ -273,11 +330,18 @@
 							  {
 								  fillColor: _getColorByWeight(data[i].weight),
 								  fillOpacity : 0.7
-							  }
+							  },
+							  data[i]
 						)
-					);
+					);*/
 					
 					_heatMapDatas.push({
+						'weight'   : data[i].weight,
+						'location' : [data[i].location[4], data[i].location[5]] 
+					});
+					
+					
+					d.push({
 						'weight'   : data[i].weight,
 						'location' : [data[i].location[4], data[i].location[5]] 
 					});
@@ -285,25 +349,30 @@
 			}
 		}
 		
-		_createHeatmap();
+		_createHeatmap(d);
 		
 		console.log("drawedCnt ==> " + drawedCnt);
 	}
 	
-	function _createHeatmap() {
+	function _createHeatmap(datas) {
 		if(_venderMap) {
-			if(false) {
-				_heatMapLayer.setData(_heatMapDatas);
-				//_heatMapLayer.redraw();
+			if(_heatMapLayer) {
+				//if(datas || datas.length > 0) {
+					_heatMapLayer.setData(_heatMapDatas);
+					_heatMapLayer.redraw();
+				//}
 			}
 			else {
 				_removeHeatmapLayer();
 				_heatMapLayer = new _vender.visualization.HeatMap({
 				    map: _venderMap,
 				    data: _heatMapDatas,
-				    opacity:0.9,
-				    radius: 40
+				    opacity:1,
+				    radius: 32,
+				    colorMap: _vender.visualization.SpectrumStyle.HOT //YIOrRd//HSV//JET //OXYGEN //YIOrRd //HOT 
 				});
+				
+				//_heatMapLayer.setColorMap(_vender.visualization.SpectrumStyle.HOT, true)
 				
 				console.log(_heatMapDatas);
 			}
@@ -331,12 +400,21 @@
 		}
 	}
 	
+	function _removeInfoWindowsForCell() {
+		$.each(_infoWindowsForCell, function(index, value) {
+			value.close();
+		});
+		
+		delete _infoWindowsForCell;
+		_infoWindowsForCell = [];
+	}
+	
 	//벤더별 벤더이벤트 전부 
-	function _convertEventObjToCustomObj(eventName, vender, obj) {
+	function _convertEventObjToCustomObj(eventName, obj) {
 		var returnObj;
 		switch(eventName) {
 		case 'zoom_changed' :
-			_setCurrentBounds(vender);
+			_setCurrentBounds();
 			returnObj = _getCurrentLevel();
 			break;
 		case 'zoom_start': //daum
@@ -346,12 +424,30 @@
 			returnObj = _venderMap.getZoom();
 			break;
 		case 'dragend' : 
-			_setCurrentBounds(vender);
+			_setCurrentBounds();
 			returnObj = _currentBounds;
 			break;
 		}
 		
 		return returnObj;
+	}
+	
+	function _initJiJeokDoLayer() {
+		
+		//지적편집도
+		if(_venderStr == 'naver') {
+			_vender._cadastralLayer = new _vender.CadastralLayer();
+		}
+	}
+	
+	function _showCellsLayer() {
+		var db = hotplace.database;
+		var _currentLevel = _getCurrentLevel();
+		
+		if(!db.hasData(_currentLevel)) return;
+		var startIdx = db.getStartXIdx(_marginBounds.swx, _currentLevel);
+		
+		_createRectangles(_currentLevel, startIdx);
 	}
 	
 	maps.getVender = function() {
@@ -388,7 +484,7 @@
 			
 			_fnListener(_venderMap, eventName, function(e) {
 				return function(obj) {
-					var convertedObj = _convertEventObjToCustomObj(e,_venderStr, obj)
+					var convertedObj = _convertEventObjToCustomObj(e, obj);
 					callback(_venderMap, convertedObj);
 				}
 				
@@ -429,8 +525,9 @@
 				break;
 			}
 			
-			_setCurrentBounds(venderStr);
-			_initJiJeokDoLayer(venderStr);
+			_setCurrentBounds();
+			_initJiJeokDoLayer();
+			_getTemplateInfoWndowForCell();
 			
 			if(listeners) {
 				for(var eventName in listeners) {
@@ -475,7 +572,7 @@
 	    });
 		
 		_markers.push(newMarker);
-		_infoWindows.push(newInfoWindow);
+		_infoWindowsForMarker.push(newInfoWindow);
 		
 		if(listeners) {
 			for(var eventName in listeners) {
@@ -522,21 +619,12 @@
 		}
 	};
 	
-	maps.initHeatmap = function() {
+	maps.initLevel = function() {
 		_heatMapDatas = [];
 		_removeHeatmapLayer();
+		_removeInfoWindowsForCell();
 	}
 	
-	
-	function _showCellsLayer() {
-		var db = hotplace.database;
-		var _currentLevel = _getCurrentLevel();
-		
-		if(!db.hasData(_currentLevel)) return;
-		var startIdx = db.getStartXIdx(_marginBounds.swx, _currentLevel);
-		
-		_createRectangles(_currentLevel, startIdx);
-	}
 	
 	maps.showCellsLayer = function() {
 		
@@ -593,24 +681,7 @@
 		}
 	}
 	
-	function _initJiJeokDoLayer(_venderStr) {
-		
-		//지적편집도
-		if(_venderStr == 'naver') {
-			_vender._cadastralLayer = new _vender.CadastralLayer();
-			
-			/*_venderEvent.addListener(_venderMap, 'cadastralLayer_changed', function(cadastralLayer) {
-			    if (cadastralLayer) {
-			    	//btn.removeClass('btn-default');
-			        //btn.addClass('btn-primary');
-			    } 
-			    else {
-			        //btn.removeClass('btn-primary');
-			        //btn.addClass('btn-default');
-			    }
-			});*/
-		}
-	}
+
 	
 }(
 	hotplace.maps = hotplace.maps || {},
@@ -620,7 +691,7 @@
 (function(dom, $) {
 	
 	var _loadEl;
-	var _loadTxt = 'Please wait...';
+	var _loadTxt = '로딩 중입니다';
 	var _loadEffects = {
 		bounce: 'bounce',
 		rotateplane: 'rotateplane',
@@ -644,11 +715,11 @@
 	/*
 	 * //https://github.com/vadimsva/waitMe/blob/gh-pages/index.html
 	 * */
-	function _runWaitMe(num, effect){
+	function _runWaitMe(loadEl, num, effect, msg){
 		
 		var fontSize = '';
 		var maxSize = '';
-		var loadTxt = '';
+		var loadTxt = msg || '로딩 중입니다';
 		var textPos = '';
 		
 		switch (num) {
@@ -669,6 +740,7 @@
 			break;
 		}
 		
+		_loadEl = loadEl;
 		_loadEl.waitMe({
 			effect: effect,
 			text: loadTxt,
@@ -689,26 +761,42 @@
 		$('input[type="checkbox"]').bootstrapToggle();
 	}
 	
-	dom.isActiveMask = function() {
-		return _loadmask;
-	};
+	dom.createChart = function(id) {
+		var ctx = document.getElementById(id);
+		var chart = new Chart(ctx, {
+			type: 'horizontalBar',
+		    data: {
+		      labels: ["Africa", "Asia"],
+		      datasets: [
+		        {
+		          label: "Population (millions)",
+		          backgroundColor: ["#3e95cd", "#8e5ea2"],
+		          data: [2478,5267]
+		        }
+		      ]
+		    },
+		    options: {
+		      legend: { display: false },
+		      title: {
+		        display: true,
+		        text: 'Predicted world population (millions) in 2050'
+		      }
+		    }
+		});
+	}
 	
-	dom.enableLoadMask = function(cfg) {
-		_loadmask = true;
-		_loadEl = cfg.el || $('body');
-		_loadTxt = cfg.msg || _loadTxt; 
-	};
-
-	dom.showMask = function() {
-		if(_loadmask) {
-			_runWaitMe(1, _loadEffects.timer);
+	dom.showMask = function(loadEl, msg) {
+		if(loadEl) {
+			loadEl = $(loadEl);
 		}
+		else {
+			loadEl = $('body');
+		}
+		_runWaitMe(loadEl, 1, _loadEffects.timer, msg);
 	};
 	
 	dom.hideMask = function() {
-		if(_loadmask) {
-			_loadEl.waitMe('hide');
-		}
+		_loadEl.waitMe('hide');
 	},
 	
 	dom.closeBootstrapModal = function(selector) {

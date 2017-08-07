@@ -107,8 +107,6 @@ $(document).ready(function() {
 		$('#templateAddressModal').append(tForm());
 	};
 	
-	hotplace.dom.enableLoadMask({el:$('body'), msg:'로딩 중입니다'});
-	
 	hotplace.maps.init('naver', {
 		X: 127.9204629,
 		Y: 36.0207091, 
@@ -117,8 +115,8 @@ $(document).ready(function() {
 		'zoom_changed' : function(map, level) {
 			console.log('changed ===> ' + level);
 			//hotplace.database.initLevel(level);
-			hotplace.maps.drawBounds();
-			hotplace.maps.initHeatmap();
+			//hotplace.maps.drawBounds();
+			hotplace.maps.initLevel();
 			hotplace.maps.showCellsLayer();
 			
 		},
@@ -129,15 +127,15 @@ $(document).ready(function() {
 		},
 		'dragend' : function(map, bnds) {
 			//console.log(bnds);
-			hotplace.maps.drawBounds();
+			//hotplace.maps.drawBounds();
 			hotplace.maps.appendCell();
 		}
 	}, function() {
 		hotplace.maps.showCellsLayer();
-		hotplace.maps.drawBounds();
+		//hotplace.maps.drawBounds();
 	});
 	
-	hotplace.dom.addButtonInMap([{
+	hotplace.dom.addButtonInMap([/*{
 		id: 'btnTest',
 		dataAttr: 'data-on="마커보기" data-off="마커보기" data-switch="off"',
 		type: 'check',
@@ -152,7 +150,7 @@ $(document).ready(function() {
 				hotplace.test.hideMarker();
 			}
 		}
-	},{
+	},*/{
 		id: 'cadastral',
 		dataAttr: 'data-on="지적도" data-off="지적도" data-switch="off"',
 		type: 'check',

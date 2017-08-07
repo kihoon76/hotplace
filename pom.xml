@@ -27,6 +27,7 @@
 		
 		
 		<handlebars-version>4.0.5</handlebars-version>
+		<chartjs-version>2.5.0</chartjs-version>
 		<bootstrap-version>3.3.7-1</bootstrap-version>
 		<bootstrap.toggle-version>2.2.2</bootstrap.toggle-version>
 	</properties>
@@ -259,6 +260,14 @@
 		    <groupId>org.webjars</groupId>
 		    <artifactId>handlebars</artifactId>
 		    <version>${handlebars-version}</version>
+		</dependency>
+		
+		<!-- chart.js -->
+		<!-- http://www.chartjs.org/docs/ -->
+		<dependency>
+		    <groupId>org.webjars.bower</groupId>
+		    <artifactId>chart.js</artifactId>
+		    <version>${chartjs-version}</version>
 		</dependency>
 	</dependencies>
 	

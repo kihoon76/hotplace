@@ -64,6 +64,7 @@
 <script type="text/javascript" src="/resources/jquery/1.11.1/jquery.min.js"></script>
 <script type="text/javascript" src="/resources/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/resources/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+<script type="text/javascript" src="/resources/chart.js/2.5.0/dist/Chart.min.js"></script>
 
 <script type="text/javascript" src="/resources/js/common.js"></script>
 <script type="text/javascript" src="/resources/js/plugins/loading/waitMe.js"></script>

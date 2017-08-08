@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mappers.mssql.sampleMapper">
 
-	<select id="selectSample" resultType="string" parameterType="string">
+	<select id="selectSample2" resultType="string" parameterType="string">
         <!-- c.센터 [경도] d.센터  [위도] -->
 		select concat(c.극서 , ',', d.극북 - 2*(d.극북 - d.센터),  ',', c.극서 + 2*(c.센터 - c.극서), ',', d.극북, ',', c.센터, ',',  d.센터, ',', round(rand(convert(varbinary, newid()))*10, 1))
 		from 
@@ -16,7 +16,7 @@
 		order by c.극서 asc
 	</select>
 	
-	<select id="selectSample2" resultType="string" parameterType="string">
+	<select id="selectSample" resultType="string" parameterType="string">
 		select concat(a.극서 , ',', b.극북 - 2*(b.극북 - b.센터),  ',', a.극서 + 2*(a.센터 - a.극서), ',', b.극북, ',', a.센터, ',',  b.센터, ',', round(rand(convert(varbinary, newid()))*10, 1)) 
 		  from [좌표계].dbo.가로축 a 
 		 cross join [좌표계].dbo.세로축 b

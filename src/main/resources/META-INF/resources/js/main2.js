@@ -116,19 +116,23 @@ $(document).ready(function() {
 			console.log('changed ===> ' + level);
 			//hotplace.database.initLevel(level);
 			//hotplace.maps.drawBounds();
-			hotplace.maps.initLevel();
+			hotplace.maps.initHeatmap();
+			hotplace.database.initLevel(level);
 			hotplace.maps.showCellsLayer();
 			
 		},
 		'zoom_start' : function(map, level) {
 			console.log('start ====> ' + level)
-			hotplace.database.initLevel(level);
+			//hotplace.database.initLevel(level);
 			hotplace.test.initMarker(level);
 		},
 		'dragend' : function(map, bnds) {
 			//console.log(bnds);
 			//hotplace.maps.drawBounds();
 			hotplace.maps.appendCell();
+		},
+		'click' : function(map, latlng) {
+			hotplace.maps.getClickedCell(latlng);
 		}
 	}, function() {
 		hotplace.maps.showCellsLayer();

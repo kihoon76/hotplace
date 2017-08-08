@@ -5,6 +5,7 @@
     </content-processor>
 
 	<!-- <mapping path="/*" decorator="/WEB-INF/views/layout/template2.jsp" /> -->
+	<mapping path="/sample/naverForm" decorator="/WEB-INF/views/layout/template2.jsp" />
 	<mapping path="/*" decorator="/WEB-INF/views/layout/template.jsp" />
 
 </sitemesh>

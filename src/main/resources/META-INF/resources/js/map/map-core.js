@@ -26,6 +26,10 @@
         return s;
     };
     
+	function _s4() {
+		return ((1 + Math.random()) * 0x10000 | 0).toString(16).substring(1);
+	}
+    
 	hotplace.isSupport = function(target, array) {
 		return $.inArray(target, array) > -1;
 	}
@@ -119,7 +123,9 @@
 		});
 	}
 	
-	
+	hotplace.createUuid = function() {
+		 return _s4() + _s4() + '-' + _s4() + '-' + _s4() + '-' + _s4() + '-' + _s4() + _s4() + _s4();
+	}
 }(
 	window.hotplace = window.hotplace || {},
 	jQuery	
@@ -133,7 +139,7 @@
 	var _venderEvent = null;
 	var _initCalled = false;
 	
-	var _events = ['zoom_changed', 'bounds_changed', 'dragend', 'zoom_start'];
+	var _events = ['zoom_changed', 'bounds_changed', 'dragend', 'zoom_start', 'click'];
 	var _vender = ['naver', 'daum'];
 	var _currentBounds = { 'swy' : 0, 'swx' : 0, 'ney' : 0,	'nex' : 0 };
 	var _marginBounds  = { 'swy' : 0, 'swx' : 0, 'ney' : 0,	'nex' : 0 };
@@ -144,6 +150,8 @@
 	var _mapTypeLayers = {heat: 'off', cell: 'off', jijeok: 'off'};
 	
 	var _cells = [];
+	var _viewCells = [];  //현재 bounds에 보이는 좌표(cell) 집합
+	
 	var _markers = [];
 	var _infoWindowsForMarker = [];
 	var _infoWindowsForCell = [];
@@ -210,7 +218,7 @@
 		//var r = (25.5*weight).toFixed(0);
 		//return 'rgb(' + r + ',051,000)';
 		var h = (1.0 - (weight/10)) * 240;
-		return '#FFFFFF' ;//hsl(" + h + ", 100%, 50%)";
+		return "hsl(" + h + ", 100%, 50%)";
 	}
 	
 	function _getTemplateInfoWndowForCell() {
@@ -241,11 +249,11 @@
 		    		new _vender.LatLng(swy, swx),
 		    		new _vender.LatLng(ney, nex) 
 			    ),
-			    strokeWeight: (css && css.strokeWeight != undefined) ? css.strokeWeight : 0, 
+			    strokeWeight: (css && css.strokeWeight != undefined) ? css.strokeWeight : 1, 
 			    strokeColor:  (css && css.strokeColor != undefined) ? css.strokeColor : '#5347AA',
 			    strokeOpacity: (css && css.strokeOpacity != undefined) ? css.strokeOpacity : 0.5,
-			    //fillColor: (css && css.fillColor != undefined) ? css.fillColor : 'rgb(255,051,000)',
-			    //fillOpacity: (css && css.fillOpacity != undefined) ? css.fillOpacity : 0.1,
+			    fillColor: (css && css.fillColor != undefined) ? css.fillColor : 'rgb(255,051,000)',
+			    fillOpacity: (css && css.fillOpacity != undefined) ? css.fillOpacity : 0.1,
 			    clickable: true
 			});
 			
@@ -298,7 +306,79 @@
 		return rec;
 	}
 	
-	function _createRectangles(level, startIdx) {
+	maps.getClickedCell = function(latlng) {
+		var len = _viewCells.length;
+		var xValue = '';
+		var xIdx = 0;
+		
+		var searchedX = false;
+		//클릭지점 cell x축 index
+		/*for(var x=0; x<len; x++) {
+			if(searchedX) {
+				if(_viewCells[x].location[0] > xValue) continue;
+				if(latlng.y >= _viewCells[x].location[1] && latlng.y <= _viewCells[x].location[3]) {
+					break;
+				}
+			}
+			else {
+				if(_viewCells[x].location[0] > latlng.x ) {
+					searchedX = true;
+					xValue = _viewCells[x-1].location[0];
+					x=x-2;
+				}
+			}
+		}*/
+		
+		var swxPrevGrpSidx = 0; //swx 이전그룹 시작 인덱스
+		var swxPrevGrpEidx = 0; //swx 이전그룹 마지막 인덱스
+		var swxGrpSidx = 0; //swx 그룹 시작 인덱스
+		
+		var currentGrpSwxVal = 0;
+		
+		for(var x=0; x<len; x++) {
+			if(x == 0) {
+				//화면 margin boundary로 인해 클릭한 지점 index는 0보다 무조건 큼 
+				currentGrpSwxVal = _viewCells[0].location[0];
+				swxGrpSidx = swxPrevGrpSidx = 0;
+			}
+			else {
+				
+				//현재 group swx값과 클릭한 지점 x를 비교한다. 
+				if(currentGrpSwxVal > latlng.x) {
+					
+				}
+				
+				if(currentGrpSwxVal != _viewCells[x].location[0]) {
+					currentGrpSwxVal = _viewCells[x].location[0];
+					swxPrevGrpSidx = swxGrpSidx;
+					swxPrevGrpEidx = x-1;
+					swxGrpSidx = x;
+					
+					//바뀐 그룹과 비교
+					if(currentGrpSwxVal > latlng.x) { //이전그룹에서 찾는다
+						
+					}
+				}
+				
+			}
+		}
+		
+		_drawRectangle(
+				_viewCells[x].location[1],
+				_viewCells[x].location[0],
+				_viewCells[x].location[3],
+				_viewCells[x].location[2], 
+			  {
+				  fillColor: _getColorByWeight(_viewCells[x].weight),
+				  fillOpacity : 0.1
+			  },
+			  _viewCells[x-1]
+		);
+	}
+	
+	function _createViewRangeData(level, startIdx) {
+		_viewCells = [];
+		
 		var data = hotplace.database.getLevelData(level);
 		var logMap = hotplace.database.getLevelLogMap(level);
 		var len = data.length;
@@ -308,17 +388,23 @@
 		var boundMY = _marginBounds.ney;
 		var drawedCnt = 0;
 		var d = [];
+		
+		var id = '';
+		
 		for(var i = startIdx; i < len; i++) {
 			
 			if(data[i].location[0] > boundMX) break;
 			var y = data[i].location[1];
 
 			if(y >= boundmY && y <= boundMY) {
-				/*if(!data[i]['drawed']){
-					data[i]['drawed'] = true;*/
-				if(!data[i]['id'] || !logMap[data[i]['id']] ){
-					data[i]['id'] = data[i].location[0];
-					logMap[data[i].location[0]] = true;
+				
+				_viewCells.push(data[i]);
+				
+				id = data[i]['id'];
+				
+				if(!id || !logMap[id] ){
+					data[i]['id'] = hotplace.createUuid();
+					logMap[data[i]['id']] = true;
 					drawedCnt++;
 					
 					/*_cells.push(
@@ -329,11 +415,13 @@
 							  data[i].location[2], 
 							  {
 								  fillColor: _getColorByWeight(data[i].weight),
-								  fillOpacity : 0.7
+								  fillOpacity : 0.1
 							  },
 							  data[i]
 						)
 					);*/
+					
+					
 					
 					_heatMapDatas.push({
 						'weight'   : data[i].weight,
@@ -341,22 +429,22 @@
 					});
 					
 					
-					d.push({
+					/*d.push({
 						'weight'   : data[i].weight,
 						'location' : [data[i].location[4], data[i].location[5]] 
-					});
+					});*/
 				}
 			}
 		}
 		
-		_createHeatmap(d);
+		_createHeatmap();
 		
 		console.log("drawedCnt ==> " + drawedCnt);
 	}
 	
-	function _createHeatmap(datas) {
+	function _createHeatmap() {
 		if(_venderMap) {
-			if(_heatMapLayer) {
+			if(false) {
 				//if(datas || datas.length > 0) {
 					_heatMapLayer.setData(_heatMapDatas);
 					_heatMapLayer.redraw();
@@ -396,22 +484,22 @@
 		if(_heatMapLayer) {
 			_heatMapLayer.setMap(null);
 			delete _heatMapLayer;
-			_heatMapLayer = null;
 		}
 	}
 	
 	function _removeInfoWindowsForCell() {
 		$.each(_infoWindowsForCell, function(index, value) {
 			value.close();
+			delete value;
 		});
 		
-		delete _infoWindowsForCell;
-		_infoWindowsForCell = [];
 	}
 	
 	//벤더별 벤더이벤트 전부 
 	function _convertEventObjToCustomObj(eventName, obj) {
 		var returnObj;
+		var latlng;
+		
 		switch(eventName) {
 		case 'zoom_changed' :
 			_setCurrentBounds();
@@ -426,6 +514,9 @@
 		case 'dragend' : 
 			_setCurrentBounds();
 			returnObj = _currentBounds;
+			break;
+		case 'click' : 
+			returnObj = (_venderStr == 'naver') ? {x:obj.latlng.x, y:obj.latlng.y} : {x:obj.latLng.gb, y:obj.latLng.hb};
 			break;
 		}
 		
@@ -447,7 +538,7 @@
 		if(!db.hasData(_currentLevel)) return;
 		var startIdx = db.getStartXIdx(_marginBounds.swx, _currentLevel);
 		
-		_createRectangles(_currentLevel, startIdx);
+		_createViewRangeData(_currentLevel, startIdx);
 	}
 	
 	maps.getVender = function() {
@@ -615,14 +706,15 @@
 		
 		if(db.hasData(_currentLevel)) {
 			var startIdx = db.getStartXIdx(_marginBounds.swx, _currentLevel);
-			_createRectangles(_currentLevel, startIdx);
+			_createViewRangeData(_currentLevel, startIdx);
 		}
 	};
 	
-	maps.initLevel = function() {
+	maps.initHeatmap = function() {
 		_heatMapDatas = [];
 		_removeHeatmapLayer();
-		_removeInfoWindowsForCell();
+		_viewCells = [];
+		//_removeInfoWindowsForCell();
 	}
 	
 	
@@ -633,8 +725,8 @@
 		
 		if(_venderMap) {
 			
-			_removeAllCells();
-			_removeHeatmapLayer();
+			//_removeAllCells();
+			//_removeHeatmapLayer();
 			
 			if(db.isCached(_currentLevel)) {
 				_showCellsLayer();
@@ -878,9 +970,9 @@
 	 * 서버에서 가져온 전 데이터를 저장
 	 * {
 	 * 	 'level' : {
-	 * 		'data' : [{"weight":2.6,"location":[126.80104492131,37.57776528544,126.80329443915,37.57956742328], id:'126.80104492131'}],
+	 * 		'data' : [{"weight":2.6,"location":[126.80104492131,37.57776528544,126.80329443915,37.57956742328], id:'uuid'}],
 	 *      'log' : {
-	 *      	'126.80104492131' : true  // data의 id => key
+	 *      	'uuid' : true  // data의 id => key
 	 *      }		
 	 *    }
 	 * }

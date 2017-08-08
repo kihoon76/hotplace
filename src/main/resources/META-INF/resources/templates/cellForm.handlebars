@@ -1,8 +1,24 @@
-<div id="dvCellDetail" style="width:300px;">
-	{{weight}}
-	<div style="width:90%">
-        <div style="padding-bottom: 60px; padding-left: 10px">
-            <canvas id="canvas" height="200" width="200" ></canvas>
+<!--<div id="dvCellDetail" style="width:300px;height:100%" class="panel panel-default">
+	가중치: <span>{{weight}}</span>
+	<a><i class="remove glyphicon glyphicon-remove-sign glyphicon-white"></i></a> 
+	<div style="width:90%; height:90%">
+        <div style="padding-bottom: 60px; padding-left: 10px; height:100%">
+            <canvas id="canvas"></canvas>
         </div>
     </div>
+</div>-->
+<div id="dvCellDetail" style="width:300px;height:100%" class="panel panel-default">
+	<div class="panel-heading">
+		<span class="panel-title pull-left">가중치: {{weight}}</span>
+        <button class="btn btn-default pull-right" id="btnCellClose">닫기</button>
+        <div class="clearfix"></div>
+	</div> 
+	<div class="panel-body">
+	<div style="width:90%; height:90%">
+        <div style="padding-bottom: 60px; padding-left: 10px; height:100%">
+            <canvas id="canvas"></canvas>
+        </div>
+    </div>
+    </div>
 </div>
+

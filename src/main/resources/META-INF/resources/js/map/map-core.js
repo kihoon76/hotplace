@@ -154,7 +154,7 @@
 	
 	var _markers = [];
 	var _infoWindowsForMarker = [];
-	var _infoWindowsForCell = [];
+	//var _infoWindowsForCell = [];
 	
 	var _bndNmBnd = []; //bound와 margin bound
 	
@@ -221,21 +221,6 @@
 		return "hsl(" + h + ", 100%, 50%)";
 	}
 	
-	function _getTemplateInfoWndowForCell() {
-		_templateInfoWndowForCell = hotplace.dom.getTemplate('cellForm');
-	}
-	
-	function _makeInfoWndowForCell(data) {
-		var newInfoWindow = new _vender.InfoWindow({
-	        //content: '<div style="width:150px;text-align:center;padding:10px;">' + data.weight +'</div>'
-	        content: _templateInfoWndowForCell({'weight' : data.weight})
-	    });
-		
-		_infoWindowsForCell.push(newInfoWindow);
-		//hotplace.dom.createChart('canvas');
-		return newInfoWindow;
-	}
-	
 	function _drawRectangle(swy, swx, ney, nex, css, cellData) {
 		var rec = null;
 		
@@ -277,7 +262,7 @@
 				var r = e.overlay;
 				console.log(e);
 				var location = new _vender.LatLng(r.data.location[5], r.data.location[4]);
-				_makeInfoWndowForCell(r.data).open(_venderMap, location);
+				hotplace.dom.openInfoWndowForCell(_venderMap, location, _vender, {'weight' : r.data.weight});
 				
 				hotplace.ajax({
 					url: 'sample/celldetail',
@@ -308,27 +293,6 @@
 	
 	maps.getClickedCell = function(latlng) {
 		var len = _viewCells.length;
-		var xValue = '';
-		var xIdx = 0;
-		
-		var searchedX = false;
-		//클릭지점 cell x축 index
-		/*for(var x=0; x<len; x++) {
-			if(searchedX) {
-				if(_viewCells[x].location[0] > xValue) continue;
-				if(latlng.y >= _viewCells[x].location[1] && latlng.y <= _viewCells[x].location[3]) {
-					break;
-				}
-			}
-			else {
-				if(_viewCells[x].location[0] > latlng.x ) {
-					searchedX = true;
-					xValue = _viewCells[x-1].location[0];
-					x=x-2;
-				}
-			}
-		}*/
-		
 		var swxPrevGrpSidx = 0; //swx 이전그룹 시작 인덱스
 		var swxPrevGrpEidx = 0; //swx 이전그룹 마지막 인덱스
 		var swxGrpSidx = 0; //swx 그룹 시작 인덱스
@@ -344,10 +308,6 @@
 			else {
 				
 				//현재 group swx값과 클릭한 지점 x를 비교한다. 
-				if(currentGrpSwxVal > latlng.x) {
-					
-				}
-				
 				if(currentGrpSwxVal != _viewCells[x].location[0]) {
 					currentGrpSwxVal = _viewCells[x].location[0];
 					swxPrevGrpSidx = swxGrpSidx;
@@ -356,24 +316,49 @@
 					
 					//바뀐 그룹과 비교
 					if(currentGrpSwxVal > latlng.x) { //이전그룹에서 찾는다
-						
+						break;
 					}
 				}
-				
 			}
 		}
 		
-		_drawRectangle(
-				_viewCells[x].location[1],
-				_viewCells[x].location[0],
-				_viewCells[x].location[3],
-				_viewCells[x].location[2], 
-			  {
-				  fillColor: _getColorByWeight(_viewCells[x].weight),
-				  fillOpacity : 0.1
-			  },
-			  _viewCells[x-1]
-		);
+		for(var y=swxPrevGrpSidx; y<=swxPrevGrpEidx; y++) {
+			if(latlng.y >= _viewCells[y].location[1] && latlng.y <= _viewCells[y].location[3]) {
+				break;
+			}
+		}
+		
+		//if(!_isRectangleDrawed(_viewCells[y])) {
+			_cells.push(_drawRectangle(
+					_viewCells[y].location[1],
+					_viewCells[y].location[0],
+					_viewCells[y].location[3],
+					_viewCells[y].location[2], 
+				  {
+					  fillColor: _getColorByWeight(_viewCells[y].weight),
+					  fillOpacity : 0.1
+				  },
+				  _viewCells[y]
+			));
+		//}
+		
+		console.log(_viewCells[y])
+	}
+	
+	function _isRectangleDrawed(obj) {
+		var len = _cells.length;
+		var drawed = false;
+		var data;
+		
+		for(var i=0; i<len; i++) {
+			data = _cells[i].data;
+			if(data.id == obj.id) {
+				drawed = true;
+				break;
+			}
+		}
+		
+		return drawed;
 	}
 	
 	function _createViewRangeData(level, startIdx) {
@@ -444,7 +429,7 @@
 	
 	function _createHeatmap() {
 		if(_venderMap) {
-			if(false) {
+			if(false/*_heatMapLayer*/) {
 				//if(datas || datas.length > 0) {
 					_heatMapLayer.setData(_heatMapDatas);
 					_heatMapLayer.redraw();
@@ -485,14 +470,6 @@
 			_heatMapLayer.setMap(null);
 			delete _heatMapLayer;
 		}
-	}
-	
-	function _removeInfoWindowsForCell() {
-		$.each(_infoWindowsForCell, function(index, value) {
-			value.close();
-			delete value;
-		});
-		
 	}
 	
 	//벤더별 벤더이벤트 전부 
@@ -618,7 +595,6 @@
 			
 			_setCurrentBounds();
 			_initJiJeokDoLayer();
-			_getTemplateInfoWndowForCell();
 			
 			if(listeners) {
 				for(var eventName in listeners) {
@@ -714,7 +690,8 @@
 		_heatMapDatas = [];
 		_removeHeatmapLayer();
 		_viewCells = [];
-		//_removeInfoWindowsForCell();
+		_removeAllCells();
+		hotplace.dom.closeInfoWndowForCell();
 	}
 	
 	
@@ -724,9 +701,6 @@
 		var _currentLevel = _getCurrentLevel();
 		
 		if(_venderMap) {
-			
-			//_removeAllCells();
-			//_removeHeatmapLayer();
 			
 			if(db.isCached(_currentLevel)) {
 				_showCellsLayer();
@@ -804,6 +778,7 @@
 	var _btnMapDiv = $('#mapButtons');
 	var _loadmask = false;
 	var _templates = {};
+	var _infoWindowForCell = null;
 	/*
 	 * //https://github.com/vadimsva/waitMe/blob/gh-pages/index.html
 	 * */
@@ -851,6 +826,37 @@
 	 * //http://www.jqueryscript.net/form/Smooth-Animated-Toggle-Control-Plugin-With-jQuery-Bootstrap-Bootstrap-Toggle.html*/
 	function _initBootstrapToggle() {
 		$('input[type="checkbox"]').bootstrapToggle();
+	}
+	
+	function _makeInfoWndowForCell(vender, data) {
+		var template = dom.getTemplate('cellForm');
+		
+		_infoWindowForCell = new vender.InfoWindow({
+	        content: template(data)
+	    });
+		
+		
+		return _infoWindowForCell;
+	}
+	
+	dom.openInfoWndowForCell = function(map, location, vender, data) {
+		var win = _makeInfoWndowForCell(vender, data);
+		win.open(map, location);
+		
+		//event handler가 걸려있는지 확인
+		var ev = $._data(document.getElementById('btnCellClose'), 'events');
+		if(!ev || !ev.click) {
+			$('#btnCellClose').on('click', function(e) {
+				dom.closeInfoWndowForCell();
+			});
+		}
+	}
+	
+	dom.closeInfoWndowForCell = function() {
+		if(_infoWindowForCell) {
+			_infoWindowForCell.close();
+			_infoWindowForCell = null;
+		}
 	}
 	
 	dom.createChart = function(id) {

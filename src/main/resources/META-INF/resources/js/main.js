@@ -110,15 +110,20 @@ $(document).ready(function() {
 	hotplace.maps.init('naver', {
 		X: 127.9204629,
 		Y: 36.0207091, 
-		level: 3//12
+		level: 3
 	}, {
 		'zoom_changed' : function(map, level) {
 			console.log('changed ===> ' + level);
-			//hotplace.database.initLevel(level);
 			//hotplace.maps.drawBounds();
-			hotplace.maps.initHeatmap();
-			hotplace.database.initLevel(level);
-			hotplace.maps.showCellsLayer();
+			
+			
+			//setTimeout(function() {
+				hotplace.maps.initLayers(level)
+				hotplace.maps.showCellsLayer();
+			//},50);
+			
+			
+			
 			
 		},
 		'zoom_start' : function(map, level) {
@@ -132,10 +137,15 @@ $(document).ready(function() {
 			hotplace.maps.appendCell();
 		},
 		'click' : function(map, latlng) {
+			console.log(latlng)
 			hotplace.maps.getClickedCell(latlng);
+		},
+		'tilesloaded': function() {
+			console.log('tilesloaded');
 		}
 	}, function() {
 		hotplace.maps.showCellsLayer();
+		hotplace.maps.start();
 		//hotplace.maps.drawBounds();
 	});
 	

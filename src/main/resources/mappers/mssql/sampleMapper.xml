@@ -17,11 +17,15 @@
 	</select>
 	
 	<select id="selectSample" resultType="string" parameterType="string">
-		select concat(a.극서 , ',', b.극북 - 2*(b.극북 - b.센터),  ',', a.극서 + 2*(a.센터 - a.극서), ',', b.극북, ',', a.센터, ',',  b.센터, ',', round(rand(convert(varbinary, newid()))*10, 1)) 
+		select concat(a.극서 , ',', b.극남,  ',', a.극동, ',', b.극북, ',', a.센터, ',',  b.센터, ',', round(rand(convert(varbinary, newid()))*100, 1)) 
 		  from [좌표계].dbo.가로축 a 
 		 cross join [좌표계].dbo.세로축 b
-		 where a.센터 between (126.980355-0.01) and (126.980355+0.01) and b.센터 between (37.566207-0.01) and (37.566207+0.01)
-		   and '13' = #{level}
+		 where a.센터 between (126.980355-(0.00028118970554590118820534258415971 * (14-convert(int, #{level}))*50)) 
+		 			    and (126.980355+(0.00028118970554590118820534258415971 * (14-convert(int, #{level}))*50))
+		   and b.센터 between (37.566207-(0.00022526721625199522552442635951175 * (14-convert(int, #{level}))*50))
+		                and (37.566207+(0.00022526721625199522552442635951175 * (14-convert(int, #{level}))*50))
+		   and a.레벨 = #{level}
+		   and b.레벨 = #{level}
 		 order by a.극서 asc
 	</select>
 </mapper>
@@ -43,4 +47,11 @@ where a.센터 between (126.980355-0.00625) and (126.980355+0.00625) and b.센�
 
  where a.센터  between (126.980355-0.005) and (126.980355+0.005)
 		   and b.센터  between (37.566207-0.0023)  and (37.566207+0.0023)
+		   
+		   		select top 1 concat(a.극서 , ',', b.극북 - 2*(b.극북 - b.센터),  ',', a.극서 + 2*(a.센터 - a.극서), ',', b.극북, ',', a.센터, ',',  b.센터, ',', round(rand(convert(varbinary, newid()))*100, 1)) 
+		  from [좌표계].dbo.가로축 a 
+		 cross join [좌표계].dbo.세로축 b
+		 where a.센터 between (126.980355-0.001) and (126.980355+0.001) and b.센터 between (37.566207-0.001) and (37.566207+0.001)
+		   and a.레벨 = #{level}
+		 order by a.극서 asc
  -->

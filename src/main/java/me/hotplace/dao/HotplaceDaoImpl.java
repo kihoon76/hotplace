@@ -1,6 +1,7 @@
 package me.hotplace.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -31,6 +32,11 @@ public class HotplaceDaoImpl implements HotplaceDao {
 	@Override
 	public List<String> selectListAddress(Address address) {
 		return msSqlSession.selectList(namespace + ".selectAddress", address);
+	}
+
+	@Override
+	public List<String> selectListLocationBounds(Map<String, String> param) {
+		return msSqlSession.selectList(namespace + ".selectLocationBounds", param);
 	}
 
 }

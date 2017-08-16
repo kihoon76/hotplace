@@ -1,5 +1,8 @@
 package me.hotplace.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,6 +19,7 @@ import com.mysql.jdbc.StringUtils;
 import me.hotplace.domain.Address;
 import me.hotplace.service.HotplaceService;
 import me.hotplace.types.MapTypes;
+import me.hotplace.utils.DataUtil;
 
 @Controller
 @RequestMapping("/")
@@ -66,6 +70,31 @@ public class HotplaceController {
 		
 		System.out.println(address);
 		return hotplaceService.getAddressList(address);
+	}
+	
+	@GetMapping("locationbounds")
+	@ResponseBody
+	public String getLocationBounds(@RequestParam(name="level") String level, 
+									@RequestParam(name="nex") String nex,
+									@RequestParam(name="swx") String swx,
+									@RequestParam(name="swy") String swy,
+									@RequestParam(name="ney") String ney) throws Exception  {
+		
+		Map<String, String> param = new HashMap<String, String>();
+		param.put("level", level);
+		param.put("nex", nex);
+		param.put("swx", swx);
+		param.put("swy", swy);
+		param.put("ney", ney);
+		
+		String data = hotplaceService.getLocationBounds(param);
+		/*AjaxVO ajaxVO = new AjaxVO();
+		ajaxVO.addObject(data);
+		ajaxVO.setSuccess(true);*/
+		//String s = "{\"success\":true, \"datas\":" + data + "}";
+		String s = String.format(DataUtil.getAjaxFormats(), true, "", data);
+		
+		return s;
 	}
 	
 

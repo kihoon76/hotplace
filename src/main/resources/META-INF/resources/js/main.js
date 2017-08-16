@@ -113,28 +113,20 @@ $(document).ready(function() {
 		level: 3
 	}, {
 		'zoom_changed' : function(map, level) {
-			console.log('changed ===> ' + level);
-			//hotplace.maps.drawBounds();
-			
-			
-			//setTimeout(function() {
-				hotplace.maps.initLayers(level)
-				hotplace.maps.showCellsLayer();
-			//},50);
-			
-			
-			
-			
+			hotplace.maps.showCellsLayer();
 		},
 		'zoom_start' : function(map, level) {
-			console.log('start ====> ' + level)
-			//hotplace.database.initLevel(level);
 			hotplace.test.initMarker(level);
 		},
 		'dragend' : function(map, bnds) {
-			//console.log(bnds);
-			//hotplace.maps.drawBounds();
-			hotplace.maps.appendCell();
+			
+			if(hotplace.maps.isInLocationBounds(bnds)) {
+				hotplace.maps.appendCell();
+			}
+			else {
+				hotplace.maps.showCellsLayer();
+			}
+			
 		},
 		'click' : function(map, latlng) {
 			console.log(latlng)
@@ -145,8 +137,6 @@ $(document).ready(function() {
 		}
 	}, function() {
 		hotplace.maps.showCellsLayer();
-		hotplace.maps.start();
-		//hotplace.maps.drawBounds();
 	});
 	
 	hotplace.dom.addButtonInMap([/*{

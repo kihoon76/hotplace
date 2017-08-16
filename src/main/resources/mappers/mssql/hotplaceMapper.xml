@@ -37,4 +37,16 @@
 			       and t1.[읍면동코드] = #{region}
 			    ) tb1
 	</select>
+	
+	<select id="selectLocationBounds" resultType="string" parameterType="hashmap">
+		select concat(a.극서 , ',', b.극남,  ',', a.극동, ',', b.극북, ',', a.센터, ',',  b.센터, ',', round(rand(convert(varbinary, newid()))*100, 1))
+          from [좌표계].dbo.[가로축] a with (nolock)
+         inner join [좌표계].dbo.[세로축] b with (nolock) on (b.레벨 = a.레벨)
+         where a.레벨 = #{level}
+           and a.극서 >= convert(float, #{swx})
+           and a.극동 <![CDATA[<=]]> convert(float, #{nex})
+           and b.극남 >= convert(float, #{swy})
+           and b.극북 <![CDATA[<=]]> convert(float, #{ney}) 
+         order by a.극서 asc
+	</select>
 </mapper>

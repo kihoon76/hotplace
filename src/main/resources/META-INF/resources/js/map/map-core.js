@@ -554,6 +554,7 @@
 			        mapTypeControlOptions: {
 			        	style: _vender.MapTypeControlStyle.DROPDOWN
 			        },
+			        minZoom: mapOptions.minZoom || 3 
 				});
 				
 				break;

@@ -107,19 +107,12 @@ $(document).ready(function() {
 		$('#templateAddressModal').append(tForm());
 	};
 	
-	var minLevel = 3;
-	
 	hotplace.maps.init('naver', {
 		X: 127.9204629,
 		Y: 36.0207091, 
 		level: 3
 	}, {
 		'zoom_changed' : function(map, level) {
-			if(level < minLevel) {
-				hotplace.maps.setLevel(minLevel);
-				return;
-			}
-			
 			hotplace.maps.showCellsLayer();
 		},
 		'zoom_start' : function(map, level) {

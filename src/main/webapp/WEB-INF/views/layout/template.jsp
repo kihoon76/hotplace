@@ -7,7 +7,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-    
+    <title><sitemesh:write property="title" /></title>
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/resources/bootstrap/3.3.7-1/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/resources/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" />
@@ -17,7 +17,6 @@
     <!-- loading -->
     <link rel="stylesheet" href="/resources/js/plugins/loading/waitMe.min.css" />
 	
-	<title><sitemesh:write property="title" /></title>
 	<sitemesh:write property="head" />
 	<style type="text/css">
 	     .buttons { position:absolute;top:0;left:0;z-index:1000;padding:5px; }

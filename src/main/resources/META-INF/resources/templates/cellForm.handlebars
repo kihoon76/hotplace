@@ -1,3 +1,4 @@
+<!--
 <div id="dvCellDetail" style="width:500px;height:500px" class="panel panel-default">
 	<div class="panel-heading">
 		<span class="panel-title pull-left">가중치: {{weight}}</span>
@@ -12,7 +13,56 @@
     </div>
     </div>
 </div>
+-->
 
-
-
-
+<div id="dvCellDetail" class="container body">
+<div style="padding-top:5px">
+	<button type="button" id="btnCellClose" class="glyphicon glyphicon-remove close" aria-label="Close"></button>
+</div>
+<div class="row">
+	<div class="col-md-8 col-sm-8 col-xs-12">
+    <div class="x_panel">
+    	<div class="x_title">
+        	<h2>Bar Graph</h2>
+        </div>
+        <div class="x_content">
+        	<div id="mainb" style="height:350px;"></div>
+        </div>
+    </div>
+    </div>
+    
+    <div class="col-md-4 col-sm-4 col-xs-12">
+    <div class="x_panel">
+    	<div class="x_title">
+        	<h2>Mini Pie</h2>
+        </div>
+        <div class="x_content">
+	        <div id="echart_mini_pie" style="height:350px;"></div>
+        </div>
+    </div>
+    </div>
+    
+    <!-- second row -->
+    <div class="col-md-6 col-sm-6 col-xs-12">
+    <div class="x_panel">
+    	<div class="x_title">
+        	<h2>Scatter Graph</h2>
+        </div>
+        <div class="x_content">
+	        <div id="echart_scatter" style="height:350px;"></div>
+        </div>
+    </div>
+    </div>
+    
+    <div class="col-md-6 col-sm-6 col-xs-12">
+    <div class="x_panel">
+    	<div class="x_title">
+        	<h2>Line Graph</h2>
+        </div>
+        <div class="x_content">
+	        <div id="echart_line" style="height:350px;"></div>
+        </div>
+    </div>
+    </div>
+</div>
+</div>

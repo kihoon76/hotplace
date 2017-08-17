@@ -1,8 +1,8 @@
 (function(hotplace, $) {
 	var _version = '1.0';
-	var ROOT_CONTEXT = 'http://hotplace.ddns.net/';
+	var ROOT_CONTEXT = $('body').data('url');
 	
-	$.browser = {};
+	$.browser = {}; 
 	/*jQuery.browser() removed
 
 	The jQuery.browser() method has been deprecated since jQuery 1.3 and is removed in 1.9.
@@ -14,7 +14,7 @@
     if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
         $.browser.msie = true;
         $.browser.version = RegExp.$1;
-    }
+    }      
     
     String.prototype.format = function() {
         var s = this,
@@ -23,7 +23,7 @@
         while (i--) {
             s = s.replace(new RegExp('\\{' + i + '\\}', 'gm'), arguments[i]);
         }
-        return s;
+        return s;  
     };
     
 	function _s4() {
@@ -248,8 +248,6 @@
 	}
 	
 	function _getColorByWeight(weight) {
-		//var r = (25.5*weight).toFixed(0);
-		//return 'rgb(' + r + ',051,000)';
 		var color = '';
 		var h = Math.ceil(weight);
 		
@@ -326,8 +324,6 @@
 			if(triggerable)	_venderEvent.trigger(rec, 'click')
 			
 			break;
-			
-			
 		}
 		
 		return rec;
@@ -678,7 +674,7 @@
 		if(_venderMap) {
 			
 			//location
-			
+			//캐쉬구현
 			if(false/*db.isCached(_currentLevel)*/) {
 				_showCellsLayer();
 			}

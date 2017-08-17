@@ -50,5 +50,6 @@
   </div><!-- /.container-fluid -->
 </nav>
 <sitemesh:write property="body" />
+<script type="text/javascript" src="//apis.daum.net/maps/maps3.js?apikey=576ff8ec0e48c2e85ada1c1cc30b1b7a"></script> 
 </body>
 </html>

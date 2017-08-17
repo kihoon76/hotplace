@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c"	uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,7 +12,7 @@
     <link rel="stylesheet" href="/resources/bootstrap/3.3.7-1/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/resources/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" />
     
-    <link rel="stylesheet" href="/resources/css/layout.css" />
+    <link rel="stylesheet" href="/resources/css/layout.min.css" />
     
     <!-- loading -->
     <link rel="stylesheet" href="/resources/js/plugins/loading/waitMe.min.css" />
@@ -22,7 +24,10 @@
 	     .buttons .control-btn { margin:0 5px 5px 0; }
 	</style>
 </head>
-<body data-mtype="<c:out value='${mType}' />">
+<c:set var="req" value="${pageContext.request}" />
+<c:set var="url">${req.requestURL}</c:set>
+<c:set var="uri" value="${req.requestURI}" />
+<body data-mtype="<c:out value='${mType}' />" data-url="${fn:substring(url, 0, fn:length(url) - fn:length(uri))}${req.contextPath}/">
 <nav class="navbar navbar-default">
 	<div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -66,9 +71,7 @@
 <script type="text/javascript" src="/resources/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 <script type="text/javascript" src="/resources/chart.js/2.5.0/dist/Chart.min.js"></script>
 
-<script type="text/javascript" src="/resources/js/plugins/loading/waitMe.js"></script>
-
-<script type="text/javascript" src="//apis.daum.net/maps/maps3.js?apikey=576ff8ec0e48c2e85ada1c1cc30b1b7a"></script> 
+<script type="text/javascript" src="/resources/js/plugins/loading/waitMe.min.js"></script>
 <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=SgnlyXnzstmDsYDhele7&submodules=visualization"></script>
 
 <script type="text/javascript" src="/resources/js/map/map-core.js"></script>

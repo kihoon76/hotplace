@@ -165,7 +165,7 @@ $(document).ready(function() {
 	});
 	
 	
-	function btnCallback($this, e, targetId) {
+	function _btnCallback($this, e, targetId) {
 		var sw = $this.data('switch');
 		$this.data('switch', ((sw == 'on') ? 'off' : 'on'));
 		
@@ -213,7 +213,7 @@ $(document).ready(function() {
 		attr: 'data-switch="off"',
 		title:'',
 		callback: function(e) {
-			btnCallback($(this), e, 'dvNews');
+			_btnCallback($(this), e, 'dvNews');
 		}
 	},{
 		id:'btnAddrSearch',
@@ -221,7 +221,7 @@ $(document).ready(function() {
 		attr: 'data-switch="off"',
 		title:'',
 		callback: function(e) {
-			btnCallback($(this), e, 'dvAddrSearch');
+			_btnCallback($(this), e, 'dvAddrSearch');
 		}
 	},{
 		id:'btnPinSearch',
@@ -238,7 +238,7 @@ $(document).ready(function() {
 			             'sliderDevWidth',
 			             'sliderParcel',
 			             'sliderSales']);
-			btnCallback($(this), e, 'dvPinSearch');
+			_btnCallback($(this), e, 'dvPinSearch');
 		}
 	},{
 		id:'btnUser',
@@ -248,14 +248,14 @@ $(document).ready(function() {
 		id:'btnInfo',
 		glyphicon: 'info-sign',
 		title:'',
-	}/*{
-		id: 'cadastral',
-		dataAttr: 'data-on="지적도" data-off="지적도" data-switch="off"',
-		type: 'check',
+	},{
+		id:'btnCadastral',
+		attr: 'data-switch="off"',
+		glyphicon: 'globe',
 		title:'',
 		callback: function() {
 			var onOff = $(this).data('switch');
 			hotplace.maps.showJijeokLayer(onOff, $(this));
 		}
-	}*/]);
+	}]);
 });

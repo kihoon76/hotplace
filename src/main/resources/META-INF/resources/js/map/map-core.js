@@ -564,8 +564,7 @@
 				});
 				
 				_venderMap.mapTypes.set(naver.maps.MapTypeId.NORMAL, naver.maps.NaverMapTypeOption.getNormalMap());
-				_venderMap.mapTypes.set(naver.maps.MapTypeId.CADASTRAL, naver.maps.NaverMapTypeOption.getCadastralLayer());
-				//_venderMap.mapTypes.set(naver.maps.MapTypeId.SATELLITE, naver.maps.NaverMapTypeOption.getSatelliteMap());
+				_venderMap.mapTypes.set(naver.maps.MapTypeId.TERRAIN, naver.maps.NaverMapTypeOption. getTerrainMap());
 				_venderMap.mapTypes.set(naver.maps.MapTypeId.HYBRID, naver.maps.NaverMapTypeOption.getHybridMap());
 				
 				break;

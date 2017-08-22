@@ -11,10 +11,10 @@
     
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/resources/bootstrap/3.3.7-1/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="/resources/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" />
     
     <!-- slider -->
-    <link rel="stylesheet" href="/resources/vendors/jQRangeSlider-5.7.2/css/bootstrap-slider.min.css" />
+    <!-- http://ghusse.github.io/jQRangeSlider/documentation.html -->
+    <link rel="stylesheet" href="/resources/vendors/jQRangeSlider-5.7.2/css/iThing-min.css" />
     
     <link rel="stylesheet" href="/resources/css/buttons.css" />
     <link rel="stylesheet" href="/resources/css/layout.css" />
@@ -226,15 +226,22 @@
 	<div class="form-group">
 		<label class="col-sm-5 control-label">RQ(종합부동산 투자지수)</label>
 		<div class="col-sm-7">
-		</div>
-	</div>
-	<!-- <div class="form-group">
-		<label class="col-sm-5 control-label">건축허가면적 증가율</label>
-		<div class="col-sm-7">
-			<input type="range" min="10" max="100" step="10"/>
+			 <div class="layout-slider" style="width: 100%">
+	       		 <span style="display: inline-block; width: 300px; padding: 0 5px;">
+	       		 <input id="sliderRQ" type="slider"  value="1;3" /></span>
+    		</div>
 		</div>
 	</div>
 	<div class="form-group">
+		<label class="col-sm-5 control-label">건축허가면적 증가율</label>
+		<div class="col-sm-7">
+			<div class="layout-slider" style="width: 100%">
+	       		 <span style="display: inline-block; width: 300px; padding: 0 5px;">
+	       		 <input id="sliderCon" type="slider"  value="1;3" /></span>
+    		</div>
+		</div>
+	</div>
+	<!-- <div class="form-group">
 		<label class="col-sm-5 control-label">개발행위 허가면적 증가율</label>
 		<div class="col-sm-7">
 			<input type="range" min="10" max="100" step="10"/>
@@ -284,9 +291,9 @@
 <script type="text/javascript" src="/resources/handlebars/4.0.5/handlebars.min.js"></script>
 <script type="text/javascript" src="/resources/jquery/1.11.1/jquery.min.js"></script>
 <script type="text/javascript" src="/resources/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="/resources/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 
-<script type="text/javascript" src="/resources/vendors/bootstrap-slider/bootstrap-slider.min.js"></script>
+<script type="text/javascript" src="/resources/jquery-ui/1.10.3/ui/minified/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/resources/jquery-ui/1.10.3/ui/minified/jquery-ui.min.js"></script>
 
 <script type="text/javascript" src="/resources/chart.js/2.5.0/dist/Chart.min.js"></script>
 
@@ -294,7 +301,11 @@
 <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=SgnlyXnzstmDsYDhele7&submodules=visualization"></script>
 
 <script type="text/javascript" src="/resources/js/map/map-core.js"></script>
-
+    <script type="text/javascript" charset="utf-8">
+    $(document).ready(function() {
+      jQuery("#Slider1").slider({ from: 0, to: 100, step: 10, smooth: true, round: 0, dimension: "&nbsp;$", skin: "plastic" });
+    });
+    </script>
 <sitemesh:write property="page.script" />
 <%--<c:choose>
 <c:when test="${mType eq 'heatmap'}">

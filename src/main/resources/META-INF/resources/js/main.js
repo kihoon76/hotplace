@@ -104,8 +104,9 @@ $(document).ready(function() {
 		hotplace.dom.captureToCanvas();
 	});
 	
-	//http://seiyria.com/bootstrap-slider/
-	
+	//slider init
+	$('#sliderRQ').slider({ from: 1, to: 10, step: 1, smooth: true, round: 0, dimension: "&nbsp;등급", skin: "plastic" });
+	$('#sliderCon').slider({ from: 1, to: 10, step: 1, smooth: true, round: 0, dimension: "&nbsp;등급", skin: "plastic" });
 	
 	/*****************************************************************************************************/
 	

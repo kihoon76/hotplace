@@ -49,16 +49,3 @@
          order by 극서 asc
 	</select>
 </mapper>
-<!-- 
-select 
-극서, 극동, 극남, 극북, 위도중심, 경도중심, 
-case when PNU존재여부='Y' then round(rand(convert(varbinary, newid()))*100, 2) else 0 end [점수]
-from 좌표계
-where
-레벨=12 and
-극서>=128 and
-극동<=128.1 and
-극남>=36 and
-극북<=36.1
-
- -->

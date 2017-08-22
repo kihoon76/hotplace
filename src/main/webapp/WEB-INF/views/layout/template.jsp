@@ -14,7 +14,7 @@
     
     <!-- slider -->
     <!-- http://ghusse.github.io/jQRangeSlider/documentation.html -->
-    <link rel="stylesheet" href="/resources/vendors/jQRangeSlider-5.7.2/css/iThing-min.css" />
+    <link rel="stylesheet" href="/resources/vendors/jQRangeSlider-5.7.2/css/classic.css" />
     
     <link rel="stylesheet" href="/resources/css/buttons.css" />
     <link rel="stylesheet" href="/resources/css/layout.css" />
@@ -203,8 +203,8 @@
       	</div>
 	</div>
 </div>
-<div id="dvPinSearch" class="layer-popup" style="width:600px; height:600px">
-<form class="form-horizontal" role="form" method="post" action="index.php">
+<div id="dvPinSearch" class="layer-popup" style="width:600px; height:800px">
+<form class="form-horizontal" role="form" method="post" action="index.php" id="fmPin">
 	<div class="form-group">
 		<label for="name" class="col-sm-5 control-label">조건검색</label>
 		<div class="col-sm-2 col-md-2" style="padding-right:0px">
@@ -226,63 +226,57 @@
 	<div class="form-group">
 		<label class="col-sm-5 control-label">RQ(종합부동산 투자지수)</label>
 		<div class="col-sm-7">
-			 <div class="layout-slider" style="width: 100%">
-	       		 <span style="display: inline-block; width: 300px; padding: 0 5px;">
-	       		 <input id="sliderRQ" type="slider"  value="1;3" /></span>
-    		</div>
+			 <div id="sliderRQ"></div>
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-5 control-label">건축허가면적 증가율</label>
 		<div class="col-sm-7">
-			<div class="layout-slider" style="width: 100%">
-	       		 <span style="display: inline-block; width: 300px; padding: 0 5px;">
-	       		 <input id="sliderCon" type="slider"  value="1;3" /></span>
-    		</div>
+			<div id="sliderCon"></div>
 		</div>
 	</div>
-	<!-- <div class="form-group">
+	<div class="form-group">
 		<label class="col-sm-5 control-label">개발행위 허가면적 증가율</label>
 		<div class="col-sm-7">
-			<input type="range" min="10" max="100" step="10"/>
+			<div id="sliderDev"></div>
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-5 control-label">부동산실거래 면적 증가율</label>
 		<div class="col-sm-7">
-			<input type="range" min="10" max="100" step="10"/>
+			<div id="sliderRealWidth"></div>
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-5 control-label">부동산실거래 가격 증가율</label>
 		<div class="col-sm-7">
-			<input type="range" min="10" max="100" step="10"/>
+			<div id="sliderRealPrice"></div>
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-5 control-label">유동인구 증가율</label>
 		<div class="col-sm-7">
-			<input type="range" min="10" max="100" step="10"/>
+			<div id="sliderPop"></div>
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-5 control-label">개발사업 면적 증가율</label>
 		<div class="col-sm-7">
-			<input type="range" min="10" max="100" step="10"/>
+			<div id="sliderDevWidth"></div>
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-5 control-label">기반시설편입 필지수 증가율</label>
 		<div class="col-sm-7">
-			<input type="range" min="10" max="100" step="10"/>
+			<div id="sliderParcel"></div>
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-5 control-label">영업허가 면적 증가율</label>
 		<div class="col-sm-7">
-			<input type="range" min="0" max="4" step="0.5"/>
+			<div id="sliderSales"></div>
 		</div>
-	</div>-->
+	</div>
 </form>
 </div>
 <div id="templateAddressModal"></div>
@@ -293,7 +287,7 @@
 <script type="text/javascript" src="/resources/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
 
 <script type="text/javascript" src="/resources/jquery-ui/1.10.3/ui/minified/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/resources/jquery-ui/1.10.3/ui/minified/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/resources/vendors/jQRangeSlider-5.7.2/jQRangeSlider-withRuler-min.js"></script>
 
 <script type="text/javascript" src="/resources/chart.js/2.5.0/dist/Chart.min.js"></script>
 
@@ -301,11 +295,6 @@
 <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=SgnlyXnzstmDsYDhele7&submodules=visualization"></script>
 
 <script type="text/javascript" src="/resources/js/map/map-core.js"></script>
-    <script type="text/javascript" charset="utf-8">
-    $(document).ready(function() {
-      jQuery("#Slider1").slider({ from: 0, to: 100, step: 10, smooth: true, round: 0, dimension: "&nbsp;$", skin: "plastic" });
-    });
-    </script>
 <sitemesh:write property="page.script" />
 <%--<c:choose>
 <c:when test="${mType eq 'heatmap'}">

@@ -8,6 +8,7 @@ $(document).ready(function() {
 		gugun  : '',
 		region : ''
 	}
+	var _isSliderInit = false;
 	
 	/*
 	 * jquery handler 작성하기 전 로드가 먼저 되어야 함
@@ -105,8 +106,24 @@ $(document).ready(function() {
 	});
 	
 	//slider init
-	$('#sliderRQ').slider({ from: 1, to: 10, step: 1, smooth: true, round: 0, dimension: "&nbsp;등급", skin: "plastic" });
-	$('#sliderCon').slider({ from: 1, to: 10, step: 1, smooth: true, round: 0, dimension: "&nbsp;등급", skin: "plastic" });
+	
+	
+	function _sliderInit(targetIds) {
+		if(_isSliderInit) return;
+		
+		var len = targetIds.length;
+		
+		for(var i=0; i<len; i++) {
+			$('#' + targetIds[i]).rangeSlider({
+				  bounds: {min: 1, max: 10},
+				  step: 1,
+				  defaultValues: {min:1, max:4}
+			});
+		}
+		
+		_isSliderInit = true;
+	}
+	
 	
 	/*****************************************************************************************************/
 	
@@ -212,7 +229,15 @@ $(document).ready(function() {
 		attr: 'data-switch="off"',
 		title:'',
 		callback: function(e) {
-			console.log('oo');
+			_sliderInit(['sliderRQ', 
+			             'sliderCon',
+			             'sliderDev',
+			             'sliderRealWidth',
+			             'sliderRealPrice',
+			             'sliderPop',
+			             'sliderDevWidth',
+			             'sliderParcel',
+			             'sliderSales']);
 			btnCallback($(this), e, 'dvPinSearch');
 		}
 	},{

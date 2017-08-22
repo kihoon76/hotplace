@@ -16,5 +16,8 @@
 <!-- ECharts -->
 <script type="text/javascript" src="/resources/vendors/echarts/dist/echarts.min.js"></script>
 <script type="text/javascript" src="/resources/vendors/echarts/map/js/world.js"></script>
+
+<script type="text/javascript" src="/resources/vendors/html2canvas/html2canvas.js"></script>
+<script type="text/javascript" src="/resources/vendors/html2canvas/html2canvas.svg.js"></script>
 </content>
 </body>

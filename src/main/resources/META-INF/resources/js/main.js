@@ -13,7 +13,7 @@ $(document).ready(function() {
 	 * jquery handler 작성하기 전 로드가 먼저 되어야 함
 	 * load 하는 부분은 가장 먼저 나와함
 	 * */
-	addressFormLoad();
+	//addressFormLoad();
 	
 	
 	/**
@@ -74,8 +74,8 @@ $(document).ready(function() {
 			}
 			
 			var result = (_dom.getTemplate('addressResult'))(dataForm);
-			output.append(result);
-		});
+			output.html(result);
+		}, true, '#dvAddrSearch');
 	});
 	
 	$('#btnViewMapAddress').on('click', function() {
@@ -98,6 +98,14 @@ $(document).ready(function() {
 			}, address);
 		});
 	});
+	
+	$('#btnCapture').on('click', function(event) {
+		event.preventDefault();
+		hotplace.dom.captureToCanvas();
+	});
+	
+	//http://seiyria.com/bootstrap-slider/
+	
 	
 	/*****************************************************************************************************/
 	
@@ -126,7 +134,6 @@ $(document).ready(function() {
 			else {
 				hotplace.maps.showCellsLayer();
 			}
-			
 		},
 		'click' : function(map, latlng) {
 			console.log(latlng)
@@ -138,6 +145,34 @@ $(document).ready(function() {
 	}, function() {
 		hotplace.maps.showCellsLayer();
 	});
+	
+	
+	function btnCallback($this, e, targetId) {
+		var sw = $this.data('switch');
+		$this.data('switch', ((sw == 'on') ? 'off' : 'on'));
+		
+		if(sw == 'off') {
+			var padding = 5;
+			var top  = e.currentTarget.offsetTop;
+			var left = e.currentTarget.offsetLeft + e.currentTarget.offsetWidth + padding;
+			
+			hotplace.dom.openLayer(targetId, {top:top, left:left});
+		}
+		else {
+			hotplace.dom.closeLayer(targetId);
+		}
+	}
+	
+	function tick() {
+		$('#newsTicker li:first').slideUp(function() {
+			$(this).appendTo($('#newsTicker')).slideDown();
+		});
+	}
+	
+	setTimeout(function repeat() {
+		tick();
+		setTimeout(repeat, 3000);
+	}, 3000);
 	
 	hotplace.dom.addButtonInMap([/*{
 		id: 'btnTest',
@@ -155,6 +190,39 @@ $(document).ready(function() {
 			}
 		}
 	},*/{
+		id:'btnNews',
+		glyphicon: 'list-alt',
+		attr: 'data-switch="off"',
+		title:'',
+		callback: function(e) {
+			btnCallback($(this), e, 'dvNews');
+		}
+	},{
+		id:'btnAddrSearch',
+		glyphicon: 'search',
+		attr: 'data-switch="off"',
+		title:'',
+		callback: function(e) {
+			btnCallback($(this), e, 'dvAddrSearch');
+		}
+	},{
+		id:'btnPinSearch',
+		glyphicon: 'search',
+		attr: 'data-switch="off"',
+		title:'',
+		callback: function(e) {
+			console.log('oo');
+			btnCallback($(this), e, 'dvPinSearch');
+		}
+	},{
+		id:'btnUser',
+		glyphicon: 'user',
+		title:'',
+	},{
+		id:'btnInfo',
+		glyphicon: 'info-sign',
+		title:'',
+	}/*{
 		id: 'cadastral',
 		dataAttr: 'data-on="지적도" data-off="지적도" data-switch="off"',
 		type: 'check',
@@ -163,5 +231,5 @@ $(document).ready(function() {
 			var onOff = $(this).data('switch');
 			hotplace.maps.showJijeokLayer(onOff, $(this));
 		}
-	}]);
+	}*/]);
 });

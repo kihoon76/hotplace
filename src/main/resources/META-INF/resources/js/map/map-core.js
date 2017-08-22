@@ -105,7 +105,7 @@
 		
 	}
 	
-	hotplace.getPlainTextFromJson = function(url, param, cbSucc) {
+	hotplace.getPlainTextFromJson = function(url, param, cbSucc, isActiveMask, loadEl) {
 	
 		hotplace.ajax({
 			url: url,
@@ -113,6 +113,8 @@
 			dataType: 'text',
 			contentType: 'application/json; charset=UTF-8',
 			data: param || {},
+			loadEl: loadEl,
+			activeMask: (isActiveMask != undefined) ? isActiveMask : true,
 			success: function(data, textStatus, jqXHR) {
 				var jo = $.parseJSON(data);
 				cbSucc(jo);
@@ -547,15 +549,24 @@
 			case 'naver' :
 				_vender = naver.maps;
 				_venderEvent = _vender.Event;
+				
+				var registry = new naver.maps.MapTypeRegistry();
+				
 				_venderMap = new _vender.Map(_container, {
 				 	center: new _vender.LatLng(mapOptions.Y, mapOptions.X), //지도의 초기 중심 좌표(36.0207091, 127.9204629)
 			        zoom: mapOptions.level, //지도의 초기 줌 레벨
+			        mapTypes: registry,
 			        mapTypeControl: true,
 			        mapTypeControlOptions: {
 			        	style: _vender.MapTypeControlStyle.DROPDOWN
 			        },
 			        minZoom: mapOptions.minZoom || 3 
 				});
+				
+				_venderMap.mapTypes.set(naver.maps.MapTypeId.NORMAL, naver.maps.NaverMapTypeOption.getNormalMap());
+				_venderMap.mapTypes.set(naver.maps.MapTypeId.CADASTRAL, naver.maps.NaverMapTypeOption.getCadastralLayer());
+				//_venderMap.mapTypes.set(naver.maps.MapTypeId.SATELLITE, naver.maps.NaverMapTypeOption.getSatelliteMap());
+				_venderMap.mapTypes.set(naver.maps.MapTypeId.HYBRID, naver.maps.NaverMapTypeOption.getHybridMap());
 				
 				break;
 			case 'daum' :
@@ -841,6 +852,43 @@
 		
 		
 		return _infoWindowForCell;
+	}
+	
+	var _layer = {};
+	
+	dom.openLayer = function(targetId, options) {
+		
+		if(!_layer[targetId]) _layer[targetId] = $('#'+targetId);
+		
+		//var $close = $layer.find('.close');
+		var width = _layer[targetId].outerWidth();
+		var ypos = options.top;
+		var xpos = options.left;
+		var marginLeft = 0;
+		
+		if(xpos==undefined){
+			xpos = '50%';
+			marginLeft = -(width/2);
+		}
+		
+		if(!_layer[targetId].is(':visible')){
+			_layer[targetId].css({'top':ypos+'px','left':xpos,'margin-left':marginLeft})
+		    	  .show();
+		}
+		
+		/*$close.bind('click',function(){
+			if($layer.is(':visible')){
+				$layer.hide();
+			}
+			
+			return false;
+		});*/
+	}
+	
+	dom.closeLayer = function(targetId) {
+		if(_layer[targetId].is(':visible')){
+			_layer[targetId].hide();
+		}
 	}
 	
 	dom.openInfoWndowForCell = function(map, location, vender, venderEvent, data, listeners) {
@@ -2078,9 +2126,12 @@
 	dom.addButtonInMap = function(params) {
 		
 		var template = function(type){
-			return (type == undefined) ?
-					'<button id="{0}" type="button" class="btn btn-default" data-toggle="buttons" {1}>{2}</button>' :
-					'<input type="checkbox" data-toggle="toggle" id="{0}" {1}>{2}';
+			/*return (type == undefined) ?
+					/*'<button id="{0}" type="button" class="btn btn-default" data-toggle="buttons" {1}>{2}</button>' :
+					'<button id="{0}" type="button" class="button glyphicon glyphicon-user" {1}>{2}</button>' :
+					'<input type="checkbox" data-toggle="toggle" id="{0}" {1}>{2}';*/
+			
+			return '<button id="{0}" type="button" class="button {3} {4}" {1}>{2}</button>';
 		}
 		
 		if(params) {
@@ -2088,7 +2139,12 @@
 			var btns = '';
 			
 			for(var i=0; i<len; i++) {
-				btns += template(params[i].type).format(params[i].id, params[i].dataAttr, params[i].title);
+				if(params[i].glyphicon){
+					btns += template(params[i].type).format(params[i].id, params[i].attr, params[i].title, 'glyphicon', 'glyphicon-' + params[i].glyphicon);
+				}
+				else {
+					btns += template(params[i].type).format(params[i].id, params[i].attr, params[i].title);
+				}
 			}
 			
 			if(btns) {
@@ -2096,13 +2152,52 @@
 				
 				//event handler
 				for(var i=0; i<len; i++) {
-					$('#' + params[i].id).on((params[i].type == undefined) ? 'click' : 'change', params[i].callback);
+					$('#' + params[i].id).on('click', params[i].callback);
 				}
 				
 				
-				_initBootstrapToggle();
+				//_initBootstrapToggle();
 			}
 		}
+	}
+	
+	dom.captureToCanvas = function() {
+	    var nodesToRecover = [];
+	    var nodesToRemove = [];
+	    var targetElem = $('#map');
+	    var svgElem = targetElem.find('svg');
+
+	    svgElem.each(function(index, node) {
+	        var parentNode = node.parentNode;
+	        var svg = parentNode.innerHTML;
+
+	        var canvas = document.createElement('canvas');
+
+	        canvg(canvas, svg);
+
+	        nodesToRecover.push({
+	            parent: parentNode,
+	            child: node
+	        });
+	        parentNode.removeChild(node);
+
+	        nodesToRemove.push({
+	            parent: parentNode,
+	            child: canvas
+	        });
+
+	        parentNode.appendChild(canvas);
+	    });
+	    
+		html2canvas(targetElem, {
+			allowTaint: true,
+			taintTest: false,
+			useCORS: true,
+			profile: true,
+			onrendered: function(canvas) {
+				$('body').append(canvas);
+			}
+		});
 	}
 }(
 	hotplace.dom = hotplace.dom || {},

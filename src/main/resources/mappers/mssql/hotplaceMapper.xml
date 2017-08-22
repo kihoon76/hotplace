@@ -39,7 +39,7 @@
 	</select>
 	
 	<select id="selectLocationBounds" resultType="string" parameterType="hashmap">
-		select concat(극서 , ',', 극남,  ',', 극동, ',', 극북, ',', 위도중심, ',',  경도중심, ',', case when PNU존재여부='Y' then round(rand(convert(varbinary, newid()))*100, 2) else 0 end)
+		select concat(극서 , ',', 극남,  ',', 극동, ',', 극북, ',', 경도중심, ',',  위도중심, ',', case when PNU존재여부='Y' then round(rand(convert(varbinary, newid()))*100, 2) else 0 end)
           from [좌표계].[dbo].[좌표계]
          where 레벨 = #{level}
            and 극서  between convert(float, #{swx}) and convert(float, #{nex})

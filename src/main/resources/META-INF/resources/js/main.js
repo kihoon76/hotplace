@@ -317,7 +317,7 @@ $(document).ready(function() {
 		level: 3
 	}, {
 		'zoom_changed' : function(map, level) {
-			//hotplace.maps.showCellsLayer();
+			hotplace.maps.showCellsLayer();
 			_enableMapButton(level, 'btnSalesView');
 		},
 		'zoom_start' : function(map, level) {
@@ -325,12 +325,12 @@ $(document).ready(function() {
 		},
 		'dragend' : function(map, bnds) {
 			
-			/*if(hotplace.maps.isInLocationBounds(bnds)) {
+			if(hotplace.maps.isInLocationBounds(bnds)) {
 				hotplace.maps.appendCell();
 			}
 			else {
 				hotplace.maps.showCellsLayer();
-			}*/
+			}
 		},
 		'click' : function(map, latlng) {
 			console.log(latlng)
@@ -340,7 +340,7 @@ $(document).ready(function() {
 			console.log('tilesloaded');
 		}
 	}, function(map) {
-		//hotplace.maps.showCellsLayer();
+		hotplace.maps.showCellsLayer();
 	});
 	
 	hotplace.dom.addButtonInMap([/*{
@@ -391,7 +391,8 @@ $(document).ready(function() {
 		attr: 'data-switch="off"',
 		title:'',
 		callback: function(e) {
-			_btnCallback($(this), e, 'dvInfo');
+			hotplace.test.searchRadius();
+			//_btnCallback($(this), e, 'dvInfo');
 		}
 	},{
 		id:'btnSalesView',

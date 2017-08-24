@@ -27,6 +27,9 @@
     <link rel="stylesheet" href="/resources/vendors/tooltipster/dist/css/tooltipster.bundle.min.css" />
     <link rel="stylesheet" href="/resources/vendors/tooltipster/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-borderless.min.css" />
     
+    <!-- tabulator -->
+    <link rel="stylesheet" href="/resources/vendors/tabulator/dist/css/tabulator_simple.min.css" />
+    
     <link rel="stylesheet" href="/resources/css/buttons.css" />
     <link rel="stylesheet" href="/resources/css/layout.css" />
     
@@ -39,59 +42,6 @@
 <c:set var="url">${req.requestURL}</c:set>
 <c:set var="uri" value="${req.requestURI}" />
 <body data-mtype="<c:out value='${mType}' />" data-url="${fn:substring(url, 0, fn:length(url) - fn:length(uri))}${req.contextPath}/">
-<!-- 
-<nav class="navbar navbar-default">
-	<div class="container-fluid">
-    <div class="navbar-header">
-    	<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#topbar" aria-expanded="false">
-        	<span class="sr-only">Toggle navigation</span>
-        	<span class="icon-bar"></span>
-        	<span class="icon-bar"></span>
-        	<span class="icon-bar"></span>
-      	</button>
-      	<a class="navbar-brand" href="#">동림P&D</a>
-    </div>
-
-    <div class="collapse navbar-collapse" id="topbar">
-    	<ul class="nav navbar-nav">
-        	<li class="dropdown">
-	          	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">맵유형<span class="caret"></span></a>
-	          	<ul class="dropdown-menu">
-		            <li><a href="/main?mType=heatmap">열지도맵</a></li>
-		            <li><a href="/main?mType=dotmap">점지도맵</a></li>
-		            <li><a href="/main?mType=cellmap">셀맵</a></li>
-	          	</ul>
-	        </li>
-      	</ul>
-      	<div class="navbar-form navbar-left">
-	        <button type="button" class="btn btn-default glyphicon glyphicon-list-alt" id="btnNews"></button>
-      	</div>
-      	<div class="navbar-form navbar-left">
-	        <button type="button" class="btn btn-default glyphicon glyphicon-search" data-toggle="modal" data-target="#addressSearch"></button>
-      	</div>
-      	<div class="navbar-form navbar-left">
-	        <button type="button" class="btn btn-default glyphicon glyphicon-camera" id="btnCapture"></button>
-      	</div>
-      	<div class="navbar-form navbar-left">
-	        <button type="button" class="btn btn-default glyphicon glyphicon-info-sign" id="btnInfo"></button>
-      	</div>
-      	
-      	<div class="nav navbar-nav">
-      	<ul class="demo2">
-      		<li class="news-item">도시재생 사업(사상스마트시티) 실시계획인가, 부산시, 201707.10</li>
-      		<li class="news-item">도시재생 사업(사상스마트시티) 실시계획인가, 부산시, 201707.10</li>
-      		<li class="news-item">도시재생 사업(사상스마트시티) 실시계획인가, 부산시, 201707.10</li>
-      		<li class="news-item">도시재생 사업(사상스마트시티) 실시계획인가, 부산시, 201707.10</li>
-      	</ul>
-      	</div>
-      	
-      	<div class="navbar-form navbar-right">
-	        <button type="button" class="btn btn-default glyphicon glyphicon-user" id="btnUser"></button>
-      	</div>
-    </div>
-	</div>
-</nav>
--->
 <div id="map" data-vender="naver">
 	<div class="map-buttons" id="mapButtons"></div>
 	<div id="dvNews" class="layer-popup" style="width:600px; height:50px">
@@ -106,6 +56,23 @@
 	<div id="dvInfo"       class="layer-popup" style="width:600px; height:800px"></div>
 	<div id="dvSalesView"  class="layer-popup" style="width:250px; height:330px"></div>
 </div>
+
+<!-- modal -->
+<div class="modal fade" id="containerModal" tabindex="-1" role="dialog" aria-labelledby="containerModalLabel">
+	<div class="modal-dialog modal-fullsize" role="document">
+    <div class="modal-content modal-fullsize">
+    	<div class="modal-header">
+    		<span id="spModalTitle">test</span>
+        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      	</div>
+      	<div class="modal-body" id="dvModalContent">
+        Modal 내용
+      	</div>
+    </div>
+	</div>
+</div>
+
+
 <sitemesh:write property="body" />
 <script type="text/javascript" src="/resources/handlebars/4.0.5/handlebars.min.js"></script>
 <script type="text/javascript" src="/resources/jquery/1.11.1/jquery.min.js"></script>
@@ -114,6 +81,7 @@
 <script type="text/javascript" src="/resources/jquery-ui/1.10.3/ui/minified/jquery-ui.min.js"></script>
 <script type="text/javascript" src="/resources/vendors/jQRangeSlider-5.7.2/jQRangeSlider-withRuler-min.js"></script>
 <script type="text/javascript" src="/resources/vendors/tooltipster/dist/js/tooltipster.bundle.min.js"></script>
+<script type="text/javascript" src="/resources/vendors/tabulator/dist/js/tabulator.min.js"></script>
 
 <script type="text/javascript" src="/resources/chart.js/2.5.0/dist/Chart.min.js"></script>
 

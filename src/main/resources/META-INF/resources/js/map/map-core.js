@@ -622,8 +622,11 @@
 		    map: _venderMap
 		});
 		
+		var tForm = hotplace.dom.getTemplate('pinpointForm');
+		
 		var newInfoWindow = new _vender.InfoWindow({
-	        content: '<div style="width:150px;text-align:center;padding:10px;">' + content +'</div>'
+	        //content: '<div style="width:150px;text-align:center;padding:10px;">' + content +'</div>'
+			content: tForm({address: content})
 	    });
 		
 		_markers.push(newMarker);
@@ -647,11 +650,38 @@
 			    radius: radius,
 			    fillColor: 'rgba(250,245,245)',
 			    fillOpacity: 0,
-			    clickable: true
+			    clickable: true,
+			    zIndex: 30000000
 			});
 			
 			_venderEvent.addListener(_radiusSearchCircle, 'click', function(e) {
-				console.log('k');
+				hotplace.dom.insertFormInmodal('radiusSearchResultForm');
+				hotplace.dom.openModal();
+				
+				$("#example-table").tabulator({
+				    height:600, // set height of table
+				    fitColumns:true, //fit columns to width of table (optional)
+				    columns:[ //Define Table Columns
+				        {title:"Name", field:"name", width:150},
+				        {title:"Age", field:"age", align:"left", formatter:"progress", width:150},
+				        {title:"Favourite Color", field:"col", width:150},
+				        {title:"Date Of Birth", field:"dob", sorter:"date", align:"center", width:150},
+				    ],
+				    rowClick:function(e, row){ //trigger an alert message when the row is clicked
+				        alert("Row " + row.getData().id + " Clicked!!!!");
+				    },
+				});
+				
+				var tabledata = [
+	                 {id:1, name:"Oli Bob", age:"12", col:"red", dob:""},
+	                 {id:2, name:"Mary May", age:"1", col:"blue", dob:"14/05/1982"},
+	                 {id:3, name:"Christine Lobowski", age:"42", col:"green", dob:"22/05/1982"},
+	                 {id:4, name:"Brendon Philips", age:"125", col:"orange", dob:"01/08/1980"},
+	                 {id:5, name:"Margret Marmajuke", age:"16", col:"yellow", dob:"31/01/1999"},
+	             ];
+				
+				$("#example-table").tabulator("setData", tabledata);
+				
 			});
 			
 			_venderEvent.addListener(_radiusSearchCircle, 'mouseover', function(e) {
@@ -962,6 +992,10 @@
 		$(CLASS).each(function(index) {
 			$(this).tooltipster('close');
 		})
+	}
+	
+	dom.openModal = function() {
+		$('#containerModal').modal('show');
 	}
 	
 	var _echartTheme = {
@@ -2163,6 +2197,11 @@
 		return _templates[name];
 	}
 	
+	dom.insertFormInmodal = function(name) {
+		var tForm = dom.getTemplate(name);
+		$('#dvModalContent').html(tForm());
+	}
+	
 	dom.getSelectOptions = function(data, title) {
 		var len = data.length;
 		var html = '<option value="">- ' + title + '  -</option>';
@@ -2407,6 +2446,21 @@
 		}
 		
 	}*/
+	
+	test.searchRadius = function() {
+		hotplace.maps.panToBounds(37.539648921, 127.152615967, null, function() {
+			hotplace.maps.getMarker(37.539648921, 127.152615967, {
+				'click' : function(map, newMarker, newInfoWindow) {
+					 if(newInfoWindow.getMap()) {
+						 newInfoWindow.close();
+				     }
+					 else {
+						 newInfoWindow.open(map, newMarker);
+				     }
+				}
+			}, '서울특별시 강동구 길동  15-1', 500);
+		});
+	}
 	
 }(
 	hotplace.test = hotplace.test || {},

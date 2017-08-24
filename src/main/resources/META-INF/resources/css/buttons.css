@@ -5,7 +5,7 @@
 	z-index:1000;
 	padding:5px; 
 }
-.map-buttons .button {
+.map-buttons .button  {
 	border: 1px solid #000;
     background-color: #F5F2F2;
     border-radius: 5px;
@@ -20,4 +20,21 @@
     margin: 10px 0px 10px 10px;
     cursor: pointer;	
 }
+
+.map-buttons .button-on {
+	border: 1px solid #000;
+    background-color: #051B97;
+    color: white;	
+}
+
+.map-buttons .button-disabled {
+	border: 1px solid #999999;
+  	background-color: #cccccc;
+  	color: #666666;
+  	cursor: default;
+}
+
+
+
+
 

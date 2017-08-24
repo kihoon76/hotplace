@@ -45,8 +45,7 @@ public class HotplaceController {
 	@ResponseBody
 	public String getAddressSearchCondition(@RequestParam(name="type", required=true) String type,
 							 @RequestParam(name="si", required=true) String si,
-							 @RequestParam(name="gugun", required=false) String gugun,
-							 @RequestParam(name="road", required=false) String road) {
+							 @RequestParam(name="gugun", required=false) String gugun) {
 			
 		if("".equals(gugun)) {
 			return hotplaceService.getGuGunList(si);

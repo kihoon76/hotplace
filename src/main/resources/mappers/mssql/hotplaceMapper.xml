@@ -26,15 +26,27 @@
 	</select>
 	
 	<select id="selectAddress" resultType="string" parameterType="Address">
-		select concat('"',[PNU], '","', [title],'","', [buildingAddress], '",', [위도], ',', [경도], ',', [극북], ',', [극서]) 
+		<if test='type == "N"'>
+		select concat('"',[PNU], '","', [시도명], ' ', [시군구명], ' ', [읍면동명], ' ', [리명], <if test="san == '2'">' 산',</if> ' ', [본번숫자], '-', [부번숫자], '",',  [위도], ',', [경도], ',', [극북], ',', [극서]) 
+		</if>
    		  from (
-				select  t1.[PNU],[title],[buildingAddress],t2.[위도],t2.[경도], t1.[극서], t1.[극북] 
-				  from [지번주소].[dbo].[전국지번통합] t1 
-				  left outer join [지번주소].[dbo].[DaumMap] t2
-				    on t1.PNU = t2.PNU
-			     where t1.[시도코드] = #{si}
-			       and t1.[시군구코드] = #{gugun}
-			       and t1.[읍면동코드] = #{region}
+   		  		<if test='type == "N"'>
+   		  		select [PNU],[필지구분코드],[본번숫자],[부번숫자],[시도명],[시군구명],[읍면동명],[리명],[위도],[경도],[극서],[극북]
+   		  		</if>
+				  from [지번주소].[dbo].[전국지번통합]  
+			     where [시도코드] = #{si}
+			       and [시군구코드] = #{gugun}
+			       and [읍면동코드] = #{region}
+			       <if test='type == "N"'>
+			       and [필지구분코드] = #{san}
+			       <if test='beonjiF != ""'>
+			       and [본번숫자]= #{beonjiF}
+			       </if>
+			       <if test='beonjiS != ""'>
+			       and [부번숫자]= #{beonjiS}
+			       </if>
+			       </if>
+			       and [위도] is not null
 			    ) tb1
 	</select>
 	

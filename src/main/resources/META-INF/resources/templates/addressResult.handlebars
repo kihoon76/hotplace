@@ -3,13 +3,13 @@
 		{{#each addresses as |addr|}}
 		<tr>
 			<td>
-			{{addr.[1]}} {{addr.[2]}}
+			{{addr.[1]}}
 			</td>
 			<td>
 				<div class="funkyradio">
         		<div class="funkyradio-info">
-					<input type="radio" name="sel" id="radio{{@index}}" data-lat="{{addr.[3]}}" data-lng="{{addr.[4]}}" data-sw="{{addr.[5]}}" data-en="{{addr.[6]}}" data-address="{{addr.[1]}} {{addr.[2]}}"/>
- 					<label for="radio{{@index}}">선택</label>
+					<input type="radio" name="{{../rdoId}}" id="{{../rdoId}}{{@index}}" data-lat="{{addr.[2]}}" data-lng="{{addr.[3]}}" data-sw="{{addr.[4]}}" data-ne="{{addr.[5]}}" data-address="{{addr.[1]}}"/>
+ 					<label for="{{../rdoId}}{{@index}}">선택</label>
 		        </div>
 				</div>
 			</td>

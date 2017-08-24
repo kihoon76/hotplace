@@ -147,19 +147,24 @@ html, body, #map { width: 100%; height: 100%; margin: 0; padding: 0; }
 	margin:0px 5px;
 }
 
-#dvAddrSearch .nav-tabs li {
+#tabAddrSearch .nav-tabs li,
+#tabRadiusSearch .nav-tabs li {
 	text-align:center;
     width: 50%;
 }
 
 .div-addr-result{
-  height:400px;
+  height:480px;
   overflow:auto;
+  border:1px solid #ccc;
+  border-radius: 4px;
 }
 
 #fmPin .form-group {
-	margin-top:40px;
+	margin-bottom:40px;
 }
+
+
 
 
 

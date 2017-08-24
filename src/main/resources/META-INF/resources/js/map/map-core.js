@@ -164,6 +164,7 @@
 	var _heatMapDatas = [];
 	
 	var _templateInfoWndowForCell = null;
+	var _radiusSearchCircle;
 	/*
 	 * daum  zoom : [14 ~ 1]
 	 * naver zoom : [1 ~ 14]
@@ -596,13 +597,14 @@
 	}
 
 	maps.panToBounds = function(lat, lng, size, moveAfterFn) {
-		size = size || 0.01;
+		//size = size || 0.01;
 		
 		if(_venderStr == 'naver') {
-			_venderMap.panToBounds(new _vender.LatLngBounds(
+			/*_venderMap.panToBounds(new _vender.LatLngBounds(
 	                new _vender.LatLng(lat - size, lng - size),
 	                new _vender.LatLng(lat + size, lng + size)
-	        ));
+	        ),{duration: 100, easing: 'linear'});*/
+			_venderMap.morph(new _vender.LatLng(lat, lng), 10, {duration: 100});
 		}
 		else if(_venderStr == 'daum') {
 			_venderMap.panTo(new _vender.LatLngBounds(
@@ -614,7 +616,7 @@
 		moveAfterFn();
 	}
 	
-	maps.getMarker = function(lat, lng, listeners, content) {
+	maps.getMarker = function(lat, lng, listeners, content, radius) {
 		var newMarker = new _vender.Marker({
 		    position: new _vender.LatLng(lat, lng),
 		    map: _venderMap
@@ -636,6 +638,33 @@
 					}
 				}(eventName, newInfoWindow));
 			}
+		}
+		
+		if(radius) {
+			_radiusSearchCircle = new _vender.Circle({
+			    map: _venderMap,
+			    center:  new _vender.LatLng(lat, lng),
+			    radius: radius,
+			    fillColor: 'rgba(250,245,245)',
+			    fillOpacity: 0,
+			    clickable: true
+			});
+			
+			_venderEvent.addListener(_radiusSearchCircle, 'click', function(e) {
+				console.log('k');
+			});
+			
+			_venderEvent.addListener(_radiusSearchCircle, 'mouseover', function(e) {
+				_radiusSearchCircle.setOptions({
+		            fillOpacity: 0.5
+		        });
+			});
+			
+			_venderEvent.addListener(_radiusSearchCircle, 'mouseout', function(e) {
+				_radiusSearchCircle.setOptions({
+		            fillOpacity: 0
+		        });
+			});
 		}
 	},
 	
@@ -908,6 +937,31 @@
 			_infoWindowForCell.close();
 			_infoWindowForCell = null;
 		}
+	}
+	
+	dom.initTooitip = function(selectorClass) {
+		// first on page load, initialize all tooltips
+		$('.' + selectorClass).tooltipster({
+			theme: 'tooltipster-borderless',
+			trigger: 'custom',
+			functionBefore: function(instance, helper) {
+				return true;
+			}
+		});
+	}
+	
+	dom.openTooltip = function(selector) {
+		$(selector).tooltipster('open');
+	}
+	
+	dom.closeTooltip = function(selector) {
+		$(selector).tooltipster('close');
+	}
+	
+	dom.closeAllTooltip = function(CLASS) {
+		$(CLASS).each(function(index) {
+			$(this).tooltipster('close');
+		})
 	}
 	
 	var _echartTheme = {
@@ -2085,9 +2139,6 @@
 		_loadEl.waitMe('hide');
 	},
 	
-	dom.closeBootstrapModal = function(selector) {
-		$(selector).modal('toggle');
-	}
 	
 	dom.getTemplate = function(name) {
 		if(_templates[name] === undefined) {
@@ -2124,13 +2175,14 @@
 	
 	dom.addButtonInMap = function(params) {
 		
-		var template = function(type){
+		var template = function(disabled){
 			/*return (type == undefined) ?
 					/*'<button id="{0}" type="button" class="btn btn-default" data-toggle="buttons" {1}>{2}</button>' :
 					'<button id="{0}" type="button" class="button glyphicon glyphicon-user" {1}>{2}</button>' :
 					'<input type="checkbox" data-toggle="toggle" id="{0}" {1}>{2}';*/
 			
-			return '<button id="{0}" type="button" class="button {3} {4}" {1}>{2}</button>';
+			return disabled ? '<button id="{0}" type="button" disabled class="button button-disabled {3} {4}" {1}>{2}</button>' :
+				              '<button id="{0}" type="button" class="button {3} {4}" {1}>{2}</button>';
 		}
 		
 		if(params) {
@@ -2139,10 +2191,10 @@
 			
 			for(var i=0; i<len; i++) {
 				if(params[i].glyphicon){
-					btns += template(params[i].type).format(params[i].id, params[i].attr, params[i].title, 'glyphicon', 'glyphicon-' + params[i].glyphicon);
+					btns += template(params[i].disabled).format(params[i].id, params[i].attr, params[i].title, 'glyphicon', 'glyphicon-' + params[i].glyphicon);
 				}
 				else {
-					btns += template(params[i].type).format(params[i].id, params[i].attr, params[i].title);
+					btns += template(params[i].disabled).format(params[i].id, params[i].attr, params[i].title);
 				}
 			}
 			
@@ -2198,6 +2250,7 @@
 			}
 		});
 	}
+	
 }(
 	hotplace.dom = hotplace.dom || {},
 	jQuery
@@ -2282,6 +2335,19 @@
 	}
 }(
 	hotplace.database = hotplace.database || {},
+	jQuery
+));
+
+(function(validation, $) {
+	validation.numberOnly = function(CLASS) {
+		$(CLASS).on('keypress', function(e) {
+			 if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+				 return false;
+			 }
+		});
+	}
+}(
+	hotplace.validation = hotplace.validation || {},
 	jQuery
 ));
 

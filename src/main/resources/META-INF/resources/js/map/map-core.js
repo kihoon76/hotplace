@@ -728,16 +728,16 @@
 			
 			_venderEvent.addListener(radiusSearchCircle, 'click', function(e) {
 				hotplace.dom.insertFormInmodal('radiusSearchResultForm');
-				hotplace.dom.openModal();
+				hotplace.dom.openModal(options.datas.content + ' 일대 (반경: ' + options.radius + 'm)');
 				
 				$("#example-table").tabulator({
 				    height:600, // set height of table
 				    fitColumns:true, //fit columns to width of table (optional)
 				    columns:[ //Define Table Columns
-				        {title:"Name", field:"name", width:150},
-				        {title:"Age", field:"age", align:"left", formatter:"progress", width:150},
-				        {title:"Favourite Color", field:"col", width:150},
-				        {title:"Date Of Birth", field:"dob", sorter:"date", align:"center", width:150},
+				        {title:"지번", field:"name", width:300},
+				        {title:"소유구분", field:"age", align:"left", formatter:"progress", width:150},
+				        {title:"지목", field:"col", width:150},
+				        {title:"면적", field:"dob", sorter:"date", align:"center", width:150},
 				    ],
 				    rowClick:function(e, row){ //trigger an alert message when the row is clicked
 				        alert("Row " + row.getData().id + " Clicked!!!!");
@@ -745,14 +745,17 @@
 				});
 				
 				var tabledata = [
-	                 {id:1, name:"Oli Bob", age:"12", col:"red", dob:""},
-	                 {id:2, name:"Mary May", age:"1", col:"blue", dob:"14/05/1982"},
-	                 {id:3, name:"Christine Lobowski", age:"42", col:"green", dob:"22/05/1982"},
-	                 {id:4, name:"Brendon Philips", age:"125", col:"orange", dob:"01/08/1980"},
-	                 {id:5, name:"Margret Marmajuke", age:"16", col:"yellow", dob:"31/01/1999"},
+	                 {id:1, name:"서울시 강남구 도곡동 963", age:"12", col:"red", dob:""},
+	                 {id:2, name:"서울시 강남구 도곡동 964", age:"1", col:"blue", dob:"14/05/1982"},
+	                 {id:3, name:"서울시 강남구 도곡동 965", age:"42", col:"green", dob:"22/05/1982"},
+	                 {id:4, name:"서울시 강남구 도곡동 966", age:"125", col:"orange", dob:"01/08/1980"},
+	                 {id:5, name:"서울시 강남구 도곡동 967", age:"16", col:"yellow", dob:"31/01/1999"},
 	             ];
 				
-				$("#example-table").tabulator("setData", tabledata);
+				setTimeout(function() {
+					$("#example-table").tabulator("setData", tabledata);
+				}, 1000);
+				
 				
 			});
 			
@@ -1062,7 +1065,8 @@
 		})
 	}
 	
-	dom.openModal = function() {
+	dom.openModal = function(title) {
+		$('#spModalTitle').text(title);
 		$('#containerModal').modal('show');
 	}
 	

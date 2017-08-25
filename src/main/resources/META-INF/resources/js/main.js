@@ -276,7 +276,7 @@ $(document).ready(function() {
 		var lng = $sel.data('lng');
 		var lat = $sel.data('lat');
 		var address = $sel.data('address');
-		var radius;
+		var radius = 0;
 		
 		if(!address) {
 			hotplace.dom.openTooltip('#' + id);
@@ -289,7 +289,9 @@ $(document).ready(function() {
 		}
 		
 		hotplace.maps.panToBounds(lat, lng, null, function() {
-			hotplace.maps.getMarker(lat, lng, {
+			
+			hotplace.maps.destroyMarkerType(hotplace.maps.MarkerType.RADIUS_SEARCH);
+			hotplace.maps.getMarker(hotplace.maps.MarkerType.RADIUS_SEARCH, lat, lng, {
 				'click' : function(map, newMarker, newInfoWindow) {
 					 if(newInfoWindow.getMap()) {
 						 newInfoWindow.close();
@@ -298,7 +300,12 @@ $(document).ready(function() {
 						 newInfoWindow.open(map, newMarker);
 				     }
 				}
-			}, address, radius);
+			}, {
+				hasInfoWindow: true,
+				infoWinFormName: 'pinpointForm',
+				radius: radius,
+				datas: {content: address}
+			});
 		});
 	});
 	
@@ -319,9 +326,11 @@ $(document).ready(function() {
 		'zoom_changed' : function(map, level) {
 			hotplace.maps.showCellsLayer();
 			_enableMapButton(level, 'btnSalesView');
+			
 		},
 		'zoom_start' : function(map, level) {
 			////hotplace.test.initMarker(level);
+			hotplace.maps.destroyMarkers();
 		},
 		'dragend' : function(map, bnds) {
 			

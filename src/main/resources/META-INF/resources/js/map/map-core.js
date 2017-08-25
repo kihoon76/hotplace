@@ -1,3 +1,8 @@
+/*
+ * jsDoc 설치방법
+ * npm install -g jsdoc
+ * http://usejsdoc.org/
+ * */
 (function(hotplace, $) {
 	var _version = '1.0';
 	var ROOT_CONTEXT = $('body').data('url');
@@ -148,6 +153,7 @@
 	var _locationBounds = {'swy' : 0, 'swx' : 0, 'ney' : 0,	'nex' : 0};	  //서버로 부터 받은 좌표계 bounds
 	
 	var _mapTypes = {heat:'heat', cell:'cell', jijeok:'use_district'};
+	
 	var _currentMapType;
 	
 	var _mapTypeLayers = {heat: 'off', cell: 'off', jijeok: 'off'};
@@ -155,8 +161,24 @@
 	var _cells = [];
 	var _notDrawedCells = [];    //weight값 제한으로 화면에서 그리지않은 cell들
 	
-	var _markers = [];
-	var _infoWindowsForMarker = [];
+	var _markerTypes = {
+		RADIUS_SEARCH: 'RADIUS_SEARCH'
+	};
+	
+	maps.MarkerType = _markerTypes;
+	/**
+	 * 
+	 * */
+	var _markers = {
+		RADIUS_SEARCH : {
+			m: [],	//marker
+			c: []   //circle
+		}    
+	};
+	
+	var _infoWindowsForMarker = {
+		RADIUS_SEARCH : []
+	};
 	
 	var _bndNmBnd = []; //bound와 margin bound
 	
@@ -164,7 +186,6 @@
 	var _heatMapDatas = [];
 	
 	var _templateInfoWndowForCell = null;
-	var _radiusSearchCircle;
 	/*
 	 * daum  zoom : [14 ~ 1]
 	 * naver zoom : [1 ~ 14]
@@ -398,6 +419,39 @@
 		}
 	}
 	
+	/*
+	 * zoom_change 시 한 레벨에서 그린  marker 삭제
+	 */
+	function _destroyMarkers () {
+		for(var type in _markers) {
+			_destroyMarkerType(type);
+		}
+	}
+	
+	function _destroyMarkerType(type) {
+		var marker = _markers[type];
+		if(marker) {
+			var arr = marker.m;
+			var arrCircle = marker.c; 
+			var len = arr.length;
+			var lenCircle = (arrCircle) ? arrCircle.length : 0;
+			
+			for(var m=0; m<len; m++) {
+				arr[m].setMap(null);
+			}
+			
+			for(var c=0; c<lenCircle; c++) {
+				arrCircle[c].setMap(null);
+			}
+			
+			arr = [];
+			if(arrCircle) arrCircle = [];  
+		}
+		else {
+			throw new Error(type + 'is not exist');
+		}
+	}
+	
 	//벤더별 벤더이벤트 전부 
 	function _convertEventObjToCustomObj(eventName, obj) {
 		var returnObj;
@@ -454,6 +508,9 @@
 		hotplace.dom.closeInfoWndowForCell();
 		hotplace.database.initLevel(level);
 	}
+	
+	maps.destroyMarkers = _destroyMarkers;
+	maps.destroyMarkerType = _destroyMarkerType;
 	
 	maps.setLevel = function(level) {
 		switch(_venderStr) {
@@ -616,21 +673,36 @@
 		moveAfterFn();
 	}
 	
-	maps.getMarker = function(lat, lng, listeners, content, radius) {
-		var newMarker = new _vender.Marker({
+	/**
+	 * @param {string} markerType 마커타입
+	 * @param {number} lat 경도좌표
+	 * @param {number} lng 위도좌표
+	 * @param {object} listeners 마커이벤트 핸들러
+	 * @param {object} options 옵션
+	 * @param {boolean} options.hasInfoWindow 클릭시 infoWindow 사용여부
+	 * @param {string} options.infoWinFormName 
+	 * @param {number} options.radius 마커주위 반경 (0일경우 표시안함) 
+	 * @param {object} options.datas  
+	 */
+	maps.getMarker = function(markerType, lat, lng, listeners, options) {
+		var newMarker, newInfoWindow;
+		
+		newMarker = new _vender.Marker({
 		    position: new _vender.LatLng(lat, lng),
 		    map: _venderMap
 		});
 		
-		var tForm = hotplace.dom.getTemplate('pinpointForm');
+		_markers[markerType].m.push(newMarker);
 		
-		var newInfoWindow = new _vender.InfoWindow({
-	        //content: '<div style="width:150px;text-align:center;padding:10px;">' + content +'</div>'
-			content: tForm({address: content})
-	    });
-		
-		_markers.push(newMarker);
-		_infoWindowsForMarker.push(newInfoWindow);
+		if(options.hasInfoWindow) {
+			var tForm = hotplace.dom.getTemplate(options.infoWinFormName);
+			
+			newInfoWindow = new _vender.InfoWindow({
+				content: tForm({address: options.datas.content})
+		    });
+			
+			_infoWindowsForMarker[markerType].push(newInfoWindow);
+		}
 		
 		if(listeners) {
 			for(var eventName in listeners) {
@@ -643,18 +715,18 @@
 			}
 		}
 		
-		if(radius) {
-			_radiusSearchCircle = new _vender.Circle({
+		if(options.radius) {
+			var radiusSearchCircle = new _vender.Circle({
 			    map: _venderMap,
 			    center:  new _vender.LatLng(lat, lng),
-			    radius: radius,
+			    radius: options.radius,
 			    fillColor: 'rgba(250,245,245)',
 			    fillOpacity: 0,
 			    clickable: true,
 			    zIndex: 30000000
 			});
 			
-			_venderEvent.addListener(_radiusSearchCircle, 'click', function(e) {
+			_venderEvent.addListener(radiusSearchCircle, 'click', function(e) {
 				hotplace.dom.insertFormInmodal('radiusSearchResultForm');
 				hotplace.dom.openModal();
 				
@@ -684,17 +756,19 @@
 				
 			});
 			
-			_venderEvent.addListener(_radiusSearchCircle, 'mouseover', function(e) {
-				_radiusSearchCircle.setOptions({
+			_venderEvent.addListener(radiusSearchCircle, 'mouseover', function(e) {
+				radiusSearchCircle.setOptions({
 		            fillOpacity: 0.5
 		        });
 			});
 			
-			_venderEvent.addListener(_radiusSearchCircle, 'mouseout', function(e) {
-				_radiusSearchCircle.setOptions({
+			_venderEvent.addListener(radiusSearchCircle, 'mouseout', function(e) {
+				radiusSearchCircle.setOptions({
 		            fillOpacity: 0
 		        });
 			});
+			
+			_markers[markerType].c.push(radiusSearchCircle);
 		}
 	},
 	
@@ -880,12 +954,6 @@
 		});
 	}
 	
-	/*
-	 * 
-	 * //http://www.jqueryscript.net/form/Smooth-Animated-Toggle-Control-Plugin-With-jQuery-Bootstrap-Bootstrap-Toggle.html*/
-	function _initBootstrapToggle() {
-		$('input[type="checkbox"]').bootstrapToggle();
-	}
 	
 	function _makeInfoWndowForCell(vender, venderEvent, data, listeners) {
 		var template = dom.getTemplate('cellForm');
@@ -2244,9 +2312,6 @@
 				for(var i=0; i<len; i++) {
 					$('#' + params[i].id).on('click', params[i].callback);
 				}
-				
-				
-				//_initBootstrapToggle();
 			}
 		}
 	}
@@ -2449,7 +2514,7 @@
 	
 	test.searchRadius = function() {
 		hotplace.maps.panToBounds(37.539648921, 127.152615967, null, function() {
-			hotplace.maps.getMarker(37.539648921, 127.152615967, {
+			hotplace.maps.getMarker(hotplace.maps.MarkerType.RADIUS_SEARCH,37.539648921, 127.152615967, {
 				'click' : function(map, newMarker, newInfoWindow) {
 					 if(newInfoWindow.getMap()) {
 						 newInfoWindow.close();
@@ -2458,7 +2523,12 @@
 						 newInfoWindow.open(map, newMarker);
 				     }
 				}
-			}, '서울특별시 강동구 길동  15-1', 500);
+			}, {
+				hasInfoWindow: true,
+				infoWinFormName: 'pinpointForm',
+				radius: 500,
+				datas: {content: '서울특별시 강동구 길동  15-1'}
+			});
 		});
 	}
 	

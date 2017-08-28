@@ -60,4 +60,8 @@
            and 극북  between convert(float, #{swy}) and convert(float, #{ney})
          order by 극서 asc
 	</select>
+	
+	<select id="selectGongsiBounds" resultType="string" parameterType="hashmap">
+	
+	</select>
 </mapper>

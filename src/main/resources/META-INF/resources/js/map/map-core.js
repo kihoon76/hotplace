@@ -162,7 +162,8 @@
 	var _notDrawedCells = [];    //weight값 제한으로 화면에서 그리지않은 cell들
 	
 	var _markerTypes = {
-		RADIUS_SEARCH: 'RADIUS_SEARCH'
+		RADIUS_SEARCH: 'RADIUS_SEARCH',
+		GONGSI: 'GONGSI'
 	};
 	
 	maps.MarkerType = _markerTypes;
@@ -353,9 +354,85 @@
 		return rec;
 	}
 	
-	function _createCells(level, startIdx) {
+	function _commXY(data, startIdx, callback) {
+		var len = data.length;
 		
-		var data = hotplace.database.getLevelData(level);
+		var boundMX = _marginBounds.nex;
+		var boundmY = _marginBounds.swy;
+		var boundMY = _marginBounds.ney;
+		var drawedCnt = 0;
+		
+		var id = '';
+		
+		for(var i = startIdx; i < len; i++) {
+			
+			if(data[i].location[0] > boundMX) break;
+			var y = data[i].location[1];
+
+			if(y >= boundmY && y <= boundMY) {
+				
+				id = data[i]['id'];
+				
+				if(!id /*|| !logMap[id]*/ ){
+					data[i]['id'] = hotplace.createUuid();
+					//logMap[data[i]['id']] = true;
+					drawedCnt++;
+					
+					callback(data[i]);
+					
+				}
+			}
+		}
+		
+		console.log("drawedCnt ==> " + drawedCnt);
+	}
+	
+	function _createMarkers(level, startIdx, markerType) {
+		var markerData;
+		switch(markerType) {
+		case _markerType.GONGSI :
+			markerData = hotplace.database.getGongsiLevelData(level);
+			break;
+		}
+		
+		_commXY(markerData,
+				startIdx,
+				function(data) {
+					maps.getMarker(markerType, lat, lng, {}, {
+						hasInfoWindow: false,
+						radius:0
+					});
+				}
+		);
+	}
+	
+	function _createCells(level, startIdx) {
+		_commXY(hotplace.database.getLevelData(level),
+				/*hotplace.database.getLevelLogMap(level),*/
+				startIdx,
+				function(data) {
+					//weight 50점 밑으로는 만들지 않는다
+					if(Math.ceil(data.weight) <= 50) {
+						_notDrawedCells.push(data);
+						return;
+					}
+					
+					_cells.push(
+						_drawRectangle(
+							  data.location[1],
+							  data.location[0],
+							  data.location[3],
+							  data.location[2], 
+							  {
+								  fillColor: _getColorByWeight(data.weight),
+								  fillOpacity : 0.5
+							  },
+							  data
+						)
+					);
+				}
+		);
+		/*var data = hotplace.database.getLevelData(level);
 		var logMap = hotplace.database.getLevelLogMap(level);
 		var len = data.length;
 		
@@ -404,7 +481,7 @@
 			}
 		}
 		
-		console.log("drawedCnt ==> " + drawedCnt);
+		console.log("drawedCnt ==> " + drawedCnt);*/
 	}
 	
 	/*
@@ -491,14 +568,24 @@
 		}
 	}
 	
-	function _showCellsLayer() {
+	function _showCellLayer() {
 		var db = hotplace.database;
-		var _currentLevel = _getCurrentLevel();
+		var currentLevel = _getCurrentLevel();
 		
-		if(!db.hasData(_currentLevel)) return;
-		var startIdx = db.getStartXIdx(_marginBounds.swx, _currentLevel);
+		if(!db.hasData(currentLevel)) return;
+		var startIdx = db.getStartXIdx(_marginBounds.swx, currentLevel);
 		
-		_createCells(_currentLevel, startIdx);
+		_createCells(currentLevel, startIdx);
+	}
+	
+	function _showGongsiLayer() {
+		var db = hotplace.database;
+		var currentLevel = _getCurrentLevel();
+		
+		if(!db.hasGongsiData(currentLevel)) return;
+		var startIdx = db.getStartXIdx(_marginBounds.swx, currentLevel);
+		
+		_createMarkers(currentLevel, startIdx);
 	}
 	
 	function _initLayers(level) {
@@ -816,6 +903,16 @@
 			_createCells(_currentLevel, startIdx);
 		}
 	};
+	
+	maps.appendGongsi = function() {
+		var db = hotplace.database;
+		var _currentLevel = _getCurrentLevel();
+		
+		if(db.hasGongsiData(_currentLevel)) {
+			var startIdx = db.getStartXIdx(_marginBounds.swx, _currentLevel);
+			_createMarker(_currentLevel, startIdx);
+		}
+	}
 	 
 	maps.isInLocationBounds = function(bnds) {
 		return !(_locationBounds.swx > bnds.swx || 
@@ -824,8 +921,7 @@
 				 _locationBounds.ney < bnds.ney);
 	}
 	
-	
-	maps.showCellsLayer = function() {
+	maps.showCellLayer = function() {
 		
 		var db = hotplace.database;
 		var _currentLevel = _getCurrentLevel();
@@ -835,7 +931,7 @@
 			//location
 			//캐쉬구현
 			if(false/*db.isCached(_currentLevel)*/) {
-				_showCellsLayer();
+				//_showCellsLayer();
 			}
 			else {
 				_initLayers(_currentLevel);
@@ -850,7 +946,44 @@
 					try {
 						db.setLevelData(_currentLevel, json.datas);
 						console.log(json.datas);
-						_showCellsLayer();
+						_showCellLayer();
+						
+					}
+					catch(e) {
+						throw e;
+					}
+				});
+			}
+		}
+	}
+	
+	maps.showGongsiLayer = function() {
+		
+		var db = hotplace.database;
+		var _currentLevel = _getCurrentLevel();
+		
+		if(_venderMap) {
+			
+			//location
+			//캐쉬구현
+			if(false/*db.isCached(_currentLevel)*/) {
+				//_showCellsLayer();
+			}
+			else {
+				_initLayers(_currentLevel);
+				
+				hotplace.getPlainText('gongsi', {
+					level: _currentLevel,
+					 swx : _locationBounds.swx,
+					 nex : _locationBounds.nex,
+					 swy : _locationBounds.swy,
+					 ney : _locationBounds.ney
+				}, function(json) {
+					try {
+						db.setGongsiLevelData(_currentLevel, json.datas);
+						console.log(json.datas);
+						_showGongsiLayer();
+						
 					}
 					catch(e) {
 						throw e;
@@ -1040,11 +1173,11 @@
 		}
 	}
 	
-	dom.initTooitip = function(selectorClass) {
+	dom.initTooltip = function(selectorClass, trigger) {
 		// first on page load, initialize all tooltips
 		$('.' + selectorClass).tooltipster({
 			theme: 'tooltipster-borderless',
-			trigger: 'custom',
+			trigger: trigger || 'custom',
 			functionBefore: function(instance, helper) {
 				return true;
 			}
@@ -1065,8 +1198,18 @@
 		})
 	}
 	
-	dom.openModal = function(title) {
+	dom.openModal = function(title, modalSize) {
 		$('#spModalTitle').text(title);
+		
+		if(!modalSize) modalSize = 'fullsize';
+		
+		$('#containerModal .modal-dialog').removeClass('modal-fullsize modal-bigsize');
+		$('#containerModal .modal-content').removeClass('modal-fullsize modal-bigsize'); 
+		
+		$('#containerModal .modal-dialog').addClass('modal-' + modalSize);
+		$('#containerModal .modal-content').addClass('modal-' + modalSize);
+		
+		
 		$('#containerModal').modal('show');
 	}
 	
@@ -2359,6 +2502,84 @@
 		});
 	}
 	
+	dom.viewProfit = function() {
+		var tForm = dom.getTemplate('profitForm');
+		
+		$('#dvModalContent').html(tForm());
+		
+		$('#stepOwnTerm')
+		.slider({min: 0, max: 10, values: [4], step: 1, change: function(event,ui){
+	        console.log(ui);
+	        $('#resultTotalInvestmentPrice').val(ui.value);
+	    }})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''})
+		
+		
+		$('#stepPurchase')
+		.slider({min: 0, max: 100, values: [50], step: 10})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
+		
+		$('#stepOtherAssetRatio')
+		.slider({min: 0, max: 10, values: [5], step: 1})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
+	
+		$('#stepTaxesNdues')	
+		.slider({min: 0, max: 100, values: [40], step: 10})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
+		
+		$('#stepPurchaseFee')	
+		.slider({min: 0, max: 100, values: [40], step: 10})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
+		
+		$('#stepPropertyTax')	
+		.slider({min: 0, max: 100, values: [40], step: 10})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
+		
+		$('#stepSellingPrice')	
+		.slider({min: 0, max: 100, values: [40], step: 10})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
+		
+		$('#stepSellingFee')	
+		.slider({min: 0, max: 100, values: [40], step: 10})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
+		
+		$('#stepTransferTax')	
+		.slider({min: 0, max: 100, values: [40], step: 10})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
+		
+		$('#stepFinancialCost')	
+		.slider({min: 0, max: 100, values: [40], step: 10})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
+		
+		$('#stepLicenseCost')	
+		.slider({min: 0, max: 100, values: [40], step: 10})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
+		
+		$('#stepParmPrivate')	
+		.slider({min: 0, max: 100, values: [40], step: 10})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
+		
+		$('#stepForestResource')	
+		.slider({min: 0, max: 100, values: [40], step: 10})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
+		
+		$('#stepDevBudamgeum')	
+		.slider({min: 0, max: 100, values: [40], step: 10})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
+		
+		$('#stepResolveMoney')	
+		.slider({min: 0, max: 100, values: [40], step: 10})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
+		
+		$('#stepIncome')	
+		.slider({min: 0, max: 100, values: [40], step: 10})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
+		
+		
+		dom.openModal('수익률 분석', 'fullsize');
+		dom.initTooltip('ui-slider-handle', 'hover');
+	}
+	
 }(
 	hotplace.dom = hotplace.dom || {},
 	jQuery
@@ -2417,7 +2638,14 @@
 	}
 	
 	db.setLevelData = function (level, data) {
-		_db[level] = {}, _db[level].data = data, _db[level].log = {}; 
+		if(!_db[level]) _db[level] = {};
+		_db[level].data = data;
+		_db[level].log = {}; 
+	}
+	
+	db.setGongsiLevelData = function(level, data) {
+		if(!_db[level]) _db[level] = {};
+		_db[level].gongsiData = data;
 	}
 	
 	db.hasData = function(level) {
@@ -2425,8 +2653,17 @@
 		return false;
 	}
 	
+	db.hasGongsiData = function() {
+		if(_db[level] && _db[level].gongsiData && _db[level].gongsiData.length > 0) return true;
+		return false;
+	}
+	
 	db.getLevelData = function(level) {
 		 return (_db[level]) ? _db[level].data : null;
+	}
+	
+	db.getGongsiLevelData = function(level) {
+		 return (_db[level]) ? _db[level].gongsiData : null;
 	}
 	
 	db.getLevelLogMap = function(level) {

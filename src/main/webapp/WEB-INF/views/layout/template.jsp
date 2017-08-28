@@ -30,6 +30,11 @@
     <!-- tabulator -->
     <link rel="stylesheet" href="/resources/vendors/tabulator/dist/css/tabulator_simple.min.css" />
     
+    <!-- jQuery-ui-slider-pips -->
+    <!-- https://github.com/simeydotme/jQuery-ui-Slider-Pips/ -->
+    <link rel="stylesheet" href="/resources/jquery-ui/1.10.3/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/vendors/jQuery-ui-Slider-Pips/dist/jquery-ui-slider-pips.min.css" />
+    
     <link rel="stylesheet" href="/resources/css/buttons.css" />
     <link rel="stylesheet" href="/resources/css/layout.css" />
     
@@ -59,8 +64,8 @@
 
 <!-- modal -->
 <div class="modal fade" id="containerModal" tabindex="-1" role="dialog" aria-labelledby="containerModalLabel">
-	<div class="modal-dialog modal-fullsize" role="document">
-    <div class="modal-content modal-fullsize">
+	<div class="modal-dialog " role="document">
+    <div class="modal-content ">
     	<div class="modal-header">
     		<span id="spModalTitle"></span>
         	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -82,6 +87,7 @@
 <script type="text/javascript" src="/resources/vendors/jQRangeSlider-5.7.2/jQRangeSlider-withRuler-min.js"></script>
 <script type="text/javascript" src="/resources/vendors/tooltipster/dist/js/tooltipster.bundle.min.js"></script>
 <script type="text/javascript" src="/resources/vendors/tabulator/dist/js/tabulator.min.js"></script>
+<script type="text/javascript" src="/resources/vendors/jQuery-ui-Slider-Pips/dist/jquery-ui-slider-pips.js"></script>
 
 <script type="text/javascript" src="/resources/chart.js/2.5.0/dist/Chart.min.js"></script>
 

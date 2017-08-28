@@ -1,0 +1,181 @@
+<form class="form-horizontal" role="form" method="post" id="fmProfit">
+    <div class="form-group">
+    	<label class="col-sm-2 control-label">매입(보유)주체</label>
+    	<div class="radio col-sm-10" style="padding-left:30px">
+        	<input id="radioPrivate" name="radioOwn" type="radio" checked>
+            <label for="radioPrivate" class="radio-own">
+                            개인
+            </label>
+            
+            <input id="radioInc" name="radioOwn" type="radio">
+            <label for="radioInc" class="radio-own">
+                           법인
+            </label>
+            
+            <input id="radioParm" name="radioOwn" type="radio">
+            <label for="radioParm" class="radio-own">
+                          농업회사법인(영농법인 등)
+            </label>
+            
+        </div>
+ 
+    </div>
+    
+    <!-- 보유기간 --> 
+    <div class="form-group">
+        <label class="col-sm-2 control-label">보유기간(년)</label>
+        <div class="col-sm-10">
+            <div id="stepOwnTerm"></div>
+        </div>
+    </div>
+    
+    <!-- 매입가격 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">매입가격<br/><span class="sub">(단위면적당 매입가)</span></label>
+        <div class="col-sm-10">
+            <div id="stepPurchase"></div>
+        </div>
+    </div>
+    
+    <!-- 타인자본비율 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">타인자본비율<br/><span class="sub">(금융권등 대출 비용)</span></label>
+        <div class="col-sm-10">
+            <div id="stepOtherAssetRatio"></div>
+        </div>
+    </div>
+    
+    <!-- 제세금 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">제세금<br/><span class="sub">(취득세, 채권매입비)</span></label>
+        <div class="col-sm-10">
+            <div id="stepTaxesNdues"></div>
+        </div>
+    </div>
+    
+    <!-- 매입 수수료 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">매입 수수료<br/><span class="sub">(등기비용, 대행료 등)</span></label>
+        <div class="col-sm-10">
+            <div id="stepPurchaseFee"></div>
+        </div>
+    </div>
+    
+    <!-- 재산세 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">재산세<br/><span class="sub">(보유기간 합계)</span></label>
+        <div class="col-sm-10">
+            <div id="stepPropertyTax"></div>
+        </div>
+    </div>
+    
+    <!-- 예상매도가격 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">예상매도가격<br/><span class="sub">(단위면적당 매도가)</span></label>
+        <div class="col-sm-10">
+            <div id="stepSellingPrice"></div>
+        </div>
+    </div>
+    
+    <!-- 매도 수수료 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">매도 수수료<br/><span class="sub">(중개수수료 등)</span></label>
+        <div class="col-sm-10">
+            <div id="stepSellingFee"></div>
+        </div>
+    </div>
+    
+    <!-- 양도세 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">양도세<br/><span class="sub">(보유기간 반영)</span></label>
+        <div class="col-sm-10">
+            <div id="stepTransferTax"></div>
+        </div>
+    </div>
+    
+    <!-- 금융비용 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">금융비용<br/><span class="sub">(금융기관 대출금리)</span></label>
+        <div class="col-sm-10">
+            <div id="stepFinancialCost"></div>
+        </div>
+    </div>
+    
+    <!-- 인허가 비용 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">인허가 비용<br/><span class="sub">(개발행위허가,건축설계 등)</span></label>
+        <div class="col-sm-10">
+            <div id="stepLicenseCost"></div>
+        </div>
+    </div>
+    
+    <!-- 농지전용 부담금 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">농지전용 부담금<br/><span class="sub">(농지전용 부담금)</span></label>
+        <div class="col-sm-10">
+            <div id="stepParmPrivate"></div>
+        </div>
+    </div>
+    
+    <!-- 대체산림자원 조성비 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">대체산림자원 조성비<br/><span class="sub">((구)산지전용부담금)</span></label>
+        <div class="col-sm-10">
+            <div id="stepForestResource"></div>
+        </div>
+    </div>
+    
+    <!-- 개발부담금 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">개발부담금<br/><span class="sub">(개발행위허가시)</span></label>
+        <div class="col-sm-10">
+            <div id="stepDevBudamgeum"></div>
+        </div>
+    </div>
+    
+    <!-- 예비비 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">예비비<br/><span class="sub">(부대비용 등)</span></label>
+        <div class="col-sm-10">
+            <div id="stepResolveMoney"></div>
+        </div>
+    </div>
+    
+    <!-- 1년간 예상수입 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">1년간 예상수입<br/><span class="sub">(임대수입 등)</span></label>
+        <div class="col-sm-10">
+            <div id="stepIncome"></div>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="col-sm-2 control-label">총 투자비용</label>
+        <div class="col-sm-1">
+         	<input type="text" class="form-control" id="resultTotalInvestmentPrice" readonly>
+        </div>
+        
+        <label class="col-sm-2 control-label">자기자본 총액</label>
+        <div class="col-sm-1">
+            <input type="text" class="form-control" id="resultEquity" readonly>
+        </div>
+        
+        <label class="col-sm-2 control-label">예상 수입금</label>
+        <div class="col-sm-1">
+        	<input type="text" class="form-control" id="resultIncome" readonly>
+        </div>
+        
+        <label class="col-sm-2 control-label">예상 수익률</label>
+        <div class="col-sm-1">
+        	<input type="text" class="form-control" id="resultProfitRatio" readonly>
+        </div>
+    </div>
+   
+   	<div class="form-group">
+        <div class="col-sm-12 text-right">
+     		<button class="btn-info btn" type="button" id="btnProfitCalc">계산하기</button>
+     		<button class="btn-info btn" type="button" id="btnProfitOutput">출력하기</button>
+     		<button class="btn-info btn" type="button" id="btnProfitSaveFile">파일로 저장</button>
+		</div>
+    </div>
+</form>

@@ -14,4 +14,6 @@ public interface HotplaceDao {
 	public List<String> selectListAddress(Address address);
 
 	public List<String> selectListLocationBounds(Map<String, String> param);
+
+	public List<String> selectListGongsiBounds(Map<String, String> param);
 }

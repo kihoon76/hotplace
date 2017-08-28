@@ -39,4 +39,9 @@ public class HotplaceDaoImpl implements HotplaceDao {
 		return msSqlSession.selectList(namespace + ".selectLocationBounds", param);
 	}
 
+	@Override
+	public List<String> selectListGongsiBounds(Map<String, String> param) {
+		return msSqlSession.selectList(namespace + ".selectGongsiBounds", param);
+	}
+
 }

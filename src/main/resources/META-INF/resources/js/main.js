@@ -316,7 +316,7 @@ $(document).ready(function() {
 	
 	/*****************************************************************************************************/
 	hotplace.validation.numberOnly('.numberOnly');
-	hotplace.dom.initTooitip('htooltip');
+	hotplace.dom.initTooltip('htooltip');
 	
 	hotplace.maps.init('naver', {
 		X: 127.9204629,
@@ -324,7 +324,7 @@ $(document).ready(function() {
 		level: 3
 	}, {
 		'zoom_changed' : function(map, level) {
-			hotplace.maps.showCellsLayer();
+			hotplace.maps.showCellLayer();
 			_enableMapButton(level, 'btnSalesView');
 			
 		},
@@ -338,7 +338,7 @@ $(document).ready(function() {
 				hotplace.maps.appendCell();
 			}
 			else {
-				hotplace.maps.showCellsLayer();
+				hotplace.maps.showCellLayer();
 			}
 		},
 		'click' : function(map, latlng) {
@@ -349,7 +349,7 @@ $(document).ready(function() {
 			console.log('tilesloaded');
 		}
 	}, function(map) {
-		hotplace.maps.showCellsLayer();
+		hotplace.maps.showCellLayer();
 	});
 	
 	hotplace.dom.addButtonInMap([/*{

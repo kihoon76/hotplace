@@ -96,5 +96,29 @@ public class HotplaceController {
 		return s;
 	}
 	
+	@GetMapping("gongsi")
+	@ResponseBody
+	public String getGongsiBounds(@RequestParam(name="level") String level, 
+								  @RequestParam(name="nex") String nex,
+								  @RequestParam(name="swx") String swx,
+								  @RequestParam(name="swy") String swy,
+								  @RequestParam(name="ney") String ney) throws Exception  {
+		
+		Map<String, String> param = new HashMap<String, String>();
+		param.put("level", level);
+		param.put("nex", nex);
+		param.put("swx", swx);
+		param.put("swy", swy);
+		param.put("ney", ney);
+		
+		String data = hotplaceService.getGongsiBounds(param);
+		/*AjaxVO ajaxVO = new AjaxVO();
+		ajaxVO.addObject(data);
+		ajaxVO.setSuccess(true);*/
+		//String s = "{\"success\":true, \"datas\":" + data + "}";
+		String s = String.format(DataUtil.getAjaxFormats(), true, "", data);
+		
+		return s;
+	}
 
 }

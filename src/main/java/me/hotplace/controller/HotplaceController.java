@@ -77,7 +77,8 @@ public class HotplaceController {
 									@RequestParam(name="nex") String nex,
 									@RequestParam(name="swx") String swx,
 									@RequestParam(name="swy") String swy,
-									@RequestParam(name="ney") String ney) throws Exception  {
+									@RequestParam(name="ney") String ney,
+									@RequestParam(name="year") String year) throws Exception  {
 		
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("level", level);
@@ -85,6 +86,7 @@ public class HotplaceController {
 		param.put("swx", swx);
 		param.put("swy", swy);
 		param.put("ney", ney);
+		param.put("year", year);
 		
 		String data = hotplaceService.getLocationBounds(param);
 		/*AjaxVO ajaxVO = new AjaxVO();

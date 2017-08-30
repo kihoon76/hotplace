@@ -68,14 +68,14 @@
 		      a.극서, a.극남, a.극동, a.극북, b.공시지가
 		   from 
 		      좌표계.dbo.좌표계13_하위 a with (nolock, INDEX(IX_좌표계13_하위_1))
-		      inner join Ranking.dbo.공시지가 b with (nolock, INDEX(PK_공시지가)) on (b.좌표계13_하위_고유번호=a.고유번호 and b.기준년월='201701')
+		      inner join Ranking.dbo.공시지가 b with (nolock, INDEX(PK_공시지가)) on (b.좌표계13_하위_고유번호=a.고유번호 and b.기준년월=#{year})
 		   where a.레벨=#{level}
 		     and a.극서 >= convert(float, #{swx})
 		     and a.극동 <![CDATA[<=]]> convert(float, #{nex})
 		     and a.극남 >= convert(float, #{swy})
 		     and a.극북 <![CDATA[<=]]> convert(float, #{ney})
 		)
-		select concat(a.극서 , '|', a.극남,  '|', a.극동, '|', a.극북, '|', '[{"type":0, "value":',  공시지가, ', "colorV":',convert(int, ((공시지가-convert(int, min지가))/convert(int, gbn)*35/100) + ((rnk+1)/(((rnk+1)/1020)+1)*65/100)), ', "maxV":', max지가, ', "minV":', min지가 , '}]') 
+		select concat(a.극서 , '|', a.극남,  '|', a.극동, '|', a.극북, '|', '[{"type":0, "value":',  공시지가, ', "colorV":',convert(int, ((공시지가-convert(int, min지가))/(convert(int, gbn)+1)*35/100) + ((rnk+1)/(((rnk+1)/1020)+1)*65/100)), ', "maxV":', max지가, ', "minV":', min지가 , '}]') 
 		  from (
 				select a.*, (max지가-min지가)/1020 [gbn] 
 				  from (

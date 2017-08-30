@@ -942,12 +942,13 @@
 					 swx : _locationBounds.swx,
 					 nex : _locationBounds.nex,
 					 swy : _locationBounds.swy,
-					 ney : _locationBounds.ney
+					 ney : _locationBounds.ney,
+					 year: hotplace.dom.getShowCellYear() + '01'
 				}, function(json) {
 					try {
 						db.setLevelData(_currentLevel, json.datas);
 						console.log(json.datas);
-						_showCellLayer( cellType || _cellTypes.GONGSI);
+						_showCellLayer(cellType || _cellTypes.GONGSI);
 						
 					}
 					catch(e) {
@@ -1047,6 +1048,7 @@
 	var _loadmask = false;
 	var _templates = {};
 	var _infoWindowForCell = null;
+	var _showCellYear = 2017;
 	/*
 	 * //https://github.com/vadimsva/waitMe/blob/gh-pages/index.html
 	 * */
@@ -2636,13 +2638,20 @@
 		});
 		
 		el.on('userValuesChanged', function(e, data){
-			dom.showMask();
+			_showCellYear = data.values.max;
+			
+			hotplace.maps.showCellLayer(_showCellYear);
+			/*dom.showMask();
 			setTimeout(function() {
 				dom.hideMask();
-			}, 1000);
+			}, 1000);*/
 		});
 		
 		el.show();
+	}
+	
+	dom.getShowCellYear = function() {
+		return _showCellYear;
 	}
 	
 	dom.hideYearRangeDiv = function() {

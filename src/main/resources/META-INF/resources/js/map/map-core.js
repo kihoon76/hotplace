@@ -244,7 +244,7 @@
 			break;
 		}
 		
-		var locationRate =  parseFloat((curBounds.nex - curBounds.swx)*1.5);
+		var locationRate =  parseFloat((curBounds.nex - curBounds.swx)/8);
 		
 		_locationBounds.swx = curBounds.swx - locationRate;
 		_locationBounds.swy = curBounds.swy - locationRate;
@@ -269,7 +269,7 @@
 	
 	function _getColorByGongsiWeight(weight) {
 		var color = '';
-		var h = Math.ceil(weight.colorV);
+		/*var h = Math.ceil(weight.colorV);
 		
 		if(h <= 50) {
 			color = 'rgba(255,255,255,0.0)';
@@ -282,9 +282,9 @@
 		}
 		else {
 			color = 'rgb(255,0,0)';
-		}
+		}*/
 		
-		/*var v = weight.colorV;
+		var v = weight.colorV;
 		if(v >= 1020) {
 			color = 'rgb(255,0,0)';
 		}
@@ -301,7 +301,7 @@
 			else {
 				color = 'rgb(0,' + v + ',255)';
 			}
-		}*/
+		}
 		
 		/*
 		 * R 255 G 0   B 0  1020
@@ -449,10 +449,10 @@
 				startIdx,
 				function(data) {
 					//weight 50점 밑으로는 만들지 않는다
-					if(Math.ceil(data.weight[0].colorV) <= 50) {
+					/*if(Math.ceil(data.weight[0].colorV) <= 50) {
 						_notDrawedCells.push(data);
 						return;
-					}
+					}*/
 					
 					_cells.push(
 						_drawRectangle(
@@ -462,7 +462,7 @@
 							  data.location[2], 
 							  {
 								  fillColor: colorFn(data.weight[0]),
-								  fillOpacity : 0.5
+								  fillOpacity : 0.3
 							  },
 							  data
 						)
@@ -705,7 +705,8 @@
 			        mapTypeControlOptions: {
 			        	style: _vender.MapTypeControlStyle.DROPDOWN
 			        },
-			        minZoom: mapOptions.minZoom || 3 
+			        minZoom: mapOptions.minZoom || 3,
+			        //maxZoom: mapOptions.maxZoom || 13
 				});
 				
 				_venderMap.mapTypes.set(naver.maps.MapTypeId.NORMAL, naver.maps.NaverMapTypeOption.getNormalMap());
@@ -1171,15 +1172,19 @@
 		}
 	}
 	
-	dom.initTooltip = function(selectorClass, trigger) {
-		// first on page load, initialize all tooltips
-		$('.' + selectorClass).tooltipster({
+	dom.initTooltip = function(selectorClass, options) {
+		var target = {
 			theme: 'tooltipster-borderless',
-			trigger: trigger || 'custom',
+			trigger: 'custom',
+			side: 'top',
 			functionBefore: function(instance, helper) {
 				return true;
 			}
-		});
+		};
+		
+		$.extend(target, options);
+		// first on page load, initialize all tooltips
+		$('.' + selectorClass).tooltipster(target);
 	}
 	
 	dom.openTooltip = function(selector) {
@@ -2387,8 +2392,7 @@
 	
 	dom.hideMask = function() {
 		_loadEl.waitMe('hide');
-	},
-	
+	};
 	
 	dom.getTemplate = function(name) {
 		if(_templates[name] === undefined) {
@@ -2436,7 +2440,7 @@
 					'<button id="{0}" type="button" class="button glyphicon glyphicon-user" {1}>{2}</button>' :
 					'<input type="checkbox" data-toggle="toggle" id="{0}" {1}>{2}';*/
 			
-			return disabled ? '<button id="{0}" type="button" disabled class="button button-disabled {3} {4}" {1}>{2}</button>' :
+			return disabled ? '<button id="{0}" type="button" disabled class="button button-disabled {3} {4} {5}" {1}>{2}</button>' :
 				              '<button id="{0}" type="button" class="button {3} {4}" {1}>{2}</button>';
 		}
 		
@@ -2446,10 +2450,10 @@
 			
 			for(var i=0; i<len; i++) {
 				if(params[i].glyphicon){
-					btns += template(params[i].disabled).format(params[i].id, params[i].attr, params[i].title, 'glyphicon', 'glyphicon-' + params[i].glyphicon);
+					btns += template(params[i].disabled).format(params[i].id, params[i].attr || '', params[i].title || '', 'glyphicon', 'glyphicon-' + params[i].glyphicon, params[i].clazz || '');
 				}
 				else {
-					btns += template(params[i].disabled).format(params[i].id, params[i].attr, params[i].title);
+					btns += template(params[i].disabled).format(params[i].id, params[i].attr || '', params[i].title || '', params[i].clazz || '');
 				}
 			}
 			
@@ -2606,7 +2610,45 @@
 		
 		
 		dom.openModal('수익률 분석', 'fullsize');
-		dom.initTooltip('ui-slider-handle', 'hover');
+		//dom.initTooltip('ui-slider-handle', {trigger:'hover'});
+	}
+	
+	dom.showYearRangeDiv = function() {
+		var max = 2017, min = 2010;
+		
+		var el = $('#dvYearRange');
+		el.rangeSlider({
+			arrows: false,
+			//enabled: false,
+			bounds: {min: min, max: max},
+			defaultValues: {min: max-1, max: 2017},
+			step: 1,
+			range:{min:1, max:1},
+			formatter: function(val) {
+				if(val == max) {
+					val = '오늘'; 
+				}
+				else {
+					val = (max - val) + '년전';
+				}
+				return val;
+			}
+		});
+		
+		el.on('userValuesChanged', function(e, data){
+			dom.showMask();
+			setTimeout(function() {
+				dom.hideMask();
+			}, 1000);
+		});
+		
+		el.show();
+	}
+	
+	dom.hideYearRangeDiv = function() {
+		var el = $('#dvYearRange');
+		el.hide();
+		el.rangeSlider('destroy');
 	}
 	
 }(

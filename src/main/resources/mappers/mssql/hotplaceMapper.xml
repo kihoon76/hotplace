@@ -51,6 +51,7 @@
 	</select>
 	
 	<select id="selectLocationBounds" resultType="string" parameterType="hashmap">
+		<!-- 
 		select concat(극서 , '|', 극남,  '|', 극동, '|', 극북, '|', '[{"type":0, "value":50, "colorV":', case when PNU존재여부='Y' then round(rand(convert(varbinary, newid()))*100, 2) else 0 end, '}]')
           from [좌표계].[dbo].[좌표계]
          where 레벨 = #{level}
@@ -59,6 +60,31 @@
            and 극남  between convert(float, #{swy}) and convert(float, #{ney})
            and 극북  between convert(float, #{swy}) and convert(float, #{ney})
          order by 극서 asc
+        -->
+          
+        with tmp as
+		(
+		   select 
+		      a.극서, a.극남, a.극동, a.극북, b.공시지가
+		   from 
+		      좌표계.dbo.좌표계13_하위 a with (nolock, INDEX(IX_좌표계13_하위_1))
+		      inner join Ranking.dbo.공시지가 b with (nolock, INDEX(PK_공시지가)) on (b.좌표계13_하위_고유번호=a.고유번호 and b.기준년월='201701')
+		   where a.레벨=#{level}
+		     and a.극서 >= convert(float, #{swx})
+		     and a.극동 <![CDATA[<=]]> convert(float, #{nex})
+		     and a.극남 >= convert(float, #{swy})
+		     and a.극북 <![CDATA[<=]]> convert(float, #{ney})
+		)
+		select concat(a.극서 , '|', a.극남,  '|', a.극동, '|', a.극북, '|', '[{"type":0, "value":',  공시지가, ', "colorV":',convert(int, ((공시지가-convert(int, min지가))/convert(int, gbn)*35/100) + ((rnk+1)/(((rnk+1)/1020)+1)*65/100)), ', "maxV":', max지가, ', "minV":', min지가 , '}]') 
+		  from (
+				select a.*, (max지가-min지가)/1020 [gbn] 
+				  from (
+						select a.*,  max(공시지가) over () [max지가], min(공시지가) over () [min지가], dense_rank() over (order by 공시지가) [rnk]
+						  from tmp a
+						) a
+				) a
+		 order by a.극서 asc
+         
 	</select>
 	
 	<select id="selectGongsiBounds" resultType="string" parameterType="hashmap">
@@ -66,30 +92,24 @@
 	</select>
 </mapper>
 <!-- 
-		with tmp as
-		(
-		   select a.극서, a.극동, a.극남, a.극북, avg(공시지가) [공시지가]
-		     from [좌표계].dbo.좌표계13_하위 a with (nolock) 
-		    inner join [좌표계].dbo.좌표계13 b with (nolock)
-			   on (b.X좌표 between a.좌표계13_X좌표시작 and a.좌표계13_X좌표끝 and b.Y좌표 between a.좌표계13_Y좌표시작 and a.좌표계13_Y좌표끝)
-		    inner join 클린징데이터.dbo.공시지가 c with (nolock)
-			   on (c.PNU=b.PNU and c.기준년월='201701')
-		   where a.레벨=#{level}
-		     and a.극서 >= convert(float, #{swx})
-			 and a.극동 <![CDATA[<=]]> convert(float, #{nex})
-			 and a.극남 >= convert(float, #{swy})
-			 and a.극북 <![CDATA[<=]]> convert(float, #{ney}) 
-		   group by a.레벨, a.X좌표, a.Y좌표, a.극서, a.극동, a.극남, a.극북
-		)
-		select  concat(a.극서 , '|', a.극남,  '|', a.극동, '|', a.극북, '|', '[{"type":0, "value":',  공시지가, ',"colorV":', (공시지가-최저가)/편차, '}]')
-		from
-		(
-		   select *, 
-		   (select min(공시지가) from tmp) [최저가], 
-		   (select max(공시지가) from tmp) [최고가], 
-		   (select (max(공시지가)-min(공시지가))/1020 from tmp) [편차] 
-		   from tmp a
-		) a
-		order by a.극서 asc
+		select 
+   a.극서, a.극동, a.극남, a.극북, b.공시지가
+   from 
+   좌표계.dbo.좌표계13_하위 a
+   inner join Ranking.dbo.공시지가 b on (b.좌표계13_하위_고유번호=a.고유번호 and b.기준년월='201701')
+   where 
+   a.레벨=10 and 
+   a.극서 >= 129.1 and 
+   a.극동 <= 129.2 and 
+   a.극남 >= 35.9 and 
+   a.극북 <= 36.0
+   OPTION (TABLE HINT(a, INDEX(IX_좌표계13_하위_1)), TABLE HINT(b, INDEX(PK_공시지가)))
+
+
+
+
+
+
+
 
  -->

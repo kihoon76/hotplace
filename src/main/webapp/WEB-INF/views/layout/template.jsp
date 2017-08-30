@@ -60,6 +60,7 @@
 	<div id="dvAddrSearch" class="layer-popup" style="width:600px; height:800px"></div>
 	<div id="dvInfo"       class="layer-popup" style="width:600px; height:800px"></div>
 	<div id="dvSalesView"  class="layer-popup" style="width:250px; height:330px"></div>
+	<div id="dvYearRange"  class="layer-year-range"></div>
 </div>
 
 <!-- modal -->
@@ -84,7 +85,7 @@
 <script type="text/javascript" src="/resources/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
 
 <script type="text/javascript" src="/resources/jquery-ui/1.10.3/ui/minified/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/resources/vendors/jQRangeSlider-5.7.2/jQRangeSlider-withRuler-min.js"></script>
+<script type="text/javascript" src="/resources/vendors/jQRangeSlider-5.7.2/jQAllRangeSliders-min.js"></script>
 <script type="text/javascript" src="/resources/vendors/tooltipster/dist/js/tooltipster.bundle.min.js"></script>
 <script type="text/javascript" src="/resources/vendors/tabulator/dist/js/tabulator.min.js"></script>
 <script type="text/javascript" src="/resources/vendors/jQuery-ui-Slider-Pips/dist/jquery-ui-slider-pips.js"></script>

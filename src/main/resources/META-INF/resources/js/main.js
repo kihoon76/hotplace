@@ -224,10 +224,10 @@ $(document).ready(function() {
 		var addrObject = (target.id == 'chkSan') ? _addrObj : _addrObjRadius;
 		
 		if(target.checked) {
-			addrObjectsan = '2';
+			addrObject.san = '2';
 		}
 		else {
-			addrObjectsan = '1';
+			addrObject.san = '1';
 		}
 	});
 	
@@ -288,9 +288,11 @@ $(document).ready(function() {
 			radius = $('input:radio[name="radioRadius"]:checked').val();
 		}
 		
+		hotplace.maps.destroyMarkerWindow(hotplace.maps.MarkerType.RADIUS_SEARCH);
+		
 		hotplace.maps.panToBounds(lat, lng, null, function() {
-			
 			hotplace.maps.destroyMarkerType(hotplace.maps.MarkerType.RADIUS_SEARCH);
+			
 			hotplace.maps.getMarker(hotplace.maps.MarkerType.RADIUS_SEARCH, lat, lng, {
 				'click' : function(map, newMarker, newInfoWindow) {
 					 if(newInfoWindow.getMap()) {
@@ -315,8 +317,6 @@ $(document).ready(function() {
 	});
 	
 	/*****************************************************************************************************/
-	hotplace.validation.numberOnly('.numberOnly');
-	hotplace.dom.initTooltip('htooltip');
 	
 	hotplace.maps.init('naver', {
 		X: 127.9204629,
@@ -326,7 +326,6 @@ $(document).ready(function() {
 		'zoom_changed' : function(map, level) {
 			hotplace.maps.showCellLayer();
 			_enableMapButton(level, 'btnSalesView');
-			
 		},
 		'zoom_start' : function(map, level) {
 			////hotplace.test.initMarker(level);
@@ -351,6 +350,7 @@ $(document).ready(function() {
 		}
 	}, function(map) {
 		hotplace.maps.showCellLayer();
+		hotplace.dom.showYearRangeDiv();
 	});
 	
 	hotplace.dom.addButtonInMap([/*{
@@ -372,7 +372,6 @@ $(document).ready(function() {
 		id:'btnNews',
 		glyphicon: 'list-alt',
 		attr: 'data-switch="off"',
-		title:'',
 		callback: function(e) {
 			_btnCallback($(this), e, 'dvNews', function() {
 				setTimeout(function repeat() {
@@ -387,14 +386,12 @@ $(document).ready(function() {
 		id:'btnAddrSearch',
 		glyphicon: 'search',
 		attr: 'data-switch="off"',
-		title:'',
 		callback: function(e) {
 			_btnCallback($(this), e, 'dvAddrSearch');
 		}
 	},{
 		id:'btnUser',
 		glyphicon: 'user',
-		title:'',
 		callback: function() {
 			hotplace.dom.captureToCanvas();
 		}
@@ -402,7 +399,6 @@ $(document).ready(function() {
 		id:'btnInfo',
 		glyphicon: 'info-sign',
 		attr: 'data-switch="off"',
-		title:'',
 		callback: function(e) {
 			hotplace.test.searchRadius();
 			//_btnCallback($(this), e, 'dvInfo');
@@ -410,9 +406,9 @@ $(document).ready(function() {
 	},{
 		id:'btnSalesView',
 		glyphicon:'check',
-		attr: 'data-switch="off"',
+		attr: 'data-switch="off" title="test"',
 		disabled: true,
-		title:'',
+		clazz: 'mBtnTooltip',
 		callback: function(e) {
 			_btnCallback($(this), e, 'dvSalesView');
 		}
@@ -420,11 +416,14 @@ $(document).ready(function() {
 		id:'btnCadastral',
 		attr: 'data-switch="off"',
 		glyphicon: 'globe',
-		title:'',
 		callback: function() {
 			var onOff = $(this).data('switch');
 			hotplace.maps.showJijeokLayer(onOff, $(this));
 			$(this).toggleClass('button-on')
 		}
 	}]);
+	
+	hotplace.validation.numberOnly('.numberOnly');
+	hotplace.dom.initTooltip('htooltip');
+	hotplace.dom.initTooltip('mBtnTooltip',{side: 'right', trigger: 'hover'});
 });

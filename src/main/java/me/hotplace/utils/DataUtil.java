@@ -59,6 +59,9 @@ public class DataUtil {
 		return m.build(list, deli);
 	}
 	
+	/*
+	 * 129.19678142091|129.19903093874|35.94412733348|35.94547893685|[{type:0, value:645, colorV:1}] row
+	 * */
 	public static String makeLatLngWeight(List<String> list, String deli) {
 		
 		Make m = new Make() {
@@ -69,7 +72,7 @@ public class DataUtil {
 				for(String token : list) {
 					String[] s = StringUtils.splitByWholeSeparator(token, deli);
 					sb.append("{\"weight\":");
-					sb.append(s[6]);
+					sb.append(s[4]);
 					sb.append(",");
 					sb.append("\"location\":[");
 					sb.append(s[0]);
@@ -79,12 +82,7 @@ public class DataUtil {
 					sb.append(s[2]);
 					sb.append(",");
 					sb.append(s[3]);
-					sb.append(",");
-					sb.append(s[4]);
-					sb.append(",");
-					sb.append(s[5]);
-					sb.append("]}");
-					sb.append(",");
+					sb.append("]},");
 				}
 			}
 		};

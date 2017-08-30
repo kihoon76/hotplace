@@ -331,6 +331,7 @@ $(document).ready(function() {
 		'zoom_start' : function(map, level) {
 			////hotplace.test.initMarker(level);
 			hotplace.maps.destroyMarkers();
+			hotplace.maps.destroyMarkerWindow(hotplace.maps.MarkerType.RADIUS_SEARCH);
 		},
 		'dragend' : function(map, bnds) {
 			
@@ -394,6 +395,9 @@ $(document).ready(function() {
 		id:'btnUser',
 		glyphicon: 'user',
 		title:'',
+		callback: function() {
+			hotplace.dom.captureToCanvas();
+		}
 	},{
 		id:'btnInfo',
 		glyphicon: 'info-sign',

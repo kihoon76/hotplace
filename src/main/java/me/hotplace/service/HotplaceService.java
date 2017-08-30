@@ -35,7 +35,7 @@ public class HotplaceService {
 
 	public String getLocationBounds(Map<String, String> param) {
 		List<String> list = hotplaceDao.selectListLocationBounds(param);
-		return DataUtil.makeLatLngWeight(list, ",");
+		return DataUtil.makeLatLngWeight(list, "|");
 	}
 
 	public String getGongsiBounds(Map<String, String> param) {

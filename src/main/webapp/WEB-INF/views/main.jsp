@@ -20,4 +20,6 @@
 <script type="text/javascript" src="/resources/vendors/html2canvas/html2canvas.js"></script>
 <script type="text/javascript" src="/resources/vendors/html2canvas/html2canvas.svg.js"></script>
 </content>
+<!-- <img id="ii" style="width:100px; height:100px" />
+<div id="test2" style="position:absolute; top: -300000px; left:-300000px;"></div>-->
 </body>

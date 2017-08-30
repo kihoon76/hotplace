@@ -86,7 +86,7 @@
 				var activeMask = (params.activeMask == undefined) ? true : params.activeMask; 
 				if(activeMask) dom.hideMask();
 			},
-			timeout: params.timeout || 30000
+			timeout: params.timeout || 300000
 		});
 	}
 	
@@ -152,18 +152,13 @@
 	var _marginBounds  = { 'swy' : 0, 'swx' : 0, 'ney' : 0,	'nex' : 0 };  //실제로 cell을 그릴 bounds
 	var _locationBounds = {'swy' : 0, 'swx' : 0, 'ney' : 0,	'nex' : 0};	  //서버로 부터 받은 좌표계 bounds
 	
-	var _mapTypes = {heat:'heat', cell:'cell', jijeok:'use_district'};
-	
-	var _currentMapType;
-	
-	var _mapTypeLayers = {heat: 'off', cell: 'off', jijeok: 'off'};
+	var _cellTypes = {GONGSI:'GONGSI'};
 	
 	var _cells = [];
 	var _notDrawedCells = [];    //weight값 제한으로 화면에서 그리지않은 cell들
 	
 	var _markerTypes = {
 		RADIUS_SEARCH: 'RADIUS_SEARCH',
-		GONGSI: 'GONGSI'
 	};
 	
 	maps.MarkerType = _markerTypes;
@@ -249,7 +244,7 @@
 			break;
 		}
 		
-		var locationRate =  parseFloat((curBounds.nex - curBounds.swx)/2);
+		var locationRate =  parseFloat((curBounds.nex - curBounds.swx)*1.5);
 		
 		_locationBounds.swx = curBounds.swx - locationRate;
 		_locationBounds.swy = curBounds.swy - locationRate;
@@ -272,9 +267,9 @@
 		return _currentLevel;
 	}
 	
-	function _getColorByWeight(weight) {
+	function _getColorByGongsiWeight(weight) {
 		var color = '';
-		var h = Math.ceil(weight);
+		var h = Math.ceil(weight.colorV);
 		
 		if(h <= 50) {
 			color = 'rgba(255,255,255,0.0)';
@@ -289,11 +284,39 @@
 			color = 'rgb(255,0,0)';
 		}
 		
-		return color;
+		/*var v = weight.colorV;
+		if(v >= 1020) {
+			color = 'rgb(255,0,0)';
+		}
+		else {
+			if(v >= 765 && v < 1020) {
+				color = 'rgb(255,' + (1020-v) + ',0)';
+			}
+			else if(v >= 510 && v < 765) {
+				color = 'rgb(' + (v-510) + ',255,0)';
+			}
+			else if(v >= 255 && v < 510) {
+				color = 'rgb(0,255,' + (510-v) + ')';
+			}
+			else {
+				color = 'rgb(0,' + v + ',255)';
+			}
+		}*/
 		
-		//255,0,0 ~ 255,255,0
+		/*
+		 * R 255 G 0   B 0  1020
+		 * R 255 G 255 B 0   765
+		 * R   0 G 255 B 0	 510
+		 * R   0 G 255 B 255 255
+		 * R   0 G   0 B 255   0
+		 * */
+		
+		return color;
 	}
 	
+	/*
+	 * data = {weight:[], location:[125.06666666667(극서), 33.83652712959(극남), 125.35460495018(극동), 34.06720077312(극북)]},...
+	 * */
 	function _drawRectangle(swy, swx, ney, nex, css, cellData, triggerable) {
 		var rec = null;
 		
@@ -319,14 +342,18 @@
 			
 			_venderEvent.addListener(rec, 'click', function(e) {
 				var r = e.overlay;
-				console.log(e);
-				var location = new _vender.LatLng(r.data.location[5], r.data.location[4]);
-				hotplace.dom.openInfoWndowForCell(_venderMap, location, _vender, _venderEvent, {'weight' : r.data.weight},{
+				var xcDiff = parseFloat((r.data.location[2] - r.data.location[0])/2).toFixed(11);
+				var ycDiff = parseFloat((r.data.location[3] - r.data.location[1])/2).toFixed(11);
+				
+				var xc = r.data.location[0] + parseFloat(xcDiff);
+				var yc = r.data.location[1] + parseFloat(ycDiff);
+				var location = new _vender.LatLng(yc, xc);
+				hotplace.dom.openInfoWindowForCell(_venderMap, location, _vender, _venderEvent, {'weight' : r.data.weight[0]},{
 					'open' : function(win, obj) {
 						console.log(obj);
 					},
 				});
-				
+				         
 				hotplace.ajax({
 					url: 'sample/celldetail',
 					method: 'GET',
@@ -389,11 +416,11 @@
 	
 	function _createMarkers(level, startIdx, markerType) {
 		var markerData;
-		switch(markerType) {
+		/*switch(markerType) {
 		case _markerType.GONGSI :
 			markerData = hotplace.database.getGongsiLevelData(level);
 			break;
-		}
+		}*/
 		
 		_commXY(markerData,
 				startIdx,
@@ -406,13 +433,23 @@
 		);
 	}
 	
-	function _createCells(level, startIdx) {
+	function _createCells(level, startIdx, cellType) {
+		var colorFn;
+	    switch(cellType) {
+		case _cellTypes.GONGSI :
+			colorFn = _getColorByGongsiWeight;
+			break;
+		default :
+			colorFn = _getColorByGongsiWeight;
+			break;
+		}
+		  
 		_commXY(hotplace.database.getLevelData(level),
 				/*hotplace.database.getLevelLogMap(level),*/
 				startIdx,
 				function(data) {
 					//weight 50점 밑으로는 만들지 않는다
-					if(Math.ceil(data.weight) <= 50) {
+					if(Math.ceil(data.weight[0].colorV) <= 50) {
 						_notDrawedCells.push(data);
 						return;
 					}
@@ -424,7 +461,7 @@
 							  data.location[3],
 							  data.location[2], 
 							  {
-								  fillColor: _getColorByWeight(data.weight),
+								  fillColor: colorFn(data.weight[0]),
 								  fillOpacity : 0.5
 							  },
 							  data
@@ -432,56 +469,6 @@
 					);
 				}
 		);
-		/*var data = hotplace.database.getLevelData(level);
-		var logMap = hotplace.database.getLevelLogMap(level);
-		var len = data.length;
-		
-		var boundMX = _marginBounds.nex;
-		var boundmY = _marginBounds.swy;
-		var boundMY = _marginBounds.ney;
-		var drawedCnt = 0;
-		
-		var id = '';
-		
-		for(var i = startIdx; i < len; i++) {
-			
-			if(data[i].location[0] > boundMX) break;
-			var y = data[i].location[1];
-
-			if(y >= boundmY && y <= boundMY) {
-				
-				id = data[i]['id'];
-				
-				if(!id || !logMap[id] ){
-					data[i]['id'] = hotplace.createUuid();
-					logMap[data[i]['id']] = true;
-					drawedCnt++;
-					
-					//weight 50점 밑으로는 만들지 않는다
-					if(Math.ceil(data[i].weight) <= 50) {
-						_notDrawedCells.push(data[i]);
-						continue;
-					}
-					
-					_cells.push(
-						_drawRectangle(
-							  data[i].location[1],
-							  data[i].location[0],
-							  data[i].location[3],
-							  data[i].location[2], 
-							  {
-								  fillColor: _getColorByWeight(data[i].weight),
-								  fillOpacity : 0.5
-							  },
-							  data[i]
-						)
-					);
-					
-				}
-			}
-		}
-		
-		console.log("drawedCnt ==> " + drawedCnt);*/
 	}
 	
 	/*
@@ -568,14 +555,14 @@
 		}
 	}
 	
-	function _showCellLayer() {
+	function _showCellLayer(cellType) {
 		var db = hotplace.database;
 		var currentLevel = _getCurrentLevel();
 		
 		if(!db.hasData(currentLevel)) return;
 		var startIdx = db.getStartXIdx(_marginBounds.swx, currentLevel);
 		
-		_createCells(currentLevel, startIdx);
+		_createCells(currentLevel, startIdx, cellType);
 	}
 	
 	function _showGongsiLayer() {
@@ -592,12 +579,25 @@
 		_removeAllCells();
 		_setLocationBounds();
 		_notDrawedCells = [];
-		hotplace.dom.closeInfoWndowForCell();
+		hotplace.dom.closeInfoWindowForCell();
 		hotplace.database.initLevel(level);
 	}
 	
 	maps.destroyMarkers = _destroyMarkers;
 	maps.destroyMarkerType = _destroyMarkerType;
+	
+	maps.destroyMarkerWindow = function(markerType) {
+		if(markerType) {
+			var len = _infoWindowsForMarker[markerType].length;
+			if(len > 0) {
+				for(var i=0; i<len; i++) {
+					_infoWindowsForMarker[markerType][i].close();
+				}
+				
+				_infoWindowsForMarker[markerType] = [];
+			}
+		}
+	}
 	
 	maps.setLevel = function(level) {
 		switch(_venderStr) {
@@ -904,7 +904,7 @@
 		}
 	};
 	
-	maps.appendGongsi = function() {
+	/*maps.appendGongsi = function() {
 		var db = hotplace.database;
 		var _currentLevel = _getCurrentLevel();
 		
@@ -912,7 +912,7 @@
 			var startIdx = db.getStartXIdx(_marginBounds.swx, _currentLevel);
 			_createMarker(_currentLevel, startIdx);
 		}
-	}
+	}*/
 	 
 	maps.isInLocationBounds = function(bnds) {
 		return !(_locationBounds.swx > bnds.swx || 
@@ -921,7 +921,7 @@
 				 _locationBounds.ney < bnds.ney);
 	}
 	
-	maps.showCellLayer = function() {
+	maps.showCellLayer = function(cellType) {
 		
 		var db = hotplace.database;
 		var _currentLevel = _getCurrentLevel();
@@ -946,7 +946,7 @@
 					try {
 						db.setLevelData(_currentLevel, json.datas);
 						console.log(json.datas);
-						_showCellLayer();
+						_showCellLayer( cellType || _cellTypes.GONGSI);
 						
 					}
 					catch(e) {
@@ -1004,7 +1004,6 @@
 			}
 			
 			$btn.data('switch', 'off');
-			_mapTypeLayers.jijeok = 'off';
 		}
 		else if(onOff == 'off') {
 			if(_venderStr == 'naver') {
@@ -1015,7 +1014,6 @@
 			}
 			
 			$btn.data('switch', 'on');
-			_mapTypeLayers.jijeok = 'on';
 		}
 	}
 }(
@@ -1097,7 +1095,7 @@
 		_infoWindowForCell = new vender.InfoWindow({
 	        content: template(data),
 	        borderWidth: 1,
-	        zIndex: 100000000
+	        zIndex: 1000
 	    });
 		
 		if(listeners) {
@@ -1153,20 +1151,20 @@
 		}
 	}
 	
-	dom.openInfoWndowForCell = function(map, location, vender, venderEvent, data, listeners) {
-		var win = _makeInfoWndowForCell(vender, venderEvent, data, listeners);
-		win.open(map, location);
+	dom.openInfoWindowForCell = function(map, location, vender, venderEvent, data, listeners) {
+		_infoWindowForCell = _makeInfoWndowForCell(vender, venderEvent, data, listeners);
+		_infoWindowForCell.open(map, location);
 		
 		//event handler가 걸려있는지 확인
 		var ev = $._data(document.getElementById('btnCellClose'), 'events');
 		if(!ev || !ev.click) {
 			$('#btnCellClose').on('click', function(e) {
-				dom.closeInfoWndowForCell();
+				dom.closeInfoWindowForCell();
 			});
 		}
 	}
 	
-	dom.closeInfoWndowForCell = function() {
+	dom.closeInfoWindowForCell = function() {
 		if(_infoWindowForCell) {
 			_infoWindowForCell.close();
 			_infoWindowForCell = null;
@@ -2251,6 +2249,9 @@
 			} 
 	}
 	
+    /**
+     * @private
+     */
 	function _echartLine() {
 		if ($('#echart_line').length ){ 
 			  
@@ -2467,7 +2468,9 @@
 	    var nodesToRecover = [];
 	    var nodesToRemove = [];
 	    var targetElem = $('#map');
-	    var svgElem = targetElem.find('svg');
+	    //var els =  document.getElementsByTagName('svg')[0]
+		//var elsLen = els.length;
+	    var svgElem = targetElem.find('svg\\:svg');
 
 	    svgElem.each(function(index, node) {
 	        var parentNode = node.parentNode;
@@ -2491,7 +2494,32 @@
 	        parentNode.appendChild(canvas);
 	    });
 	    
-		html2canvas(targetElem, {
+	    hotplace.ajax({
+	    	url: 'sample/naverForm',
+	    	method: 'GET',
+	    	dataType: 'html',
+	    	success: function(data) {
+	    		console.log(data);
+	    		var d = $('#test2');
+	    		d.html(data)
+	    		console.log(d);
+	    		html2canvas(d, {
+	    			allowTaint: true,
+	    			taintTest: false,
+	    			useCORS: true,
+	    			profile: true,
+	    			onrendered: function(canvas) {
+	    				//$('body').append(canvas);
+	    				console.log(canvas)
+	    				var img = canvas.toDataURL('image/png');
+	    				d.html('');
+	    				$('#ii').attr('src', img)
+	    			}
+	    		});
+	    	}
+	    });
+	    
+		/*html2canvas(targetElem, {
 			allowTaint: true,
 			taintTest: false,
 			useCORS: true,
@@ -2499,7 +2527,8 @@
 			onrendered: function(canvas) {
 				$('body').append(canvas);
 			}
-		});
+		});*/
+		
 	}
 	
 	dom.viewProfit = function() {

@@ -249,10 +249,10 @@
 		
 		var locationRate =  parseFloat((curBounds.nex - curBounds.swx)/8/**(r[_getCurrentLevel()-3])*/);
 		
-		_locationBounds.swx = _marginBounds.swx - locationRate;
-		_locationBounds.swy = _marginBounds.swy - locationRate;
-		_locationBounds.nex = _marginBounds.nex + locationRate;
-		_locationBounds.ney = _marginBounds.ney + locationRate;
+		_locationBounds.swx = _currentBounds.swx - locationRate;
+		_locationBounds.swy = _currentBounds.swy - locationRate;
+		_locationBounds.nex = _currentBounds.nex + locationRate;
+		_locationBounds.ney = _currentBounds.ney + locationRate;
 	}
 	
 	function _getCurrentLevel() {

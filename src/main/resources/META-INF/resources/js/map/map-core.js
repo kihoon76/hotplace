@@ -253,6 +253,10 @@
 		_locationBounds.swy = _currentBounds.swy - locationRate;
 		_locationBounds.nex = _currentBounds.nex + locationRate;
 		_locationBounds.ney = _currentBounds.ney + locationRate;
+		/*_locationBounds.swx = _marginBounds.swx - locationRate;
+		_locationBounds.swy = _marginBounds.swy - locationRate;
+		_locationBounds.nex = _marginBounds.nex + locationRate;
+		_locationBounds.ney = _marginBounds.ney + locationRate;*/
 	}
 	
 	function _getCurrentLevel() {

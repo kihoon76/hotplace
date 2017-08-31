@@ -318,22 +318,28 @@ $(document).ready(function() {
 	
 	/*****************************************************************************************************/
 	
+	var _prevLevel = 3;
+	var _currLevel = 3;
+	
+	var _isLevelChanged = function() {
+		return _prevLevel != _currLevel;
+	}
+	
 	hotplace.maps.init('naver', {
 		X: 127.9204629,
 		Y: 36.0207091, 
 		level: 3
 	}, {
 		'zoom_changed' : function(map, level) {
-			hotplace.maps.showCellLayer();
+			//hotplace.maps.showCellLayer();
+			_currLevel = level;
 			_enableMapButton(level, 'btnSalesView');
-			/*var _promise = function(param) {
-				return new Promise(function(resolve, reject) {
-					hotplace.maps.showCellLayer();
-				});
-			}*/
+			
 		},
 		'zoom_start' : function(map, level) {
 			////hotplace.test.initMarker(level);
+			_prevLevel = level;
+			
 			hotplace.maps.destroyMarkers();
 			hotplace.maps.destroyMarkerWindow(hotplace.maps.MarkerType.RADIUS_SEARCH);
 		},
@@ -350,8 +356,12 @@ $(document).ready(function() {
 			console.log(latlng)
 			hotplace.maps.getClickedCell(latlng);
 		},
-		'tilesloaded': function() {
-			console.log('tilesloaded');
+		'tilesloaded': function(e) {
+			//console.log(e);
+			
+			if(_isLevelChanged()) {
+				hotplace.maps.showCellLayer();
+			}
 		}
 	}, function(map) {
 		hotplace.maps.showCellLayer();

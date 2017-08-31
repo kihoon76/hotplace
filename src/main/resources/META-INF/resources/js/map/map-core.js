@@ -941,7 +941,7 @@
 				}, function(json) {
 					try {
 						db.setLevelData(_currentLevel, json.datas);
-						console.log(json.datas);
+						//console.log(json.datas);
 						_showCellLayer(cellType || _cellTypes.GONGSI);
 						
 					}

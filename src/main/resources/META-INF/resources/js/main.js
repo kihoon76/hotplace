@@ -331,10 +331,11 @@ $(document).ready(function() {
 		level: 3
 	}, {
 		'zoom_changed' : function(map, level) {
-			hotplace.maps.showCellLayer();
 			_currLevel = level;
-			_enableMapButton(level, 'btnSalesView');
-			//hotplace.maps.drawBounds();
+			setTimeout(function() {
+				hotplace.maps.showCellLayer();
+				_enableMapButton(level, 'btnSalesView');
+			},500);
 		},
 		'zoom_start' : function(map, level) {
 			////hotplace.test.initMarker(level);
@@ -344,7 +345,6 @@ $(document).ready(function() {
 			hotplace.maps.destroyMarkerWindow(hotplace.maps.MarkerType.RADIUS_SEARCH);
 		},
 		'dragend' : function(map, bnds) {
-			//hotplace.maps.drawBounds();
 			if(hotplace.maps.isInLocationBounds(bnds)) {
 				hotplace.maps.appendCell();
 			}
@@ -357,15 +357,12 @@ $(document).ready(function() {
 			hotplace.maps.getClickedCell(latlng);
 		},
 		'tilesloaded': function(e) {
-			//console.log(e);
-			
-			if(_isLevelChanged()) {
-				console.log('eee')
-				//hotplace.maps.showCellLayer();
-			}
+			console.log('tilesloaded');
+		},
+		'idle': function(e) {
+			console.log('idle');
 		}
 	}, function(map) {
-		//hotplace.maps.drawBounds();
 		hotplace.maps.showCellLayer();
 		hotplace.dom.showYearRangeDiv();
 	});

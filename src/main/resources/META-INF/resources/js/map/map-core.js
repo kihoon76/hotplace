@@ -146,7 +146,7 @@
 	var _venderEvent = null;
 	var _initCalled = false;
 	
-	var _events = ['zoom_changed', 'bounds_changed', 'dragend', 'zoom_start', 'click', 'tilesloaded'];
+	var _events = ['zoom_changed', 'bounds_changed', 'dragend', 'zoom_start', 'click', 'tilesloaded', 'idle'];
 	var _vender = ['naver', 'daum'];
 	var _currentBounds = { 'swy' : 0, 'swx' : 0, 'ney' : 0,	'nex' : 0 };  //화면에 보이는 bounds
 	var _marginBounds  = { 'swy' : 0, 'swx' : 0, 'ney' : 0,	'nex' : 0 };  //실제로 cell을 그릴 bounds
@@ -280,21 +280,6 @@
 	
 	function _getColorByGongsiWeight(weight) {
 		var color = '';
-		/*var h = Math.ceil(weight.colorV);
-		
-		if(h <= 50) {
-			color = 'rgba(255,255,255,0.0)';
-		}
-		else if(h>50 && h <=75) {
-			color = 'rgb(255,255,0)';
-		}
-		else if(h>75 && h<=90) {
-			color = 'rgb(255,150,0)';
-		}
-		else {
-			color = 'rgb(255,0,0)';
-		}*/
-		
 		var v = weight.colorV;
 		if(v >= 1020) {
 			color = 'rgb(255,0,0)';
@@ -553,6 +538,9 @@
 		case 'tilesloaded' :
 			returnObj = {};
 			break;
+		case 'idle' :
+			returnObj = {};
+			break;
 		}
 		
 		return returnObj;
@@ -753,13 +741,8 @@
 	}
 
 	maps.panToBounds = function(lat, lng, size, moveAfterFn) {
-		//size = size || 0.01;
 		
 		if(_venderStr == 'naver') {
-			/*_venderMap.panToBounds(new _vender.LatLngBounds(
-	                new _vender.LatLng(lat - size, lng - size),
-	                new _vender.LatLng(lat + size, lng + size)
-	        ),{duration: 100, easing: 'linear'});*/
 			_venderMap.morph(new _vender.LatLng(lat, lng), 10, {duration: 100});
 		}
 		else if(_venderStr == 'daum') {
@@ -773,15 +756,15 @@
 	}
 	
 	/**
-	 * @param {string} markerType 마커타입
-	 * @param {number} lat 경도좌표
-	 * @param {number} lng 위도좌표
-	 * @param {object} listeners 마커이벤트 핸들러
-	 * @param {object} options 옵션
+	 * @param {string}  markerType 마커타입
+	 * @param {number}  lat 경도좌표
+	 * @param {number}  lng 위도좌표
+	 * @param {object}  listeners 마커이벤트 핸들러
+	 * @param {object}  options 옵션
 	 * @param {boolean} options.hasInfoWindow 클릭시 infoWindow 사용여부
-	 * @param {string} options.infoWinFormName 
-	 * @param {number} options.radius 마커주위 반경 (0일경우 표시안함) 
-	 * @param {object} options.datas  
+	 * @param {string}  options.infoWinFormName 
+	 * @param {number}  options.radius 마커주위 반경 (0일경우 표시안함) 
+	 * @param {object}  options.datas  
 	 */
 	maps.getMarker = function(markerType, lat, lng, listeners, options) {
 		var newMarker, newInfoWindow;

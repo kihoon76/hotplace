@@ -210,18 +210,20 @@
 			};
 			break;
 		}
-		var r = [2,2,2,2,2,2,2,2,2,2,2,2];
 		
-		var marginRate =  parseFloat((_currentBounds.nex - _currentBounds.swx)/8);
+		//var r = [2,2,2,2,2,2,2,2,2,2,2,2];
 		
-		_marginBounds.swx = _currentBounds.swx - marginRate;
-		_marginBounds.swy = _currentBounds.swy - marginRate;
-		_marginBounds.nex = _currentBounds.nex + marginRate;
-		_marginBounds.ney = _currentBounds.ney + marginRate;
+		var marginXRate =  parseFloat((_currentBounds.nex - _currentBounds.swx)/8);
+		var marginYRate =  parseFloat((_currentBounds.ney - _currentBounds.swy)/8);
+		
+		_marginBounds.swx = _currentBounds.swx - marginXRate;
+		_marginBounds.swy = _currentBounds.swy - marginYRate;
+		_marginBounds.nex = _currentBounds.nex + marginXRate;
+		_marginBounds.ney = _currentBounds.ney + marginYRate;
 	}
 	
 	function _setLocationBounds() {
-		var bnds = null;
+		/*var bnds = null;
 		var curBounds = null;
 		
 		switch(_venderStr) {
@@ -243,20 +245,22 @@
 				ney : bnds._ne.y
 			};
 			break;
-		}
+		}*/
+		//_setCurrentBounds();
 		
-		//var r = [0.5,0.5,1,0.3,2,2,2,2,2,2,2,2];
+		var r = [0.5,0.5,1,0.3,2,2,2,2,2,2,2,2];
 		
-		var locationRate =  parseFloat((curBounds.nex - curBounds.swx)/8/**(r[_getCurrentLevel()-3])*/);
+		var locationXRate =  parseFloat((_marginBounds.nex - _marginBounds.swx)/6);
+		var locationYRate =  parseFloat((_marginBounds.ney - _marginBounds.swy)/6);
 		
-		_locationBounds.swx = _currentBounds.swx - locationRate;
+		/*_locationBounds.swx = _currentBounds.swx - locationRate;
 		_locationBounds.swy = _currentBounds.swy - locationRate;
 		_locationBounds.nex = _currentBounds.nex + locationRate;
-		_locationBounds.ney = _currentBounds.ney + locationRate;
-		/*_locationBounds.swx = _marginBounds.swx - locationRate;
-		_locationBounds.swy = _marginBounds.swy - locationRate;
-		_locationBounds.nex = _marginBounds.nex + locationRate;
-		_locationBounds.ney = _marginBounds.ney + locationRate;*/
+		_locationBounds.ney = _currentBounds.ney + locationRate;*/
+		_locationBounds.swx = _marginBounds.swx - locationXRate;
+		_locationBounds.swy = _marginBounds.swy - locationYRate;
+		_locationBounds.nex = _marginBounds.nex + locationXRate;
+		_locationBounds.ney = _marginBounds.ney + locationYRate;
 	}
 	
 	function _getCurrentLevel() {
@@ -2648,10 +2652,6 @@
 			_showCellYear = data.values.max;
 			
 			hotplace.maps.showCellLayer(_showCellYear);
-			/*dom.showMask();
-			setTimeout(function() {
-				dom.hideMask();
-			}, 1000);*/
 		});
 		
 		el.show();

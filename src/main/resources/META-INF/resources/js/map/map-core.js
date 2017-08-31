@@ -941,7 +941,7 @@
 				}, function(json) {
 					try {
 						db.setLevelData(_currentLevel, json.datas);
-						//console.log(json.datas);
+						console.log(json.datas);
 						_showCellLayer(cellType || _cellTypes.GONGSI);
 						
 					}
@@ -2431,13 +2431,9 @@
 	dom.addButtonInMap = function(params) {
 		
 		var template = function(disabled){
-			/*return (type == undefined) ?
-					/*'<button id="{0}" type="button" class="btn btn-default" data-toggle="buttons" {1}>{2}</button>' :
-					'<button id="{0}" type="button" class="button glyphicon glyphicon-user" {1}>{2}</button>' :
-					'<input type="checkbox" data-toggle="toggle" id="{0}" {1}>{2}';*/
 			
 			return disabled ? '<button id="{0}" type="button" disabled class="button button-disabled {3} {4} {5}" {1}>{2}</button>' :
-				              '<button id="{0}" type="button" class="button {3} {4}" {1}>{2}</button>';
+				              '<button id="{0}" type="button" class="button {3} {4} {5}" {1}>{2}</button>';
 		}
 		
 		if(params) {

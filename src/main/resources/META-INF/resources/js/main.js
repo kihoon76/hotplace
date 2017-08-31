@@ -370,25 +370,11 @@ $(document).ready(function() {
 		hotplace.dom.showYearRangeDiv();
 	});
 	
-	hotplace.dom.addButtonInMap([/*{
-		id: 'btnTest',
-		dataAttr: 'data-on="마커보기" data-off="마커보기" data-switch="off"',
-		type: 'check',
-		title:'',
-		callback: function(e) {
-			var sw = $(this).data('switch');
-			$(this).data('switch', ((sw == 'on') ? 'off' : 'on'));
-			if(sw == 'off') {
-				hotplace.test.showMarker();
-			}
-			else {
-				hotplace.test.hideMarker();
-			}
-		}
-	},*/{
+	hotplace.dom.addButtonInMap([{
 		id:'btnNews',
 		glyphicon: 'list-alt',
-		attr: 'data-switch="off"',
+		attr: 'data-switch="off" title="뉴스"',
+		clazz: 'mBtnTooltip',
 		callback: function(e) {
 			_btnCallback($(this), e, 'dvNews', function() {
 				setTimeout(function repeat() {
@@ -402,7 +388,8 @@ $(document).ready(function() {
 	},{
 		id:'btnAddrSearch',
 		glyphicon: 'search',
-		attr: 'data-switch="off"',
+		attr: 'data-switch="off" title="주소,상세,반경검색"',
+		clazz: 'mBtnTooltip',
 		callback: function(e) {
 			_btnCallback($(this), e, 'dvAddrSearch');
 		}
@@ -423,7 +410,7 @@ $(document).ready(function() {
 	},{
 		id:'btnSalesView',
 		glyphicon:'check',
-		attr: 'data-switch="off" title="test"',
+		attr: 'data-switch="off" title="물건보기"',
 		disabled: true,
 		clazz: 'mBtnTooltip',
 		callback: function(e) {
@@ -431,8 +418,9 @@ $(document).ready(function() {
 		}
 	},{
 		id:'btnCadastral',
-		attr: 'data-switch="off"',
+		attr: 'data-switch="off" title="지적도 보기"',
 		glyphicon: 'globe',
+		clazz: 'mBtnTooltip',
 		callback: function() {
 			var onOff = $(this).data('switch');
 			hotplace.maps.showJijeokLayer(onOff, $(this));

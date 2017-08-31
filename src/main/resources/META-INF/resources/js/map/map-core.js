@@ -2630,7 +2630,9 @@
 		el.on('userValuesChanged', function(e, data){
 			_showCellYear = data.values.max;
 			
+			dom.addBodyAllMask();
 			hotplace.maps.showCellLayer(_showCellYear);
+			dom.removeBodyAllMask();
 		});
 		
 		el.show();

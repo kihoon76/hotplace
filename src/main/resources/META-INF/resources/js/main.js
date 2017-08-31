@@ -336,7 +336,7 @@ $(document).ready(function() {
 			
 			setTimeout(function() {
 				hotplace.maps.showCellLayer();
-				hotplace.dom.removeBodyAllMask()
+				hotplace.dom.removeBodyAllMask();
 				_enableMapButton(level, 'btnSalesView');
 			},500);
 		},

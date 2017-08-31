@@ -75,7 +75,7 @@
 		     and a.극남 >= convert(float, #{swy})
 		     and a.극북 <![CDATA[<=]]> convert(float, #{ney})
 		)
-		select concat(a.극서 , '|', a.극남,  '|', a.극동, '|', a.극북, '|', '[{"type":0, "value":',  공시지가, ', "colorV":',convert(int, case when (공시지가-convert(int, min지가))/convert(int, gbn) > 900 then (공시지가-convert(int, min지가))/convert(int, gbn) else ((공시지가-convert(int, min지가))/convert(int, gbn)*25/100) + ((rnk+1)/(((rnk+1)/1020)+1)*75/100) end), ', "maxV":', max지가, ', "minV":', min지가 , '}]') 
+		select concat(a.극서 , '|', a.극남,  '|', a.극동, '|', a.극북, '|', '[{"type":0, "value":',  공시지가, ', "colorV":',convert(int, case when (공시지가-convert(int, min지가))/convert(int, gbn) > 1000 then (공시지가-convert(int, min지가))/convert(int, gbn) else ((공시지가-convert(int, min지가))/convert(int, gbn)*5/100) + ((rnk+1)/(((rnk+1)/1020)+1)*95/100) end), ', "maxV":', max지가, ', "minV":', min지가 , '}]') 
 		  from (
 				select a.*, (max지가-min지가)/1020 [gbn] 
 				  from (

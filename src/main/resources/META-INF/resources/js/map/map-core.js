@@ -473,7 +473,7 @@
 							  data.location[2], 
 							  {
 								  fillColor: colorFn(data.weight[0]),
-								  fillOpacity : 0.3
+								  fillOpacity : 0.5
 							  },
 							  data
 						)

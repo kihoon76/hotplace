@@ -210,6 +210,7 @@
 			};
 			break;
 		}
+		var r = [2,2,2,2,2,2,2,2,2,2,2,2];
 		
 		var marginRate =  parseFloat((_currentBounds.nex - _currentBounds.swx)/8);
 		
@@ -244,12 +245,14 @@
 			break;
 		}
 		
-		var locationRate =  parseFloat((curBounds.nex - curBounds.swx)/8);
+		//var r = [0.5,0.5,1,0.3,2,2,2,2,2,2,2,2];
 		
-		_locationBounds.swx = curBounds.swx - locationRate;
-		_locationBounds.swy = curBounds.swy - locationRate;
-		_locationBounds.nex = curBounds.nex + locationRate;
-		_locationBounds.ney = curBounds.ney + locationRate;
+		var locationRate =  parseFloat((curBounds.nex - curBounds.swx)/8/**(r[_getCurrentLevel()-3])*/);
+		
+		_locationBounds.swx = _marginBounds.swx - locationRate;
+		_locationBounds.swy = _marginBounds.swy - locationRate;
+		_locationBounds.nex = _marginBounds.nex + locationRate;
+		_locationBounds.ney = _marginBounds.ney + locationRate;
 	}
 	
 	function _getCurrentLevel() {

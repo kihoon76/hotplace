@@ -326,6 +326,11 @@ $(document).ready(function() {
 		'zoom_changed' : function(map, level) {
 			hotplace.maps.showCellLayer();
 			_enableMapButton(level, 'btnSalesView');
+			/*var _promise = function(param) {
+				return new Promise(function(resolve, reject) {
+					hotplace.maps.showCellLayer();
+				});
+			}*/
 		},
 		'zoom_start' : function(map, level) {
 			////hotplace.test.initMarker(level);

@@ -332,8 +332,11 @@ $(document).ready(function() {
 	}, {
 		'zoom_changed' : function(map, level) {
 			_currLevel = level;
+			hotplace.dom.addBodyAllMask();
+			
 			setTimeout(function() {
 				hotplace.maps.showCellLayer();
+				hotplace.dom.removeBodyAllMask()
 				_enableMapButton(level, 'btnSalesView');
 			},500);
 		},

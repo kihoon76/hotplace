@@ -2650,6 +2650,14 @@
 		el.rangeSlider('destroy');
 	}
 	
+	dom.addBodyAllMask = function() {
+		$('#dimScreen').show();
+	}
+	
+	dom.removeBodyAllMask = function() {
+		$('#dimScreen').hide();
+	}
+	
 }(
 	hotplace.dom = hotplace.dom || {},
 	jQuery

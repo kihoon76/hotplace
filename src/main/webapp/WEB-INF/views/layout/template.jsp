@@ -78,7 +78,7 @@
 	</div>
 </div>
 
-
+<div id="dimScreen"></div>
 <sitemesh:write property="body" />
 <script type="text/javascript" src="/resources/handlebars/4.0.5/handlebars.min.js"></script>
 <script type="text/javascript" src="/resources/jquery/1.11.1/jquery.min.js"></script>

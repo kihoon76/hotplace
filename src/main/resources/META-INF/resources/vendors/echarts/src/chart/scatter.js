@@ -6,7 +6,7 @@ define(function (require) {
     require('./scatter/ScatterSeries');
     require('./scatter/ScatterView');
 
-    echarts.registerVisualCoding('chart', zrUtil.curry(
+    echarts.registerVisual(zrUtil.curry(
         require('../visual/symbol'), 'scatter', 'circle', null
     ));
     echarts.registerLayout(zrUtil.curry(
@@ -14,5 +14,5 @@ define(function (require) {
     ));
 
     // In case developer forget to include grid component
-    require('../component/grid');
+    require('../component/gridSimple');
 });

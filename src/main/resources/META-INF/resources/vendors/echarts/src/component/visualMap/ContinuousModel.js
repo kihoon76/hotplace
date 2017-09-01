@@ -27,20 +27,23 @@ define(function(require) {
             realtime: true,         // Whether realtime update.
             itemHeight: null,       // The length of the range control edge.
             itemWidth: null,        // The length of the other side.
-            hoverLink: true         // Enable hover highlight.
+            hoverLink: true,        // Enable hover highlight.
+            hoverLinkDataSize: null,// The size of hovered data.
+            hoverLinkOnHandle: true // Whether trigger hoverLink when hover handle.
         },
 
         /**
          * @override
          */
-        doMergeOption: function (newOption, isInit) {
-            ContinuousModel.superApply(this, 'doMergeOption', arguments);
+        optionUpdated: function (newOption, isInit) {
+            ContinuousModel.superApply(this, 'optionUpdated', arguments);
 
-            this.resetTargetSeries(newOption, isInit);
+            this.resetTargetSeries();
             this.resetExtent();
 
             this.resetVisual(function (mappingOption) {
                 mappingOption.mappingMethod = 'linear';
+                mappingOption.dataExtent = this.getExtent();
             });
 
             this._resetRange();
@@ -51,7 +54,7 @@ define(function(require) {
          * @override
          */
         resetItemSize: function () {
-            VisualMapModel.prototype.resetItemSize.apply(this, arguments);
+            ContinuousModel.superApply(this, 'resetItemSize', arguments);
 
             var itemSize = this.itemSize;
 
@@ -99,7 +102,6 @@ define(function(require) {
         },
 
         /**
-         * @public
          * @override
          */
         setSelected: function (selected) {
@@ -127,7 +129,6 @@ define(function(require) {
         },
 
         /**
-         * @public
          * @override
          */
         getValueState: function (value) {
@@ -143,7 +144,6 @@ define(function(require) {
         },
 
         /**
-         * @public
          * @params {Array.<number>} range target value: range[0] <= value && value <= range[1]
          * @return {Array.<Object>} [{seriesId, dataIndices: <Array.<number>>}, ...]
          */
@@ -158,13 +158,91 @@ define(function(require) {
                     range[0] <= value && value <= range[1] && dataIndices.push(dataIndex);
                 }, true, this);
 
-                result.push({seriesId: seriesModel.id, dataIndices: dataIndices});
+                result.push({seriesId: seriesModel.id, dataIndex: dataIndices});
             }, this);
 
             return result;
+        },
+
+        /**
+         * @implement
+         */
+        getVisualMeta: function (getColorVisual) {
+            var oVals = getColorStopValues(this, 'outOfRange', this.getExtent());
+            var iVals = getColorStopValues(this, 'inRange', this.option.range.slice());
+            var stops = [];
+
+            function setStop(value, valueState) {
+                stops.push({
+                    value: value,
+                    color: getColorVisual(value, valueState)
+                });
+            }
+
+            // Format to: outOfRange -- inRange -- outOfRange.
+            var iIdx = 0;
+            var oIdx = 0;
+            var iLen = iVals.length;
+            var oLen = oVals.length;
+
+            for (; oIdx < oLen && (!iVals.length || oVals[oIdx] <= iVals[0]); oIdx++) {
+                // If oVal[oIdx] === iVals[iIdx], oVal[oIdx] should be ignored.
+                if (oVals[oIdx] < iVals[iIdx]) {
+                    setStop(oVals[oIdx], 'outOfRange');
+                }
+            }
+            for (var first = 1; iIdx < iLen; iIdx++, first = 0) {
+                // If range is full, value beyond min, max will be clamped.
+                // make a singularity
+                first && stops.length && setStop(iVals[iIdx], 'outOfRange');
+                setStop(iVals[iIdx], 'inRange');
+            }
+            for (var first = 1; oIdx < oLen; oIdx++) {
+                if (!iVals.length || iVals[iVals.length - 1] < oVals[oIdx]) {
+                    // make a singularity
+                    if (first) {
+                        stops.length && setStop(stops[stops.length - 1].value, 'outOfRange');
+                        first = 0;
+                    }
+                    setStop(oVals[oIdx], 'outOfRange');
+                }
+            }
+
+            var stopsLen = stops.length;
+
+            return {
+                stops: stops,
+                outerColors: [
+                    stopsLen ? stops[0].color : 'transparent',
+                    stopsLen ? stops[stopsLen - 1].color : 'transparent'
+                ]
+            };
         }
 
     });
+
+    function getColorStopValues(visualMapModel, valueState, dataExtent) {
+        if (dataExtent[0] === dataExtent[1]) {
+            return dataExtent.slice();
+        }
+
+        // When using colorHue mapping, it is not linear color any more.
+        // Moreover, canvas gradient seems not to be accurate linear.
+        // FIXME
+        // Should be arbitrary value 100? or based on pixel size?
+        var count = 200;
+        var step = (dataExtent[1] - dataExtent[0]) / count;
+
+        var value = dataExtent[0];
+        var stopValues = [];
+        for (var i = 0; i <= count && value < dataExtent[1]; i++) {
+            stopValues.push(value);
+            value += step;
+        }
+        stopValues.push(dataExtent[1]);
+
+        return stopValues;
+    }
 
     return ContinuousModel;
 

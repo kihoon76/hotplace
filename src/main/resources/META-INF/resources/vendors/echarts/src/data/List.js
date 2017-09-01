@@ -27,26 +27,40 @@ define(function (require) {
     var modelUtil = require('../util/model');
     var isObject = zrUtil.isObject;
 
-    var IMMUTABLE_PROPERTIES = [
-        'stackedOn', '_nameList', '_idList', '_rawData'
+    var TRANSFERABLE_PROPERTIES = [
+        'stackedOn', 'hasItemOption', '_nameList', '_idList', '_rawData'
     ];
 
-    var transferImmuProperties = function (a, b) {
-        zrUtil.each(IMMUTABLE_PROPERTIES.concat(b.__wrappedMethods || []), function (propName) {
+    function transferProperties(a, b) {
+        zrUtil.each(TRANSFERABLE_PROPERTIES.concat(b.__wrappedMethods || []), function (propName) {
             if (b.hasOwnProperty(propName)) {
                 a[propName] = b[propName];
             }
         });
 
         a.__wrappedMethods = b.__wrappedMethods;
+    }
+
+    function DefaultDataProvider(dataArray) {
+        this._array = dataArray || [];
+    }
+
+    DefaultDataProvider.prototype.pure = false;
+
+    DefaultDataProvider.prototype.count = function () {
+        return this._array.length;
+    };
+    DefaultDataProvider.prototype.getItem = function (idx) {
+        return this._array[idx];
     };
 
     /**
      * @constructor
      * @alias module:echarts/data/List
      *
-     * @param {Array.<string>} dimensions
-     *        Dimensions should be concrete names like x, y, z, lng, lat, angle, radius
+     * @param {Array.<string|Object>} dimensions
+     *      For example, ['someDimName', {name: 'someDimName', type: 'someDimType'}, ...].
+     *      Dimensions should be concrete names like x, y, z, lng, lat, angle, radius
      * @param {module:echarts/model/Model} hostModel
      */
     var List = function (dimensions, hostModel) {
@@ -62,6 +76,8 @@ define(function (require) {
                 dimensionName = dimensions[i];
                 dimensionInfo = {
                     name: dimensionName,
+                    coordDim: dimensionName,
+                    coordDimIndex: 0,
                     stackable: false,
                     // Type can be 'float', 'int', 'number'
                     // Default is number, Precision of float may not enough
@@ -72,10 +88,16 @@ define(function (require) {
                 dimensionInfo = dimensions[i];
                 dimensionName = dimensionInfo.name;
                 dimensionInfo.type = dimensionInfo.type || 'number';
+                if (!dimensionInfo.coordDim) {
+                    dimensionInfo.coordDim = dimensionName;
+                    dimensionInfo.coordDimIndex = 0;
+                }
             }
+            dimensionInfo.otherDims = dimensionInfo.otherDims || {};
             dimensionNames.push(dimensionName);
             dimensionInfos[dimensionName] = dimensionInfo;
         }
+
         /**
          * @readOnly
          * @type {Array.<string>}
@@ -121,6 +143,7 @@ define(function (require) {
          * @type {Array.<string>}
          */
         this._idList = [];
+
         /**
          * Models of data option is stored sparse for optimizing memory cost
          * @type {Array.<module:echarts/model/Model>}
@@ -186,6 +209,12 @@ define(function (require) {
     listProto.type = 'list';
 
     /**
+     * If each data item has it's own option
+     * @type {boolean}
+     */
+    listProto.hasItemOption = true;
+
+    /**
      * Get dimension name
      * @param {string|number} dim
      *        Dimension can be concrete names like x, y, z, lng, lat, angle, radius
@@ -198,6 +227,7 @@ define(function (require) {
         }
         return dim;
     };
+
     /**
      * Get type and stackable info of particular dimension
      * @param {string|number} dim
@@ -217,8 +247,14 @@ define(function (require) {
     listProto.initData = function (data, nameList, dimValueGetter) {
         data = data || [];
 
-        if (!zrUtil.isArray(data)) {
-            throw new Error('Invalid data.');
+        var isDataArray = zrUtil.isArray(data);
+        if (isDataArray) {
+            data = new DefaultDataProvider(data);
+        }
+        if (__DEV__) {
+            if (!isDataArray && (typeof data.getItem != 'function' || typeof data.count != 'function')) {
+                throw new Error('Inavlid data provider.');
+            }
         }
 
         this._rawData = data;
@@ -228,26 +264,37 @@ define(function (require) {
         var indices = this.indices = [];
 
         var dimensions = this.dimensions;
-        var size = data.length;
         var dimensionInfoMap = this._dimensionInfos;
+
+        var size = data.count();
 
         var idList = [];
         var nameRepeatCount = {};
+        var nameDimIdx;
 
         nameList = nameList || [];
 
         // Init storage
         for (var i = 0; i < dimensions.length; i++) {
             var dimInfo = dimensionInfoMap[dimensions[i]];
+            dimInfo.otherDims.itemName === 0 && (nameDimIdx = i);
             var DataCtor = dataCtors[dimInfo.type];
             storage[dimensions[i]] = new DataCtor(size);
         }
 
+        var self = this;
+        if (!dimValueGetter) {
+            self.hasItemOption = false;
+        }
         // Default dim value getter
         dimValueGetter = dimValueGetter || function (dataItem, dimName, dataIndex, dimIndex) {
             var value = modelUtil.getDataItemValue(dataItem);
+            // If any dataItem is like { value: 10 }
+            if (modelUtil.isDataItemOption(dataItem)) {
+                self.hasItemOption = true;
+            }
             return modelUtil.converDataValue(
-                zrUtil.isArray(value)
+                (value instanceof Array)
                     ? value[dimIndex]
                     // If value is a single number or something else not array.
                     : value,
@@ -255,8 +302,9 @@ define(function (require) {
             );
         };
 
-        for (var idx = 0; idx < data.length; idx++) {
-            var dataItem = data[idx];
+        for (var i = 0; i < size; i++) {
+            // NOTICE: Try not to write things into dataItem
+            var dataItem = data.getItem(i);
             // Each data item is value
             // [1, 2]
             // 2
@@ -269,21 +317,27 @@ define(function (require) {
                 var dim = dimensions[k];
                 var dimStorage = storage[dim];
                 // PENDING NULL is empty or zero
-                dimStorage[idx] = dimValueGetter(dataItem, dim, idx, k);
+                dimStorage[i] = dimValueGetter(dataItem, dim, i, k);
             }
 
-            indices.push(idx);
+            indices.push(i);
         }
 
         // Use the name in option and create id
-        for (var i = 0; i < data.length; i++) {
-            var id = '';
-            if (!nameList[i]) {
-                nameList[i] = data[i].name;
-                // Try using the id in option
-                id = data[i].id;
+        for (var i = 0; i < size; i++) {
+            var dataItem = data.getItem(i);
+            if (!nameList[i] && dataItem) {
+                if (dataItem.name != null) {
+                    nameList[i] = dataItem.name;
+                }
+                else if (nameDimIdx != null) {
+                    nameList[i] = storage[dimensions[nameDimIdx]][i];
+                }
             }
             var name = nameList[i] || '';
+            // Try using the id in option
+            var id = dataItem && dataItem.id;
+
             if (!id && name) {
                 // Use name as id and add counter to avoid same name
                 nameRepeatCount[name] = nameRepeatCount[name] || 0;
@@ -319,11 +373,11 @@ define(function (require) {
         var dataIndex = this.indices[idx];
 
         // If value not exists
-        if (dataIndex == null) {
+        if (dataIndex == null || !storage[dim]) {
             return NaN;
         }
 
-        var value = storage[dim] && storage[dim][dataIndex];
+        var value = storage[dim][dataIndex];
         // FIXME ordinal data type is not stackable
         if (stack) {
             var dimensionInfo = this._dimensionInfos[dim];
@@ -393,8 +447,10 @@ define(function (require) {
      * Get extent of data in one dimension
      * @param {string} dim
      * @param {boolean} stack
+     * @param {Function} filter
      */
-    listProto.getDataExtent = function (dim, stack) {
+    listProto.getDataExtent = function (dim, stack, filter) {
+        dim = this.getDimension(dim);
         var dimData = this._storage[dim];
         var dimInfo = this.getDimensionInfo(dim);
         stack = (dimInfo && dimInfo.stackable) && stack;
@@ -414,10 +470,12 @@ define(function (require) {
                 // if (isOrdinal && typeof value === 'string') {
                 //     value = zrUtil.indexOf(dimData, value);
                 // }
-                value < min && (min = value);
-                value > max && (max = value);
+                if (!filter || filter(value, dim, i)) {
+                    value < min && (min = value);
+                    value > max && (max = value);
+                }
             }
-            return (this._extent[dim + stack] = [min, max]);
+            return (this._extent[dim + !!stack] = [min, max]);
         }
         else {
             return [Infinity, -Infinity];
@@ -487,35 +545,77 @@ define(function (require) {
     };
 
     /**
+     * Retreive the index with given raw data index
+     * @param {number} idx
+     * @param {number} name
+     * @return {number}
+     */
+    listProto.indexOfRawIndex = function (rawIndex) {
+        // Indices are ascending
+        var indices = this.indices;
+
+        // If rawIndex === dataIndex
+        var rawDataIndex = indices[rawIndex];
+        if (rawDataIndex != null && rawDataIndex === rawIndex) {
+            return rawIndex;
+        }
+
+        var left = 0;
+        var right = indices.length - 1;
+        while (left <= right) {
+            var mid = (left + right) / 2 | 0;
+            if (indices[mid] < rawIndex) {
+                left = mid + 1;
+            }
+            else if (indices[mid] > rawIndex) {
+                right = mid - 1;
+            }
+            else {
+                return mid;
+            }
+        }
+        return -1;
+    };
+
+    /**
      * Retreive the index of nearest value
      * @param {string} dim
      * @param {number} value
      * @param {boolean} stack If given value is after stacked
-     * @return {number}
+     * @param {number} [maxDistance=Infinity]
+     * @return {Array.<number>} Considere multiple points has the same value.
      */
-    listProto.indexOfNearest = function (dim, value, stack) {
+    listProto.indicesOfNearest = function (dim, value, stack, maxDistance) {
         var storage = this._storage;
         var dimData = storage[dim];
+        var nearestIndices = [];
 
-        if (dimData) {
-            var minDist = Number.MAX_VALUE;
-            var nearestIdx = -1;
-            for (var i = 0, len = this.count(); i < len; i++) {
-                var diff = value - this.get(dim, i, stack);
-                var dist = Math.abs(diff);
-                if (dist < minDist
-                    // For the case of two data are same on xAxis, which has sequence data.
-                    // Show the nearest index
-                    // https://github.com/ecomfe/echarts/issues/2869
-                    || (dist === minDist && diff > 0)
-                ) {
-                    minDist = dist;
-                    nearestIdx = i;
-                }
-            }
-            return nearestIdx;
+        if (!dimData) {
+            return nearestIndices;
         }
-        return -1;
+
+        if (maxDistance == null) {
+            maxDistance = Infinity;
+        }
+
+        var minDist = Number.MAX_VALUE;
+        var minDiff = -1;
+        for (var i = 0, len = this.count(); i < len; i++) {
+            var diff = value - this.get(dim, i, stack);
+            var dist = Math.abs(diff);
+            if (diff <= maxDistance && dist <= minDist) {
+                // For the case of two data are same on xAxis, which has sequence data.
+                // Show the nearest index
+                // https://github.com/ecomfe/echarts/issues/2869
+                if (dist < minDist || (diff >= 0 && minDiff < 0)) {
+                    minDist = dist;
+                    minDiff = diff;
+                    nearestIndices.length = 0;
+                }
+                nearestIndices.push(i);
+            }
+        }
+        return nearestIndices;
     };
 
     /**
@@ -534,7 +634,7 @@ define(function (require) {
      * @return {number}
      */
     listProto.getRawDataItem = function (idx) {
-        return this._rawData[this.getRawIndex(idx)];
+        return this._rawData.getItem(this.getRawIndex(idx));
     };
 
     /**
@@ -575,39 +675,41 @@ define(function (require) {
      *  list.each(['x', 'y'], function (x, y, idx) {});
      *  list.each(function (idx) {})
      */
-    listProto.each = function (dimensions, cb, stack, context) {
-        if (typeof dimensions === 'function') {
+    listProto.each = function (dims, cb, stack, context) {
+        if (typeof dims === 'function') {
             context = stack;
             stack = cb;
-            cb = dimensions;
-            dimensions = [];
+            cb = dims;
+            dims = [];
         }
 
-        dimensions = zrUtil.map(
-            normalizeDimensions(dimensions), this.getDimension, this
-        );
+        dims = zrUtil.map(normalizeDimensions(dims), this.getDimension, this);
 
         var value = [];
-        var dimSize = dimensions.length;
+        var dimSize = dims.length;
         var indices = this.indices;
 
         context = context || this;
 
         for (var i = 0; i < indices.length; i++) {
-            if (dimSize === 0) {
-                cb.call(context, i);
-            }
             // Simple optimization
-            else if (dimSize === 1) {
-                cb.call(context, this.get(dimensions[0], i, stack), i);
-            }
-            else {
-                for (var k = 0; k < dimSize; k++) {
-                    value[k] = this.get(dimensions[k], i, stack);
-                }
-                // Index
-                value[k] = i;
-                cb.apply(context, value);
+            switch (dimSize) {
+                case 0:
+                    cb.call(context, i);
+                    break;
+                case 1:
+                    cb.call(context, this.get(dims[0], i, stack), i);
+                    break;
+                case 2:
+                    cb.call(context, this.get(dims[0], i, stack), this.get(dims[1], i, stack), i);
+                    break;
+                default:
+                    for (var k = 0; k < dimSize; k++) {
+                        value[k] = this.get(dims[k], i, stack);
+                    }
+                    // Index
+                    value[k] = i;
+                    cb.apply(context, value);
             }
         }
     };
@@ -641,7 +743,10 @@ define(function (require) {
         for (var i = 0; i < indices.length; i++) {
             var keep;
             // Simple optimization
-            if (dimSize === 1) {
+            if (!dimSize) {
+                keep = cb.call(context, i);
+            }
+            else if (dimSize === 1) {
                 keep = cb.call(
                     context, this.get(dimensions[0], i, stack), i
                 );
@@ -696,7 +801,7 @@ define(function (require) {
             original.hostModel
         );
         // FIXME If needs stackedOn, value may already been stacked
-        transferImmuProperties(list, original);
+        transferProperties(list, original);
 
         var storage = list._storage = {};
         var originalStorage = original._storage;
@@ -816,7 +921,7 @@ define(function (require) {
     listProto.getItemModel = function (idx) {
         var hostModel = this.hostModel;
         idx = this.indices[idx];
-        return new Model(this._rawData[idx], hostModel, hostModel && hostModel.ecModel);
+        return new Model(this._rawData.getItem(idx), hostModel, hostModel && hostModel.ecModel);
     };
 
     /**
@@ -827,11 +932,19 @@ define(function (require) {
     listProto.diff = function (otherList) {
         var idList = this._idList;
         var otherIdList = otherList && otherList._idList;
+        var val;
+        // Use prefix to avoid index to be the same as otherIdList[idx],
+        // which will cause weird udpate animation.
+        var prefix = 'e\0\0';
+
         return new DataDiffer(
-            otherList ? otherList.indices : [], this.indices, function (idx) {
-                return otherIdList[idx] || (idx + '');
-            }, function (idx) {
-                return idList[idx] || (idx + '');
+            otherList ? otherList.indices : [],
+            this.indices,
+            function (idx) {
+                return (val = otherIdList[idx]) != null ? val : prefix + idx;
+            },
+            function (idx) {
+                return (val = idList[idx]) != null ? val : prefix + idx;
             }
         );
     };
@@ -870,7 +983,7 @@ define(function (require) {
 
     /**
      * Set layout property.
-     * @param {string} key
+     * @param {string|Object} key
      * @param {*} [val]
      */
     listProto.setLayout = function (key, val) {
@@ -925,7 +1038,7 @@ define(function (require) {
      * Get visual property of single data item
      * @param {number} idx
      * @param {string} key
-     * @param {boolean} ignoreParent
+     * @param {boolean} [ignoreParent=false]
      */
     listProto.getItemVisual = function (idx, key, ignoreParent) {
         var itemVisual = this._itemVisuals[idx];
@@ -963,6 +1076,14 @@ define(function (require) {
             return;
         }
         itemVisual[key] = value;
+    };
+
+    /**
+     * Clear itemVisuals and list visual.
+     */
+    listProto.clearAllVisual = function () {
+        this._visual = {};
+        this._itemVisuals = [];
     };
 
     var setItemDataAndSeriesIndex = function (child) {
@@ -1023,9 +1144,15 @@ define(function (require) {
         // FIXME
         list._storage = this._storage;
 
-        transferImmuProperties(list, this);
+        transferProperties(list, this);
 
+
+        // Clone will not change the data extent and indices
         list.indices = this.indices.slice();
+
+        if (this._extent) {
+            list._extent = zrUtil.extend({}, this._extent);
+        }
 
         return list;
     };

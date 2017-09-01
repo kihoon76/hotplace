@@ -146,7 +146,7 @@ define(function (require) {
 
             var oldOptionBackup = this._optionBackup;
             var newParsedOption = parseRawOption.call(
-                this, rawOption, optionPreprocessorFuncs
+                this, rawOption, optionPreprocessorFuncs, !oldOptionBackup
             );
             this._newBaseOption = newParsedOption.baseOption;
 
@@ -193,7 +193,7 @@ define(function (require) {
                 // called, and is merged into every new option by inner method `mergeOption`
                 // each time `setOption` called, can be only used in `isRecreate`, because
                 // its reliability is under suspicion. In other cases option merge is
-                // proformed by `model.mergeOption`.
+                // performed by `model.mergeOption`.
                 ? optionBackup.baseOption : this._newBaseOption
             );
         },
@@ -266,7 +266,7 @@ define(function (require) {
         }
     };
 
-    function parseRawOption(rawOption, optionPreprocessorFuncs) {
+    function parseRawOption(rawOption, optionPreprocessorFuncs, isNew) {
         var timelineOptions = [];
         var mediaList = [];
         var mediaDefault;
@@ -320,7 +320,7 @@ define(function (require) {
             })),
             function (option) {
                 each(optionPreprocessorFuncs, function (preProcess) {
-                    preProcess(option);
+                    preProcess(option, isNew);
                 });
             }
         );

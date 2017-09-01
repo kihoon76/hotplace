@@ -233,7 +233,9 @@ define(function(require) {
 
     var symbolBuildProxies = {};
     for (var name in symbolCtors) {
-        symbolBuildProxies[name] = new symbolCtors[name]();
+        if (symbolCtors.hasOwnProperty(name)) {
+            symbolBuildProxies[name] = new symbolCtors[name]();
+        }
     }
 
     var Symbol = graphic.extendShape({
@@ -259,7 +261,7 @@ define(function(require) {
             }
         },
 
-        buildPath: function (ctx, shape) {
+        buildPath: function (ctx, shape, inBundle) {
             var symbolType = shape.symbolType;
             var proxySymbol = symbolBuildProxies[symbolType];
             if (shape.symbolType !== 'none') {
@@ -271,7 +273,7 @@ define(function(require) {
                 symbolShapeMakers[symbolType](
                     shape.x, shape.y, shape.width, shape.height, proxySymbol.shape
                 );
-                proxySymbol.buildPath(ctx, proxySymbol.shape);
+                proxySymbol.buildPath(ctx, proxySymbol.shape, inBundle);
             }
         }
     });
@@ -293,7 +295,7 @@ define(function(require) {
                 symbolStyle.fill && (symbolStyle.fill = color);
                 symbolStyle.stroke && (symbolStyle.stroke = color);
             }
-            this.dirty();
+            this.dirty(false);
         }
     };
 
@@ -308,6 +310,8 @@ define(function(require) {
          * @param {string} color
          */
         createSymbol: function (symbolType, x, y, w, h, color) {
+            // TODO Support image object, DynamicImage.
+
             var isEmpty = symbolType.indexOf('empty') === 0;
             if (isEmpty) {
                 symbolType = symbolType.substr(5, 1).toLowerCase() + symbolType.substr(6);

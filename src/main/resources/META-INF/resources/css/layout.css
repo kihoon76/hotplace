@@ -130,6 +130,7 @@ html, body, #map { width: 100%; height: 100%; margin: 0; padding: 0; }
 
 .layer-popup {display:none; position:absolute; left:50%; top:175px; z-index:10; padding:10px 10px 10px 10px; margin-left:-235px; background-color:#fff; border:1px solid #000;  border-radius: 5px;}
 .layer-year-range {display:none; position:absolute; right:140px; top:15px; z-index:10; width:250px;}
+.layer-year-range-auto {display:none; position:absolute; right:179px; top:15px; z-index:10; width:250px;}
 /*#dvYearRange.ui-slider-pips .ui-slider-pip {
 	color: #104B4A;
 }

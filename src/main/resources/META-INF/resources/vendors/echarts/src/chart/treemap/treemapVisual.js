@@ -7,7 +7,7 @@ define(function (require) {
 
     var ITEM_STYLE_NORMAL = 'itemStyle.normal';
 
-    return function (ecModel, payload) {
+    return function (ecModel, api, payload) {
 
         var condition = {mainType: 'series', subType: 'treemap', query: payload};
         ecModel.eachComponent(condition, function (seriesModel) {
@@ -74,6 +74,7 @@ define(function (require) {
             var mapping = buildVisualMapping(
                 node, nodeModel, nodeLayout, nodeItemStyleModel, visuals, viewChildren
             );
+
             // Designate visual to children.
             zrUtil.each(viewChildren, function (child, index) {
                 // If higher than viewRoot, only ancestors of viewRoot is needed to visit.
@@ -161,10 +162,16 @@ define(function (require) {
             return;
         }
 
+        var visualMin = nodeModel.get('visualMin');
+        var visualMax = nodeModel.get('visualMax');
+        var dataExtent = nodeLayout.dataExtent.slice();
+        visualMin != null && visualMin < dataExtent[0] && (dataExtent[0] = visualMin);
+        visualMax != null && visualMax > dataExtent[1] && (dataExtent[1] = visualMax);
+
         var colorMappingBy = nodeModel.get('colorMappingBy');
         var opt = {
             type: rangeVisual.name,
-            dataExtent: nodeLayout.dataExtent,
+            dataExtent: dataExtent,
             visual: rangeVisual.range
         };
         if (opt.type === 'color'

@@ -3,6 +3,8 @@ define(function (require) {
     var Group = require('zrender/container/Group');
     var componentUtil = require('../util/component');
     var clazzUtil = require('../util/clazz');
+    var modelUtil = require('../util/model');
+    var zrUtil = require('zrender/core/util');
 
     function Chart() {
 
@@ -76,6 +78,15 @@ define(function (require) {
          * @param  {module:echarts/ExtensionAPI} api
          */
         dispose: function () {}
+
+        /**
+         * The view contains the given point.
+         * @interface
+         * @param {Array.<number>} point
+         * @return {boolean}
+         */
+        // containPoint: function () {}
+
     };
 
     var chartProto = Chart.prototype;
@@ -108,14 +119,12 @@ define(function (require) {
      * @inner
      */
     function toggleHighlight(data, payload, state) {
-        if (payload.dataIndex != null) {
-            var el = data.getItemGraphicEl(payload.dataIndex);
-            elSetState(el, state);
-        }
-        else if (payload.name) {
-            var dataIndex = data.indexOfName(payload.name);
-            var el = data.getItemGraphicEl(dataIndex);
-            elSetState(el, state);
+        var dataIndex = modelUtil.queryDataIndex(data, payload);
+
+        if (dataIndex != null) {
+            zrUtil.each(modelUtil.normalizeToArray(dataIndex), function (dataIdx) {
+                elSetState(data.getItemGraphicEl(dataIdx), state);
+            });
         }
         else {
             data.eachItemGraphicEl(function (el) {
@@ -125,7 +134,7 @@ define(function (require) {
     }
 
     // Enable Chart.extend.
-    clazzUtil.enableClassExtend(Chart);
+    clazzUtil.enableClassExtend(Chart, ['dispose']);
 
     // Add capability of registerClass, getClass, hasClass, registerSubTypeDefaulter and so on.
     clazzUtil.enableClassManagement(Chart, {registerWhenExtend: true});

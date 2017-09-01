@@ -1,3 +1,4 @@
+// FIXME step not support polar
 define(function(require) {
 
     'use strict';
@@ -7,9 +8,8 @@ define(function(require) {
     var Symbol = require('../helper/Symbol');
     var lineAnimationDiff = require('./lineAnimationDiff');
     var graphic = require('../../util/graphic');
-
+    var modelUtil = require('../../util/model');
     var polyHelper = require('./poly');
-
     var ChartView = require('../../view/Chart');
 
     function isPointsSame(points1, points2) {
@@ -78,15 +78,6 @@ define(function(require) {
 
             return coordSys.dataToPoint(stackedData);
         }, true);
-    }
-
-    function queryDataIndex(data, payload) {
-        if (payload.dataIndex != null) {
-            return payload.dataIndex;
-        }
-        else if (payload.name != null) {
-            return data.indexOfName(payload.name);
-        }
     }
 
     function createGridClipShape(cartesian, hasAnimation, seriesModel) {
@@ -171,6 +162,127 @@ define(function(require) {
             : createGridClipShape(coordSys, hasAnimation, seriesModel);
     }
 
+    function turnPointsIntoStep(points, coordSys, stepTurnAt) {
+        var baseAxis = coordSys.getBaseAxis();
+        var baseIndex = baseAxis.dim === 'x' || baseAxis.dim === 'radius' ? 0 : 1;
+
+        var stepPoints = [];
+        for (var i = 0; i < points.length - 1; i++) {
+            var nextPt = points[i + 1];
+            var pt = points[i];
+            stepPoints.push(pt);
+
+            var stepPt = [];
+            switch (stepTurnAt) {
+                case 'end':
+                    stepPt[baseIndex] = nextPt[baseIndex];
+                    stepPt[1 - baseIndex] = pt[1 - baseIndex];
+                    // default is start
+                    stepPoints.push(stepPt);
+                    break;
+                case 'middle':
+                    // default is start
+                    var middle = (pt[baseIndex] + nextPt[baseIndex]) / 2;
+                    var stepPt2 = [];
+                    stepPt[baseIndex] = stepPt2[baseIndex] = middle;
+                    stepPt[1 - baseIndex] = pt[1 - baseIndex];
+                    stepPt2[1 - baseIndex] = nextPt[1 - baseIndex];
+                    stepPoints.push(stepPt);
+                    stepPoints.push(stepPt2);
+                    break;
+                default:
+                    stepPt[baseIndex] = pt[baseIndex];
+                    stepPt[1 - baseIndex] = nextPt[1 - baseIndex];
+                    // default is start
+                    stepPoints.push(stepPt);
+            }
+        }
+        // Last points
+        points[i] && stepPoints.push(points[i]);
+        return stepPoints;
+    }
+
+    function getVisualGradient(data, coordSys) {
+        var visualMetaList = data.getVisual('visualMeta');
+        if (!visualMetaList || !visualMetaList.length || !data.count()) {
+            // When data.count() is 0, gradient range can not be calculated.
+            return;
+        }
+
+        var visualMeta;
+        for (var i = visualMetaList.length - 1; i >= 0; i--) {
+            // Can only be x or y
+            if (visualMetaList[i].dimension < 2) {
+                visualMeta = visualMetaList[i];
+                break;
+            }
+        }
+        if (!visualMeta || coordSys.type !== 'cartesian2d') {
+            if (__DEV__) {
+                console.warn('Visual map on line style only support x or y dimension.');
+            }
+            return;
+        }
+
+        // If the area to be rendered is bigger than area defined by LinearGradient,
+        // the canvas spec prescribes that the color of the first stop and the last
+        // stop should be used. But if two stops are added at offset 0, in effect
+        // browsers use the color of the second stop to render area outside
+        // LinearGradient. So we can only infinitesimally extend area defined in
+        // LinearGradient to render `outerColors`.
+
+        var dimension = visualMeta.dimension;
+        var dimName = data.dimensions[dimension];
+        var axis = coordSys.getAxis(dimName);
+
+        // dataToCoor mapping may not be linear, but must be monotonic.
+        var colorStops = zrUtil.map(visualMeta.stops, function (stop) {
+            return {
+                coord: axis.toGlobalCoord(axis.dataToCoord(stop.value)),
+                color: stop.color
+            };
+        });
+        var stopLen = colorStops.length;
+        var outerColors = visualMeta.outerColors.slice();
+
+        if (stopLen && colorStops[0].coord > colorStops[stopLen - 1].coord) {
+            colorStops.reverse();
+            outerColors.reverse();
+        }
+
+        var tinyExtent = 10; // Arbitrary value: 10px
+        var minCoord = colorStops[0].coord - tinyExtent;
+        var maxCoord = colorStops[stopLen - 1].coord + tinyExtent;
+        var coordSpan = maxCoord - minCoord;
+
+        if (coordSpan < 1e-3) {
+            return 'transparent';
+        }
+
+        zrUtil.each(colorStops, function (stop) {
+            stop.offset = (stop.coord - minCoord) / coordSpan;
+        });
+        colorStops.push({
+            offset: stopLen ? colorStops[stopLen - 1].offset : 0.5,
+            color: outerColors[1] || 'transparent'
+        });
+        colorStops.unshift({ // notice colorStops.length have been changed.
+            offset: stopLen ? colorStops[0].offset : 0.5,
+            color: outerColors[0] || 'transparent'
+        });
+
+        // zrUtil.each(colorStops, function (colorStop) {
+        //     // Make sure each offset has rounded px to avoid not sharp edge
+        //     colorStop.offset = (Math.round(colorStop.offset * (end - start) + start) - start) / (end - start);
+        // });
+
+        var gradient = new graphic.LinearGradient(0, 0, 0, 0, colorStops, true);
+        gradient[dimName] = minCoord;
+        gradient[dimName + '2'] = maxCoord;
+
+        return gradient;
+    }
+
     return ChartView.extend({
 
         type: 'line',
@@ -229,11 +341,19 @@ define(function(require) {
 
             group.add(lineGroup);
 
+            // FIXME step not support polar
+            var step = !isCoordSysPolar && seriesModel.get('step');
             // Initialization animation or coordinate system changed
             if (
-                !(polyline && prevCoordSys.type === coordSys.type)
+                !(polyline && prevCoordSys.type === coordSys.type && step === this._step)
             ) {
                 showSymbol && symbolDraw.updateData(data, isSymbolIgnore);
+
+                if (step) {
+                    // TODO If stacked series is not step
+                    points = turnPointsIntoStep(points, coordSys, step);
+                    stackedOnPoints = turnPointsIntoStep(stackedOnPoints, coordSys, step);
+                }
 
                 polyline = this._newPolyline(points, coordSys, hasAnimation);
                 if (isAreaChart) {
@@ -278,10 +398,17 @@ define(function(require) {
                 ) {
                     if (hasAnimation) {
                         this._updateAnimation(
-                            data, stackedOnPoints, coordSys, api
+                            data, stackedOnPoints, coordSys, api, step
                         );
                     }
                     else {
+                        // Not do it in update with animation
+                        if (step) {
+                            // TODO If stacked series is not step
+                            points = turnPointsIntoStep(points, coordSys, step);
+                            stackedOnPoints = turnPointsIntoStep(stackedOnPoints, coordSys, step);
+                        }
+
                         polyline.setShape({
                             points: points
                         });
@@ -293,12 +420,14 @@ define(function(require) {
                 }
             }
 
+            var visualColor = getVisualGradient(data, coordSys) || data.getVisual('color');
+
             polyline.useStyle(zrUtil.defaults(
                 // Use color in lineStyle first
                 lineStyleModel.getLineStyle(),
                 {
                     fill: 'none',
-                    stroke: data.getVisual('color'),
+                    stroke: visualColor,
                     lineJoin: 'bevel'
                 }
             ));
@@ -318,7 +447,7 @@ define(function(require) {
                 polygon.useStyle(zrUtil.defaults(
                     areaStyleModel.getAreaStyle(),
                     {
-                        fill: data.getVisual('color'),
+                        fill: visualColor,
                         opacity: 0.7,
                         lineJoin: 'bevel'
                     }
@@ -342,18 +471,25 @@ define(function(require) {
             this._coordSys = coordSys;
             this._stackedOnPoints = stackedOnPoints;
             this._points = points;
+            this._step = step;
         },
+
+        dispose: function () {},
 
         highlight: function (seriesModel, ecModel, api, payload) {
             var data = seriesModel.getData();
-            var dataIndex = queryDataIndex(data, payload);
+            var dataIndex = modelUtil.queryDataIndex(data, payload);
 
-            if (dataIndex != null && dataIndex >= 0) {
+            if (!(dataIndex instanceof Array) && dataIndex != null && dataIndex >= 0) {
                 var symbol = data.getItemGraphicEl(dataIndex);
                 if (!symbol) {
                     // Create a temporary symbol if it is not exists
                     var pt = data.getItemLayout(dataIndex);
-                    symbol = new Symbol(data, dataIndex, api);
+                    if (!pt) {
+                        // Null data
+                        return;
+                    }
+                    symbol = new Symbol(data, dataIndex);
                     symbol.position = pt;
                     symbol.setZ(
                         seriesModel.get('zlevel'),
@@ -380,7 +516,7 @@ define(function(require) {
 
         downplay: function (seriesModel, ecModel, api, payload) {
             var data = seriesModel.getData();
-            var dataIndex = queryDataIndex(data, payload);
+            var dataIndex = modelUtil.queryDataIndex(data, payload);
             if (dataIndex != null && dataIndex >= 0) {
                 var symbol = data.getItemGraphicEl(dataIndex);
                 if (symbol) {
@@ -394,6 +530,8 @@ define(function(require) {
                 }
             }
             else {
+                // FIXME
+                // can not downplay completely.
                 // Downplay whole series
                 ChartView.prototype.downplay.call(
                     this, seriesModel, ecModel, api, payload
@@ -469,7 +607,7 @@ define(function(require) {
          * @private
          */
         // FIXME Two value axis
-        _updateAnimation: function (data, stackedOnPoints, coordSys, api) {
+        _updateAnimation: function (data, stackedOnPoints, coordSys, api, step) {
             var polyline = this._polyline;
             var polygon = this._polygon;
             var seriesModel = data.hostModel;
@@ -479,23 +617,39 @@ define(function(require) {
                 this._stackedOnPoints, stackedOnPoints,
                 this._coordSys, coordSys
             );
-            polyline.shape.points = diff.current;
+
+            var current = diff.current;
+            var stackedOnCurrent = diff.stackedOnCurrent;
+            var next = diff.next;
+            var stackedOnNext = diff.stackedOnNext;
+            if (step) {
+                // TODO If stacked series is not step
+                current = turnPointsIntoStep(diff.current, coordSys, step);
+                stackedOnCurrent = turnPointsIntoStep(diff.stackedOnCurrent, coordSys, step);
+                next = turnPointsIntoStep(diff.next, coordSys, step);
+                stackedOnNext = turnPointsIntoStep(diff.stackedOnNext, coordSys, step);
+            }
+            // `diff.current` is subset of `current` (which should be ensured by
+            // turnPointsIntoStep), so points in `__points` can be updated when
+            // points in `current` are update during animation.
+            polyline.shape.__points = diff.current;
+            polyline.shape.points = current;
 
             graphic.updateProps(polyline, {
                 shape: {
-                    points: diff.next
+                    points: next
                 }
             }, seriesModel);
 
             if (polygon) {
                 polygon.setShape({
-                    points: diff.current,
-                    stackedOnPoints: diff.stackedOnCurrent
+                    points: current,
+                    stackedOnPoints: stackedOnCurrent
                 });
                 graphic.updateProps(polygon, {
                     shape: {
-                        points: diff.next,
-                        stackedOnPoints: diff.stackedOnNext
+                        points: next,
+                        stackedOnPoints: stackedOnNext
                     }
                 }, seriesModel);
             }
@@ -520,7 +674,7 @@ define(function(require) {
                 polyline.animators[0].during(function () {
                     for (var i = 0; i < updatedDataInfo.length; i++) {
                         var el = updatedDataInfo[i].el;
-                        el.attr('position', polyline.shape.points[updatedDataInfo[i].ptIdx]);
+                        el.attr('position', polyline.shape.__points[updatedDataInfo[i].ptIdx]);
                     }
                 });
             }

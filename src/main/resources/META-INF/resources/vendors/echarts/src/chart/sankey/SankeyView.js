@@ -1,7 +1,10 @@
+/**
+ * @file  The file used to draw sankey view
+ * @author  Deqing Li(annong035@gmail.com)
+ */
 define(function (require) {
 
     var graphic = require('../../util/graphic');
-    var zrUtil = require('zrender/core/util');
 
     var SankeyShape = graphic.extendShape({
         shape: {
@@ -41,7 +44,7 @@ define(function (require) {
          */
         _model: null,
 
-        render: function(seriesModel, ecModel, api) {
+        render: function (seriesModel, ecModel, api) {
             var graph = seriesModel.getGraph();
             var group = this.group;
             var layoutInfo = seriesModel.layoutInfo;
@@ -53,60 +56,6 @@ define(function (require) {
             group.removeAll();
 
             group.position = [layoutInfo.x, layoutInfo.y];
-
-            // generate a rect  for each node
-            graph.eachNode(function (node) {
-                var layout = node.getLayout();
-                var itemModel = node.getModel();
-                var labelModel = itemModel.getModel('label.normal');
-                var textStyleModel = labelModel.getModel('textStyle');
-                var labelHoverModel = itemModel.getModel('label.emphasis');
-                var textStyleHoverModel = labelHoverModel.getModel('textStyle');
-
-                var rect = new graphic.Rect({
-                    shape: {
-                        x: layout.x,
-                        y: layout.y,
-                        width: node.getLayout().dx,
-                        height: node.getLayout().dy
-                    },
-                    style: {
-                        // Get formatted label in label.normal option. Use node id if it is not specified
-                        text: labelModel.get('show')
-                            ? seriesModel.getFormattedLabel(node.dataIndex, 'normal') || node.id
-                            // Use empty string to hide the label
-                            : '',
-                        textFont: textStyleModel.getFont(),
-                        textFill: textStyleModel.getTextColor(),
-                        textPosition: labelModel.get('position')
-                    }
-                });
-
-                rect.setStyle(zrUtil.defaults(
-                    {
-                        fill: node.getVisual('color')
-                    },
-                    itemModel.getModel('itemStyle.normal').getItemStyle()
-                ));
-
-                graphic.setHoverStyle(rect, zrUtil.extend(
-                    node.getModel('itemStyle.emphasis'),
-                    {
-                        text: labelHoverModel.get('show')
-                            ? seriesModel.getFormattedLabel(node.dataIndex, 'emphasis') || node.id
-                            : '',
-                        textFont: textStyleHoverModel.getFont(),
-                        textFill: textStyleHoverModel.getTextColor(),
-                        textPosition: labelHoverModel.get('position')
-                    }
-                ));
-
-                group.add(rect);
-
-                nodeData.setItemGraphicEl(node.dataIndex, rect);
-
-                rect.dataType = 'node';
-            });
 
             // generate a bezire Curve for each edge
             graph.eachEdge(function (edge) {
@@ -127,7 +76,7 @@ define(function (require) {
                 var x1 = n1Layout.x + n1Layout.dx;
                 var y1 = n1Layout.y + edgeLayout.sy + edgeLayout.dy / 2;
                 var x2 = n2Layout.x;
-                var y2 = n2Layout.y + edgeLayout.ty + edgeLayout.dy /2;
+                var y2 = n2Layout.y + edgeLayout.ty + edgeLayout.dy / 2;
                 var cpx1 = x1 * (1 - curvature) + x2 * curvature;
                 var cpy1 = y1;
                 var cpx2 = x1 * curvature + x2 * (1 - curvature);
@@ -145,22 +94,76 @@ define(function (require) {
                 });
 
                 curve.setStyle(lineStyleModel.getItemStyle());
+                // Special color, use source node color or target node color
+                switch (curve.style.fill) {
+                    case 'source':
+                        curve.style.fill = edge.node1.getVisual('color');
+                        break;
+                    case 'target':
+                        curve.style.fill = edge.node2.getVisual('color');
+                        break;
+                }
+
                 graphic.setHoverStyle(curve, edge.getModel('lineStyle.emphasis').getItemStyle());
 
                 group.add(curve);
 
                 edgeData.setItemGraphicEl(edge.dataIndex, curve);
             });
+
+            // generate a rect  for each node
+            graph.eachNode(function (node) {
+                var layout = node.getLayout();
+                var itemModel = node.getModel();
+                var labelModel = itemModel.getModel('label.normal');
+                var labelHoverModel = itemModel.getModel('label.emphasis');
+
+                var rect = new graphic.Rect({
+                    shape: {
+                        x: layout.x,
+                        y: layout.y,
+                        width: node.getLayout().dx,
+                        height: node.getLayout().dy
+                    },
+                    style: itemModel.getModel('itemStyle.normal').getItemStyle()
+                });
+
+                var hoverStyle = node.getModel('itemStyle.emphasis').getItemStyle();
+
+                graphic.setLabelStyle(
+                    rect.style, hoverStyle, labelModel, labelHoverModel,
+                    {
+                        labelFetcher: seriesModel,
+                        labelDataIndex: node.dataIndex,
+                        defaultText: node.id,
+                        isRectText: true
+                    }
+                );
+
+                rect.setStyle('fill', node.getVisual('color'));
+
+                graphic.setHoverStyle(rect, hoverStyle);
+
+                group.add(rect);
+
+                nodeData.setItemGraphicEl(node.dataIndex, rect);
+
+                rect.dataType = 'node';
+            });
+
             if (!this._data && seriesModel.get('animation')) {
                 group.setClipPath(createGridClipShape(group.getBoundingRect(), seriesModel, function () {
                     group.removeClipPath();
                 }));
             }
+
             this._data = seriesModel.getData();
-        }
+        },
+
+        dispose: function () {}
     });
 
-    //add animation to the view
+    // add animation to the view
     function createGridClipShape(rect, seriesModel, cb) {
         var rectEl = new graphic.Rect({
             shape: {

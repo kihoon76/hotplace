@@ -7,15 +7,16 @@ define(function(require) {
     var sliderMove = require('../helper/sliderMove');
     var LinearGradient = require('zrender/graphic/LinearGradient');
     var helper = require('./helper');
+    var modelUtil = require('../../util/model');
+    var eventTool = require('zrender/core/event');
 
     var linearMap = numberUtil.linearMap;
-    var convertDataIndicesToBatch = helper.convertDataIndicesToBatch;
     var each = zrUtil.each;
     var mathMin = Math.min;
     var mathMax = Math.max;
 
     // Arbitrary value
-    var HOVER_LINK_RANGE = 6;
+    var HOVER_LINK_SIZE = 12;
     var HOVER_LINK_OUT = 6;
 
     // Notice:
@@ -26,7 +27,7 @@ define(function(require) {
     // high data value: this._dataInterval[1] and has high coord.
     // The logic of transform is implemented in this._createBarGroup.
 
-    var ContinuousVisualMapView = VisualMapView.extend({
+    var ContinuousView = VisualMapView.extend({
 
         type: 'visualMap.continuous',
 
@@ -35,7 +36,7 @@ define(function(require) {
          */
         init: function () {
 
-            VisualMapView.prototype.init.apply(this, arguments);
+            ContinuousView.superApply(this, 'init', arguments);
 
             /**
              * @private
@@ -66,6 +67,16 @@ define(function(require) {
              * @private
              */
             this._hoverLinkDataIndices = [];
+
+            /**
+             * @private
+             */
+            this._dragging;
+
+            /**
+             * @private
+             */
+            this._hovering;
         },
 
         /**
@@ -75,9 +86,6 @@ define(function(require) {
         doRender: function (visualMapModel, ecModel, api, payload) {
             if (!payload || payload.type !== 'selectDataRange' || payload.from !== this.uid) {
                 this._buildView();
-            }
-            else {
-                this._updateView();
             }
         },
 
@@ -156,7 +164,7 @@ define(function(require) {
                     textAlign: orient === 'horizontal' ? align : 'center',
                     text: text,
                     textFont: textStyleModel.getFont(),
-                    fill: textStyleModel.getTextColor()
+                    textFill: textStyleModel.getTextColor()
                 }
             }));
         },
@@ -177,12 +185,13 @@ define(function(require) {
             barGroup.add(shapes.outOfRange = createPolygon());
             barGroup.add(shapes.inRange = createPolygon(
                 null,
-                zrUtil.bind(this._modifyHandle, this, 'all'),
-                useHandle ? 'move' : null
+                useHandle ? getCursor(this._orient) : null,
+                zrUtil.bind(this._dragHandle, this, 'all', false),
+                zrUtil.bind(this._dragHandle, this, 'all', true)
             ));
 
             var textRect = visualMapModel.textStyleModel.getTextRect('国');
-            var textSize = Math.max(textRect.width, textRect.height);
+            var textSize = mathMax(textRect.width, textRect.height);
 
             // Handle
             if (useHandle) {
@@ -203,11 +212,13 @@ define(function(require) {
          * @private
          */
         _createHandle: function (barGroup, handleIndex, itemSize, textSize, orient) {
-            var modifyHandle = zrUtil.bind(this._modifyHandle, this, handleIndex);
+            var onDrift = zrUtil.bind(this._dragHandle, this, handleIndex, false);
+            var onDragEnd = zrUtil.bind(this._dragHandle, this, handleIndex, true);
             var handleThumb = createPolygon(
                 createHandlePoints(handleIndex, textSize),
-                modifyHandle,
-                'move'
+                getCursor(this._orient),
+                onDrift,
+                onDragEnd
             );
             handleThumb.position[0] = itemSize[0];
             barGroup.add(handleThumb);
@@ -219,11 +230,16 @@ define(function(require) {
             var textStyleModel = this.visualMapModel.textStyleModel;
             var handleLabel = new graphic.Text({
                 draggable: true,
-                drift: modifyHandle,
+                drift: onDrift,
+                onmousemove: function (e) {
+                    // Fot mobile devicem, prevent screen slider on the button.
+                    eventTool.stop(e.event);
+                },
+                ondragend: onDragEnd,
                 style: {
                     x: 0, y: 0, text: '',
                     textFont: textStyleModel.getFont(),
-                    fill: textStyleModel.getTextColor()
+                    textFill: textStyleModel.getTextColor()
                 }
             });
             this.group.add(handleLabel);
@@ -247,7 +263,7 @@ define(function(require) {
          * @private
          */
         _createIndicator: function (barGroup, itemSize, textSize, orient) {
-            var indicator = createPolygon([[0, 0]], null, 'move');
+            var indicator = createPolygon([[0, 0]], 'move');
             indicator.position[0] = itemSize[0];
             indicator.attr({invisible: true, silent: true});
             barGroup.add(indicator);
@@ -259,7 +275,7 @@ define(function(require) {
                 style: {
                     x: 0, y: 0, text: '',
                     textFont: textStyleModel.getFont(),
-                    fill: textStyleModel.getTextColor()
+                    textFill: textStyleModel.getTextColor()
                 }
             });
             this.group.add(indicatorLabel);
@@ -278,21 +294,39 @@ define(function(require) {
         /**
          * @private
          */
-        _modifyHandle: function (handleIndex, dx, dy) {
+        _dragHandle: function (handleIndex, isEnd, dx, dy) {
             if (!this._useHandle) {
                 return;
             }
 
-            // Transform dx, dy to bar coordination.
-            var vertex = this._applyTransform([dx, dy], this._shapes.barGroup, true);
-            this._updateInterval(handleIndex, vertex[1]);
+            this._dragging = !isEnd;
 
-            this.api.dispatchAction({
-                type: 'selectDataRange',
-                from: this.uid,
-                visualMapId: this.visualMapModel.id,
-                selected: this._dataInterval.slice()
-            });
+            if (!isEnd) {
+                // Transform dx, dy to bar coordination.
+                var vertex = this._applyTransform([dx, dy], this._shapes.barGroup, true);
+                this._updateInterval(handleIndex, vertex[1]);
+
+                // Considering realtime, update view should be executed
+                // before dispatch action.
+                this._updateView();
+            }
+
+            // dragEnd do not dispatch action when realtime.
+            if (isEnd === !this.visualMapModel.get('realtime')) { // jshint ignore:line
+                this.api.dispatchAction({
+                    type: 'selectDataRange',
+                    from: this.uid,
+                    visualMapId: this.visualMapModel.id,
+                    selected: this._dataInterval.slice()
+                });
+            }
+
+            if (isEnd) {
+                !this._hovering && this._clearHoverLinkToSeries();
+            }
+            else if (useHoverLinkOnHandle(this.visualMapModel)) {
+                this._doHoverLinkToSeries(this._handleEnds[handleIndex], false);
+            }
         },
 
         /**
@@ -321,16 +355,18 @@ define(function(require) {
             delta = delta || 0;
             var visualMapModel = this.visualMapModel;
             var handleEnds = this._handleEnds;
+            var sizeExtent = [0, visualMapModel.itemSize[1]];
 
             sliderMove(
                 delta,
                 handleEnds,
-                [0, visualMapModel.itemSize[1]],
-                handleIndex === 'all' ? 'rigid' : 'push',
-                handleIndex
+                sizeExtent,
+                handleIndex,
+                // cross is forbiden
+                0
             );
+
             var dataExtent = visualMapModel.getExtent();
-            var sizeExtent = [0, visualMapModel.itemSize[1]];
             // Update data interval.
             this._dataInterval = [
                 linearMap(handleEnds[0], sizeExtent, dataExtent, true),
@@ -389,7 +425,7 @@ define(function(require) {
             var barPoints = this._createBarPoints(handleEnds, symbolSizes);
 
             return {
-                barColor: new LinearGradient(0, 0, 1, 1, colorStops),
+                barColor: new LinearGradient(0, 0, 0, 1, colorStops),
                 barPoints: barPoints,
                 handlesColor: [
                     colorStops[0].color,
@@ -505,13 +541,17 @@ define(function(require) {
 
         /**
          * @private
+         * @param {number} cursorValue
+         * @param {number} textValue
+         * @param {string} [rangeSymbol]
+         * @param {number} [halfHoverLinkSize]
          */
-        _showIndicator: function (value, isRange) {
+        _showIndicator: function (cursorValue, textValue, rangeSymbol, halfHoverLinkSize) {
             var visualMapModel = this.visualMapModel;
             var dataExtent = visualMapModel.getExtent();
             var itemSize = visualMapModel.itemSize;
             var sizeExtent = [0, itemSize[1]];
-            var pos = linearMap(value, dataExtent, sizeExtent, true);
+            var pos = linearMap(cursorValue, dataExtent, sizeExtent, true);
 
             var shapes = this._shapes;
             var indicator = shapes.indicator;
@@ -521,10 +561,12 @@ define(function(require) {
 
             indicator.position[1] = pos;
             indicator.attr('invisible', false);
-            indicator.setShape('points', createIndicatorPoints(isRange, pos, itemSize[1]));
+            indicator.setShape('points', createIndicatorPoints(
+                !!rangeSymbol, halfHoverLinkSize, pos, itemSize[1]
+            ));
 
             var opts = {convertOpacityToAlpha: true};
-            var color = this.getControllerVisual(value, 'color', opts);
+            var color = this.getControllerVisual(cursorValue, 'color', opts);
             indicator.setStyle('fill', color);
 
             // Update handle label position.
@@ -538,7 +580,7 @@ define(function(require) {
             var align = this._applyTransform('left', shapes.barGroup);
             var orient = this._orient;
             indicatorLabel.setStyle({
-                text: (isRange ? '≈' : '') + visualMapModel.formatValueText(value),
+                text: (rangeSymbol ? rangeSymbol : '') + visualMapModel.formatValueText(textValue),
                 textVerticalAlign: orient === 'horizontal' ? align : 'middle',
                 textAlign: orient === 'horizontal' ? 'center' : align,
                 x: textPoint[0],
@@ -550,43 +592,34 @@ define(function(require) {
          * @private
          */
         _enableHoverLinkToSeries: function () {
+            var self = this;
             this._shapes.barGroup
-                .on('mousemove', zrUtil.bind(onMouseOver, this))
-                .on('mouseout', zrUtil.bind(this._clearHoverLinkToSeries, this));
 
-            function onMouseOver(e) {
-                var visualMapModel = this.visualMapModel;
-                var itemSize = visualMapModel.itemSize;
+                .on('mousemove', function (e) {
+                    self._hovering = true;
 
-                if (!visualMapModel.option.hoverLink) {
-                    return;
-                }
+                    if (!self._dragging) {
+                        var itemSize = self.visualMapModel.itemSize;
+                        var pos = self._applyTransform(
+                            [e.offsetX, e.offsetY], self._shapes.barGroup, true, true
+                        );
+                        // For hover link show when hover handle, which might be
+                        // below or upper than sizeExtent.
+                        pos[1] = mathMin(mathMax(0, pos[1]), itemSize[1]);
 
-                var pos = this._applyTransform(
-                    [e.offsetX, e.offsetY], this._shapes.barGroup, true, true
-                );
-                var hoverRange = [pos[1] - HOVER_LINK_RANGE / 2, pos[1] + HOVER_LINK_RANGE / 2];
-                var sizeExtent = [0, itemSize[1]];
-                var dataExtent = visualMapModel.getExtent();
-                var valueRange = [
-                    linearMap(hoverRange[0], sizeExtent, dataExtent, true),
-                    linearMap(hoverRange[1], sizeExtent, dataExtent, true)
-                ];
+                        self._doHoverLinkToSeries(
+                            pos[1],
+                            0 <= pos[0] && pos[0] <= itemSize[0]
+                        );
+                    }
+                })
 
-                // Do not show indicator when mouse is over handle,
-                // otherwise labels overlap, especially when dragging.
-                if (0 <= pos[0] && pos[0] <= itemSize[0]) {
-                    this._showIndicator((valueRange[0] + valueRange[1]) / 2, true);
-                }
-
-                var oldBatch = convertDataIndicesToBatch(this._hoverLinkDataIndices);
-                this._hoverLinkDataIndices = visualMapModel.findTargetDataIndices(valueRange);
-                var newBatch = convertDataIndicesToBatch(this._hoverLinkDataIndices);
-                var resultBatches = helper.removeDuplicateBatch(oldBatch, newBatch);
-
-                this.api.dispatchAction({type: 'downplay', batch: resultBatches[0]});
-                this.api.dispatchAction({type: 'highlight', batch: resultBatches[1]});
-            }
+                .on('mouseout', function () {
+                    // When mouse is out of handle, hoverLink still need
+                    // to be displayed when realtime is set as false.
+                    self._hovering = false;
+                    !self._dragging && self._clearHoverLinkToSeries();
+                });
         },
 
         /**
@@ -607,19 +640,87 @@ define(function(require) {
         /**
          * @private
          */
+        _doHoverLinkToSeries: function (cursorPos, hoverOnBar) {
+            var visualMapModel = this.visualMapModel;
+            var itemSize = visualMapModel.itemSize;
+
+            if (!visualMapModel.option.hoverLink) {
+                return;
+            }
+
+            var sizeExtent = [0, itemSize[1]];
+            var dataExtent = visualMapModel.getExtent();
+
+            // For hover link show when hover handle, which might be below or upper than sizeExtent.
+            cursorPos = mathMin(mathMax(sizeExtent[0], cursorPos), sizeExtent[1]);
+
+            var halfHoverLinkSize = getHalfHoverLinkSize(visualMapModel, dataExtent, sizeExtent);
+            var hoverRange = [cursorPos - halfHoverLinkSize, cursorPos + halfHoverLinkSize];
+            var cursorValue = linearMap(cursorPos, sizeExtent, dataExtent, true);
+            var valueRange = [
+                linearMap(hoverRange[0], sizeExtent, dataExtent, true),
+                linearMap(hoverRange[1], sizeExtent, dataExtent, true)
+            ];
+            // Consider data range is out of visualMap range, see test/visualMap-continuous.html,
+            // where china and india has very large population.
+            hoverRange[0] < sizeExtent[0] && (valueRange[0] = -Infinity);
+            hoverRange[1] > sizeExtent[1] && (valueRange[1] = Infinity);
+
+            // Do not show indicator when mouse is over handle,
+            // otherwise labels overlap, especially when dragging.
+            if (hoverOnBar) {
+                if (valueRange[0] === -Infinity) {
+                    this._showIndicator(cursorValue, valueRange[1], '< ', halfHoverLinkSize);
+                }
+                else if (valueRange[1] === Infinity) {
+                    this._showIndicator(cursorValue, valueRange[0], '> ', halfHoverLinkSize);
+                }
+                else {
+                    this._showIndicator(cursorValue, cursorValue, '≈ ', halfHoverLinkSize);
+                }
+            }
+
+            // When realtime is set as false, handles, which are in barGroup,
+            // also trigger hoverLink, which help user to realize where they
+            // focus on when dragging. (see test/heatmap-large.html)
+            // When realtime is set as true, highlight will not show when hover
+            // handle, because the label on handle, which displays a exact value
+            // but not range, might mislead users.
+            var oldBatch = this._hoverLinkDataIndices;
+            var newBatch = [];
+            if (hoverOnBar || useHoverLinkOnHandle(visualMapModel)) {
+                newBatch = this._hoverLinkDataIndices = visualMapModel.findTargetDataIndices(valueRange);
+            }
+
+            var resultBatches = modelUtil.compressBatches(oldBatch, newBatch);
+            this._dispatchHighDown('downplay', helper.convertDataIndex(resultBatches[0]));
+            this._dispatchHighDown('highlight', helper.convertDataIndex(resultBatches[1]));
+        },
+
+        /**
+         * @private
+         */
         _hoverLinkFromSeriesMouseOver: function (e) {
             var el = e.target;
+            var visualMapModel = this.visualMapModel;
 
             if (!el || el.dataIndex == null) {
                 return;
             }
 
-            var dataModel = el.dataModel || this.ecModel.getSeriesByIndex(el.seriesIndex);
+            var dataModel = this.ecModel.getSeriesByIndex(el.seriesIndex);
+
+            if (!visualMapModel.isTargetSeries(dataModel)) {
+                return;
+            }
+
             var data = dataModel.getData(el.dataType);
-            var dim = data.getDimension(this.visualMapModel.getDataDimension(data));
+            var dim = data.getDimension(visualMapModel.getDataDimension(data));
             var value = data.get(dim, el.dataIndex, true);
 
-            this._showIndicator(value);
+            if (!isNaN(value)) {
+                this._showIndicator(value, value);
+            }
         },
 
         /**
@@ -639,10 +740,7 @@ define(function(require) {
 
             var indices = this._hoverLinkDataIndices;
 
-            this.api.dispatchAction({
-                type: 'downplay',
-                batch: convertDataIndicesToBatch(indices)
-            });
+            this._dispatchHighDown('downplay', helper.convertDataIndex(indices));
 
             indices.length = 0;
         },
@@ -670,6 +768,16 @@ define(function(require) {
         },
 
         /**
+         * @private
+         */
+        _dispatchHighDown: function (type, batch) {
+            batch && batch.length && this.api.dispatchAction({
+                type: type,
+                batch: batch
+            });
+        },
+
+        /**
          * @override
          */
         dispose: function () {
@@ -687,12 +795,17 @@ define(function(require) {
 
     });
 
-    function createPolygon(points, onDrift, cursor) {
+    function createPolygon(points, cursor, onDrift, onDragEnd) {
         return new graphic.Polygon({
             shape: {points: points},
             draggable: !!onDrift,
             cursor: cursor,
-            drift: onDrift
+            drift: onDrift,
+            onmousemove: function (e) {
+                // Fot mobile devicem, prevent screen slider on the button.
+                eventTool.stop(e.event);
+            },
+            ondragend: onDragEnd
         });
     }
 
@@ -702,17 +815,34 @@ define(function(require) {
             : [[0, 0], [textSize, 0], [textSize, textSize]];
     }
 
-    function createIndicatorPoints(isRange, pos, extentMax) {
+    function createIndicatorPoints(isRange, halfHoverLinkSize, pos, extentMax) {
         return isRange
             ? [ // indicate range
-                [0, -mathMin(HOVER_LINK_RANGE, mathMax(pos, 0))],
+                [0, -mathMin(halfHoverLinkSize, mathMax(pos, 0))],
                 [HOVER_LINK_OUT, 0],
-                [0, mathMin(HOVER_LINK_RANGE, mathMax(extentMax - pos, 0))]
+                [0, mathMin(halfHoverLinkSize, mathMax(extentMax - pos, 0))]
             ]
             : [ // indicate single value
                 [0, 0], [5, -5], [5, 5]
             ];
     }
 
-    return ContinuousVisualMapView;
+    function getHalfHoverLinkSize(visualMapModel, dataExtent, sizeExtent) {
+        var halfHoverLinkSize = HOVER_LINK_SIZE / 2;
+        var hoverLinkDataSize = visualMapModel.get('hoverLinkDataSize');
+        if (hoverLinkDataSize) {
+            halfHoverLinkSize = linearMap(hoverLinkDataSize, dataExtent, sizeExtent, true) / 2;
+        }
+        return halfHoverLinkSize;
+    }
+
+    function useHoverLinkOnHandle(visualMapModel) {
+        return !visualMapModel.get('realtime') && visualMapModel.get('hoverLinkOnHandle');
+    }
+
+    function getCursor(orient) {
+        return orient === 'vertical' ? 'ns-resize' : 'ew-resize';
+    }
+
+    return ContinuousView;
 });

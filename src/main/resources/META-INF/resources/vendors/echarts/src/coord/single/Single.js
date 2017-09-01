@@ -20,7 +20,7 @@ define(function (require) {
          * @type {string}
          * @readOnly
          */
-        this.dimension = 'oneDim';
+        this.dimension = 'single';
 
         /**
          * Add it just for draw tooltip.
@@ -28,7 +28,7 @@ define(function (require) {
          * @type {Array.<string>}
          * @readOnly
          */
-        this.dimensions = ['oneDim'];
+        this.dimensions = ['single'];
 
         /**
          * @private
@@ -47,12 +47,14 @@ define(function (require) {
         /**
          * @type {module:echarts/coord/single/AxisModel}
          */
-        this._model = axisModel;
+        this.model = axisModel;
     }
 
     Single.prototype = {
 
-        type: 'single',
+        type: 'singleAxis',
+
+        axisPointerEnabled: true,
 
         constructor: Single,
 
@@ -83,6 +85,7 @@ define(function (require) {
 
             axisModel.axis = axis;
             axis.model = axisModel;
+            axis.coordinateSystem = this;
             this._axis = axis;
         },
 
@@ -92,25 +95,15 @@ define(function (require) {
          * @param  {module:echarts/ExtensionAPI} api
          */
         update: function (ecModel, api) {
-            this._updateAxisFromSeries(ecModel);
-        },
-
-        /**
-         * Update the axis extent from series.
-         *
-         * @param  {module:echarts/model/Global} ecModel
-         * @private
-         */
-        _updateAxisFromSeries: function (ecModel) {
-
             ecModel.eachSeries(function (seriesModel) {
-
-                var data = seriesModel.getData();
-                var dim = this.dimension;
-                this._axis.scale.unionExtent(
-                    data.getDataExtent(seriesModel.coordDimToDataDim(dim))
-                );
-                axisHelper.niceScaleExtent(this._axis, this._axis.model);
+                if (seriesModel.coordinateSystem === this) {
+                    var data = seriesModel.getData();
+                    var dim = this.dimension;
+                    this._axis.scale.unionExtentFromData(
+                        data, seriesModel.coordDimToDataDim(dim)
+                    );
+                    axisHelper.niceScaleExtent(this._axis.scale, this._axis.model);
+                }
             }, this);
         },
 
@@ -174,19 +167,19 @@ define(function (require) {
             var extentSum = axisExtent[0] + axisExtent[1];
             var isHorizontal = axis.isHorizontal();
 
-            axis.toGlobalCoord = isHorizontal ?
-                function (coord) {
+            axis.toGlobalCoord = isHorizontal
+                ? function (coord) {
                     return coord + coordBase;
-                } :
-                function (coord) {
+                }
+                : function (coord) {
                     return extentSum - coord + coordBase;
                 };
 
-            axis.toLocalCoord = isHorizontal ?
-                function (coord) {
+            axis.toLocalCoord = isHorizontal
+                ? function (coord) {
                     return coord - coordBase;
-                } :
-                function (coord) {
+                }
+                : function (coord) {
                     return extentSum - coord + coordBase;
                 };
         },
@@ -207,6 +200,20 @@ define(function (require) {
          */
         getBaseAxis: function () {
             return this._axis;
+        },
+
+        /**
+         * @return {Array.<module:echarts/coord/Axis>}
+         */
+        getAxes: function () {
+            return [this._axis];
+        },
+
+        /**
+         * @return {Object} {baseAxes: [], otherAxes: []}
+         */
+        getTooltipAxes: function () {
+            return {baseAxes: [this.getAxis()]};
         },
 
         /**
@@ -231,34 +238,36 @@ define(function (require) {
 
         /**
          * @param {Array.<number>} point
+         * @return {Array.<number>}
          */
         pointToData: function (point) {
             var axis = this.getAxis();
-            var orient = axis.orient;
-            if (orient === 'horizontal') {
-                return [
-                    axis.coordToData(axis.toLocalCoord(point[0])),
-                    point[1]
-                ];
-            }
-            else {
-                return [
-                    axis.coordToData(axis.toLocalCoord(point[1])),
-                    point[0]
-                ];
-            }
+            return [axis.coordToData(axis.toLocalCoord(
+                point[axis.orient === 'horizontal' ? 0 : 1]
+            ))];
         },
 
         /**
          * Convert the series data to concrete point.
          *
-         * @param  {*} value
-         * @return {number}
+         * @param  {number|Array.<number>} val
+         * @return {Array.<number>}
          */
-        dataToPoint: function (point) {
+        dataToPoint: function (val) {
             var axis = this.getAxis();
-            return [axis.toGlobalCoord(axis.dataToCoord(point[0])), point[1]];
+            var rect = this.getRect();
+            var pt = [];
+            var idx = axis.orient === 'horizontal' ? 0 : 1;
+
+            if (val instanceof Array) {
+                val = val[0];
+            }
+
+            pt[idx] = axis.toGlobalCoord(axis.dataToCoord(+val));
+            pt[1 - idx] = idx === 0 ? (rect.y + rect.height / 2) : (rect.x + rect.width / 2);
+            return pt;
         }
+
     };
 
     return Single;

@@ -13,8 +13,9 @@ define(function(require) {
 
         getStyleUpdater: function () {
             return updateStyle;
-        }
+        },
 
+        dispose: zrUtil.noop
     });
 
     zrUtil.mixin(CandlestickView, whiskerBoxCommon.viewMixin, true);
@@ -27,7 +28,7 @@ define(function(require) {
         var itemModel = data.getItemModel(idx);
         var normalItemStyleModel = itemModel.getModel(normalStyleAccessPath);
         var color = data.getItemVisual(idx, 'color');
-        var borderColor = data.getItemVisual(idx, 'borderColor');
+        var borderColor = data.getItemVisual(idx, 'borderColor') || color;
 
         // Color must be excluded.
         // Because symbol provide setColor individually to set fill and stroke

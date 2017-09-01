@@ -6,6 +6,7 @@ define(function (require) {
     var zrUtil = require('zrender/core/util');
     var modelUtil = require('../../util/model');
     var Model = require('../../model/Model');
+    var formatUtil = require('../../util/format');
 
     var createGraphFromNodeEdge = require('../helper/createGraphFromNodeEdge');
 
@@ -36,7 +37,7 @@ define(function (require) {
 
         mergeDefaultAndTheme: function (option) {
             GraphSeries.superApply(this, 'mergeDefaultAndTheme', arguments);
-            modelUtil.defaultEmphasis(option.edgeLabel, modelUtil.LABEL_OPTIONS);
+            modelUtil.defaultEmphasis(option.edgeLabel, ['show']);
         },
 
         getInitialData: function (option, ecModel) {
@@ -62,21 +63,24 @@ define(function (require) {
                 });
 
                 var edgeLabelModel = self.getModel('edgeLabel');
-                var wrappedGetEdgeModel = function (path, parentModel) {
-                    var pathArr = (path || '').split('.');
-                    if (pathArr[0] === 'label') {
-                        parentModel = parentModel
-                            || edgeLabelModel.getModel(pathArr.slice(1));
-                    }
-                    var model = Model.prototype.getModel.call(this, pathArr, parentModel);
-                    model.getModel = wrappedGetEdgeModel;
-                    return model;
-                };
+                // For option `edgeLabel` can be found by label.xxx.xxx on item mode.
+                var fakeSeriesModel = new Model(
+                    {label: edgeLabelModel.option},
+                    edgeLabelModel.parentModel,
+                    ecModel
+                );
+
                 edgeData.wrapMethod('getItemModel', function (model) {
-                    // FIXME Wrap get method ?
-                    model.getModel = wrappedGetEdgeModel;
+                    model.customizeGetParent(edgeGetParent);
                     return model;
                 });
+
+                function edgeGetParent(path) {
+                    path = this.parsePath(path);
+                    return (path && path[0] === 'label')
+                        ? fakeSeriesModel
+                        : this.parentModel;
+                }
             }
         },
 
@@ -111,9 +115,14 @@ define(function (require) {
                 var edge = nodeData.graph.getEdgeByIndex(dataIndex);
                 var sourceName = nodeData.getName(edge.node1.dataIndex);
                 var targetName = nodeData.getName(edge.node2.dataIndex);
-                var html = sourceName + ' > ' + targetName;
+
+                var html = [];
+                sourceName != null && html.push(sourceName);
+                targetName != null && html.push(targetName);
+                html = formatUtil.encodeHTML(html.join(' > '));
+
                 if (params.value) {
-                    html += ' : ' + params.value;
+                    html += ' : ' + formatUtil.encodeHTML(params.value);
                 }
                 return html;
             }
@@ -147,20 +156,23 @@ define(function (require) {
             this.option.center = center;
         },
 
+        isAnimationEnabled: function () {
+            return GraphSeries.superCall(this, 'isAnimationEnabled')
+                // Not enable animation when do force layout
+                && !(this.get('layout') === 'force' && this.get('force.layoutAnimation'));
+        },
+
         defaultOption: {
             zlevel: 0,
             z: 2,
 
-            color: ['#61a0a8', '#d14a61', '#fd9c35', '#675bba', '#fec42c',
-                    '#dd4444', '#fd9c35', '#cd4870'],
-
             coordinateSystem: 'view',
 
             // Default option for all coordinate systems
-            xAxisIndex: 0,
-            yAxisIndex: 0,
-            polarIndex: 0,
-            geoIndex: 0,
+            // xAxisIndex: 0,
+            // yAxisIndex: 0,
+            // polarIndex: 0,
+            // geoIndex: 0,
 
             legendHoverLink: true,
 
@@ -168,11 +180,20 @@ define(function (require) {
 
             layout: null,
 
-            // Configuration of force
+            focusNodeAdjacency: false,
+
+            // Configuration of circular layout
+            circular: {
+                rotateLabel: false
+            },
+            // Configuration of force directed layout
             force: {
                 initLayout: null,
-                repulsion: 50,
+                // Node repulsion. Can be an array to represent range.
+                repulsion: [0, 50],
                 gravity: 0.1,
+
+                // Edge length. Can be an array to represent range.
                 edgeLength: 30,
 
                 layoutAnimation: true
@@ -207,6 +228,7 @@ define(function (require) {
             zoom: 1,
             // Symbol size scale ratio in roam
             nodeScaleRatio: 0.6,
+            // cursor: null,
 
             // categories: [],
 

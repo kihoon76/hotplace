@@ -1,20 +1,22 @@
 define(function (require) {
 
     return function (ecModel) {
+
+        var paletteScope = {};
         ecModel.eachSeriesByType('graph', function (seriesModel) {
-            var colorList = seriesModel.get('color');
             var categoriesData = seriesModel.getCategoriesData();
             var data = seriesModel.getData();
 
             var categoryNameIdxMap = {};
 
             categoriesData.each(function (idx) {
-                categoryNameIdxMap[categoriesData.getName(idx)] = idx;
+                var name = categoriesData.getName(idx);
+                // Add prefix to avoid conflict with Object.prototype.
+                categoryNameIdxMap['ec-' + name] = idx;
 
                 var itemModel = categoriesData.getItemModel(idx);
-                var rawIdx = categoriesData.getRawIndex(idx);
                 var color = itemModel.get('itemStyle.normal.color')
-                    || colorList[rawIdx % colorList.length];
+                    || seriesModel.getColorFromPalette(name, paletteScope);
                 categoriesData.setItemVisual(idx, 'color', color);
             });
 
@@ -25,7 +27,7 @@ define(function (require) {
                     var category = model.getShallow('category');
                     if (category != null) {
                         if (typeof category === 'string') {
-                            category = categoryNameIdxMap[category];
+                            category = categoryNameIdxMap['ec-' + category];
                         }
                         if (!data.getItemVisual(idx, 'color', true)) {
                             data.setItemVisual(

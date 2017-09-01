@@ -30,7 +30,7 @@
 		<chartjs-version>2.5.0</chartjs-version>
 		<bootstrap-version>3.3.7-1</bootstrap-version>
 		<jquery.ui-version>1.10.3</jquery.ui-version>
-		<html2canvas-version>0.4.1</html2canvas-version>
+		<bootstrap.toggle-version>2.2.2</bootstrap.toggle-version>
 	</properties>
 	
 	<dependencies>
@@ -275,6 +275,14 @@
 		    <groupId>org.apache.httpcomponents</groupId>
 		    <artifactId>httpclient</artifactId>
 		    <version>${httpclient-version}</version>
+		</dependency>
+		
+		<!-- bootstrap toggle -->
+		<!-- http://www.bootstraptoggle.com/ -->
+		<dependency>
+		    <groupId>org.webjars.bower</groupId>
+		    <artifactId>bootstrap-toggle</artifactId>
+		    <version>${bootstrap.toggle-version}</version>
 		</dependency>
 		
 		<!-- html2canvas -->

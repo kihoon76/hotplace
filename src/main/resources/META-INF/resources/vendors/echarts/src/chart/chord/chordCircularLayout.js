@@ -47,7 +47,7 @@ define(function (require) {
         if (opts.sort && opts.sort != 'none') {
             groups.sort(compareGroups);
             if (opts.sort === 'descending') {
-                groups.revert();
+                groups.reverse();
             }
         }
 
@@ -58,7 +58,7 @@ define(function (require) {
             if (opts.sortSub && opts.sortSub != 'none') {
                 group.subGroups.sort(compareGroups);
                 if (opts.sortSub === 'descending') {
-                    group.subGroups.revert();
+                    group.subGroups.reverse();
                 }
             }
 
@@ -95,7 +95,7 @@ define(function (require) {
         return a.size - b.size;
     };
 
-    return function (ecModel, api) {
+    return function (ecModel, api, payload) {
         ecModel.eachSeriesByType('chord', function (chordSeries) {
             var graph = chordSeries.getGraph();
 

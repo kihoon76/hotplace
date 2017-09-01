@@ -34,7 +34,7 @@ $(document).ready(function() {
 	 * load 하는 부분은 가장 먼저 나와함
 	 * */
 	_searchFormLoad();
-	_salesViewFormLoad();
+	_salesViewFormLoad(); 
 	
 	function _enableMapButton(level, targetBtnId) {
 		var target = $('#' + targetBtnId);
@@ -359,15 +359,16 @@ $(document).ready(function() {
 			console.log(latlng)
 			hotplace.maps.getClickedCell(latlng);
 		},
-		'tilesloaded': function(e) {
+		/*'tilesloaded': function(e) {
 			console.log('tilesloaded');
 		},
 		'idle': function(e) {
 			console.log('idle');
-		}
+		}*/
 	}, function(map) {
 		hotplace.maps.showCellLayer();
 		hotplace.dom.showYearRangeDiv();
+		hotplace.dom.showAutoYearRangeDiv();
 	});
 	
 	hotplace.dom.addButtonInMap([{

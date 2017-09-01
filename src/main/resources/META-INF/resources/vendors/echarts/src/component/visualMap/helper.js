@@ -1,8 +1,7 @@
 define(function(require) {
 
-    var layout = require('../../util/layout');
     var zrUtil = require('zrender/core/util');
-    var DataDiffer = require('../../data/DataDiffer');
+    var layout = require('../../util/layout');
 
     var helper = {
 
@@ -46,39 +45,20 @@ define(function(require) {
             ];
         },
 
-        convertDataIndicesToBatch: function (dataIndicesBySeries) {
-            var batch = [];
-            zrUtil.each(dataIndicesBySeries, function (item) {
-                zrUtil.each(item.dataIndices, function (dataIndex) {
-                    batch.push({seriesId: item.seriesId, dataIndex: dataIndex});
-                });
+        /**
+         * Prepare dataIndex for outside usage, where dataIndex means rawIndex, and
+         * dataIndexInside means filtered index.
+         */
+        convertDataIndex: function (batch) {
+            zrUtil.each(batch || [], function (batchItem) {
+                if (batch.dataIndex != null) {
+                    batch.dataIndexInside = batch.dataIndex;
+                    batch.dataIndex = null;
+                }
             });
             return batch;
-        },
-
-        removeDuplicateBatch: function (batchA, batchB) {
-            var result = [[], []];
-
-            (new DataDiffer(batchA, batchB, getKey, getKey))
-                .add(add)
-                .update(zrUtil.noop)
-                .remove(remove)
-                .execute();
-
-            function getKey(item) {
-                return item.seriesId + '-' + item.dataIndex;
-            }
-
-            function add(index) {
-                result[1].push(batchB[index]);
-            }
-
-            function remove(index) {
-                result[0].push(batchA[index]);
-            }
-
-            return result;
         }
+
     };
 
 

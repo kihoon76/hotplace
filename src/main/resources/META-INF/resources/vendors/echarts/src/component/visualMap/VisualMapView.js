@@ -1,10 +1,10 @@
 define(function (require) {
 
-    var echarts = require('../../echarts');
     var zrUtil = require('zrender/core/util');
     var graphic = require('../../util/graphic');
     var formatUtil = require('../../util/format');
     var layout = require('../../util/layout');
+    var echarts = require('../../echarts');
     var VisualMapping = require('../../visual/VisualMapping');
 
     return echarts.extendComponentView({
@@ -35,12 +35,6 @@ define(function (require) {
              * @type {module:echarts/component/visualMap/visualMapModel}
              */
             this.visualMapModel;
-
-            /**
-             * @private
-             * @type {Object}
-             */
-            this._updatableShapes = {};
         },
 
         /**
@@ -84,7 +78,7 @@ define(function (require) {
 
         /**
          * @protected
-         * @param {number} targetValue
+         * @param {number} targetValue can be Infinity or -Infinity
          * @param {string=} visualCluster Only can be 'color' 'opacity' 'symbol' 'symbolSize'
          * @param {Object} [opts]
          * @param {string=} [opts.forceState] Specify state, instead of using getValueState method.
@@ -143,7 +137,7 @@ define(function (require) {
             var model = this.visualMapModel;
             var api = this.api;
 
-            layout.positionGroup(
+            layout.positionElement(
                 group,
                 model.getBoxLayoutParams(),
                 {width: api.getWidth(), height: api.getHeight()}

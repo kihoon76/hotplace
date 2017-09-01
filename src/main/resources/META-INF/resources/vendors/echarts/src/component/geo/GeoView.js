@@ -30,6 +30,13 @@ define(function (require) {
             else {
                 this._mapDraw.group.removeAll();
             }
+
+            this.group.silent = geoModel.get('silent');
+        },
+
+        dispose: function () {
+            this._mapDraw && this._mapDraw.remove();
         }
+
     });
 });

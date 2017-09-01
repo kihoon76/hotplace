@@ -7,12 +7,19 @@ define(function(require) {
 
     var LegendModel = require('../../echarts').extendComponentModel({
 
-        type: 'legend',
+        type: 'legend.plain',
 
         dependencies: ['series'],
 
         layoutMode: {
             type: 'box',
+            // legend.width/height are maxWidth/maxHeight actually,
+            // whereas realy width/height is calculated by its content.
+            // (Setting {left: 10, right: 10} does not make sense).
+            // So consider the case:
+            // `setOption({legend: {left: 10});`
+            // then `setOption({legend: {right: 10});`
+            // The previous `left` should be cleared by setting `ignoreSize`.
             ignoreSize: true
         },
 
@@ -20,19 +27,28 @@ define(function(require) {
             this.mergeDefaultAndTheme(option, ecModel);
 
             option.selected = option.selected || {};
+        },
 
-            this._updateData(ecModel);
+        mergeOption: function (option) {
+            LegendModel.superCall(this, 'mergeOption', option);
+        },
+
+        optionUpdated: function () {
+            this._updateData(this.ecModel);
 
             var legendData = this._data;
-            // If has any selected in option.selected
-            var selectedMap = this.option.selected;
+
             // If selectedMode is single, try to select one
             if (legendData[0] && this.get('selectedMode') === 'single') {
                 var hasSelected = false;
-                for (var name in selectedMap) {
-                    if (selectedMap[name]) {
+                // If has any selected in option.selected
+                for (var i = 0; i < legendData.length; i++) {
+                    var name = legendData[i].get('name');
+                    if (this.isSelected(name)) {
+                        // Force to unselect others
                         this.select(name);
                         hasSelected = true;
+                        break;
                     }
                 }
                 // Try select the first if selectedMode is single
@@ -40,15 +56,10 @@ define(function(require) {
             }
         },
 
-        mergeOption: function (option) {
-            LegendModel.superCall(this, 'mergeOption', option);
-
-            this._updateData(this.ecModel);
-        },
-
         _updateData: function (ecModel) {
             var legendData = zrUtil.map(this.get('data') || [], function (dataItem) {
-                if (typeof dataItem === 'string') {
+                // Can be string or number
+                if (typeof dataItem === 'string' || typeof dataItem === 'number') {
                     dataItem = {
                         name: dataItem
                     };
@@ -110,7 +121,7 @@ define(function(require) {
         toggleSelected: function (name) {
             var selected = this.option.selected;
             // Default is true
-            if (!(name in selected)) {
+            if (!selected.hasOwnProperty(name)) {
                 selected[name] = true;
             }
             this[selected[name] ? 'unSelect' : 'select'](name);
@@ -121,7 +132,7 @@ define(function(require) {
          */
         isSelected: function (name) {
             var selected = this.option.selected;
-            return !((name in selected) && !selected[name])
+            return !(selected.hasOwnProperty(name) && !selected[name])
                 && zrUtil.indexOf(this._availableNames, name) >= 0;
         },
 
@@ -139,8 +150,8 @@ define(function(require) {
             left: 'center',
             // right: 'center',
 
-            top: 'top',
-            // bottom: 'top',
+            top: 0,
+            // bottom: null,
 
             // 水平对齐
             // 'auto' | 'left' | 'right'
@@ -150,6 +161,7 @@ define(function(require) {
             backgroundColor: 'rgba(0,0,0,0)',
             // 图例边框颜色
             borderColor: '#ccc',
+            borderRadius: 0,
             // 图例边框线宽，单位px，默认为0（无边框）
             borderWidth: 0,
             // 图例内边距，单位px，默认各方向内边距为5，
@@ -162,17 +174,26 @@ define(function(require) {
             itemWidth: 25,
             // 图例图形高度
             itemHeight: 14,
+
+            // 图例关闭时候的颜色
+            inactiveColor: '#ccc',
+
             textStyle: {
                 // 图例文字颜色
                 color: '#333'
             },
             // formatter: '',
             // 选择模式，默认开启图例开关
-            selectedMode: true
+            selectedMode: true,
             // 配置默认选中状态，可配合LEGEND.SELECTED事件做动态数据载入
             // selected: null,
             // 图例内容（详见legend.data，数组中每一项代表一个item
             // data: [],
+
+            // Tooltip 相关配置
+            tooltip: {
+                show: false
+            }
         }
     });
 

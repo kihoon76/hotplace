@@ -50,7 +50,7 @@
 				
 				if(params.beforeSend && typeof params.beforeSend === 'function') {
 					params.beforeSend();
-				}
+				} 
 			},
 			contentType: params.contentType || 'application/x-www-form-urlencoded; charset=UTF-8',
 			dataType: params.dataType || 'json',
@@ -60,7 +60,7 @@
 			statusCode: {
 				404: function() {
 					console.log('Page not found');
-				}
+				}  
 			},
 			success: function(data, textStatus, jqXHR) {
 				if(!params.success || typeof params.success !== 'function') {
@@ -69,7 +69,7 @@
 				
 				try {
 					params.success(data, textStatus, jqXHR);
-				}
+				} 
 				finally {
 					var activeMask = (params.activeMask == undefined) ? true : params.activeMask; 
 					if(activeMask) dom.hideMask();
@@ -916,7 +916,7 @@
 				 _locationBounds.ney < bnds.ney);
 	}
 	
-	maps.showCellLayer = function(cellType) {
+	maps.showCellLayer = function(cellType, callback) {
 		
 		var db = hotplace.database;
 		var _currentLevel = _getCurrentLevel();
@@ -942,8 +942,15 @@
 					try {
 						db.setLevelData(_currentLevel, json.datas);
 						//console.log(json.datas);
-						_showCellLayer(cellType || _cellTypes.GONGSI);
+						if(!cellType) {
+							cellType = _cellTypes.GONGSI;
+						}
+						else if(typeof(cellType) === 'function'){
+							callback = cellType;
+						}
 						
+						_showCellLayer(cellType || _cellTypes.GONGSI);
+						if(callback) callback();
 					}
 					catch(e) {
 						throw e;
@@ -2605,15 +2612,36 @@
 		//dom.initTooltip('ui-slider-handle', {trigger:'hover'});
 	}
 	
-	dom.showYearRangeDiv = function() {
-		var max = 2017, min = 2010;
-		
+	var _yearRangeMode = 'manual';
+	
+	dom.showYearRangeDiv = function(mx, mn) {
+		var max = 2017, min = 2011, i = 0, step = 1;
+		var range = max - min - 1;
 		var el = $('#dvYearRange');
+		
+		/*
+		 * Auto
+		 * */
+		var runFn = hotplace.maps.showCellLayer;
+		var callback = function() {
+			i++;
+			if(i<=range) {
+				setTimeout(function() {
+					el.rangeSlider('scrollRight', step);
+				}, 2000);
+			}
+			else {
+				i = 0;
+				_yearRangeMode = 'manual';
+				$('#btnAutoYear').bootstrapToggle('off');  
+			}
+		};
+		
 		el.rangeSlider({
 			arrows: false,
 			//enabled: false,
 			bounds: {min: min, max: max},
-			defaultValues: {min: max-1, max: 2017},
+			defaultValues: {min: max-1, max: max},
 			step: 1,
 			range:{min:1, max:1},
 			formatter: function(val) {
@@ -2631,8 +2659,35 @@
 			_showCellYear = data.values.max;
 			
 			dom.addBodyAllMask();
-			hotplace.maps.showCellLayer(_showCellYear);
+			if(_yearRangeMode == 'auto') {
+				runFn(callback);
+			}
+			else {
+				runFn();
+			}
+			//hotplace.maps.showCellLayer();
 			dom.removeBodyAllMask();
+		});
+		
+		el.show();
+	}
+	
+	dom.showAutoYearRangeDiv = function() {
+		
+		var el = $('#dvAutoYearRange');
+		
+		$('#btnAutoYear').bootstrapToggle({
+			size:'mini'
+		});
+		
+		$('#btnAutoYear').on('change', function() {
+			if($(this).prop('checked')) {
+				_yearRangeMode = 'auto';
+				$('#dvYearRange').rangeSlider('scrollLeft', 100);
+			}
+			else {
+				_yearRangeMode == 'auto';
+			}
 		});
 		
 		el.show();

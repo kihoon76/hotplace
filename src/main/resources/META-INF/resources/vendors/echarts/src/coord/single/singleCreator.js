@@ -26,16 +26,21 @@ define(function (require) {
         });
 
         ecModel.eachSeries(function (seriesModel) {
-
-            if (seriesModel.get('coordinateSystem') === 'single') {
-                var singleAxisIndex = seriesModel.get('singleAxisIndex');
-                var axisModel = ecModel.getComponent('singleAxis', singleAxisIndex);
-                seriesModel.coordinateSystem = axisModel.coordinateSystem;
+            if (seriesModel.get('coordinateSystem') === 'singleAxis') {
+                var singleAxisModel = ecModel.queryComponents({
+                    mainType: 'singleAxis',
+                    index: seriesModel.get('singleAxisIndex'),
+                    id: seriesModel.get('singleAxisId')
+                })[0];
+                seriesModel.coordinateSystem = singleAxisModel && singleAxisModel.coordinateSystem;
             }
         });
 
         return singles;
     }
 
-    require('../../CoordinateSystem').register('single', {create: create});
+    require('../../CoordinateSystem').register('single', {
+        create: create,
+        dimensions: Single.prototype.dimensions
+    });
 });

@@ -2,12 +2,7 @@ define(function (require) {
 
     var zrUtil = require('zrender/core/util');
     var List = require('../../data/List');
-    var formatUtil = require('../../util/format');
-    var modelUtil = require('../../util/model');
     var numberUtil = require('../../util/number');
-
-    var addCommas = formatUtil.addCommas;
-    var encodeHTML = formatUtil.encodeHTML;
 
     var markerHelper = require('./markerHelper');
 
@@ -58,8 +53,8 @@ define(function (require) {
             mlTo.coord[baseIndex] = Infinity;
 
             var precision = mlModel.get('precision');
-            if (precision >= 0) {
-                value = +value.toFixed(precision);
+            if (precision >= 0 && typeof value === 'number') {
+                value = +value.toFixed(Math.min(precision, 20));
             }
 
             mlFrom.coord[valueIndex] = mlTo.coord[valueIndex] = value;
@@ -123,19 +118,16 @@ define(function (require) {
     }
 
     function updateSingleMarkerEndLayout(
-        data, idx, isFrom, mlType, valueIndex, seriesModel, api
+        data, idx, isFrom, seriesModel, api
     ) {
         var coordSys = seriesModel.coordinateSystem;
         var itemModel = data.getItemModel(idx);
 
         var point;
-        var xPx = itemModel.get('x');
-        var yPx = itemModel.get('y');
-        if (xPx != null && yPx != null) {
-            point = [
-                numberUtil.parsePercent(xPx, api.getWidth()),
-                numberUtil.parsePercent(yPx, api.getHeight())
-            ];
+        var xPx = numberUtil.parsePercent(itemModel.get('x'), api.getWidth());
+        var yPx = numberUtil.parsePercent(itemModel.get('y'), api.getHeight());
+        if (!isNaN(xPx) && !isNaN(yPx)) {
+            point = [xPx, yPx];
         }
         else {
             // Chart like bar may have there own marker positioning logic
@@ -171,63 +163,22 @@ define(function (require) {
                     point[1] = yAxis.toGlobalCoord(yAxis.getExtent()[isFrom ? 0 : 1]);
                 }
             }
+
+            // Use x, y if has any
+            if (!isNaN(xPx)) {
+                point[0] = xPx;
+            }
+            if (!isNaN(yPx)) {
+                point[1] = yPx;
+            }
         }
 
         data.setItemLayout(idx, point);
     }
 
-    var markLineFormatMixin = {
-        formatTooltip: function (dataIndex) {
-            var data = this._data;
-            var value = this.getRawValue(dataIndex);
-            var formattedValue = zrUtil.isArray(value)
-                ? zrUtil.map(value, addCommas).join(', ') : addCommas(value);
-            var name = data.getName(dataIndex);
-            return this.name + '<br />'
-                + ((name ? encodeHTML(name) + ' : ' : '') + formattedValue);
-        },
-
-        getData: function () {
-            return this._data;
-        },
-
-        setData: function (data) {
-            this._data = data;
-        }
-    };
-
-    zrUtil.defaults(markLineFormatMixin, modelUtil.dataFormatMixin);
-
-    require('../../echarts').extendComponentView({
+    require('./MarkerView').extend({
 
         type: 'markLine',
-
-        init: function () {
-            /**
-             * Markline grouped by series
-             * @private
-             * @type {Object}
-             */
-            this._markLineMap = {};
-        },
-
-        render: function (markLineModel, ecModel, api) {
-            var lineDrawMap = this._markLineMap;
-            for (var name in lineDrawMap) {
-                lineDrawMap[name].__keep = false;
-            }
-
-            ecModel.eachSeries(function (seriesModel) {
-                var mlModel = seriesModel.markLineModel;
-                mlModel && this._renderSeriesML(seriesModel, mlModel, ecModel, api);
-            }, this);
-
-            for (var name in lineDrawMap) {
-                if (!lineDrawMap[name].__keep) {
-                    this.group.remove(lineDrawMap[name].group);
-                }
-            }
-        },
 
         updateLayout: function (markLineModel, ecModel, api) {
             ecModel.eachSeries(function (seriesModel) {
@@ -238,11 +189,8 @@ define(function (require) {
                     var toData = mlModel.__to;
                     // Update visual and layout of from symbol and to symbol
                     fromData.each(function (idx) {
-                        var lineModel = mlData.getItemModel(idx);
-                        var mlType = lineModel.get('type');
-                        var valueIndex = lineModel.get('valueIndex');
-                        updateSingleMarkerEndLayout(fromData, idx, true, mlType, valueIndex, seriesModel, api);
-                        updateSingleMarkerEndLayout(toData, idx, false, mlType, valueIndex, seriesModel, api);
+                        updateSingleMarkerEndLayout(fromData, idx, true, seriesModel, api);
+                        updateSingleMarkerEndLayout(toData, idx, false, seriesModel, api);
                     });
                     // Update layout of line
                     mlData.each(function (idx) {
@@ -252,21 +200,20 @@ define(function (require) {
                         ]);
                     });
 
-                    this._markLineMap[seriesModel.name].updateLayout();
+                    this.markerGroupMap.get(seriesModel.id).updateLayout();
+
                 }
             }, this);
         },
 
-        _renderSeriesML: function (seriesModel, mlModel, ecModel, api) {
+        renderSeries: function (seriesModel, mlModel, ecModel, api) {
             var coordSys = seriesModel.coordinateSystem;
-            var seriesName = seriesModel.name;
+            var seriesId = seriesModel.id;
             var seriesData = seriesModel.getData();
 
-            var lineDrawMap = this._markLineMap;
-            var lineDraw = lineDrawMap[seriesName];
-            if (!lineDraw) {
-                lineDraw = lineDrawMap[seriesName] = new LineDraw();
-            }
+            var lineDrawMap = this.markerGroupMap;
+            var lineDraw = lineDrawMap.get(seriesId)
+                || lineDrawMap.set(seriesId, new LineDraw());
             this.group.add(lineDraw.group);
 
             var mlData = createList(coordSys, seriesModel, mlModel);
@@ -278,7 +225,6 @@ define(function (require) {
             mlModel.__from = fromData;
             mlModel.__to = toData;
             // Line data for tooltip and formatter
-            zrUtil.extend(mlModel, markLineFormatMixin);
             mlModel.setData(lineData);
 
             var symbolType = mlModel.get('symbol');
@@ -292,11 +238,8 @@ define(function (require) {
 
             // Update visual and layout of from symbol and to symbol
             mlData.from.each(function (idx) {
-                var lineModel = lineData.getItemModel(idx);
-                var mlType = lineModel.get('type');
-                var valueIndex = lineModel.get('valueIndex');
-                updateDataVisualAndLayout(fromData, idx, true, mlType, valueIndex);
-                updateDataVisualAndLayout(toData, idx, false, mlType, valueIndex);
+                updateDataVisualAndLayout(fromData, idx, true);
+                updateDataVisualAndLayout(toData, idx, false);
             });
 
             // Update visual and layout of line
@@ -328,11 +271,11 @@ define(function (require) {
                 });
             });
 
-            function updateDataVisualAndLayout(data, idx, isFrom, mlType, valueIndex) {
+            function updateDataVisualAndLayout(data, idx, isFrom) {
                 var itemModel = data.getItemModel(idx);
 
                 updateSingleMarkerEndLayout(
-                    data, idx, isFrom, mlType, valueIndex, seriesModel, api
+                    data, idx, isFrom, seriesModel, api
                 );
 
                 data.setItemVisual(idx, {
@@ -343,6 +286,8 @@ define(function (require) {
             }
 
             lineDraw.__keep = true;
+
+            lineDraw.group.silent = mlModel.get('silent') || seriesModel.get('silent');
         }
     });
 
@@ -398,6 +343,7 @@ define(function (require) {
         lineData.initData(
             zrUtil.map(optData, function (item) { return item[2]; })
         );
+        lineData.hasItemOption = true;
         return {
             from: fromData,
             to: toData,

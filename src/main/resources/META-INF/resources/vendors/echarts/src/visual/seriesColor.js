@@ -1,12 +1,11 @@
 define(function (require) {
     var Gradient = require('zrender/graphic/Gradient');
-    return function (seriesType, styleType, ecModel) {
+    return function (ecModel) {
         function encodeColor(seriesModel) {
-            var colorAccessPath = [styleType, 'normal', 'color'];
-            var colorList = ecModel.get('color');
+            var colorAccessPath = (seriesModel.visualColorAccessPath || 'itemStyle.normal.color').split('.');
             var data = seriesModel.getData();
             var color = seriesModel.get(colorAccessPath) // Set in itemStyle
-                || colorList[seriesModel.seriesIndex % colorList.length];  // Default color
+                || seriesModel.getColorFromPalette(seriesModel.get('name'));  // Default color
 
             // FIXME Set color function or use the platte color
             data.setVisual('color', color);
@@ -21,6 +20,7 @@ define(function (require) {
                     });
                 }
 
+                // itemStyle in each data item
                 data.each(function (idx) {
                     var itemModel = data.getItemModel(idx);
                     var color = itemModel.get(colorAccessPath, true);
@@ -30,7 +30,6 @@ define(function (require) {
                 });
             }
         }
-        seriesType ? ecModel.eachSeriesByType(seriesType, encodeColor)
-            : ecModel.eachSeries(encodeColor);
+        ecModel.eachRawSeries(encodeColor);
     };
 });

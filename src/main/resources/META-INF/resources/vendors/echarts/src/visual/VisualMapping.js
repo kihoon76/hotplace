@@ -11,11 +11,10 @@ define(function (require) {
 
     var CATEGORY_DEFAULT_VISUAL_INDEX = -1;
 
-
     /**
      * @param {Object} option
      * @param {string} [option.type] See visualHandlers.
-     * @param {string} [option.mappingMethod] 'linear' or 'piecewise' or 'category'
+     * @param {string} [option.mappingMethod] 'linear' or 'piecewise' or 'category' or 'fixed'
      * @param {Array.<number>=} [option.dataExtent] [minExtent, maxExtent],
      *                                              required when mappingMethod is 'linear'
      * @param {Array.<Object>=} [option.pieceList] [
@@ -27,8 +26,8 @@ define(function (require) {
      *                                            Visual for only each piece can be specified.
      * @param {Array.<string|Object>=} [option.categories] ['cate1', 'cate2']
      *                                            required when mappingMethod is 'category'.
-     *                                            If no option.categories, it represents
-     *                                            categories is [0, 1, 2, ...].
+     *                                            If no option.categories, categories is set
+     *                                            as [0, 1, 2, ...].
      * @param {boolean} [option.loop=false] Whether loop mapping when mappingMethod is 'category'.
      * @param {(Array|Object|*)} [option.visual]  Visual data.
      *                                            when mappingMethod is 'category',
@@ -68,15 +67,25 @@ define(function (require) {
          */
         this._normalizeData = normalizers[mappingMethod];
 
+        var visualHandler = visualHandlers[visualType];
+
+        /**
+         * @public
+         * @type {Function}
+         */
+        this.applyVisual = visualHandler.applyVisual;
+
+        /**
+         * @public
+         * @type {Function}
+         */
+        this.getColorMapper = visualHandler.getColorMapper;
+
         /**
          * @private
          * @type {Function}
          */
-        this._getSpecifiedVisual = zrUtil.bind(
-            specifiedVisualGetters[mappingMethod], this, visualType
-        );
-
-        zrUtil.extend(this, visualHandlers[visualType]);
+        this._doMap = visualHandler._doMap[mappingMethod];
 
         if (mappingMethod === 'piecewise') {
             normalizeVisualRange(thisOption);
@@ -89,8 +98,8 @@ define(function (require) {
                 // which need no more preprocess except normalize visual.
                 : normalizeVisualRange(thisOption, true);
         }
-        else { // mappingMethod === 'linear'
-            zrUtil.assert(thisOption.dataExtent);
+        else { // mappingMethod === 'linear' or 'fixed'
+            zrUtil.assert(mappingMethod !== 'linear' || thisOption.dataExtent);
             normalizeVisualRange(thisOption);
         }
     };
@@ -99,11 +108,10 @@ define(function (require) {
 
         constructor: VisualMapping,
 
-        applyVisual: null,
-
-        isValueActive: null,
-
-        mapValueToVisual: null,
+        mapValueToVisual: function (value) {
+            var normalized = this._normalizeData(value);
+            return this._doMap(normalized, value);
+        },
 
         getNormalizer: function () {
             return zrUtil.bind(this._normalizeData, this);
@@ -114,45 +122,52 @@ define(function (require) {
 
         color: {
 
-            applyVisual: defaultApplyColor,
+            applyVisual: makeApplyVisual('color'),
 
             /**
              * Create a mapper function
              * @return {Function}
              */
             getColorMapper: function () {
-                var visual = isCategory(this)
-                    ? this.option.visual
-                    : zrUtil.map(this.option.visual, zrColor.parse);
+                var thisOption = this.option;
 
                 return zrUtil.bind(
-                    isCategory(this)
-                    ? function (value, isNormalized) {
-                        !isNormalized && (value = this._normalizeData(value));
-                        return getVisualForCategory(this, visual, value);
-                    }
-                    : function (value, isNormalized, out) {
-                        // If output rgb array
-                        // which will be much faster and useful in pixel manipulation
-                        var returnRGBArray = !!out;
-                        !isNormalized && (value = this._normalizeData(value));
-                        out = zrColor.fastMapToColor(value, visual, out);
-                        return returnRGBArray ? out : zrUtil.stringify(out, 'rgba');
-                    }, this);
+                    thisOption.mappingMethod === 'category'
+                        ? function (value, isNormalized) {
+                            !isNormalized && (value = this._normalizeData(value));
+                            return doMapCategory.call(this, value);
+                        }
+                        : function (value, isNormalized, out) {
+                            // If output rgb array
+                            // which will be much faster and useful in pixel manipulation
+                            var returnRGBArray = !!out;
+                            !isNormalized && (value = this._normalizeData(value));
+                            out = zrColor.fastMapToColor(value, thisOption.parsedVisual, out);
+                            return returnRGBArray ? out : zrColor.stringify(out, 'rgba');
+                        },
+                    this
+                );
             },
 
-            mapValueToVisual: function (value) {
-                var visual = this.option.visual;
-                var normalized = this._normalizeData(value);
-                var result = this._getSpecifiedVisual(value);
-
-                if (result == null) {
-                    result = isCategory(this)
-                        ? getVisualForCategory(this, visual, normalized)
-                        : zrColor.mapToColor(normalized, visual);
-                }
-
-                return result;
+            _doMap: {
+                linear: function (normalized) {
+                    return zrColor.stringify(
+                        zrColor.fastMapToColor(normalized, this.option.parsedVisual),
+                        'rgba'
+                    );
+                },
+                category: doMapCategory,
+                piecewise: function (normalized, value) {
+                    var result = getSpecifiedVisual.call(this, value);
+                    if (result == null) {
+                        result = zrColor.stringify(
+                            zrColor.fastMapToColor(normalized, this.option.parsedVisual),
+                            'rgba'
+                        );
+                    }
+                    return result;
+                },
+                fixed: doMapFixed
             }
         },
 
@@ -173,22 +188,8 @@ define(function (require) {
         }),
 
         opacity: {
-            applyVisual: function (value, getter, setter) {
-                setter('opacity', this.mapValueToVisual(value));
-            },
-
-            mapValueToVisual: function (value) {
-                var normalized = this._normalizeData(value);
-                var result = this._getSpecifiedVisual(value);
-                var visual = this.option.visual;
-
-                if (result == null) {
-                    result = isCategory(this)
-                        ? getVisualForCategory(this, visual, normalized)
-                        : linearMap(normalized, [0, 1], visual, true);
-                }
-                return result;
-            }
+            applyVisual: makeApplyVisual('opacity'),
+            _doMap: makeDoMap([0, 1])
         },
 
         symbol: {
@@ -205,41 +206,26 @@ define(function (require) {
                     }
                 }
             },
-
-            mapValueToVisual: function (value) {
-                var normalized = this._normalizeData(value);
-                var result = this._getSpecifiedVisual(value);
-                var visual = this.option.visual;
-
-                if (result == null) {
-                    result = isCategory(this)
-                        ? getVisualForCategory(this, visual, normalized)
-                        : (arrayGetByNormalizedValue(visual, normalized) || {});
-                }
-
-                return result;
+            _doMap: {
+                linear: doMapToArray,
+                category: doMapCategory,
+                piecewise: function (normalized, value) {
+                    var result = getSpecifiedVisual.call(this, value);
+                    if (result == null) {
+                        result = doMapToArray.call(this, normalized);
+                    }
+                    return result;
+                },
+                fixed: doMapFixed
             }
         },
 
         symbolSize: {
-            applyVisual: function (value, getter, setter) {
-                setter('symbolSize', this.mapValueToVisual(value));
-            },
-
-            mapValueToVisual: function (value) {
-                var normalized = this._normalizeData(value);
-                var result = this._getSpecifiedVisual(value);
-                var visual = this.option.visual;
-
-                if (result == null) {
-                    result = isCategory(this)
-                        ? getVisualForCategory(this, visual, normalized)
-                        : linearMap(normalized, [0, 1], visual, true);
-                }
-                return result;
-            }
+            applyVisual: makeApplyVisual('symbolSize'),
+            _doMap: makeDoMap([0, 1])
         }
     };
+
 
     function preprocessForPiecewise(thisOption) {
         var pieceList = thisOption.pieceList;
@@ -279,7 +265,7 @@ define(function (require) {
                 visualArr[CATEGORY_DEFAULT_VISUAL_INDEX] = visual;
             }
 
-            visual = thisOption.visual = visualArr;
+            visual = setVisualToOption(thisOption, visualArr);
         }
 
         // Remove categories that has no visual,
@@ -305,66 +291,99 @@ define(function (require) {
             visualArr.push(visual);
         }
 
-        var doNotNeedPair = {'color': 1, 'symbol': 1};
+        var doNotNeedPair = {color: 1, symbol: 1};
 
         if (!isCategory
             && visualArr.length === 1
-            && !(thisOption.type in doNotNeedPair)
+            && !doNotNeedPair.hasOwnProperty(thisOption.type)
         ) {
             // Do not care visualArr.length === 0, which is illegal.
             visualArr[1] = visualArr[0];
         }
 
-        thisOption.visual = visualArr;
+        setVisualToOption(thisOption, visualArr);
     }
 
     function makePartialColorVisualHandler(applyValue) {
         return {
-
             applyVisual: function (value, getter, setter) {
                 value = this.mapValueToVisual(value);
                 // Must not be array value
                 setter('color', applyValue(getter('color'), value));
             },
-
-            mapValueToVisual: function (value) {
-                var normalized = this._normalizeData(value);
-                var result = this._getSpecifiedVisual(value);
-                var visual = this.option.visual;
-
-                if (result == null) {
-                    result = isCategory(this)
-                        ? getVisualForCategory(this, visual, normalized)
-                        : linearMap(normalized, [0, 1], visual, true);
-                }
-                return result;
-            }
+            _doMap: makeDoMap([0, 1])
         };
     }
 
-    function arrayGetByNormalizedValue(arr, normalized) {
-        return arr[
-            Math.round(linearMap(normalized, [0, 1], [0, arr.length - 1], true))
-        ];
-    }
-
-    function defaultApplyColor(value, getter, setter) {
-        setter('color', this.mapValueToVisual(value));
-    }
-
-    function getVisualForCategory(me, visual, normalized) {
+    function doMapToArray(normalized) {
+        var visual = this.option.visual;
         return visual[
-            (me.option.loop && normalized !== CATEGORY_DEFAULT_VISUAL_INDEX)
+            Math.round(linearMap(normalized, [0, 1], [0, visual.length - 1], true))
+        ] || {};
+    }
+
+    function makeApplyVisual(visualType) {
+        return function (value, getter, setter) {
+            setter(visualType, this.mapValueToVisual(value));
+        };
+    }
+
+    function doMapCategory(normalized) {
+        var visual = this.option.visual;
+        return visual[
+            (this.option.loop && normalized !== CATEGORY_DEFAULT_VISUAL_INDEX)
                 ? normalized % visual.length
                 : normalized
         ];
     }
 
-    function isCategory(me) {
-        return me.option.mappingMethod === 'category';
+    function doMapFixed() {
+        return this.option.visual[0];
+    }
+
+    function makeDoMap(sourceExtent) {
+        return {
+            linear: function (normalized) {
+                return linearMap(normalized, sourceExtent, this.option.visual, true);
+            },
+            category: doMapCategory,
+            piecewise: function (normalized, value) {
+                var result = getSpecifiedVisual.call(this, value);
+                if (result == null) {
+                    result = linearMap(normalized, sourceExtent, this.option.visual, true);
+                }
+                return result;
+            },
+            fixed: doMapFixed
+        };
+    }
+
+    function getSpecifiedVisual(value) {
+        var thisOption = this.option;
+        var pieceList = thisOption.pieceList;
+        if (thisOption.hasSpecialVisual) {
+            var pieceIndex = VisualMapping.findPieceIndex(value, pieceList);
+            var piece = pieceList[pieceIndex];
+            if (piece && piece.visual) {
+                return piece.visual[this.type];
+            }
+        }
+    }
+
+    function setVisualToOption(thisOption, visualArr) {
+        thisOption.visual = visualArr;
+        if (thisOption.type === 'color') {
+            thisOption.parsedVisual = zrUtil.map(visualArr, function (item) {
+                return zrColor.parse(item);
+            });
+        }
+        return visualArr;
     }
 
 
+    /**
+     * Normalizers by mapping methods.
+     */
     var normalizers = {
 
         linear: function (value) {
@@ -373,7 +392,7 @@ define(function (require) {
 
         piecewise: function (value) {
             var pieceList = this.option.pieceList;
-            var pieceIndex = VisualMapping.findPieceIndex(value, pieceList);
+            var pieceIndex = VisualMapping.findPieceIndex(value, pieceList, true);
             if (pieceIndex != null) {
                 return linearMap(pieceIndex, [0, pieceList.length - 1], [0, 1], true);
             }
@@ -384,33 +403,25 @@ define(function (require) {
                 ? this.option.categoryMap[value]
                 : value; // ordinal
             return index == null ? CATEGORY_DEFAULT_VISUAL_INDEX : index;
-        }
+        },
+
+        fixed: zrUtil.noop
     };
 
 
-    // FIXME
-    // refactor
-    var specifiedVisualGetters = {
 
-        // Linear do not support this feature.
-        linear: zrUtil.noop,
-
-        piecewise: function (visualType, value) {
-            var thisOption = this.option;
-            var pieceList = thisOption.pieceList;
-            if (thisOption.hasSpecialVisual) {
-                var pieceIndex = VisualMapping.findPieceIndex(value, pieceList);
-                var piece = pieceList[pieceIndex];
-                if (piece && piece.visual) {
-                    return piece.visual[visualType];
-                }
-            }
-        },
-
-        // Category do not need to support this feature.
-        // Visual can be set in visualMap.inRange or
-        // visualMap.outOfRange directly.
-        category: zrUtil.noop
+    /**
+     * List available visual types.
+     *
+     * @public
+     * @return {Array.<string>}
+     */
+    VisualMapping.listVisualTypes = function () {
+        var visualTypes = [];
+        zrUtil.each(visualHandlers, function (handler, key) {
+            visualTypes.push(key);
+        });
+        return visualTypes;
     };
 
     /**
@@ -460,7 +471,7 @@ define(function (require) {
     /**
      * @public
      * @param {Object} obj
-     * @return {Oject} new object containers visual values.
+     * @return {Object} new object containers visual values.
      *                 If no visuals, return null.
      */
     VisualMapping.retrieveVisuals = function (obj) {
@@ -526,41 +537,82 @@ define(function (require) {
     };
 
     /**
-     * @public {Array.<Object>} [{value: ..., interval: [min, max]}, ...]
+     * @param {number} value
+     * @param {Array.<Object>} pieceList [{value: ..., interval: [min, max]}, ...]
+     *                         Always from small to big.
+     * @param {boolean} [findClosestWhenOutside=false]
      * @return {number} index
      */
-    VisualMapping.findPieceIndex = function (value, pieceList) {
-        // value has high priority.
+    VisualMapping.findPieceIndex = function (value, pieceList, findClosestWhenOutside) {
+        var possibleI;
+        var abs = Infinity;
+
+        // value has the higher priority.
         for (var i = 0, len = pieceList.length; i < len; i++) {
-            var piece = pieceList[i];
-            if (piece.value != null && piece.value === value) {
-                return i;
+            var pieceValue = pieceList[i].value;
+            if (pieceValue != null) {
+                if (pieceValue === value
+                    // FIXME
+                    // It is supposed to compare value according to value type of dimension,
+                    // but currently value type can exactly be string or number.
+                    // Compromise for numeric-like string (like '12'), especially
+                    // in the case that visualMap.categories is ['22', '33'].
+                    || (typeof pieceValue === 'string' && pieceValue === value + '')
+                ) {
+                    return i;
+                }
+                findClosestWhenOutside && updatePossible(pieceValue, i);
             }
         }
 
         for (var i = 0, len = pieceList.length; i < len; i++) {
             var piece = pieceList[i];
             var interval = piece.interval;
+            var close = piece.close;
+
             if (interval) {
                 if (interval[0] === -Infinity) {
-                    if (value < interval[1]) {
+                    if (littleThan(close[1], value, interval[1])) {
                         return i;
                     }
                 }
                 else if (interval[1] === Infinity) {
-                    if (interval[0] < value) {
+                    if (littleThan(close[0], interval[0], value)) {
                         return i;
                     }
                 }
                 else if (
-                    piece.interval[0] <= value
-                    && value <= piece.interval[1]
+                    littleThan(close[0], interval[0], value)
+                    && littleThan(close[1], value, interval[1])
                 ) {
                     return i;
                 }
+                findClosestWhenOutside && updatePossible(interval[0], i);
+                findClosestWhenOutside && updatePossible(interval[1], i);
             }
         }
+
+        if (findClosestWhenOutside) {
+            return value === Infinity
+                ? pieceList.length - 1
+                : value === -Infinity
+                ? 0
+                : possibleI;
+        }
+
+        function updatePossible(val, index) {
+            var newAbs = Math.abs(val - value);
+            if (newAbs < abs) {
+                abs = newAbs;
+                possibleI = index;
+            }
+        }
+
     };
+
+    function littleThan(close, a, b) {
+        return close ? a <= b : a < b;
+    }
 
     return VisualMapping;
 

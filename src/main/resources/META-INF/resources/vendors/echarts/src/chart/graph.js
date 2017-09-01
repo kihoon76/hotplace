@@ -6,15 +6,15 @@ define(function (require) {
     require('./graph/GraphSeries');
     require('./graph/GraphView');
 
-    require('./graph/roamAction');
+    require('./graph/graphAction');
 
-    echarts.registerProcessor('filter', require('./graph/categoryFilter'));
+    echarts.registerProcessor(require('./graph/categoryFilter'));
 
-    echarts.registerVisualCoding('chart', zrUtil.curry(
+    echarts.registerVisual(zrUtil.curry(
         require('../visual/symbol'), 'graph', 'circle', null
     ));
-    echarts.registerVisualCoding('chart', require('./graph/categoryVisual'));
-    echarts.registerVisualCoding('chart', require('./graph/edgeVisual'));
+    echarts.registerVisual(require('./graph/categoryVisual'));
+    echarts.registerVisual(require('./graph/edgeVisual'));
 
     echarts.registerLayout(require('./graph/simpleLayout'));
     echarts.registerLayout(require('./graph/circularLayout'));

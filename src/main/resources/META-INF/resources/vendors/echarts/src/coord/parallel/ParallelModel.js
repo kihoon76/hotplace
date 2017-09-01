@@ -30,9 +30,11 @@ define(function(require) {
          */
         parallelAxisIndex: null,
 
+        layoutMode: 'box',
+
         defaultOption: {
-            zlevel: 0,                  // 一级层叠
-            z: 0,                       // 二级层叠
+            zlevel: 0,
+            z: 0,
             left: 80,
             top: 60,
             right: 80,
@@ -41,6 +43,19 @@ define(function(require) {
             // height: {totalHeight} - top - bottom,
 
             layout: 'horizontal',      // 'horizontal' or 'vertical'
+
+            // FIXME
+            // naming?
+            axisExpandable: false,
+            axisExpandCenter: null,
+            axisExpandCount: 0,
+            axisExpandWidth: 50,      // FIXME '10%' ?
+            axisExpandRate: 17,
+            axisExpandDebounce: 50,
+            // [out, in, jumpTarget]. In percentage. If use [null, 0.05], null means full.
+            // Do not doc to user until necessary.
+            axisExpandSlideTriggerArea: [-0.15, 0.05, 0.4],
+            axisExpandTriggerOn: 'click', // 'mousemove' or 'click'
 
             parallelAxisDefault: null
         },
@@ -74,6 +89,18 @@ define(function(require) {
             var parallelIndex = model.get('parallelIndex');
             return parallelIndex != null
                 && ecModel.getComponent('parallel', parallelIndex) === this;
+        },
+
+        setAxisExpand: function (opt) {
+            zrUtil.each(
+                ['axisExpandable', 'axisExpandCenter', 'axisExpandCount', 'axisExpandWidth', 'axisExpandWindow'],
+                function (name) {
+                    if (opt.hasOwnProperty(name)) {
+                        this.option[name] = opt[name];
+                    }
+                },
+                this
+            );
         },
 
         /**

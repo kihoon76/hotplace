@@ -1,18 +1,17 @@
 define(function (require) {
 
-    /**
-     * @payload
-     * @property {string} parallelAxisId
-     * @property {Array.<number>} extent
-     */
-    return function (ecModel, payload) {
+    var opacityAccessPath = ['lineStyle', 'normal', 'opacity'];
+
+    return function (ecModel) {
 
         ecModel.eachSeriesByType('parallel', function (seriesModel) {
 
             var itemStyleModel = seriesModel.getModel('itemStyle.normal');
+            var lineStyleModel = seriesModel.getModel('lineStyle.normal');
             var globalColors = ecModel.get('color');
 
-            var color = itemStyleModel.get('color')
+            var color = lineStyleModel.get('color')
+                || itemStyleModel.get('color')
                 || globalColors[seriesModel.seriesIndex % globalColors.length];
             var inactiveOpacity = seriesModel.get('inactiveOpacity');
             var activeOpacity = seriesModel.get('activeOpacity');
@@ -28,7 +27,13 @@ define(function (require) {
             };
 
             coordSys.eachActiveState(data, function (activeState, dataIndex) {
-                data.setItemVisual(dataIndex, 'opacity', opacityMap[activeState]);
+                var itemModel = data.getItemModel(dataIndex);
+                var opacity = opacityMap[activeState];
+                if (activeState === 'normal') {
+                    var itemOpacity = itemModel.get(opacityAccessPath, true);
+                    itemOpacity != null && (opacity = itemOpacity);
+                }
+                data.setItemVisual(dataIndex, 'opacity', opacity);
             });
 
             data.setVisual('color', color);

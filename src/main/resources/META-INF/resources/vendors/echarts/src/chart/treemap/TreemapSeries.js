@@ -5,6 +5,7 @@ define(function(require) {
     var zrUtil = require('zrender/core/util');
     var Model = require('../../model/Model');
     var formatUtil = require('../../util/format');
+    var helper = require('./helper');
     var encodeHTML = formatUtil.encodeHTML;
     var addCommas = formatUtil.addCommas;
 
@@ -12,6 +13,8 @@ define(function(require) {
     return SeriesModel.extend({
 
         type: 'series.treemap',
+
+        layoutMode: 'box',
 
         dependencies: ['grid', 'polar'],
 
@@ -21,6 +24,9 @@ define(function(require) {
         _viewRoot: null,
 
         defaultOption: {
+            // Disable progressive rendering
+            progressive: 0,
+            hoverLayerThreshold: Infinity,
             // center: ['50%', '50%'],          // not supported in ec3.
             // size: ['80%', '80%'],            // deprecated, compatible with ec2.
             left: 'center',
@@ -37,7 +43,7 @@ define(function(require) {
                                                 // Count from zero (zero represents only view root).
             drillDownIcon: '▶',                 // Use html character temporarily because it is complicated
                                                 // to align specialized icon. ▷▶❒❐▼✚
-            visualDimension: 0,                 // Can be 0, 1, 2, 3.
+
             zoomToNodeRatio: 0.32 * 0.32,       // Be effective when using zoomToNode. Specify the proportion of the
                                                 // target node area in the view area.
             roam: true,                         // true, false, 'scale' or 'zoom', 'move'.
@@ -77,11 +83,34 @@ define(function(require) {
             label: {
                 normal: {
                     show: true,
+                    // Do not use textDistance, for ellipsis rect just the same as treemap node rect.
+                    distance: 0,
+                    padding: 5,
                     position: 'inside', // Can be [5, '5%'] or position stirng like 'insideTopLeft', ...
-                    textStyle: {
-                        color: '#fff',
-                        ellipsis: true
-                    }
+                    // formatter: null,
+                    color: '#fff',
+                    ellipsis: true
+                    // align
+                    // verticalAlign
+                }
+            },
+            upperLabel: {                   // Label when node is parent.
+                normal: {
+                    show: false,
+                    position: [0, '50%'],
+                    height: 20,
+                    // formatter: null,
+                    color: '#fff',
+                    ellipsis: true,
+                    // align: null,
+                    verticalAlign: 'middle'
+                },
+                emphasis: {
+                    show: true,
+                    position: [0, '50%'],
+                    color: '#fff',
+                    ellipsis: true,
+                    verticalAlign: 'middle'
                 }
             },
             itemStyle: {
@@ -100,8 +129,21 @@ define(function(require) {
 
                 }
             },
-            color: 'none',              // Array. Specify color list of each level.
-                                        // level[0].color would be global color list.
+
+            visualDimension: 0,                 // Can be 0, 1, 2, 3.
+            visualMin: null,
+            visualMax: null,
+
+            color: [],                  // + treemapSeries.color should not be modified. Please only modified
+                                        // level[n].color (if necessary).
+                                        // + Specify color list of each level. level[0].color would be global
+                                        // color list if not specified. (see method `setDefault`).
+                                        // + But set as a empty array to forbid fetch color from global palette
+                                        // when using nodeModel.get('color'), otherwise nodes on deep level
+                                        // will always has color palette set and are not able to inherit color
+                                        // from parent node.
+                                        // + TreemapSeries.color can not be set as 'none', otherwise effect
+                                        // legend color fetching (see seriesColor.js).
             colorAlpha: null,           // Array. Specify color alpha range of each level, like [0.2, 0.8]
             colorSaturation: null,      // Array. Specify color saturation of each level, like [0.2, 0.5]
             colorMappingBy: 'index',    // 'value' or 'index' or 'id'.
@@ -127,18 +169,11 @@ define(function(require) {
          * @override
          */
         getInitialData: function (option, ecModel) {
-            var data = option.data || [];
-            var rootName = option.name;
-            rootName == null && (rootName = option.name);
-
             // Create a virtual root.
-            var root = {name: rootName, children: option.data};
-            var value0 = (data[0] || {}).value;
+            var root = {name: option.name, children: option.data};
 
-            completeTreeValue(root, zrUtil.isArray(value0) ? value0.length : -1);
+            completeTreeValue(root);
 
-            // FIXME
-            // sereis.mergeOption 的 getInitData是否放在merge后，从而能直接获取merege后的结果而非手动判断。
             var levels = option.levels || [];
 
             levels = option.levels = setDefault(levels, ecModel);
@@ -165,7 +200,7 @@ define(function(require) {
                 ? addCommas(value[0]) : addCommas(value);
             var name = data.getName(dataIndex);
 
-            return encodeHTML(name) + ': ' + formattedValue;
+            return encodeHTML(name + ': ' + formattedValue);
         },
 
         /**
@@ -178,21 +213,8 @@ define(function(require) {
         getDataParams: function (dataIndex) {
             var params = SeriesModel.prototype.getDataParams.apply(this, arguments);
 
-            var data = this.getData();
-            var node = data.tree.getNodeByDataIndex(dataIndex);
-            var treePathInfo = params.treePathInfo = [];
-
-            while (node) {
-                var nodeDataIndex = node.dataIndex;
-                treePathInfo.push({
-                    name: node.name,
-                    dataIndex: nodeDataIndex,
-                    value: this.getRawValue(nodeDataIndex)
-                });
-                node = node.parentNode;
-            }
-
-            treePathInfo.reverse();
+            var node = this.getData().tree.getNodeByDataIndex(dataIndex);
+            params.treePathInfo = helper.wrapTreePathInfo(node, this);
 
             return params;
         },
@@ -235,7 +257,7 @@ define(function(require) {
             var idIndexMap = this._idIndexMap;
 
             if (!idIndexMap) {
-                idIndexMap = this._idIndexMap = {};
+                idIndexMap = this._idIndexMap = zrUtil.createHashMap();
                 /**
                  * @private
                  * @type {number}
@@ -243,9 +265,9 @@ define(function(require) {
                 this._idIndexMapCount = 0;
             }
 
-            var index = idIndexMap[id];
+            var index = idIndexMap.get(id);
             if (index == null) {
-                idIndexMap[id] = index = this._idIndexMapCount++;
+                idIndexMap.set(id, index = this._idIndexMapCount++);
             }
 
             return index;
@@ -276,7 +298,7 @@ define(function(require) {
     /**
      * @param {Object} dataNode
      */
-    function completeTreeValue(dataNode, arrValueLength) {
+    function completeTreeValue(dataNode) {
         // Postorder travel tree.
         // If value of none-leaf node is not set,
         // calculate it by suming up the value of all children.
@@ -284,7 +306,7 @@ define(function(require) {
 
         zrUtil.each(dataNode.children, function (child) {
 
-            completeTreeValue(child, arrValueLength);
+            completeTreeValue(child);
 
             var childValue = child.value;
             zrUtil.isArray(childValue) && (childValue = childValue[0]);
@@ -293,14 +315,8 @@ define(function(require) {
         });
 
         var thisValue = dataNode.value;
-
-        if (arrValueLength >= 0) {
-            if (!zrUtil.isArray(thisValue)) {
-                dataNode.value = new Array(arrValueLength);
-            }
-            else {
-                thisValue = thisValue[0];
-            }
+        if (zrUtil.isArray(thisValue)) {
+            thisValue = thisValue[0];
         }
 
         if (thisValue == null || isNaN(thisValue)) {
@@ -311,7 +327,7 @@ define(function(require) {
             thisValue = 0;
         }
 
-        arrValueLength >= 0
+        zrUtil.isArray(dataNode.value)
             ? (dataNode.value[0] = thisValue)
             : (dataNode.value = thisValue);
     }
@@ -331,6 +347,7 @@ define(function(require) {
         zrUtil.each(levels, function (levelDefine) {
             var model = new Model(levelDefine);
             var modelColor = model.get('color');
+
             if (model.get('itemStyle.normal.color')
                 || (modelColor && modelColor !== 'none')
             ) {

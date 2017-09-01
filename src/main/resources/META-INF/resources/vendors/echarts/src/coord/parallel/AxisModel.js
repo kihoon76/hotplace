@@ -95,7 +95,7 @@ define(function(require) {
          */
         dim: null, // 0, 1, 2, ...
 
-        parallelIndex: null,
+        // parallelIndex: null,
 
         areaSelectStyle: {
             width: 20,
@@ -104,6 +104,8 @@ define(function(require) {
             color: 'rgba(160,197,232)',
             opacity: 0.3
         },
+
+        realtime: true, // Whether realtime update view when select.
 
         z: 10
     };

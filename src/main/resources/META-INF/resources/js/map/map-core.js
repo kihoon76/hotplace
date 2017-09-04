@@ -2534,81 +2534,236 @@
 		
 	}
 	
-	dom.viewProfit = function() {
+	
+	dom.viewProfit = function(addr) {
 		var tForm = dom.getTemplate('profitForm');
 		
 		$('#dvModalContent').html(tForm());
 		
+		var sliderTooltip = function(target, html, defaultV) {
+			
+			return function(event, ui) {
+				var v = (ui.value == undefined) ? defaultV : ui.value;
+			    var tooltip = '<div style="display:none" class="tooltip"><div class="tooltip-inner">' + html + '(' + ui.value + ') </div></div>';
+			    $('#' + target + ' .ui-slider-handle').html(tooltip); //attach tooltip to the slider handle
+			}
+		}
+		
+		var event = function(target) { 
+			return {
+				mouseout: function() {
+					$('#' + target +' .tooltip').hide();
+				},
+				mouseover: function() {
+					$('#' + target +' .tooltip').show();
+				}
+			};
+		}
+		
+		var profitToolHtml = {
+			stepPurchase: '<div style="width:150px">최근 1년간 반경 1km이내 유사조건 물건의 실거래가 평균</div>',
+			stepOwnTerm:'<div><pre>한글</pre></div>',
+			stepOtherAssetRatio:'<div style="width:150px">담보 가능여부와  매입주체의 신용도에 따라 대출규모 상이</div>'
+		};
+		
+		//매입가격
+		$('#stepPurchase')
+		.slider({min: -10, max: 200, values: [100], step: 10, change: function(event,ui) {
+			 $('#txtPurchase').val(ui.value);
+		}, create:sliderTooltip('stepPurchase', profitToolHtml.stepPurchase, 100), slide: sliderTooltip('stepPurchase', profitToolHtml.stepPurchase, 100)})
+		.slider('pips',{rest: 'label', labels: function() {
+			var x = new Array(21);
+			x[0] = '-10%', x[6] = '50%', x[11] = '100%', x[16] = '150%', x[21] = '200%';
+			return x
+		}()})
+		.on(event('stepPurchase'));
+		
+		//$('#stepPurchase .ui-slider-handle').on(event('stepPurchase'));
+		
+		//보유기간
 		$('#stepOwnTerm')
-		.slider({min: 0, max: 10, values: [4], step: 1, change: function(event,ui){
+		.slider({min: 0, max: 10, values: [0,5], step: 1,  range: true, change: function(event,ui){
 	        console.log(ui);
 	        $('#resultTotalInvestmentPrice').val(ui.value);
-	    }})
-		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''})
+	    }, create:sliderTooltip('stepOwnTerm', profitToolHtml.stepOwnTerm), slide: sliderTooltip('stepOwnTerm', profitToolHtml.stepOwnTerm)})
+		.slider('pips',{rest: 'label', labels: false, prefix: '', suffix: '년'})
+		//.on(event('stepOwnTerm'));
 		
-		
-		$('#stepPurchase')
-		.slider({min: 0, max: 100, values: [50], step: 10})
-		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
-		
+		//타인자본비율
 		$('#stepOtherAssetRatio')
-		.slider({min: 0, max: 10, values: [5], step: 1})
-		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
-	
-		$('#stepTaxesNdues')	
-		.slider({min: 0, max: 100, values: [40], step: 10})
-		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
+		.slider({min: 0, max: 100, values: [70], step: 10, change:function() {
+			
+		}, create:sliderTooltip('stepOtherAssetRatio', profitToolHtml.stepOtherAssetRatio), slide: sliderTooltip('stepOtherAssetRatio', profitToolHtml.stepOtherAssetRatio)})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: '%'})
+		.on(event('stepOtherAssetRatio'));
 		
-		$('#stepPurchaseFee')	
-		.slider({min: 0, max: 100, values: [40], step: 10})
-		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
 		
-		$('#stepPropertyTax')	
-		.slider({min: 0, max: 100, values: [40], step: 10})
-		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
-		
-		$('#stepSellingPrice')	
-		.slider({min: 0, max: 100, values: [40], step: 10})
-		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
-		
-		$('#stepSellingFee')	
-		.slider({min: 0, max: 100, values: [40], step: 10})
-		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
-		
-		$('#stepTransferTax')	
-		.slider({min: 0, max: 100, values: [40], step: 10})
-		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
-		
+		//대출 금리
 		$('#stepFinancialCost')	
-		.slider({min: 0, max: 100, values: [40], step: 10})
-		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
+		.slider({min: 0, max: 20, values: [5], step: 0.5,  change: function(event,ui){
+	        $('#txtFinancialCost').val(ui.value);
+	    }})
+		.slider('pips',{labels: function() {
+			var x = new Array(40);
+			x[0] = '0%', x[10] = '5.0%', x[20] = '10.0%', x[30] = '15.0%', x[40] = '20.0%';
+			return x
+		}(), rest: 'label'});
 		
+		//취득세
+		$('#stepAcquisitionTax')	
+		.slider({min: 0, max: 10, values: [5], step: 0.5, change: function(event,ui){
+	        $('#txtAcquisitionTax').val(ui.value);
+	    }})
+		.slider('pips',{rest: 'label', labels: function() {
+			var x = new Array(20);
+			x[0] = '0%', x[5] = '2.5%', x[10] = '5.0%', x[15] = '7.5%', x[20] = '10.0%';
+			return x
+		}()});
+		
+		//재산세
+		$('#stepPropertyTax')	
+		.slider({min: 0, max: 200, values: [100], step: 10, change: function(event,ui){
+	        $('#txtPropertyTax').val(ui.value);
+	    }})
+		.slider('pips',{rest: 'label', labels: function() {
+			var x = new Array(20);
+			x[0] = '0%', x[5] = '50%', x[10] = '100%', x[15] = '150%', x[20] = '200%';
+			return x
+		}()});
+		
+		//양도세
+		$('#stepTransferTax')	
+		.slider({min: 0, max: 200, values: [100], step: 10, change: function(event,ui){
+	        $('#txtTransferTax').val(ui.value);
+	    }})
+		.slider('pips',{rest: 'label', labels: function() {
+			var x = new Array(20);
+			x[0] = '0%', x[5] = '50%', x[10] = '100%', x[15] = '150%', x[20] = '200%';
+			return x
+		}()});
+		
+		//법인세
+		$('#stepCorporateTax')	
+		.slider({min: 0, max: 200, values: [100], step: 10, change: function(event,ui){
+	        $('#txtCorporateTax').val(ui.value);
+	    }})
+		.slider('pips',{rest: 'label', labels: function() {
+			var x = new Array(20);
+			x[0] = '0%', x[5] = '50%', x[10] = '100%', x[15] = '150%', x[20] = '200%';
+			return x
+		}()});
+		
+		//토목 공사비
+		$('#stepCivilWorksFee')	
+		.slider({min: 0, max: 200, values: [100], step: 10, change: function(event,ui){
+	        $('#txtCivilWorksFee').val(ui.value);
+	    }})
+		.slider('pips',{rest: 'label', labels: function() {
+			var x = new Array(20);
+			x[0] = '0%', x[5] = '50%', x[10] = '100%', x[15] = '150%', x[20] = '200%';
+			return x
+		}()});
+		
+		//건축 공사비
+		$('#stepBuildingWorksFee')	
+		.slider({min: 0, max: 200, values: [100], step: 10, change: function(event,ui){
+	        $('#txtBuildingWorksFee').val(ui.value);
+	    }})
+		.slider('pips',{rest: 'label', labels: function() {
+			var x = new Array(20);
+			x[0] = '0%', x[5] = '50%', x[10] = '100%', x[15] = '150%', x[20] = '200%';
+			return x
+		}()});
+		
+		//인허가 비용
 		$('#stepLicenseCost')	
-		.slider({min: 0, max: 100, values: [40], step: 10})
-		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
+		.slider({min: 0, max: 19, values: [10], step: 1, change: function(event,ui){
+			var val;
+			if(ui.value > 10) {
+				val = (((ui.value) % 10) + 1) * 1000;
+			}
+			else {
+				val = (ui.value) * 100;
+			}
+	        $('#txtLicenseCost').val(val);
+	    }})
+		.slider('pips',{rest: 'label', labels: function() {
+			var x = new Array(9);
+			x[0] = '0', x[5] = '5백만', x[10] = '1천만', x[14] = '5천만', x[19] = '1억';
+			return x
+		}()});
 		
-		$('#stepParmPrivate')	
-		.slider({min: 0, max: 100, values: [40], step: 10})
-		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
-		
-		$('#stepForestResource')	
-		.slider({min: 0, max: 100, values: [40], step: 10})
-		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
-		
+		//개발부담금
 		$('#stepDevBudamgeum')	
 		.slider({min: 0, max: 100, values: [40], step: 10})
 		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
 		
+		//농지보전 부담금
+		$('#stepFarmConserve')	
+		.slider({min: 0, max: 100, values: [40], step: 10})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
+		
+		//대체산림자원 조성비 
+		$('#stepForestResource')	
+		.slider({min: 0, max: 100, values: [40], step: 10})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
+		
+		//채권 매입비
+		$('#stepBondPurchase')	
+		.slider({min: 0, max: 10, values: [5], step: 1})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: '%'});
+		
+		//근저당 설정비
+		$('#stepGeunJeoDang')	
+		.slider({min: 0, max: 100, values: [40], step: 10})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
+		
+		//보존등기비
+		$('#stepDeungGi')	
+		.slider({min: 0, max: 100, values: [40], step: 10})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
+		
+		//운영비
+		$('#stepManageFee')	
+		.slider({min: 0, max: 100, values: [40], step: 10})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
+		
+		//매각 수수료
+		$('#stepSaleFee')	
+		.slider({min: 0, max: 100, values: [40], step: 10})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
+		
+		//예비비
 		$('#stepResolveMoney')	
 		.slider({min: 0, max: 100, values: [40], step: 10})
 		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
 		
-		$('#stepIncome')	
+		//수입발생기간
+		$('#stepIncomeOccurTerm')	
+		.slider({min: 0, max: 100, values: [20, 40], step: 10, range: true})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
+		
+		//연간수입 금액
+		$('#stepIncomeYear')	
 		.slider({min: 0, max: 100, values: [40], step: 10})
 		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
 		
+		//토지매도 가격
+		$('#stepLandFee')	
+		.slider({min: 0, max: 100, values: [40], step: 10})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
 		
-		dom.openModal('수익률 분석', 'fullsize');
+		//건물매도 가격
+		$('#stepBuildingFee')	
+		.slider({min: 0, max: 100, values: [40], step: 10})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
+		
+		//설비매도 가격
+		$('#stepEquipmentFee')	
+		.slider({min: 0, max: 100, values: [40], step: 10})
+		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''});
+		
+		dom.openModal('수지 분석(소재지: ' + addr + ')', 'fullsize');
 		//dom.initTooltip('ui-slider-handle', {trigger:'hover'});
 	}
 	

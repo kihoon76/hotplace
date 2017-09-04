@@ -61,7 +61,6 @@
 	<div id="dvInfo"       class="layer-popup" style="width:600px; height:800px"></div>
 	<div id="dvSalesView"  class="layer-popup" style="width:250px; height:330px"></div>
 	<div id="dvAutoYearRange" class="layer-year-range-auto">
-        <!-- <button id="btnAutoYear" type="button" class="btn btn-xs" data-color="primary">자동</button> -->
         <input type="checkbox" id="btnAutoYear" data-toggle="toggle" data-on="<i class='fa fa-play'></i>" data-off="<i class='fa fa-pause'></i>">
 	</div>
 	<div id="dvYearRange"  class="layer-year-range"></div>

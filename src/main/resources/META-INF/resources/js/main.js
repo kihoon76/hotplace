@@ -26,6 +26,18 @@ $(document).ready(function() {
 		beonjiS : ''      		 //지번 뒷자리
 	};
 	
+	var _hpGradeParam = {
+		rq   : {min:1, max:4},   /*RQ(종합부동산 투자지수)*/
+		cpgr : {min:1, max:4},   /*건축허가면적 증가율(Construction Permit Growth Rate)*/
+		bpgr : {min:1, max:4},   /*개발행위 허가면적 증가율(Betterment Permit Growth Rate)*/
+		rtWgr: {min:1, max:4},   /*부동산실거래 면적 증가율(Real estate Transactions Width Growth Rate)*/
+		rtPgr: {min:1, max:4},   /*부동산실거래 가격 증가율(Real estate Transactions Price Growth Rate)*/
+		fpgr : {min:1, max:4},   /*유동인구 증가율(Floating Population Growth Rate)*/
+		dpgr : {min:1, max:4},   /*개발사업 면적 증가율(Development Project Growth Rate)*/
+		tigr : {min:1, max:4},   /*기반시설편입 필지수 증가율(Tranfer to Infra Growth Rate)*/
+		blgr : {min:1, max:4}    /*영업허가 면적 증가율(Business License Growth Rate)*/
+	}
+	
 	var _sliderGrpInit = {};
 	var _startInternal;
 	var _buttonsThreshold = {};	//button 특정레벨에서 비활성화
@@ -65,10 +77,23 @@ $(document).ready(function() {
 		var len = targetIds.length;
 		
 		for(var i=0; i<len; i++) {
-			$('#' + targetIds[i]).rangeSlider({
-				  bounds: {min: 1, max: 10},
+			var t = $('#' + targetIds[i]);
+			t.rangeSlider({
+				  bounds: {min: -10, max: -1},
 				  step: 1,
-				  defaultValues: {min:1, max:4}
+				  defaultValues: {min:-4, max:-1},
+				  formatter: function(val) {
+					  //console.log(val)
+					  return Math.abs(val) + '등급';
+				  }
+			});
+			
+			t.bind('valuesChanged', function(e, data) {
+				var id = e.currentTarget.id;
+				var values = data.values;
+				
+				_hpGradeParam[id].min = Math.abs(values.max);
+				_hpGradeParam[id].max = Math.abs(values.min);
 			});
 		}
 		
@@ -128,17 +153,17 @@ $(document).ready(function() {
 	/* 검색 > 상세검색 탭 클릭시 slider init */
 	$('#dvAddrSearch a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 		  var target = $(e.target).attr("href") // activated tab
-		  if(target == '#tabDetailSearch') {
-			  _sliderInit('tabDetailSearch', [
-			              'sliderRQ', 
-				          'sliderCon',
-				          'sliderDev',
-				          'sliderRealWidth',
-				          'sliderRealPrice',
-				          'sliderPop',
-				          'sliderDevWidth',
-				          'sliderParcel',
-				          'sliderSales']
+		  if(target == '#tabHPgradeSearch') {
+			  _sliderInit('tabHPgradeSearch', [
+			              'rq', 
+				          'cpgr',
+				          'bpgr',
+				          'rtWgr',
+				          'rtPgr',
+				          'fpgr',
+				          'dpgr',
+				          'tigr',
+				          'blgr']
 			  );  
 		  }
 		  
@@ -311,6 +336,76 @@ $(document).ready(function() {
 		});
 	});
 	
+	$('#btnHPgradeBack').on('click', function() {
+		$('#fmPin').show();
+		$('#btnHPgradeSearch').show();
+		
+		$('#fmPinResult').hide();
+		$('#btnHPgradeBack').hide();
+	});
+	
+	//HP grade 검색
+	$('#btnHPgradeSearch').on('click', function() {
+		hotplace.ajax({
+			url: 'hpgrade/search',
+			contentType: 'application/json',
+			data: JSON.stringify(_hpGradeParam),
+			activeMask: true,
+			loadEl:'#dvAddrSearch',
+			success: function(data, textStatus, jqXHR) {
+				
+				$('#fmPin').hide();
+				$('#btnHPgradeSearch').hide();
+				
+				$('#fmPinResult').show();
+				$('#btnHPgradeBack').show();
+				
+				$("#dvHpgradeResult").tabulator({
+				    height:670, // set height of table
+				    fitColumns:true, //fit columns to width of table (optional)
+				    columns:[ //Define Table Columns
+				        {title:"위치", field:"addr", width:445},
+				        {title:"RQ",  field:"rq", width:55},
+				    ],
+				    rowClick:function(e, row){ //trigger an alert message when the row is clicked
+				        alert("Row " + row.getData().id + " Clicked!!!!");
+				    },
+				});
+				
+				var tabledata = [
+	                 {id:1, addr:"서울시 강남구 도곡동 963", rq:"1"},
+	                 {id:2, addr:"서울시 강남구 도곡동 964", rq:"1"},
+	                 {id:3, addr:"서울시 강남구 도곡동 965", rq:"2"},
+	                 {id:4, addr:"서울시 강남구 도곡동 966", rq:"5"},
+	                 {id:5, addr:"서울시 강남구 도곡동 967", rq:"6"},
+	                 {id:6, addr:"서울시 강남구 도곡동 963", rq:"1"},
+	                 {id:7, addr:"서울시 강남구 도곡동 964", rq:"1"},
+	                 {id:8, addr:"서울시 강남구 도곡동 965", rq:"2"},
+	                 {id:9, addr:"서울시 강남구 도곡동 966", rq:"5"},
+	                 {id:10, addr:"서울시 강남구 도곡동 963", rq:"1"},
+	                 {id:11, addr:"서울시 강남구 도곡동 964", rq:"1"},
+	                 {id:12, addr:"서울시 강남구 도곡동 965", rq:"2"},
+	                 {id:13, addr:"서울시 강남구 도곡동 966", rq:"5"},
+	                 {id:14, addr:"서울시 강남구 도곡동 963", rq:"1"},
+	                 {id:15, addr:"서울시 강남구 도곡동 964", rq:"1"},
+	                 {id:16, addr:"서울시 강남구 도곡동 965", rq:"2"},
+	                 {id:17, addr:"서울시 강남구 도곡동 966", rq:"5"},
+	                 {id:18, addr:"서울시 강남구 도곡동 963", rq:"1"},
+	                 {id:19, addr:"서울시 강남구 도곡동 964", rq:"1"},
+	                 {id:20, addr:"서울시 강남구 도곡동 965", rq:"2"},
+	                 {id:21, addr:"서울시 강남구 도곡동 966", rq:"5"},
+	             ];
+				
+				setTimeout(function() {
+					$("#dvHpgradeResult").tabulator("setData", tabledata);
+				}, 1000);
+			},
+			error: function() {
+				console.log('ii')
+			}
+		});
+	});
+	
 	$('#btnCapture').on('click', function(event) {
 		event.preventDefault();
 		hotplace.dom.captureToCanvas();
@@ -331,14 +426,14 @@ $(document).ready(function() {
 		level: 3
 	}, {
 		'zoom_changed' : function(map, level) {
-			_currLevel = level;
+			/*_currLevel = level;
 			hotplace.dom.addBodyAllMask();
 			
 			setTimeout(function() {
 				hotplace.maps.showCellLayer();
 				hotplace.dom.removeBodyAllMask();
 				_enableMapButton(level, 'btnSalesView');
-			},500);
+			},500);*/
 		},
 		'zoom_start' : function(map, level) {
 			////hotplace.test.initMarker(level);
@@ -366,9 +461,9 @@ $(document).ready(function() {
 			console.log('idle');
 		}*/
 	}, function(map) {
-		hotplace.maps.showCellLayer();
+		/*hotplace.maps.showCellLayer();
 		hotplace.dom.showYearRangeDiv();
-		hotplace.dom.showAutoYearRangeDiv();
+		hotplace.dom.showAutoYearRangeDiv();*/
 	});
 	
 	hotplace.dom.addButtonInMap([{

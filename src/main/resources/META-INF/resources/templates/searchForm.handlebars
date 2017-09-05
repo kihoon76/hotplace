@@ -5,8 +5,9 @@
     	<div class="panel-heading">
         	<ul class="nav nav-tabs">
             	<li class="active"><a href="#tabAddrSearch" data-toggle="tab">주소검색</a></li>
-                <li><a href="#tabDetailSearch"   data-toggle="tab">상세검색</a></li>
-                <li><a href="#tabRadiusSearch"   data-toggle="tab">반경검색</a></li>
+                <li><a href="#tabHPgradeSearch"   data-toggle="tab">HP등급검색</a></li>
+                <li><a href="#tabRadiusSearch"    data-toggle="tab">반경검색</a></li>
+                <li><a href="#tabForSale"         data-toggle="tab">매물(경매/공매/등록매물)검색</a></li>
             </ul>
         </div>
         <div class="panel-body">
@@ -138,7 +139,7 @@
       					</div>
 					</div>
 				</div>
-                <div class="tab-pane fade" id="tabDetailSearch">
+                <div class="tab-pane fade" id="tabHPgradeSearch">
                 	<form class="form-horizontal" role="form" method="post" id="fmPin">
                 		<div class="form-group">
 							<label for="name" class="col-sm-5 control-label">조건검색</label>
@@ -162,59 +163,71 @@
 						<div class="form-group">
 							<label class="col-sm-5 control-label">RQ(종합부동산 투자지수)</label>
 							<div class="col-sm-7">
-								<div id="sliderRQ"></div>
+								<div id="rq"></div>
 							</div>
 						</div>
 						
 						<div class="form-group">
 							<label class="col-sm-5 control-label">건축허가면적 증가율</label>
 							<div class="col-sm-7">
-								<div id="sliderCon"></div>
+								<div id="cpgr"></div>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-5 control-label">개발행위 허가면적 증가율</label>
 							<div class="col-sm-7">
-								<div id="sliderDev"></div>
+								<div id="bpgr"></div>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-5 control-label">부동산실거래 면적 증가율</label>
 							<div class="col-sm-7">
-								<div id="sliderRealWidth"></div>
+								<div id="rtWgr"></div>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-5 control-label">부동산실거래 가격 증가율</label>
 							<div class="col-sm-7">
-								<div id="sliderRealPrice"></div>
+								<div id="rtPgr"></div>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-5 control-label">유동인구 증가율</label>
 							<div class="col-sm-7">
-								<div id="sliderPop"></div>
+								<div id="fpgr"></div>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-5 control-label">개발사업 면적 증가율</label>
 							<div class="col-sm-7">
-								<div id="sliderDevWidth"></div>
+								<div id="dpgr"></div>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-5 control-label">기반시설편입 필지수 증가율</label>
 							<div class="col-sm-7">
-								<div id="sliderParcel"></div>
+								<div id="tigr"></div>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-5 control-label">영업허가 면적 증가율</label>
 							<div class="col-sm-7">
-								<div id="sliderSales"></div>
+								<div id="blgr"></div>
 							</div>
 						</div>
                 	</form>
+                	
+                	<form class="form-horizontal" role="form" method="post" id="fmPinResult" style="display:none;">
+                		<div id="dvHpgradeResult"></div>
+                	</form>
+                	
+                	<div style="padding-top:1px; padding-left:480px" id="btnHPgradeSearch">
+        				<button type="button" class="btn btn-primary" >검색하기</button>		
+      				</div>
+      				
+      				<div style="padding-top:5px; padding-left:465px; display:none;" id="btnHPgradeBack">
+        				<button type="button" class="btn btn-primary">검색폼 보기</button>		
+      				</div>
                 </div>           
                 <div class="tab-pane fade" id="tabRadiusSearch">
                     <ul class="nav nav-tabs" id="addrTypeRadius">
@@ -363,6 +376,448 @@
       					</div>
         			</div>
                 </div>
+                
+                 <div class="tab-pane fade" id="tabForSale">
+                 	<form class="form-horizontal" role="form" method="post" id="fmForSale">
+                 		<div class="form-group">
+							<label class="col-sm-4 control-label">(국토계획법상)용도지역</label>
+							<div class="col-sm-8">
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox01" value="option1">
+                        			<label for="inlineCheckbox01">주거지역</label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox02" value="option1">
+                        			<label for="inlineCheckbox02">상업지역</label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox03" value="option1">
+                        			<label for="inlineCheckbox03">공업지역</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox04" value="option1">
+                        			<label for="inlineCheckbox04">녹지지역</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox05" value="option1">
+                        			<label for="inlineCheckbox05">농림지역</label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox06" value="option1">
+                        			<label for="inlineCheckbox06">자연환경보전지역</label>
+                    			</div>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-4 control-label">(국토계획법상)용도지구</label>
+							<div class="col-sm-8">
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox10" value="option1">
+                        			<label for="inlineCheckbox10">경관지구</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox11" value="option1">
+                        			<label for="inlineCheckbox11">미관지구</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox12" value="option1">
+                        			<label for="inlineCheckbox12">고도지구</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox13" value="option1">
+                        			<label for="inlineCheckbox13">방화지구</label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox14" value="option1">
+                        			<label for="inlineCheckbox14">방재지구</label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox15" value="option1">
+                        			<label for="inlineCheckbox15">보존지구</label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox16" value="option1">
+                        			<label for="inlineCheckbox16">시설보호지구</label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox17" value="option1">
+                        			<label for="inlineCheckbox17">취락지구</label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox18" value="option1">
+                        			<label for="inlineCheckbox18">개발진흥지구</label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox19" value="option1">
+                        			<label for="inlineCheckbox19">특정용도제한지구</label>
+                    			</div>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-4 control-label">(국토계획법상)용도구역</label>
+							<div class="col-sm-8">
+							
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox21" value="option1">
+                        			<label for="inlineCheckbox21">시가화 조정구역</label>
+                    			</div>
+                    			
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox22" value="option1">
+                        			<label for="inlineCheckbox22">개발제한구역</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox23" value="option1">
+                        			<label for="inlineCheckbox23">도시자연공원구역</label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox24" value="option1">
+                        			<label for="inlineCheckbox24">수산자원보호구역</label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox25" value="option1">
+                        			<label for="inlineCheckbox25">입지규제최소구역</label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox26" value="option1">
+                        			<label for="inlineCheckbox26">지구단위계획구역</label>
+                    			</div>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-4 control-label">기타 법률에 의한 지역,지구 등</label>
+							<div class="col-sm-8">
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox31" value="option1">
+                        			<label for="inlineCheckbox31">보전산지</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox32" value="option1">
+                        			<label for="inlineCheckbox32">공익용산지</label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox33" value="option1">
+                        			<label for="inlineCheckbox33">임업용산지</label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox34" value="option1">
+                        			<label for="inlineCheckbox34">농업보호지역</label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox35" value="option1">
+                        			<label for="inlineCheckbox35">농업진흥구역</label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox36" value="option1">
+                        			<label for="inlineCheckbox36">상수원보호구역</label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox37" value="option1">
+                        			<label for="inlineCheckbox37">배출시설설치제한구역</label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox38" value="option1">
+                        			<label for="inlineCheckbox38">수질보전대책지역</label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox39" value="option1">
+                        			<label for="inlineCheckbox39">접도구역</label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox391" value="option1">
+                        			<label for="inlineCheckbox391">공장설립제한지역</label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox392" value="option1">
+                        			<label for="inlineCheckbox393">비오톱</label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox394" value="option1">
+                        			<label for="inlineCheckbox394">개발행위허가제한구역</label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox395" value="option1">
+                        			<label for="inlineCheckbox395">정비구역</label>
+                    			</div>
+    							<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox396" value="option1">
+                        			<label for="inlineCheckbox396">재개발구역</label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox397" value="option1">
+                        			<label for="inlineCheckbox397">뉴타운지구</label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox398" value="option1">
+                        			<label for="inlineCheckbox398">제한보호구역</label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox399" value="option1">
+                        			<label for="inlineCheckbox399">문화재보존영향 검토대상구역</label>
+                    			</div>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-4 control-label">기타 참고사항</label>
+							<div class="col-sm-8">
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox41" value="option1">
+                        			<label for="inlineCheckbox41">농지취득자격증명 필요 </label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox42" value="option1">
+                        			<label for="inlineCheckbox42">영농여건불리농지 </label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox43" value="option1">
+                        			<label for="inlineCheckbox43">토지거래계약에 관한 허가구역 </label>
+                    			</div>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-4 control-label">도시계획시설</label>
+							<div class="col-sm-8">
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox51" value="option1">
+                        			<label for="inlineCheckbox51">도로 </label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox52" value="option1">
+                        			<label for="inlineCheckbox52">철도 </label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox53" value="option1">
+                        			<label for="inlineCheckbox53">기타교통 </label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox54" value="option1">
+                        			<label for="inlineCheckbox54">공원 </label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox55" value="option1">
+                        			<label for="inlineCheckbox55">기타공간시설 </label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox56" value="option1">
+                        			<label for="inlineCheckbox56">공공문화체육시설 </label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox57" value="option1">
+                        			<label for="inlineCheckbox57">방재시설 </label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox58" value="option1">
+                        			<label for="inlineCheckbox58">보건위생시설 </label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox59" value="option1">
+                        			<label for="inlineCheckbox59">유통공급시설 </label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox591" value="option1">
+                        			<label for="inlineCheckbox591">환경기초시설 </label>
+                    			</div>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-4 control-label">도시계획시설 저촉 상태</label>
+							<div class="col-sm-8">
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox511" value="option1">
+                        			<label for="inlineCheckbox511">전필(전체편입)</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox512" value="option1">
+                        			<label for="inlineCheckbox512">저촉(부분편입)</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox513" value="option1">
+                        			<label for="inlineCheckbox513">접함</label>
+                    			</div>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-4 control-label">지역검색</label>
+							<div class="col-sm-8">
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox61" value="option1">
+                        			<label for="inlineCheckbox61">서울특별시 </label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox62" value="option1">
+                        			<label for="inlineCheckbox62">경기도 </label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox63" value="option1">
+                        			<label for="inlineCheckbox63">강원도 </label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox64" value="option1">
+                        			<label for="inlineCheckbox64">충청북도 </label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox65" value="option1">
+                        			<label for="inlineCheckbox65">충청남도 </label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox66" value="option1">
+                        			<label for="inlineCheckbox66">인천광역시 </label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox67" value="option1">
+                        			<label for="inlineCheckbox67">대전광역시 </label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox68" value="option1">
+                        			<label for="inlineCheckbox68">경상북도 </label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox69" value="option1">
+                        			<label for="inlineCheckbox69">경상남도 </label>
+                    			</div>
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox611" value="option1">
+                        			<label for="inlineCheckbox611">울산광역시 </label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox612" value="option1">
+                        			<label for="inlineCheckbox612">부산광역시 </label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox613" value="option1">
+                        			<label for="inlineCheckbox613">대전광역시 </label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox614" value="option1">
+                        			<label for="inlineCheckbox614">전라북도 </label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox615" value="option1">
+                        			<label for="inlineCheckbox615">전라남도 </label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox616" value="option1">
+                        			<label for="inlineCheckbox616">세종시 </label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox617" value="option1">
+                        			<label for="inlineCheckbox617">제주도 </label>
+                    			</div>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-4 control-label">물건유형</label>
+							<div class="col-sm-8">
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox71" value="option1">
+                        			<label for="inlineCheckbox71">대</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox72" value="option1">
+                        			<label for="inlineCheckbox72">전 </label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox73" value="option1">
+                        			<label for="inlineCheckbox73">답 </label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox74" value="option1">
+                        			<label for="inlineCheckbox74">임야</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox75" value="option1">
+                        			<label for="inlineCheckbox75">도로</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox76" value="option1">
+                        			<label for="inlineCheckbox76">잡종지</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox77" value="option1">
+                        			<label for="inlineCheckbox77">제방</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox78" value="option1">
+                        			<label for="inlineCheckbox78">종교용지</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox79" value="option1">
+                        			<label for="inlineCheckbox79">학교용지</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox711" value="option1">
+                        			<label for="inlineCheckbox711">기타</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox712" value="option1">
+                        			<label for="inlineCheckbox712">미분류</label>
+                    			</div>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-4 control-label">보상/편입 여부</label>
+							<div class="col-sm-8">
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox81" value="option1">
+                        			<label for="inlineCheckbox81">편입 고시/공고</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox82" value="option1">
+                        			<label for="inlineCheckbox82">보상 고시/공고</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox83" value="option1">
+                        			<label for="inlineCheckbox83">해당없음</label>
+                    			</div>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-4 control-label">지분 매각여부</label>
+							<div class="col-sm-8">
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox91" value="option1">
+                        			<label for="inlineCheckbox91">지분매각</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox92" value="option1">
+                        			<label for="inlineCheckbox92">해당없음</label>
+                    			</div>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-4 control-label">인근(반경 500m)이내 RQ등급</label>
+							<div class="col-sm-8">
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox111" value="option1">
+                        			<label for="inlineCheckbox111">7등급 이상</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox112" value="option1">
+                        			<label for="inlineCheckbox112">5등급 이상</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox113" value="option1">
+                        			<label for="inlineCheckbox113">3등급 이상</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox114" value="option1">
+                        			<label for="inlineCheckbox114">1등급 이상</label>
+                    			</div>
+							</div>
+						</div>
+                 	</form>
+                 </div>
         	</div>
         </div>
     </div>

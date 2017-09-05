@@ -301,9 +301,10 @@ input[readonly]{
 */
 .ui-slider a {outline:none;}
 
+/*#fmForSale .control-label {font-size: .9em}
+#fmForSale .checkbox-inline {font-size: .9em}*/
 
-
-
+#fmForSale {overflow-y: auto;height:650px; overflow-x:hidden;}
 
 
 

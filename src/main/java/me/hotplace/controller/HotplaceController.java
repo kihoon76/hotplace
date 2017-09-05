@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mysql.jdbc.StringUtils;
 
 import me.hotplace.domain.Address;
+import me.hotplace.domain.HpSearch;
 import me.hotplace.service.HotplaceService;
 import me.hotplace.types.MapTypes;
 import me.hotplace.utils.DataUtil;
@@ -121,6 +122,14 @@ public class HotplaceController {
 		String s = String.format(DataUtil.getAjaxFormats(), true, "", data);
 		
 		return s;
+	}
+	
+	@PostMapping("hpgrade/search")
+	@ResponseBody
+	public HpSearch getHpgradeSearch(@RequestBody HpSearch hpSearch) {
+		
+		System.out.println(hpSearch.getBlgr().getMax());
+		return hpSearch;
 	}
 
 }

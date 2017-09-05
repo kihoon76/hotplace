@@ -2543,8 +2543,10 @@
 		var sliderTooltip = function(target, html, defaultV) {
 			
 			return function(event, ui) {
+				console.log(event);
+				console.log(ui);
 				var v = (ui.value == undefined) ? defaultV : ui.value;
-			    var tooltip = '<div style="display:none" class="tooltip"><div class="tooltip-inner">' + html + '(' + ui.value + ') </div></div>';
+			    var tooltip = '<div style="display:none" class="tooltip"><div class="tooltip-inner">' + html + '(선택값: <span id="sp_' + target + '">' + v + '</span>) </div></div>';
 			    $('#' + target + ' .ui-slider-handle').html(tooltip); //attach tooltip to the slider handle
 			}
 		}
@@ -2556,6 +2558,12 @@
 				},
 				mouseover: function() {
 					$('#' + target +' .tooltip').show();
+				},
+				//label을 클릭했을때 발생 
+				click: function(event) {
+					var data = $(event.target).data('value');
+					console.log(data);
+					$('#sp_' + target).text(data);
 				}
 			};
 		}
@@ -2641,7 +2649,7 @@
 		$('#stepPurchase')
 		.slider({min: -10, max: 200, values: [100], step: 10, change: function(event,ui) {
 			 $('#txtPurchase').val(ui.value);
-		}, create:sliderTooltip('stepPurchase', profitToolHtml.stepPurchase, 100), slide: sliderTooltip('stepPurchase', profitToolHtml.stepPurchase, 100)})
+		}, create:sliderTooltip('stepPurchase', profitToolHtml.stepPurchase, 100), slide: sliderTooltip('stepPurchase', profitToolHtml.stepPurchase)})
 		.slider('pips',{rest: 'label', labels: function() {
 			var x = new Array(21);
 			x[0] = '-10%', x[6] = '50%', x[11] = '100%', x[16] = '150%', x[21] = '200%';
@@ -2664,7 +2672,7 @@
 		$('#stepOtherAssetRatio')
 		.slider({min: 0, max: 100, values: [70], step: 10, change:function() {
 			
-		}, create:sliderTooltip('stepOtherAssetRatio', profitToolHtml.stepOtherAssetRatio), slide: sliderTooltip('stepOtherAssetRatio', profitToolHtml.stepOtherAssetRatio)})
+		}, create:sliderTooltip('stepOtherAssetRatio', profitToolHtml.stepOtherAssetRatio, 70), slide: sliderTooltip('stepOtherAssetRatio', profitToolHtml.stepOtherAssetRatio)})
 		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: '%'})
 		.on(event('stepOtherAssetRatio'));
 		
@@ -2673,7 +2681,7 @@
 		$('#stepFinancialCost')	
 		.slider({min: 0, max: 20, values: [5], step: 0.5,  change: function(event,ui){
 	        $('#txtFinancialCost').val(ui.value);
-	    }, create:sliderTooltip('stepFinancialCost', profitToolHtml.stepFinancialCost), slide: sliderTooltip('stepFinancialCost', profitToolHtml.stepFinancialCost)})
+	    }, create:sliderTooltip('stepFinancialCost', profitToolHtml.stepFinancialCost, 5), slide: sliderTooltip('stepFinancialCost', profitToolHtml.stepFinancialCost)})
 		.slider('pips',{labels: function() {
 			var x = new Array(40);
 			x[0] = '0%', x[10] = '5.0%', x[20] = '10.0%', x[30] = '15.0%', x[40] = '20.0%';
@@ -2685,7 +2693,7 @@
 		$('#stepAcquisitionTax')	
 		.slider({min: 0, max: 10, values: [5], step: 0.5, change: function(event,ui){
 	        $('#txtAcquisitionTax').val(ui.value);
-	    },create:sliderTooltip('stepAcquisitionTax', profitToolHtml.stepAcquisitionTax), slide: sliderTooltip('stepAcquisitionTax', profitToolHtml.stepAcquisitionTax)})
+	    },create:sliderTooltip('stepAcquisitionTax', profitToolHtml.stepAcquisitionTax, 5.0), slide: sliderTooltip('stepAcquisitionTax', profitToolHtml.stepAcquisitionTax)})
 		.slider('pips',{rest: 'label', labels: function() {
 			var x = new Array(20);
 			x[0] = '0%', x[5] = '2.5%', x[10] = '5.0%', x[15] = '7.5%', x[20] = '10.0%';
@@ -2697,7 +2705,7 @@
 		$('#stepPropertyTax')	
 		.slider({min: 0, max: 200, values: [100], step: 10, change: function(event,ui){
 	        $('#txtPropertyTax').val(ui.value);
-	    }, create:sliderTooltip('stepPropertyTax', profitToolHtml.stepPropertyTax), slide: sliderTooltip('stepPropertyTax', profitToolHtml.stepPropertyTax)})
+	    }, create:sliderTooltip('stepPropertyTax', profitToolHtml.stepPropertyTax, 100), slide: sliderTooltip('stepPropertyTax', profitToolHtml.stepPropertyTax)})
 		.slider('pips',{rest: 'label', labels: function() {
 			var x = new Array(20);
 			x[0] = '0%', x[5] = '50%', x[10] = '100%', x[15] = '150%', x[20] = '200%';
@@ -2709,7 +2717,7 @@
 		$('#stepTransferTax')	
 		.slider({min: 0, max: 200, values: [100], step: 10, change: function(event,ui){
 	        $('#txtTransferTax').val(ui.value);
-	    }, create:sliderTooltip('stepTransferTax', profitToolHtml.stepTransferTax), slide: sliderTooltip('stepTransferTax', profitToolHtml.stepTransferTax)})
+	    }, create:sliderTooltip('stepTransferTax', profitToolHtml.stepTransferTax, 100), slide: sliderTooltip('stepTransferTax', profitToolHtml.stepTransferTax)})
 		.slider('pips',{rest: 'label', labels: function() {
 			var x = new Array(20);
 			x[0] = '0%', x[5] = '50%', x[10] = '100%', x[15] = '150%', x[20] = '200%';
@@ -2721,7 +2729,7 @@
 		$('#stepCorporateTax')	
 		.slider({min: 0, max: 200, values: [100], step: 10, change: function(event,ui){
 	        $('#txtCorporateTax').val(ui.value);
-	    }, create:sliderTooltip('stepCorporateTax', profitToolHtml.stepCorporateTax), slide: sliderTooltip('stepCorporateTax', profitToolHtml.stepCorporateTax)})
+	    }, create:sliderTooltip('stepCorporateTax', profitToolHtml.stepCorporateTax, 100), slide: sliderTooltip('stepCorporateTax', profitToolHtml.stepCorporateTax)})
 		.slider('pips',{rest: 'label', labels: function() {
 			var x = new Array(20);
 			x[0] = '0%', x[5] = '50%', x[10] = '100%', x[15] = '150%', x[20] = '200%';
@@ -2733,7 +2741,7 @@
 		$('#stepCivilWorksFee')	
 		.slider({min: 0, max: 200, values: [100], step: 10, change: function(event,ui){
 	        $('#txtCivilWorksFee').val(ui.value);
-	    }, create:sliderTooltip('stepCivilWorksFee', profitToolHtml.stepCivilWorksFee), slide: sliderTooltip('stepCivilWorksFee', profitToolHtml.stepCivilWorksFee)})
+	    }, create:sliderTooltip('stepCivilWorksFee', profitToolHtml.stepCivilWorksFee, 100), slide: sliderTooltip('stepCivilWorksFee', profitToolHtml.stepCivilWorksFee)})
 		.slider('pips',{rest: 'label', labels: function() {
 			var x = new Array(20);
 			x[0] = '0%', x[5] = '50%', x[10] = '100%', x[15] = '150%', x[20] = '200%';
@@ -2745,7 +2753,7 @@
 		$('#stepBuildingWorksFee')	
 		.slider({min: 0, max: 200, values: [100], step: 10, change: function(event,ui){
 	        $('#txtBuildingWorksFee').val(ui.value);
-	    }, create:sliderTooltip('stepBuildingWorksFee', profitToolHtml.stepBuildingWorksFee), slide: sliderTooltip('stepBuildingWorksFee', profitToolHtml.stepBuildingWorksFee)})
+	    }, create:sliderTooltip('stepBuildingWorksFee', profitToolHtml.stepBuildingWorksFee, 100), slide: sliderTooltip('stepBuildingWorksFee', profitToolHtml.stepBuildingWorksFee)})
 		.slider('pips',{rest: 'label', labels: function() {
 			var x = new Array(20);
 			x[0] = '0%', x[5] = '50%', x[10] = '100%', x[15] = '150%', x[20] = '200%';
@@ -2764,7 +2772,7 @@
 				val = (ui.value) * 100;
 			}
 	        $('#txtLicenseCost').val(val);
-	    }, create:sliderTooltip('stepLicenseCost', profitToolHtml.stepLicenseCost), slide: sliderTooltip('stepLicenseCost', profitToolHtml.stepLicenseCost)})
+	    }, create:sliderTooltip('stepLicenseCost', profitToolHtml.stepLicenseCost, 10), slide: sliderTooltip('stepLicenseCost', profitToolHtml.stepLicenseCost)})
 		.slider('pips',{rest: 'label', labels: function() {
 			var x = new Array(9);
 			x[0] = '0', x[5] = '5백만', x[10] = '1천만', x[14] = '5천만', x[19] = '1억';
@@ -2800,7 +2808,7 @@
 		$('#stepBondPurchase')	
 		.slider({min: 0, max: 9, values: [4.5], step: 0.5, change: function(event,ui){
 	        $('#txtBondPurchase').val(ui.value);
-	    }, create:sliderTooltip('stepBondPurchase', profitToolHtml.stepBondPurchase), slide: sliderTooltip('stepBondPurchase', profitToolHtml.stepBondPurchase)})
+	    }, create:sliderTooltip('stepBondPurchase', profitToolHtml.stepBondPurchase, 4.5), slide: sliderTooltip('stepBondPurchase', profitToolHtml.stepBondPurchase)})
 		.slider('pips',{rest: 'label', labels: function() {
 			var x = new Array(19);
 			x[0] = '0%', x[4] = '2.0%', x[9] = '4.5%', x[14] = '7.0%', x[18] = '9.0%';
@@ -2812,7 +2820,7 @@
 		$('#stepGeunJeoDang')	
 		.slider({min: 0, max: 0.8, values: [0.4], step: 0.1, change: function(event,ui){
 	        $('#txtGeunJeoDang').val(ui.value);
-	    }, create:sliderTooltip('stepGeunJeoDang', profitToolHtml.stepGeunJeoDang), slide: sliderTooltip('stepGeunJeoDang', profitToolHtml.stepGeunJeoDang)})
+	    }, create:sliderTooltip('stepGeunJeoDang', profitToolHtml.stepGeunJeoDang, 0.4), slide: sliderTooltip('stepGeunJeoDang', profitToolHtml.stepGeunJeoDang)})
 		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: ['0', '0.1%','0.2%','0.3%','0.4%','0.5%','0.6%','0.7%','0.8%'], prefix: '', suffix: ''})
 		.on(event('stepGeunJeoDang'));
 		
@@ -2828,7 +2836,7 @@
 		$('#stepManageFee')	
 		.slider({min: 0, max: 100, values: [50], step: 10, change: function(event,ui){
 	        $('#txtManageFee').val(ui.value);
-	    }, create:sliderTooltip('stepManageFee', profitToolHtml.stepManageFee), slide: sliderTooltip('stepManageFee', profitToolHtml.stepManageFee)})
+	    }, create:sliderTooltip('stepManageFee', profitToolHtml.stepManageFee, 50), slide: sliderTooltip('stepManageFee', profitToolHtml.stepManageFee)})
 		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''})
 		.on(event('stepManageFee'));
 		
@@ -2836,7 +2844,7 @@
 		$('#stepSaleFee')	
 		.slider({min: 0, max: 1.8, values: [0.9], step: 0.1, change: function(event,ui){
 	        $('#txtSaleFee').val(ui.value);
-	    }, create:sliderTooltip('stepSaleFee', profitToolHtml.stepSaleFee), slide: sliderTooltip('stepSaleFee', profitToolHtml.stepSaleFee)})
+	    }, create:sliderTooltip('stepSaleFee', profitToolHtml.stepSaleFee, 0.9), slide: sliderTooltip('stepSaleFee', profitToolHtml.stepSaleFee)})
 		.slider('pips',{rest: 'label', labels: function() {
 			var x = new Array(19);
 			x[0] = '0%', x[3] = '0.3%', x[6] = '0.6%', x[9] = '0.9%', x[12] = '1.2%', x[15] = '1.5%', x[18] = '1.8%';
@@ -2848,7 +2856,7 @@
 		$('#stepResolveMoney')	
 		.slider({min: 0, max: 20, values: [10], step: 1, change: function(event,ui){
 	        $('#txtResolveMoney').val(ui.value);
-	    }, create:sliderTooltip('stepResolveMoney', profitToolHtml.stepResolveMoney), slide: sliderTooltip('stepResolveMoney', profitToolHtml.stepResolveMoney)})
+	    }, create:sliderTooltip('stepResolveMoney', profitToolHtml.stepResolveMoney, 10), slide: sliderTooltip('stepResolveMoney', profitToolHtml.stepResolveMoney)})
 		.slider('pips',{rest: 'label', labels: function() {
 			var x = new Array(21);
 			x[0] = '0%', x[5] = '5%', x[10] = '10%', x[15] = '15%', x[20] = '20%';

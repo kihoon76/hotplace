@@ -331,14 +331,14 @@ $(document).ready(function() {
 		level: 3
 	}, {
 		'zoom_changed' : function(map, level) {
-			/*_currLevel = level;
+			_currLevel = level;
 			hotplace.dom.addBodyAllMask();
 			
 			setTimeout(function() {
 				hotplace.maps.showCellLayer();
 				hotplace.dom.removeBodyAllMask();
 				_enableMapButton(level, 'btnSalesView');
-			},500);*/
+			},500);
 		},
 		'zoom_start' : function(map, level) {
 			////hotplace.test.initMarker(level);
@@ -366,9 +366,9 @@ $(document).ready(function() {
 			console.log('idle');
 		}*/
 	}, function(map) {
-		/*hotplace.maps.showCellLayer();
+		hotplace.maps.showCellLayer();
 		hotplace.dom.showYearRangeDiv();
-		hotplace.dom.showAutoYearRangeDiv();*/
+		hotplace.dom.showAutoYearRangeDiv();
 	});
 	
 	hotplace.dom.addButtonInMap([{

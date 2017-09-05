@@ -290,7 +290,7 @@ input[readonly]{
     max-width: 2000px;
     padding: 3px 8px;
     color: #ffffff;
-    text-align: center;
+    text-align: left;
     text-decoration: none;
     background-color: #000000;
     -webkit-border-radius: 4px;

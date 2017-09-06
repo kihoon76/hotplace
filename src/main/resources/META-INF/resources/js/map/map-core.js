@@ -931,8 +931,9 @@
 			else {
 				_initLayers(_currentLevel);
 				
+				var adjustLevel = (_currentLevel >=3 && _currentLevel <=5) ? _currentLevel + 1 : _currentLevel;
 				hotplace.getPlainText('locationbounds', {
-					level: _currentLevel,
+					level: adjustLevel/*_currentLevel*/,
 					 swx : _locationBounds.swx,
 					 nex : _locationBounds.nex,
 					 swy : _locationBounds.swy,
@@ -2421,8 +2422,15 @@
 	}
 	
 	dom.insertFormInmodal = function(name) {
-		var tForm = dom.getTemplate(name);
-		$('#dvModalContent').html(tForm());
+		
+		var elContent = $('#dvModalContent');
+		if(($.trim(name)).indexOf('<') == 0) {/*html 직접입력*/
+			elContent.html(name);
+		}
+		else {
+			var tForm = dom.getTemplate(name);
+			elContent.html(tForm());
+		}
 	}
 	
 	dom.getSelectOptions = function(data, title) {

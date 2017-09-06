@@ -218,7 +218,7 @@
                 	</form>
                 	
                 	<form class="form-horizontal" role="form" method="post" id="fmPinResult" style="display:none;">
-                		<div id="dvHpgradeResult"></div>
+                		<div id="dvHpgradeResult" style="width:563px"></div>
                 	</form>
                 	
                 	<div style="padding-top:1px; padding-left:480px" id="btnHPgradeSearch">
@@ -379,6 +379,7 @@
                 
                  <div class="tab-pane fade" id="tabForSale">
                  	<form class="form-horizontal" role="form" method="post" id="fmForSale">
+                 		<!-- (국토계획법상)용도지역 -->
                  		<div class="form-group">
 							<label class="col-sm-4 control-label">(국토계획법상)용도지역</label>
 							<div class="col-sm-8">
@@ -409,6 +410,7 @@
 							</div>
 						</div>
 						
+						<!-- (국토계획법상)용도지구 -->
 						<div class="form-group">
 							<label class="col-sm-4 control-label">(국토계획법상)용도지구</label>
 							<div class="col-sm-8">
@@ -455,6 +457,7 @@
 							</div>
 						</div>
 						
+						<!-- (국토계획법상)용도구역 -->
 						<div class="form-group">
 							<label class="col-sm-4 control-label">(국토계획법상)용도구역</label>
 							<div class="col-sm-8">
@@ -487,6 +490,7 @@
 							</div>
 						</div>
 						
+						<!-- 기타 법률에 의한 지역,지구 등 -->
 						<div class="form-group">
 							<label class="col-sm-4 control-label">기타 법률에 의한 지역,지구 등</label>
 							<div class="col-sm-8">
@@ -561,6 +565,7 @@
 							</div>
 						</div>
 						
+						<!-- 기타 참고사항 -->
 						<div class="form-group">
 							<label class="col-sm-4 control-label">기타 참고사항</label>
 							<div class="col-sm-8">
@@ -579,6 +584,7 @@
 							</div>
 						</div>
 						
+						<!-- 도시계획시설 -->
 						<div class="form-group">
 							<label class="col-sm-4 control-label">도시계획시설</label>
 							<div class="col-sm-8">
@@ -625,6 +631,7 @@
 							</div>
 						</div>
 						
+						<!-- 도시계획시설 저촉 상태 -->
 						<div class="form-group">
 							<label class="col-sm-4 control-label">도시계획시설 저촉 상태</label>
 							<div class="col-sm-8">
@@ -643,6 +650,7 @@
 							</div>
 						</div>
 						
+						<!-- 지역검색 -->
 						<div class="form-group">
 							<label class="col-sm-4 control-label">지역검색</label>
 							<div class="col-sm-8">
@@ -713,6 +721,7 @@
 							</div>
 						</div>
 						
+						<!-- 물건유형 -->
 						<div class="form-group">
 							<label class="col-sm-4 control-label">물건유형</label>
 							<div class="col-sm-8">
@@ -763,6 +772,7 @@
 							</div>
 						</div>
 						
+						<!-- 보상/편입 여부 -->
 						<div class="form-group">
 							<label class="col-sm-4 control-label">보상/편입 여부</label>
 							<div class="col-sm-8">
@@ -781,6 +791,7 @@
 							</div>
 						</div>
 						
+						<!-- 지분 매각여부 -->
 						<div class="form-group">
 							<label class="col-sm-4 control-label">지분 매각여부</label>
 							<div class="col-sm-8">
@@ -795,6 +806,7 @@
 							</div>
 						</div>
 						
+						<!-- 인근(반경 500m)이내 RQ등급 -->
 						<div class="form-group">
 							<label class="col-sm-4 control-label">인근(반경 500m)이내 RQ등급</label>
 							<div class="col-sm-8">
@@ -816,7 +828,95 @@
                     			</div>
 							</div>
 						</div>
+						
+						<!-- 인근(반경 100m) 이내 토지이용계획(LURIS) 변경 물건 -->
+						<div class="form-group">
+							<label class="col-sm-4 control-label">인근(반경 100m) 이내 토지이용계획(LURIS) 변경 물건</label>
+							<div class="col-sm-8">
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox211" value="option1">
+                        			<label for="inlineCheckbox211">있슴</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox212" value="option1">
+                        			<label for="inlineCheckbox212">없슴</label>
+                    			</div>
+							</div>
+						</div>
+						
+						<!-- 토지이용계획(LURIS)변경 여부 -->
+						<div class="form-group">
+							<label class="col-sm-4 control-label">토지이용계획(LURIS)변경 여부</label>
+							<div class="col-sm-8">
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox311" value="option1">
+                        			<label for="inlineCheckbox311">토지이용계획 변경</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox312" value="option1">
+                        			<label for="inlineCheckbox312">해당없슴</label>
+                    			</div>
+							</div>
+						</div>
+						
+						<!-- 최소입찰가율 -->
+						<div class="form-group">
+							<label class="col-sm-4 control-label">최소입찰가율</label>
+							<div class="col-sm-8">
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox411" value="option1">
+                        			<label for="inlineCheckbox411">100%</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox412" value="option1">
+                        			<label for="inlineCheckbox412">75%~100%</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox413" value="option1">
+                        			<label for="inlineCheckbox413">50%~75%</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox414" value="option1">
+                        			<label for="inlineCheckbox414">25%~50%</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox415" value="option1">
+                        			<label for="inlineCheckbox415">25% 미만</label>
+                    			</div>
+							</div>
+						</div>
+						
+						<!-- 최소입찰가 -->
+						<div class="form-group">
+							<label class="col-sm-4 control-label">최소입찰가</label>
+							<div class="col-sm-8">
+								<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox511" value="option1">
+                        			<label for="inlineCheckbox511">1천만원 미만</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox512" value="option1">
+                        			<label for="inlineCheckbox512">1천만원 ~ 1억원</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox513" value="option1">
+                        			<label for="inlineCheckbox513">1억원 ~ 5억원</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox514" value="option1">
+                        			<label for="inlineCheckbox514">5억원 ~ 20억원</label>
+                    			</div>
+                    			<div class="checkbox checkbox-success checkbox-inline">
+                        			<input type="checkbox" id="inlineCheckbox515" value="option1">
+                        			<label for="inlineCheckbox515">20억원 이상</label>
+                    			</div>
+							</div>
+						</div>
                  	</form>
+                 	
+                 	<div style="margin-top:30px; padding-left:483px">
+        					<button type="button" class="btn btn-primary" id="btnSalesSearch">검색하기</button>
+      					</div>
                  </div>
         	</div>
         </div>

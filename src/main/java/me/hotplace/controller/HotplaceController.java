@@ -126,9 +126,9 @@ public class HotplaceController {
 	
 	@PostMapping("hpgrade/search")
 	@ResponseBody
-	public HpSearch getHpgradeSearch(@RequestBody HpSearch hpSearch) {
+	public HpSearch getHpgradeSearch(@RequestBody HpSearch hpSearch) throws InterruptedException {
 		
-		System.out.println(hpSearch.getBlgr().getMax());
+		Thread.sleep(2000);
 		return hpSearch;
 	}
 

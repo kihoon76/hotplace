@@ -336,6 +336,49 @@ $(document).ready(function() {
 		});
 	});
 	
+	//매물검색
+	$('#btnSalesSearch').on('click', function() {
+		hotplace.dom.insertFormInmodal('<div id="tbSales"></div>');
+		hotplace.dom.openModal('매물(경매/공매/등록매물) 검색결과', 'fullsize');
+		
+		hotplace.dom.showMask('#containerModal');
+		$('#tbSales').tabulator({
+		    height:600, // set height of table
+		    fitColumns:true, //fit columns to width of table (optional)
+		    columns:[ //Define Table Columns
+		        {title:'관심물건여부', field:'favor', formatter:'tick', width:50},
+		        {title:'구분', field:'guboon', width:50},
+		        {title:'물건유형', field:'type', width:50},
+		        {title:'주소', field:'addr', width:200},
+		        {title:'감정평가액', field:'gamjeong', formatter:'money', width:100},
+		        {title:'최소입찰가', field:'minBid', formatter:'money', width:100},
+		        {title:'최소입찰가율', field:'minBidRate', width:100},
+		        {title:'종료일', field:'endDate', sorter:'date', width:100},
+		        {title:'등록일', field:'regDate', sorter:'date', width:100},
+		        {title:'RQ지수', field:'jisu', formatter:'star', formatterParams:{stars:10}, width:200},
+		    ],
+		    rowClick:function(e, row){ //trigger an alert message when the row is clicked
+		        alert("Row " + row.getData().id + " Clicked!!!!");
+		    },
+		});
+		
+		var tabledata = [
+             {id:1, favor:true, guboon:'G', type:'대',  addr:'서울시 강남구 도곡동 963', gamjeong:'110000000', minBid:'90000000', minBidRate:'80.0%', endDate: '2018.08.15', regDate:'', jisu:1},
+             {id:2, favor:false, guboon:'K', type:'대',  addr:'서울시 강남구 도곡동 963', gamjeong:'130000000', minBid:'50000000', minBidRate:'50.0%', endDate: '2015.02.15', regDate:'', jisu:10},
+             {id:3, favor:false, guboon:'G', type:'대',  addr:'서울시 강남구 도곡동 963', gamjeong:'110000000', minBid:'90000000', minBidRate:'80.0%', endDate: '2018.08.15', regDate:'', jisu:3},
+             {id:4, favor:true, guboon:'G', type:'대',  addr:'서울시 강남구 도곡동 963', gamjeong:'110000000', minBid:'90000000', minBidRate:'80.0%', endDate: '2018.08.15', regDate:'', jisu:5},
+             {id:5, favor:true, guboon:'G', type:'대',  addr:'서울시 강남구 도곡동 963', gamjeong:'110000000', minBid:'90000000', minBidRate:'80.0%', endDate: '2018.08.15', regDate:'', jisu:2},
+             {id:6, favor:true, guboon:'G', type:'대',  addr:'서울시 강남구 도곡동 963', gamjeong:'110000000', minBid:'90000000', minBidRate:'80.0%', endDate: '2018.08.15', regDate:'', jisu:7},
+         ];
+		
+		setTimeout(function() {
+			$("#tbSales").tabulator("setData", tabledata);
+				hotplace.dom.hideMask();
+		}, 1000);
+	});
+	
+	
+	//HP grade 검색폼 돌아가기
 	$('#btnHPgradeBack').on('click', function() {
 		$('#fmPin').show();
 		$('#btnHPgradeSearch').show();
@@ -360,12 +403,12 @@ $(document).ready(function() {
 				$('#fmPinResult').show();
 				$('#btnHPgradeBack').show();
 				
-				$("#dvHpgradeResult").tabulator({
+				$('#dvHpgradeResult').tabulator({
 				    height:670, // set height of table
 				    fitColumns:true, //fit columns to width of table (optional)
 				    columns:[ //Define Table Columns
-				        {title:"위치", field:"addr", width:445},
-				        {title:"RQ",  field:"rq", width:55},
+				        {title:"위치", field:"addr", width:470},
+				        {title:"RQ",  field:"rq", width:70},
 				    ],
 				    rowClick:function(e, row){ //trigger an alert message when the row is clicked
 				        alert("Row " + row.getData().id + " Clicked!!!!");
@@ -394,14 +437,19 @@ $(document).ready(function() {
 	                 {id:19, addr:"서울시 강남구 도곡동 964", rq:"1"},
 	                 {id:20, addr:"서울시 강남구 도곡동 965", rq:"2"},
 	                 {id:21, addr:"서울시 강남구 도곡동 966", rq:"5"},
+	                 {id:22, addr:"서울시 강남구 도곡동 964", rq:"1"},
+	                 {id:23, addr:"서울시 강남구 도곡동 965", rq:"2"},
+	                 {id:24, addr:"서울시 강남구 도곡동 966", rq:"5"},
+	                 {id:25, addr:"서울시 강남구 도곡동 963", rq:"1"},
+	                 {id:26, addr:"서울시 강남구 도곡동 964", rq:"1"},
+	                 {id:27, addr:"서울시 강남구 도곡동 965", rq:"2"},
+	                 {id:28, addr:"서울시 강남구 도곡동 966", rq:"5"},
 	             ];
 				
-				setTimeout(function() {
-					$("#dvHpgradeResult").tabulator("setData", tabledata);
-				}, 1000);
+				$('#dvHpgradeResult').tabulator('setData', tabledata);
 			},
 			error: function() {
-				console.log('ii')
+				//console.log('ii')
 			}
 		});
 	});
@@ -426,14 +474,14 @@ $(document).ready(function() {
 		level: 3
 	}, {
 		'zoom_changed' : function(map, level) {
-			/*_currLevel = level;
+			_currLevel = level;
 			hotplace.dom.addBodyAllMask();
 			
 			setTimeout(function() {
 				hotplace.maps.showCellLayer();
 				hotplace.dom.removeBodyAllMask();
 				_enableMapButton(level, 'btnSalesView');
-			},500);*/
+			},500);
 		},
 		'zoom_start' : function(map, level) {
 			////hotplace.test.initMarker(level);
@@ -461,9 +509,9 @@ $(document).ready(function() {
 			console.log('idle');
 		}*/
 	}, function(map) {
-		/*hotplace.maps.showCellLayer();
+		hotplace.maps.showCellLayer();
 		hotplace.dom.showYearRangeDiv();
-		hotplace.dom.showAutoYearRangeDiv();*/
+		hotplace.dom.showAutoYearRangeDiv();
 	});
 	
 	hotplace.dom.addButtonInMap([{
@@ -484,7 +532,7 @@ $(document).ready(function() {
 	},{
 		id:'btnAddrSearch',
 		glyphicon: 'search',
-		attr: 'data-switch="off" title="주소,상세,반경검색"',
+		attr: 'data-switch="off" title="주소,HP,반경,매물검색"',
 		clazz: 'mBtnTooltip',
 		callback: function(e) {
 			_btnCallback($(this), e, 'dvAddrSearch');

@@ -336,6 +336,43 @@ $(document).ready(function() {
 		});
 	});
 	
+	var _selFilter = function(arr) {
+		return function(cell, onRendered, success, cancel) {
+			var len = arr.length;
+			
+			var htmlStr = '';
+				
+			for(var i=0; i<len; i++) {
+				htmlStr += '<option value="' + arr[i] + '">' + arr[i] + '</option>';
+				console.log(htmlStr);
+			}
+				
+			var editor = $('<select><option value=""></option>' + htmlStr + '</select>');
+			editor.css({
+				'padding':'3px',
+		        'width':'100%',
+		        'box-sizing':'border-box',
+		    });
+			 
+			//Set value of editor to the current value of the cell
+			editor.val(cell.getValue());
+			  
+			//set focus on the select box when the editor is selected (timeout allows for editor to be added to DOM)
+			onRendered(function(){
+				editor.focus();
+				editor.css('height','100%');
+			});
+			 
+			//when the value has been set, trigger the cell to update
+			editor.on('change blur', function(e){
+				success(editor.val());
+			});
+	
+			//return the editor element
+			return editor;
+		}
+	}
+	
 	//매물검색
 	$('#btnSalesSearch').on('click', function() {
 		hotplace.dom.insertFormInmodal('<div id="tbSales"></div>');
@@ -347,15 +384,15 @@ $(document).ready(function() {
 		    fitColumns:true, //fit columns to width of table (optional)
 		    columns:[ //Define Table Columns
 		        {title:'관심물건여부', field:'favor', formatter:'tick', width:50},
-		        {title:'구분', field:'guboon', width:50},
-		        {title:'물건유형', field:'type', width:50},
-		        {title:'주소', field:'addr', width:200},
+		        {title:'구분', field:'guboon', width:50, headerFilter:true, editor:_selFilter(['G', 'K', 'R'])},
+		        {title:'물건유형', field:'type', width:50,  headerFilter:true, editor:_selFilter(['대','전','답','임야','하천','도로','건물'])},
+		        {title:'주소', field:'addr', width:200,  headerFilter:'input', headerFilterPlaceholder:'주소검색'},
 		        {title:'감정평가액', field:'gamjeong', formatter:'money', width:100},
 		        {title:'최소입찰가', field:'minBid', formatter:'money', width:100},
 		        {title:'최소입찰가율', field:'minBidRate', width:100},
 		        {title:'종료일', field:'endDate', sorter:'date', width:100},
 		        {title:'등록일', field:'regDate', sorter:'date', width:100},
-		        {title:'RQ지수', field:'jisu', formatter:'star', formatterParams:{stars:10}, width:200},
+		        {title:'RQ지수', field:'jisu', formatter:'star', formatterParams:{stars:10}, width:200, headerFilter:'number', headerFilterPlaceholder:'1 ~ 10'},
 		    ],
 		    rowClick:function(e, row){ //trigger an alert message when the row is clicked
 		        alert("Row " + row.getData().id + " Clicked!!!!");
@@ -364,11 +401,13 @@ $(document).ready(function() {
 		
 		var tabledata = [
              {id:1, favor:true, guboon:'G', type:'대',  addr:'서울시 강남구 도곡동 963', gamjeong:'110000000', minBid:'90000000', minBidRate:'80.0%', endDate: '2018.08.15', regDate:'', jisu:1},
-             {id:2, favor:false, guboon:'K', type:'대',  addr:'서울시 강남구 도곡동 963', gamjeong:'130000000', minBid:'50000000', minBidRate:'50.0%', endDate: '2015.02.15', regDate:'', jisu:10},
-             {id:3, favor:false, guboon:'G', type:'대',  addr:'서울시 강남구 도곡동 963', gamjeong:'110000000', minBid:'90000000', minBidRate:'80.0%', endDate: '2018.08.15', regDate:'', jisu:3},
-             {id:4, favor:true, guboon:'G', type:'대',  addr:'서울시 강남구 도곡동 963', gamjeong:'110000000', minBid:'90000000', minBidRate:'80.0%', endDate: '2018.08.15', regDate:'', jisu:5},
-             {id:5, favor:true, guboon:'G', type:'대',  addr:'서울시 강남구 도곡동 963', gamjeong:'110000000', minBid:'90000000', minBidRate:'80.0%', endDate: '2018.08.15', regDate:'', jisu:2},
-             {id:6, favor:true, guboon:'G', type:'대',  addr:'서울시 강남구 도곡동 963', gamjeong:'110000000', minBid:'90000000', minBidRate:'80.0%', endDate: '2018.08.15', regDate:'', jisu:7},
+             {id:2, favor:false, guboon:'K', type:'임야',  addr:'서울시 강남구 도곡동 963', gamjeong:'130000000', minBid:'50000000', minBidRate:'50.0%', endDate: '2015.02.15', regDate:'', jisu:10},
+             {id:3, favor:false, guboon:'G', type:'전',  addr:'서울시 강남구 도곡동 963', gamjeong:'110000000', minBid:'90000000', minBidRate:'80.0%', endDate: '2018.08.15', regDate:'', jisu:3},
+             {id:4, favor:true, guboon:'K', type:'답',  addr:'서울시 강남구 대치동  963', gamjeong:'110000000', minBid:'90000000', minBidRate:'80.0%', endDate: '2018.08.15', regDate:'', jisu:5},
+             {id:5, favor:true, guboon:'R', type:'도로',  addr:'서울시 강남구 역삼동 963', gamjeong:'110000000', minBid:'90000000', minBidRate:'80.0%', endDate: '2018.08.15', regDate:'', jisu:2},
+             {id:6, favor:true, guboon:'G', type:'임야',  addr:'서울시 강남구 도곡동 963', gamjeong:'110000000', minBid:'90000000', minBidRate:'80.0%', endDate: '2018.08.15', regDate:'', jisu:7},
+             {id:6, favor:true, guboon:'R', type:'하천',  addr:'서울시 강남구 도곡동 963', gamjeong:'110000000', minBid:'90000000', minBidRate:'80.0%', endDate: '2018.08.15', regDate:'', jisu:7},
+             {id:6, favor:true, guboon:'G', type:'건물',  addr:'서울시 강남구 도곡동 963', gamjeong:'110000000', minBid:'90000000', minBidRate:'80.0%', endDate: '2018.08.15', regDate:'', jisu:7},
          ];
 		
 		setTimeout(function() {
@@ -376,7 +415,6 @@ $(document).ready(function() {
 				hotplace.dom.hideMask();
 		}, 1000);
 	});
-	
 	
 	//HP grade 검색폼 돌아가기
 	$('#btnHPgradeBack').on('click', function() {
@@ -386,7 +424,7 @@ $(document).ready(function() {
 		$('#fmPinResult').hide();
 		$('#btnHPgradeBack').hide();
 	});
-	
+
 	//HP grade 검색
 	$('#btnHPgradeSearch').on('click', function() {
 		hotplace.ajax({

@@ -211,10 +211,10 @@
 			break;
 		}
 		
-		//var r = [2,2,2,2,2,2,2,2,2,2,2,2];
+		var r = [60,60,60,20,20,20,20,20,20,20,20,20];
 		
-		var marginXRate =  parseFloat((_currentBounds.nex - _currentBounds.swx)/8);
-		var marginYRate =  parseFloat((_currentBounds.ney - _currentBounds.swy)/8);
+		var marginXRate =  parseFloat((_currentBounds.nex - _currentBounds.swx)/r[_getCurrentLevel()-3]);
+		var marginYRate =  parseFloat((_currentBounds.ney - _currentBounds.swy)/r[_getCurrentLevel()-3]);
 		
 		_marginBounds.swx = _currentBounds.swx - marginXRate;
 		_marginBounds.swy = _currentBounds.swy - marginYRate;
@@ -223,40 +223,12 @@
 	}
 	
 	function _setLocationBounds() {
-		/*var bnds = null;
-		var curBounds = null;
 		
-		switch(_venderStr) {
-		case 'daum' :
-			bnds = _venderMap.getBounds();
-			curBounds = {
-				swx : bnds.ba,
-				swy : bnds.ha,
-				nex : bnds.fa,
-				ney : bnds.ga
-			};
-			break;
-		case 'naver' :
-			bnds = _venderMap.getBounds();
-			curBounds = {
-				swx : bnds._sw.x,
-				swy : bnds._sw.y,
-				nex : bnds._ne.x,
-				ney : bnds._ne.y
-			};
-			break;
-		}*/
-		//_setCurrentBounds();
+		var r = [0.5,0.5,2,4,4,4,4,4,4,4,4,4];
 		
-		var r = [0.5,0.5,1,0.3,2,2,2,2,2,2,2,2];
+		var locationXRate =  parseFloat((_marginBounds.nex - _marginBounds.swx)/r[_getCurrentLevel()-3] /*6*/);
+		var locationYRate =  parseFloat((_marginBounds.ney - _marginBounds.swy)/r[_getCurrentLevel()-3]);
 		
-		var locationXRate =  parseFloat((_marginBounds.nex - _marginBounds.swx)/6);
-		var locationYRate =  parseFloat((_marginBounds.ney - _marginBounds.swy)/6);
-		
-		/*_locationBounds.swx = _currentBounds.swx - locationRate;
-		_locationBounds.swy = _currentBounds.swy - locationRate;
-		_locationBounds.nex = _currentBounds.nex + locationRate;
-		_locationBounds.ney = _currentBounds.ney + locationRate;*/
 		_locationBounds.swx = _marginBounds.swx - locationXRate;
 		_locationBounds.swy = _marginBounds.swy - locationYRate;
 		_locationBounds.nex = _marginBounds.nex + locationXRate;

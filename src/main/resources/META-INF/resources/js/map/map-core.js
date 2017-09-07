@@ -3,9 +3,12 @@
  * npm install -g jsdoc
  * http://usejsdoc.org/
  * */
+/**
+ * @namespace hotplace
+ * */
 (function(hotplace, $) {
 	var _version = '1.0';
-	var ROOT_CONTEXT = $('body').data('url');
+	var _ROOT_CONTEXT = $('body').data('url');
 	
 	$.browser = {}; 
 	/*jQuery.browser() removed
@@ -31,25 +34,70 @@
         return s;  
     };
     
+    /**
+     * @private
+     * @function _s4
+     * @desc create UUID 
+     */
 	function _s4() {
 		return ((1 + Math.random()) * 0x10000 | 0).toString(16).substring(1);
 	}
     
+	/**
+	 * @memberof hotplace
+     * @function isSupport
+     * @param {string} target 찾을요소
+     * @param {string[]} array 배열
+     * @returns {boolean}
+     */
 	hotplace.isSupport = function(target, array) {
 		return $.inArray(target, array) > -1;
 	}
 	
+	/**
+	 * Callback for ajax beforeSend.
+	 *
+	 * @callback ajax_beforeSend
+	 * @param {object} xhr - XMLHttpRequest.
+	 */
+	
+	/**
+	 * Callback for ajax success.
+	 *
+	 * @callback ajax_success
+	 * @param {object} data - data
+	 * @param {string} textStatus
+	 * @param {object} jqXHR
+	 */
+	
+	/**
+	 * @memberof hotplace
+     * @function ajax
+     * @param {object} 	   		params 설정
+     * @param {string} 	   		params.url - 전송URL (처음에 '/' 반드시 생략)
+     * @param {boolean}    		params.async - 비동기 여부 (default 'true')
+     * @param {boolean}    		params.activeMask - ajax 마스크 사용여부 (default 'true')
+     * @param {string}			params.loadEl - 마스크할 element selector( ex: #id )
+     * @param {string}			params.loadMsg - 마스크시 메시지 (default '로딩중입니다')
+     * @param {ajax_beforeSend} params.beforeSend - 전송전 실행할 함수
+     * @param {string}	   		params.contentType - (default 'application/x-www-form-urlencoded; charset=UTF-8')
+     * @param {string}	   		params.dataType - (default 'json')
+     * @param {string}     		params.method - (default 'POST')
+     * @param {string}	   		params.data 
+     * @param {ajax_success}	params.success
+     * @param {number}			params.timeout - timeout(millisecond) default 300000
+     */
 	hotplace.ajax = function(params) {
 		var dom = hotplace.dom;
 		
-		$.ajax(ROOT_CONTEXT + params.url, {
+		$.ajax(_ROOT_CONTEXT + params.url, {
 			async: (params.async == null)? true : params.async,
 			beforeSend: function(xhr) {
 				var activeMask = (params.activeMask == undefined) ? true : params.activeMask; //전체설정 이후 마스크 개별설정
 				if(activeMask) dom.showMask(params.loadEl, params.loadMsg);
 				
 				if(params.beforeSend && typeof params.beforeSend === 'function') {
-					params.beforeSend();
+					params.beforeSend(xhr);
 				} 
 			},
 			contentType: params.contentType || 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -90,6 +138,14 @@
 		});
 	}
 	
+	/**
+	 * @memberof hotplace
+     * @function getPlainText
+     * @param {string} 	   		url - 전송URL (처음에 '/' 반드시 생략)
+     * @param {object} 	   		param - data
+     * @param {ajax_success}    cbSucc	
+     * @param {boolean}    		isActiveMask - ajax 마스크 사용여부 (default 'true')
+     */
 	hotplace.getPlainText = function(url, param, cbSucc, isActiveMask) {
 			
 		hotplace.ajax({
@@ -110,6 +166,15 @@
 		
 	}
 	
+	/**
+	 * @memberof hotplace
+     * @function getPlainTextFromJson 
+     * @param {string} 	   		url - 전송URL (처음에 '/' 반드시 생략)
+     * @param {object} 	   		param - data
+     * @param {ajax_success}    cbSucc	
+     * @param {boolean}    		isActiveMask - ajax 마스크 사용여부 (default 'true')
+     * @param {string}    		loadEl - 마스크할 element selector( ex: #id )
+     */
 	hotplace.getPlainTextFromJson = function(url, param, cbSucc, isActiveMask, loadEl) {
 	
 		hotplace.ajax({
@@ -130,63 +195,169 @@
 		});
 	}
 	
+	/**
+     * @memberof hotplace
+     * @function createUuid
+     * @returns {string}
+     */
 	hotplace.createUuid = function() {
 		 return _s4() + _s4() + '-' + _s4() + '-' + _s4() + '-' + _s4() + '-' + _s4() + _s4() + _s4();
 	}
+	
+	/**
+     * @memberof hotplace
+     * @function getContextUrl
+     * @returns {string}
+     */
+	hotplace.getContextUrl = function() {
+		return _ROOT_CONTEXT;
+	} 
 }(
 	window.hotplace = window.hotplace || {},
 	jQuery	
 ));
 
+/**
+ * @namespace hotplace.maps
+ * 
+ */
 (function(maps, $) {
+	/**
+	 * @private 
+	 * @desc 맵 제공업체 naver, daum
+	 */
 	var _venderStr = '';
+	
+	/**
+	 * @private 
+	 * @desc 맵 element
+	 */
 	var _container = document.getElementById('map');
+	
 	var _vender = null;
 	var _venderMap = null;
 	var _venderEvent = null;
+	
+	/** 
+	 * @private
+	 * @desc hotplace.naps.init 함수가 호출되었는지 여부
+	 */
 	var _initCalled = false;
 	
+	/**
+	 * @private 
+	 * @desc 지원하는 hotplace map 이벤트 목록
+	 */
 	var _events = ['zoom_changed', 'bounds_changed', 'dragend', 'zoom_start', 'click', 'tilesloaded', 'idle'];
-	var _vender = ['naver', 'daum'];
-	var _currentBounds = { 'swy' : 0, 'swx' : 0, 'ney' : 0,	'nex' : 0 };  //화면에 보이는 bounds
-	var _marginBounds  = { 'swy' : 0, 'swx' : 0, 'ney' : 0,	'nex' : 0 };  //실제로 cell을 그릴 bounds
-	var _locationBounds = {'swy' : 0, 'swx' : 0, 'ney' : 0,	'nex' : 0};	  //서버로 부터 받은 좌표계 bounds
 	
+	/**
+	 * @private
+	 * @desc 지원하는 벤더목록
+	 */
+	var _venders = ['naver', 'daum'];
+	
+	/** 
+	 * @private 
+	 * @desc 화면에 보이는 bounds
+	 * @type {object}
+	 * @property {number} swx - 극서
+	 * @property {number} nex - 극동
+	 * @property {number} swy - 극남
+	 * @property {number} ney - 극북
+	 */
+	var _currentBounds = { 'swy' : 0, 'swx' : 0, 'ney' : 0,	'nex' : 0 }; 
+	
+	/** 
+	 * @private 
+	 * @desc 실제로 cell을 그릴 bounds
+	 * @type {object}
+	 * @property {number} swx - 극서
+	 * @property {number} nex - 극동
+	 * @property {number} swy - 극남
+	 * @property {number} ney - 극북
+	 */
+	var _marginBounds  = { 'swy' : 0, 'swx' : 0, 'ney' : 0,	'nex' : 0 };  
+	
+	/** 
+	 * @private 
+	 * @desc 서버로부터 받을 좌표계 bounds
+	 * @type {object} 
+	 * @property {number} swx - 극서
+	 * @property {number} nex - 극동
+	 * @property {number} swy - 극남
+	 * @property {number} ney - 극북
+	 */
+	var _locationBounds = {'swy' : 0, 'swx' : 0, 'ney' : 0,	'nex' : 0};	  
+	
+	/** 
+	 * @private 
+	 * @desc cell(heatmap)이 표현할수 있는 타입종류 
+	 * @typedef {object} cellType
+	 * @property {string} GONGSI - 공시지가
+	 */
 	var _cellTypes = {GONGSI:'GONGSI'};
 	
+	/** 
+	 * @private 
+	 * @desc 지도위에 그려진 (visible && invisible)cell들의 배열
+	 * @type {Array} 
+	 */
 	var _cells = [];
-	var _notDrawedCells = [];    //weight값 제한으로 화면에서 그리지않은 cell들
+	
+	/** 
+	 * @private 
+	 * @desc weight값 제한으로 화면에서 보이는 좌표이지만 그리지않은 cell들
+	 * @deprecated
+	 * @type {Array} 
+	 */
+	var _notDrawedCells = [];    
+	
 	
 	var _markerTypes = {
 		RADIUS_SEARCH: 'RADIUS_SEARCH',
 	};
 	
+	/** 
+	 * @memberof hotplace.maps
+	 * @desc 지도위에 그려진 마커그룹 타입
+	 * @typedef {object} hotplace.maps.MarkerType 
+	 * @property {string} RADIUS_SEARCH - 반경검색 후 지도상에 보이는 마커(1개)
+	 */
 	maps.MarkerType = _markerTypes;
-	/**
-	 * 
-	 * */
+	
+	/** 
+	 * @private 
+	 * @desc 지도위에 그려진 마커그룹
+	 * @type  {object} 
+	 * @param {object} RADIUS_SEARCH 반경검색 마커그룹
+	 * @param {Array}  RADIUS_SEARCH.m 반경검색 marker
+	 * @param {Array}  RADIUS_SEARCH.c 반경검색 circle
+	 */
 	var _markers = {
 		RADIUS_SEARCH : {
-			m: [],	//marker
-			c: []   //circle
+			m: [],	
+			c: []   
 		}    
 	};
 	
+	/** 
+	 * @private 
+	 * @desc 마커그룹의 마커 위에 보여질 infoWindow 팝업
+	 * @type  {object} 
+	 * @param {Array}  RADIUS_SEARCH 반경검색 마커윈도우
+	 */
 	var _infoWindowsForMarker = {
 		RADIUS_SEARCH : []
 	};
 	
-	var _bndNmBnd = []; //bound와 margin bound
 	
-	var _heatMapLayer = null;
-	var _heatMapDatas = [];
-	
-	var _templateInfoWndowForCell = null;
-	/*
-	 * daum  zoom : [14 ~ 1]
-	 * naver zoom : [1 ~ 14]
-	 * */
-	
+	/** 
+	 * @private 
+	 * @function _setCurrentBounds 
+	 * @desc 현재 보이는 영역의 bounds와 margin 영역의 bounds를 설정한다. 
+	 *       zoom_changed, dragend, maps.init 함수호출시 호출됨.
+	 *       _convertEventObjToCustomObj 함수참조.
+	 */
 	function _setCurrentBounds() {
 		var bnds = null;
 		
@@ -222,6 +393,11 @@
 		_marginBounds.ney = _currentBounds.ney + marginYRate;
 	}
 	
+	/** 
+	 * @private 
+	 * @function _setLocationBounds 
+	 * @desc 레벨별로  서버에 쿼리할 bound를 설정한다
+	 */
 	function _setLocationBounds() {
 		
 		var r = [0.5,0.5,2,4,4,4,4,4,4,4,4,4];
@@ -235,6 +411,14 @@
 		_locationBounds.ney = _marginBounds.ney + locationYRate;
 	}
 	
+	/** 
+	 * @private 
+	 * @function _getCurrentLevel 
+	 * @desc 현재 보이는 지도의 줌레벨.
+	 *  	 daum  zoom : [14 ~ 1]
+	 * 		 naver zoom : [1 ~ 14]
+	 * @return {number}
+	 */
 	function _getCurrentLevel() {
 		var _currentLevel = -1;
 		
@@ -250,6 +434,24 @@
 		return _currentLevel;
 	}
 	
+	/** 
+	 * @private 
+	 * @function _getColorByGongsiWeight 
+	 * @param {object} weight
+	 * @param {number} weight.colorV 스펙트럼으로 표시할 보정값
+	 * @param {number} weight.minV   쿼리요청한 boundary 안에서 공시지가 최소값
+	 * @param {number} weight.maxV   쿼리요청한 boundary 안에서 공시지가 최대값
+	 * @param {number} weight.value  공시지가
+	 * @param {number} weight.type	 공시지가 (0)
+	 * @desc  공시지가 스펙트럼 값
+	 * 		  RGB               |     colorV
+	 * 		  R 255 G   0 B   0 |       1020
+	 * 		  R 255 G 255 B   0 |        765
+	 * 		  R   0 G 255 B   0	|		 510
+	 *  	  R   0 G 255 B 255 |		 255
+	 *  	  R   0 G   0 B 255 |  		   0
+	 * @return {number}
+	 */
 	function _getColorByGongsiWeight(weight) {
 		var color = '';
 		var v = weight.colorV;
@@ -271,20 +473,26 @@
 			}
 		}
 		
-		/*
-		 * R 255 G 0   B 0  1020
-		 * R 255 G 255 B 0   765
-		 * R   0 G 255 B 0	 510
-		 * R   0 G 255 B 255 255
-		 * R   0 G   0 B 255   0
-		 * */
-		
 		return color;
 	}
 	
-	/*
-	 * data = {weight:[], location:[125.06666666667(극서), 33.83652712959(극남), 125.35460495018(극동), 34.06720077312(극북)]},...
-	 * */
+	/** 
+	 * @private 
+	 * @function _drawRectangle 
+	 * @param {number} swy 극남
+	 * @param {number} swx 극서
+	 * @param {number} ney 극북
+	 * @param {number} nex 극동
+	 * @param {object} css cell style
+	 * @param {number} css.strokeWeight
+	 * @param {number} css.strokeColor
+	 * @param {number} css.strokeOpacity
+	 * @param {number} css.fillColor
+	 * @param {number} css.fillOpacity
+	 * @param {object} cellData cell click시 보여줄 데이터
+	 * @param {boolean} triggerable cell을 만들고나서 바로 info창이 열리게 할지 여부
+	 * @desc  공시지가 스펙트럼 값
+	 */
 	function _drawRectangle(swy, swx, ney, nex, css, cellData, triggerable) {
 		var rec = null;
 		
@@ -310,12 +518,15 @@
 			
 			_venderEvent.addListener(rec, 'click', function(e) {
 				var r = e.overlay;
+				
+				/** cell center 구하기 */
 				var xcDiff = parseFloat((r.data.location[2] - r.data.location[0])/2).toFixed(11);
 				var ycDiff = parseFloat((r.data.location[3] - r.data.location[1])/2).toFixed(11);
-				
 				var xc = r.data.location[0] + parseFloat(xcDiff);
 				var yc = r.data.location[1] + parseFloat(ycDiff);
 				var location = new _vender.LatLng(yc, xc);
+				/** */
+				
 				hotplace.dom.openInfoWindowForCell(_venderMap, location, _vender, _venderEvent, {'weight' : r.data.weight[0]},{
 					'open' : function(win, obj) {
 						console.log(obj);
@@ -330,9 +541,6 @@
 					data: {},
 					loadEl: '#dvCellDetail',
 					success: function(data, textStatus, jqXHR) {
-						//var jo = $.parseJSON(data);
-						//console.log('data count : ' + jo.datas.length);
-						//cbSucc(jo);
 						hotplace.dom.createChart('canvas');
 					},
 					error:function() {
@@ -349,6 +557,14 @@
 		return rec;
 	}
 	
+	/** 
+	 * @private
+	 * @function _commXY 
+	 * @param {object} data	 지도에 보여줄 좌표정보
+	 * @param {number} startIdx marginbound의 극서에 가장 가까운 좌표의 index의 값
+	 * @param {function} callback
+	 * @desc  margin bound 범위내에 있는 좌표 찾은후 넘겨받은 callback에 파라미터로 넘겨줌
+	 */
 	function _commXY(data, startIdx, callback) {
 		var len = data.length;
 		
@@ -382,6 +598,14 @@
 		console.log("drawedCnt ==> " + drawedCnt);
 	}
 	
+	/** 
+	 * @private
+	 * @function _createMarkers 
+	 * @param {number} level  현재 줌레벨
+	 * @param {number} startIdx marginbound의 극서에 가장 가까운 좌표의 index의 값
+	 * @param {hotplace.maps.MarkerType} markerType
+	 * @desc  margin bound 범위내에 있는 좌표 찾은후 넘겨받은 callback에 파라미터로 넘겨줌
+	 */
 	function _createMarkers(level, startIdx, markerType) {
 		var markerData;
 		/*switch(markerType) {
@@ -401,6 +625,14 @@
 		);
 	}
 	
+	/** 
+	 * @private 
+	 * @function _createCells 
+	 * @param {number} level  현재 줌레벨
+	 * @param {number} startIdx marginbound의 극서에 가장 가까운 좌표의 index의 값
+	 * @param {cellType} cellType
+	 * @desc  margin bound 범위내에 있는 좌표의 cell을 그린다.
+	 */
 	function _createCells(level, startIdx, cellType) {
 		var colorFn;
 	    switch(cellType) {
@@ -439,8 +671,10 @@
 		);
 	}
 	
-	/*
-	 * 한 레벨에서 그린  Rectangle 삭제
+	/** 
+	 * @private 
+	 * @function _removeAllCells 
+	 * @desc  cell전부를 지도에서 제거한다.
 	 */
 	function _removeAllCells() {
 		for(var i=_cells.length-1; i>=0; i--) {
@@ -451,8 +685,10 @@
 		}
 	}
 	
-	/*
-	 * zoom_change 시 한 레벨에서 그린  marker 삭제
+	/** 
+	 * @private 
+	 * @function _destroyMarkers 
+	 * @desc  마커를 전부 삭제함
 	 */
 	function _destroyMarkers () {
 		for(var type in _markers) {
@@ -460,6 +696,12 @@
 		}
 	}
 	
+	/** 
+	 * @private 
+	 * @function _destroyMarkerType 
+	 * @param {hotplace.maps.MarkerType} type
+	 * @desc  해당 타입의 마커를 삭제함
+	 */
 	function _destroyMarkerType(type) {
 		var marker = _markers[type];
 		if(marker) {
@@ -485,6 +727,12 @@
 	}
 	
 	//벤더별 벤더이벤트 전부 
+	/** 
+	 * @private 
+	 * @function _convertEventObjToCustomObj 
+	 * @param {hotplace.maps.MarkerType} type
+	 * @desc  해당 타입의 마커를 삭제함
+	 */
 	function _convertEventObjToCustomObj(eventName, obj) {
 		var returnObj;
 		var latlng;
@@ -657,7 +905,7 @@
 	maps.init = function(venderStr, mapOptions, listeners, afterInit) {
 		if(_initCalled) throw new Error('init 함수는 이미 호출 되었습니다');
 		
-		if(hotplace.isSupport(venderStr, _vender)) {
+		if(hotplace.isSupport(venderStr, _venders)) {
 			_venderStr = venderStr;
 			_initCalled = true;
 			
@@ -743,7 +991,14 @@
 		
 		newMarker = new _vender.Marker({
 		    position: new _vender.LatLng(lat, lng),
-		    map: _venderMap
+		    map: _venderMap,
+		    icon: {
+		        content: '<img src="'+ hotplace.getContextUrl() +'resources/img/marker/blink.gif" alt="" ' +
+		                 'style="margin: 0px; padding: 0px; border: 0px solid transparent; display: block; max-width: none; max-height: none; ' +
+		                 '-webkit-user-select: none; position: absolute; width: 64px; height: 64px; left: 0px; top: 0px;">',
+		        size: new naver.maps.Size(64, 64),
+		        anchor: new naver.maps.Point(32, 64)
+		    }
 		});
 		
 		_markers[markerType].m.push(newMarker);
@@ -827,38 +1082,6 @@
 			
 			_markers[markerType].c.push(radiusSearchCircle);
 		}
-	},
-	
-	maps.drawBounds = function() {
-		if(_bndNmBnd.length != 0) {
-			_bndNmBnd[0].setMap(null);
-			_bndNmBnd[1].setMap(null);
-			_bndNmBnd[2].setMap(null);
-			_bndNmBnd = [];
-		}
-		
-		_bndNmBnd.push(_drawRectangle(_currentBounds.swy, _currentBounds.swx, _currentBounds.ney, _currentBounds.nex,{
-		    strokeColor: '#5347AA',
-		    strokeWeight: 2,
-		    fillColor: '#BBBBBB',
-		    fillOpacity: 0.1,
-		}));
-		
-		_bndNmBnd.push(_drawRectangle(_marginBounds.swy, _marginBounds.swx, _marginBounds.ney, _marginBounds.nex,{
-		    strokeColor: '#5347AA',
-		    strokeWeight: 2,
-		    fillColor: '#EEEEEE',
-		    fillOpacity: 0.1,
-		}));
-		
-		_setLocationBounds();
-		_bndNmBnd.push(_drawRectangle(_locationBounds.swy, _locationBounds.swx, _locationBounds.ney, _locationBounds.nex,{
-		    strokeColor: '#5347AA',
-		    strokeWeight: 2,
-		    fillColor: '#CCCCCC',
-		    fillOpacity: 0.1,
-		}));
-		
 	},
 	
 	maps.appendCell = function() {
@@ -997,6 +1220,10 @@
 	jQuery	
 ));
 
+/**
+ * @namespace hotplace.dom
+ * @memberof hotplace
+ * */
 (function(dom, $) {
 	
 	var _loadEl;
@@ -2990,6 +3217,9 @@
 	jQuery
 ));
 
+/**
+ * @namespace hotplace.db
+ * */
 (function(db, $) {
 	
 	var _db = {};
@@ -3088,6 +3318,9 @@
 	jQuery
 ));
 
+/**
+ * @namespace hotplace.validation
+ * */
 (function(validation, $) {
 	validation.numberOnly = function(CLASS) {
 		$(CLASS).on('keypress', function(e) {
@@ -3101,6 +3334,9 @@
 	jQuery
 ));
 
+/**
+ * @namespace hotplace.test
+ * */
 (function(test, $) {
 	/*
 	 *  테스트 용도
@@ -3183,3 +3419,68 @@
 	jQuery
 ));
 
+/*
+ * 다음지도 
+ * 표기     |  축척
+   10m  |  1:475
+   20m  |  1:950
+   30m  |  1:1,900
+   50m  |  1:3,800
+  100m  |  1:7,600
+  250m  |  1:15,200
+  500m  |  1:30,400
+   1km  |  1:60,800
+   2km  |  1:121,600
+   4km  |  1:243,200
+   8km  |  1:486,400
+  16km  |  1:972,800
+  32km  |  1:1,945,600
+  64km  |  1:3,891,200
+ 128km  |  1:7,782,400
+ 
+var mapContainer = document.getElementById('map');
+var mapOption = { 
+    center: new daum.maps.LatLng(33.450701, 126.570667),
+    level: 1
+};  
+
+var map = new daum.maps.Map(mapContainer, mapOption);
+var proj = map.getProjection();
+
+// 지도 중심 좌표를 중심으로 하는 사각형을 구하려고 함
+// center에 지도 중심 말고 원하는 좌표를 넣으면 됨
+var center = map.getCenter();
+var level = map.getLevel();
+
+// 지도 레벨 마다 화면좌표 1px당 m값을 구할 수 있으므로
+// 지도 중심의 좌표를 화면좌표로 투영시켜
+// 화면좌표 기준으로 계산할 예정
+var centerPoint = proj.pointFromCoords(center);
+
+// 3레벨에서 1px이 1m
+var scale = 1 / Math.pow(2, level - 3);
+
+// 구하고자 하는 사각형 한 변의 길이: 25미터
+var len = 25;
+
+// 12.5m의 화면좌표 값
+var pixelForHalfLen = len / 2 * scale;
+
+var swPoint = new daum.maps.Point(
+    			centerPoint.x - pixelForHalfLen,
+    			centerPoint.y + pixelForHalfLen);
+var nwPoint = new daum.maps.Point(
+    			centerPoint.x + pixelForHalfLen,
+    			centerPoint.y - pixelForHalfLen);
+
+// 화면좌표를 다시 지도의 좌표계 좌표로 변환
+var sw = proj.coordsFromPoint(swPoint);
+var ne = proj.coordsFromPoint(nwPoint);
+
+var rectangleBounds = new daum.maps.LatLngBounds(sw, ne);
+
+var rectangle = new daum.maps.Rectangle({
+    map: map,
+    bounds: rectangleBounds
+});
+ * */

@@ -3,6 +3,7 @@
  * npm install -g jsdoc
  * http://usejsdoc.org/
  * */
+
 /**
  * @namespace hotplace
  * */
@@ -219,7 +220,6 @@
 
 /**
  * @namespace hotplace.maps
- * 
  */
 (function(maps, $) {
 	/**
@@ -685,23 +685,12 @@
 		}
 	}
 	
-	/** 
-	 * @private 
-	 * @function _destroyMarkers 
-	 * @desc  마커를 전부 삭제함
-	 */
 	function _destroyMarkers () {
 		for(var type in _markers) {
 			_destroyMarkerType(type);
 		}
 	}
 	
-	/** 
-	 * @private 
-	 * @function _destroyMarkerType 
-	 * @param {hotplace.maps.MarkerType} type
-	 * @desc  해당 타입의 마커를 삭제함
-	 */
 	function _destroyMarkerType(type) {
 		var marker = _markers[type];
 		if(marker) {
@@ -726,12 +715,28 @@
 		}
 	}
 	
-	//벤더별 벤더이벤트 전부 
+	/** 
+	 * @memberof hotplace.maps 
+	 * @function destroyMarkers 
+	 * @desc  마커를 전부 삭제함
+	 */
+	maps.destroyMarkers = _destroyMarkers;
+	
+	/** 
+	 * @memberof hotplace.maps 
+	 * @function destroyMarkerType 
+	 * @param {hotplace.maps.MarkerType} type
+	 * @desc  해당 타입의 마커를 삭제함
+	 */
+	maps.destroyMarkerType = _destroyMarkerType;
+	
+	
 	/** 
 	 * @private 
 	 * @function _convertEventObjToCustomObj 
-	 * @param {hotplace.maps.MarkerType} type
-	 * @desc  해당 타입의 마커를 삭제함
+	 * @param {string} eventName 벤더별 벤더이벤트 전부
+	 * @param {object} obj 벤더 리스너 param 
+	 * @desc  벤더별 이벤트 리스너 파라미터를 공통화 함
 	 */
 	function _convertEventObjToCustomObj(eventName, obj) {
 		var returnObj;
@@ -766,6 +771,11 @@
 		return returnObj;
 	}
 	
+	/** 
+	 * @private 
+	 * @function _initJiJeokDoLayer 
+	 * @desc  벤더별 지적도 초기화 함
+	 */
 	function _initJiJeokDoLayer() {
 		
 		//지적편집도
@@ -774,6 +784,12 @@
 		}
 	}
 	
+	/** 
+	 * @private 
+	 * @function _showCellLayer 
+	 * @param {cellType} cellType cellType
+	 * @desc  cellType에 해당하는 cell layer를 보여줌
+	 */
 	function _showCellLayer(cellType) {
 		var db = hotplace.database;
 		var currentLevel = _getCurrentLevel();
@@ -784,6 +800,10 @@
 		_createCells(currentLevel, startIdx, cellType);
 	}
 	
+	/** 
+	 * @private 
+	 * @deprecated
+	 */
 	function _showGongsiLayer() {
 		var db = hotplace.database;
 		var currentLevel = _getCurrentLevel();
@@ -794,6 +814,12 @@
 		_createMarkers(currentLevel, startIdx);
 	}
 	
+	/** 
+	 * @private 
+	 * @function _initLayers 
+	 * @param {number} level 줌레벨
+	 * @desc  hotplace.maps.showCellLayer가 호출될 때 동작함
+	 */
 	function _initLayers(level) {
 		_removeAllCells();
 		_setLocationBounds();
@@ -802,9 +828,13 @@
 		hotplace.database.initLevel(level);
 	}
 	
-	maps.destroyMarkers = _destroyMarkers;
-	maps.destroyMarkerType = _destroyMarkerType;
-	
+
+	/** 
+	 * @memberof hotplace.maps 
+	 * @function destroyMarkerWindow 
+	 * @param {hotplace.naps.MarkerType} markerType 마커타입
+	 * @desc  해당 마커타입의 infoWindow 삭제
+	 */
 	maps.destroyMarkerWindow = function(markerType) {
 		if(markerType) {
 			var len = _infoWindowsForMarker[markerType].length;
@@ -818,6 +848,12 @@
 		}
 	}
 	
+	/** 
+	 * @memberof hotplace.maps 
+	 * @function setLevel 
+	 * @param {number} level 줌레벨
+	 * @desc  줌레벨 설정
+	 */
 	maps.setLevel = function(level) {
 		switch(_venderStr) {
 		case 'naver' :
@@ -829,6 +865,15 @@
 		}
 	}
 	
+	/** 
+	 * @memberof hotplace.maps 
+	 * @function getClickedCell 
+	 * @param {object} latlng
+	 * @param {number} latlmg.x 경도
+	 * @param {number} latlmg.y 위도
+	 * @desc  맵 클릭시 클릭지점의 cell이 생성이 안되었을때 동적으로 생성함
+	 * @deprecated
+	 */
 	maps.getClickedCell = function(latlng) {
 		
 		var len = _notDrawedCells.length;
@@ -859,20 +904,47 @@
 		}
 	}
 	
+	/** 
+	 * @memberof hotplace.maps 
+	 * @function getVender 
+	 * @desc  맵 벤더를 가져옴 ['naver', 'daum'] 
+	 */
 	maps.getVender = function() {
 		return _vender;
 	}
 	
+	/** 
+	 * @memberof hotplace.maps 
+	 * @function getVenderMap 
+	 * @desc  벤더의 맵 객체를 가져옴 
+	 */
 	maps.getVenderMap = function() {
 		return _venderMap;
 	}
 	
+	/** 
+	 * @memberof hotplace.maps 
+	 * @function getCurrentLevel 
+	 * @desc  맵의 현재 줌레벨을 가져옴 
+	 */
 	maps.getCurrentLevel = function() {
 		return _getCurrentLevel();
 	}
 	
+	/** 
+	 * @memberof hotplace.maps
+	 * @name event 
+	 * @type {object}
+	 * @property {listener} addListener 
+	 * @desc  event listener 
+	 */
 	maps.event = {
-		addListener : function(eventName, callback, target) {
+		/** 
+		 * @typedef {function} listener
+		 * @param {string} eventName - 이벤트 명
+		 * @param {function} callback
+		 */
+		addListener : function(eventName, callback) {
 			
 			if(!hotplace.isSupport(eventName, _events)) {
 				throw new Error('[' + eventName + ' 는(은) 지원하지 않습니다](supported : zoom_changed, bounds_changed');
@@ -902,6 +974,12 @@
 		},
 	};
 	
+	/** 
+	 * @memberof hotplace.maps 
+	 * @function init 
+	 * @param {string} venderStr
+	 * @param {object} mapOptions
+	 */
 	maps.init = function(venderStr, mapOptions, listeners, afterInit) {
 		if(_initCalled) throw new Error('init 함수는 이미 호출 되었습니다');
 		
@@ -995,9 +1073,9 @@
 		    icon: {
 		        content: '<img src="'+ hotplace.getContextUrl() +'resources/img/marker/blink.gif" alt="" ' +
 		                 'style="margin: 0px; padding: 0px; border: 0px solid transparent; display: block; max-width: none; max-height: none; ' +
-		                 '-webkit-user-select: none; position: absolute; width: 64px; height: 64px; left: 0px; top: 0px;">',
-		        size: new naver.maps.Size(64, 64),
-		        anchor: new naver.maps.Point(32, 64)
+		                 '-webkit-user-select: none; position: absolute; /*width: 64px; height: 64px;*/ left: 0px; top: 0px;">',
+		        //size: new naver.maps.Size(64, 64),
+		        //anchor: new naver.maps.Point(32, 64)
 		    }
 		});
 		

@@ -315,7 +315,7 @@ $(document).ready(function() {
 		
 		hotplace.maps.destroyMarkerWindow(hotplace.maps.MarkerType.RADIUS_SEARCH);
 		
-		hotplace.maps.panToBounds(lat, lng, null, function() {
+		hotplace.maps.panToBounds(lat, lng, function() {
 			hotplace.maps.destroyMarkerType(hotplace.maps.MarkerType.RADIUS_SEARCH);
 			
 			hotplace.maps.getMarker(hotplace.maps.MarkerType.RADIUS_SEARCH, lat, lng, {

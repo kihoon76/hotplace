@@ -290,13 +290,90 @@
 	 */
 	var _locationBounds = {'swy' : 0, 'swx' : 0, 'ney' : 0,	'nex' : 0};	  
 	
+	var _cellTypes = {DEFAULT:'HP', GONGSI:'GONGSI'};
+	
 	/** 
 	 * @private 
-	 * @desc cell(heatmap)이 표현할수 있는 타입종류 
-	 * @typedef {object} cellType
-	 * @property {string} GONGSI - 공시지가
+	 * @desc 표시하고자 하는 layer 0:inactive, 1:on -1:off (XOR관계임) 
+	 * @type {object} 
+	 * @property {string} DEFAULT - HP지수
+	 * @property {string} GONGSI  - 공시지가
 	 */
-	var _cellTypes = {GONGSI:'GONGSI'};
+	var _cellLayerOnOff = {DEFAULT:0, GONGSI:1};
+	
+	var _isCellChanged = false;
+	
+	/**
+	 * @memerof hotplace.maps
+	 * @function changeCell
+	 * @params {hotplace.maps.CellTypes} cellType - 변경하려는 cell type
+	 * @todo celltype을 변경 가능할때 구현
+	 * @ignore
+	 */
+	maps.changeCell = function(cellType) {
+		var currCellType = _getActiveCellType();
+		
+		//cell이 꺼져 있을경우
+		if(currCellType == null) {
+			
+		}
+		
+		for(var t in _cellTypes) {
+			//if(_cellLayerOnOff[t])
+		}
+	}
+	
+	/**
+	 * @memerof hotplace.maps
+	 * @function cellToggle
+	 * @desc cell toggle
+	 */
+	maps.cellToggle = function() {
+		
+		if(_isOffCell(true)) {
+			//on 한다.
+			_restoreAllCells();
+		}
+		else {
+			//off 한다.
+			_removeAllCells(true);  //detach
+		}
+	}
+	
+	/** 
+	 * @private 
+	 * @desc 현재 활성화 된 cell layer를 반환
+	 * @function _getActiveCellType 
+	 * @returns {hotplace.maps.CellTypes} 
+	 */
+	var _getActiveCellType = function() {
+		
+		for(var t in _cellTypes) {
+			if(_cellLayerOnOff[t] == 1 || _cellLayerOnOff[t] == -1/*toggle*/) {
+				return _cellTypes[t];
+			}
+		}
+	}
+	
+	/** 
+	 * @private 
+	 * @desc 현재 cell layer가 off 되어있는지 검사
+	 * @function _isOffCell 
+	 * @param {boolean} isWrite - 현재 toggle상태를 바꿀지 여부
+	 * @returns {hotplace.maps.CellTypes} 
+	 */
+	var _isOffCell = function(isWrite) {
+		for(var t in _cellLayerOnOff) {
+			if(_cellLayerOnOff[t] == 1) {
+				if(isWrite) _cellLayerOnOff[t] = -1;
+				return false;
+			}
+			else if(_cellLayerOnOff[t] == -1) {
+				if(isWrite) _cellLayerOnOff[t] = 1;
+				return true;
+			}
+		}
+	}
 	
 	/** 
 	 * @private 
@@ -321,10 +398,19 @@
 	/** 
 	 * @memberof hotplace.maps
 	 * @desc 지도위에 그려진 마커그룹 타입
-	 * @typedef {object} hotplace.maps.MarkerType 
+	 * @typedef {object} hotplace.maps.MarkerTypes 
 	 * @property {string} RADIUS_SEARCH - 반경검색 후 지도상에 보이는 마커(1개)
 	 */
-	maps.MarkerType = _markerTypes;
+	maps.MarkerTypes = _markerTypes;
+	
+	/** 
+	 * @memberof hotplace.maps
+	 * @desc cell(heatmap)이 표현할수 있는 타입종류 
+	 * @typedef {object} hotplace.maps.CellTypes
+	 * @property {string} GONGSI - 공시지가
+	 * @property {string} DEFAULT - 기본값 (HP지수)
+	 */
+	maps.CellTypes = _cellTypes;
 	
 	/** 
 	 * @private 
@@ -502,7 +588,7 @@
 			break;
 		case 'naver' :
 			rec = new _vender.Rectangle({
-			    map: _venderMap,
+			    map: (_isOffCell()) ? null : _venderMap,
 			    bounds: new _vender.LatLngBounds(
 		    		new _vender.LatLng(swy, swx),
 		    		new _vender.LatLng(ney, nex) 
@@ -604,7 +690,7 @@
 	 * @function _createMarkers 
 	 * @param {number} level  현재 줌레벨
 	 * @param {number} startIdx marginbound의 극서에 가장 가까운 좌표의 index의 값
-	 * @param {hotplace.maps.MarkerType} markerType
+	 * @param {hotplace.maps.MarkerTypes} markerType
 	 * @desc  margin bound 범위내에 있는 좌표 찾은후 넘겨받은 callback에 파라미터로 넘겨줌
 	 */
 	function _createMarkers(level, startIdx, markerType) {
@@ -631,17 +717,18 @@
 	 * @function _createCells 
 	 * @param {number} level  현재 줌레벨
 	 * @param {number} startIdx marginbound의 극서에 가장 가까운 좌표의 index의 값
-	 * @param {cellType} cellType
 	 * @desc  margin bound 범위내에 있는 좌표의 cell을 그린다.
 	 */
-	function _createCells(level, startIdx, cellType) {
+	function _createCells(level, startIdx) {
 		var colorFn;
-	    switch(cellType) {
+		var currCellType = _getActiveCellType();
+		
+	    switch(currCellType) {
 		case _cellTypes.GONGSI :
 			colorFn = _getColorByGongsiWeight;
 			break;
 		default :
-			colorFn = _getColorByGongsiWeight;
+			colorFn = _getColorByHpWeight;
 			break;
 		}
 		  
@@ -674,15 +761,28 @@
 	
 	/** 
 	 * @private 
-	 * @function _removeAllCells 
+	 * @function _removeAllCells
+	 * @param {boolean} isDetach - detach 여부 
 	 * @desc  cell전부를 지도에서 제거한다.
 	 */
-	function _removeAllCells() {
+	function _removeAllCells(isDetach) {
 		for(var i=_cells.length-1; i>=0; i--) {
-			if(_cells[i]){
-				_cells[i].setMap(null);
-				delete _cells[i]; 
-			}
+			_cells[i].setMap(null);
+		}
+		
+		//단순히 맵에서만 제거할 것이 아니면
+		if(!isDetach) _cells = [];
+		
+	}
+	
+	/** 
+	 * @private 
+	 * @function _restoreAllCells 
+	 * @desc  detach한 cell을 다시 지도에 붙인다.
+	 */
+	function _restoreAllCells() {
+		for(var i=_cells.length-1; i>=0; i--) {
+			_cells[i].setMap(_venderMap);
 		}
 	}
 	
@@ -726,7 +826,7 @@
 	/** 
 	 * @memberof hotplace.maps 
 	 * @function destroyMarkerType 
-	 * @param {hotplace.maps.MarkerType} type
+	 * @param {hotplace.maps.MarkerTypes} type
 	 * @desc  해당 타입의 마커를 삭제함
 	 */
 	maps.destroyMarkerType = _destroyMarkerType;
@@ -788,17 +888,16 @@
 	/** 
 	 * @private 
 	 * @function _showCellLayer 
-	 * @param {cellType} cellType cellType
 	 * @desc  cellType에 해당하는 cell layer를 보여줌
 	 */
-	function _showCellLayer(cellType) {
+	function _showCellLayer() {
 		var db = hotplace.database;
 		var currentLevel = _getCurrentLevel();
 		
 		if(!db.hasData(currentLevel)) return;
 		var startIdx = db.getStartXIdx(_marginBounds.swx, currentLevel);
 		
-		_createCells(currentLevel, startIdx, cellType);
+		_createCells(currentLevel, startIdx);
 	}
 	
 	/** 
@@ -833,7 +932,7 @@
 	/** 
 	 * @memberof hotplace.maps 
 	 * @function destroyMarkerWindow 
-	 * @param {hotplace.maps.MarkerType} markerType 마커타입
+	 * @param {hotplace.maps.MarkerTypes} markerType 마커타입
 	 * @desc  해당 마커타입의 infoWindow 삭제
 	 */
 	maps.destroyMarkerWindow = function(markerType) {
@@ -1089,13 +1188,13 @@
 		newMarker = new _vender.Marker({
 		    position: new _vender.LatLng(lat, lng),
 		    map: _venderMap,
-		    icon: {
+		    /*icon: {
 		        content: '<img src="'+ hotplace.getContextUrl() +'resources/img/marker/blink.gif" alt="" ' +
 		                 'style="margin: 0px; padding: 0px; border: 0px solid transparent; display: block; max-width: none; max-height: none; ' +
 		                 '-webkit-user-select: none; position: absolute; width: 80px; height: 100px; left: 0px; top: 0px;">',
 		        size: new naver.maps.Size(80, 100),
 		        anchor: new naver.maps.Point(40, 100)
-		    }
+		    }*/
 		});
 		
 		_markers[markerType].m.push(newMarker);
@@ -1228,10 +1327,9 @@
 	 * @memberof hotplace.maps 
 	 * @function showCellLayer
 	 * @desc celltype의 cell layer를 보여준다 
-	 * @param {cellType} cellType
 	 * @param {function} callback
 	 */
-	maps.showCellLayer = function(cellType, callback) {
+	maps.showCellLayer = function(callback) {
 		
 		var db = hotplace.database;
 		var _currentLevel = _getCurrentLevel();
@@ -1256,16 +1354,18 @@
 					 year: hotplace.dom.getShowCellYear() + '01'
 				}, function(json) {
 					try {
-						db.setLevelData(_currentLevel, json.datas);
-						//console.log(json.datas);
-						if(!cellType) {
-							cellType = _cellTypes.GONGSI;
-						}
-						else if(typeof(cellType) === 'function'){
-							callback = cellType;
+						var activeCell = _getActiveCellType();
+						
+						switch(activeCell) {
+						case _cellTypes.GONGSI :
+							db.setLevelData(_currentLevel, json.datas);
+							break;
+						default :
+							break;
+							
 						}
 						
-						_showCellLayer(cellType || _cellTypes.GONGSI);
+						_showCellLayer();
 						if(callback) callback();
 					}
 					catch(e) {
@@ -3330,7 +3430,7 @@
 	 */
 	test.searchRadius = function() {
 		hotplace.maps.panToBounds(37.539648921, 127.152615967, function() {
-			hotplace.maps.getMarker(hotplace.maps.MarkerType.RADIUS_SEARCH,37.539648921, 127.152615967, {
+			hotplace.maps.getMarker(hotplace.maps.MarkerTypes.RADIUS_SEARCH,37.539648921, 127.152615967, {
 				'click' : function(map, newMarker, newInfoWindow) {
 					 if(newInfoWindow.getMap()) {
 						 newInfoWindow.close();

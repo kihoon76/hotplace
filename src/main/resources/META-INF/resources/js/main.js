@@ -110,20 +110,22 @@ $(document).ready(function() {
 		$('#dvSalesView').append(tForm());
 	}
 	
-	function _btnCallback($this, e, targetId, onFn, offFn) {
+	function _btnCallback($this, e, targetId, isUseDiv, onFn, offFn) {
 		var sw = $this.data('switch');
 		$this.data('switch', ((sw == 'on') ? 'off' : 'on'));
 		
 		if(sw == 'off') {
-			var padding = 5;
-			var top  = e.currentTarget.offsetTop;
-			var left = e.currentTarget.offsetLeft + e.currentTarget.offsetWidth + padding;
-			
-			hotplace.dom.openLayer(targetId, {top:top, left:left});
+			if(isUseDiv) {
+				var padding = 5;
+				var top  = e.currentTarget.offsetTop;
+				var left = e.currentTarget.offsetLeft + e.currentTarget.offsetWidth + padding;
+				
+				hotplace.dom.openLayer(targetId, {top:top, left:left});
+			}
 			if(onFn) onFn();
 		}
 		else {
-			hotplace.dom.closeLayer(targetId);
+			if(isUseDiv) hotplace.dom.closeLayer(targetId);
 			if(offFn) offFn();
 		}
 		
@@ -526,7 +528,7 @@ $(document).ready(function() {
 			_prevLevel = level;
 			
 			hotplace.maps.destroyMarkers();
-			hotplace.maps.destroyMarkerWindow(hotplace.maps.MarkerType.RADIUS_SEARCH);
+			hotplace.maps.destroyMarkerWindow(hotplace.maps.MarkerTypes.RADIUS_SEARCH);
 		},
 		'dragend' : function(map, bnds) {
 			if(hotplace.maps.isInLocationBounds(bnds)) {
@@ -558,7 +560,7 @@ $(document).ready(function() {
 		attr: 'data-switch="off" title="뉴스"',
 		clazz: 'mBtnTooltip',
 		callback: function(e) {
-			_btnCallback($(this), e, 'dvNews', function() {
+			_btnCallback($(this), e, 'dvNews', true, function() {
 				setTimeout(function repeat() {
 					_tick();
 					_startInternal = setTimeout(repeat, 3000);
@@ -573,13 +575,14 @@ $(document).ready(function() {
 		attr: 'data-switch="off" title="주소,HP,반경,매물검색"',
 		clazz: 'mBtnTooltip',
 		callback: function(e) {
-			_btnCallback($(this), e, 'dvAddrSearch');
+			_btnCallback($(this), e, 'dvAddrSearch', true);
 		}
 	},{
 		id:'btnUser',
 		glyphicon: 'user',
+		//attr: 'data-switch="off"',
 		callback: function() {
-			hotplace.dom.captureToCanvas();
+			
 		}
 	},{
 		id:'btnInfo',
@@ -596,7 +599,7 @@ $(document).ready(function() {
 		disabled: true,
 		clazz: 'mBtnTooltip',
 		callback: function(e) {
-			_btnCallback($(this), e, 'dvSalesView');
+			_btnCallback($(this), e, 'dvSalesView', true);
 		}
 	},{
 		id:'btnCadastral',
@@ -607,6 +610,19 @@ $(document).ready(function() {
 			var onOff = $(this).data('switch');
 			hotplace.maps.showJijeokLayer(onOff, $(this));
 			$(this).toggleClass('button-on')
+		}
+	}, {
+		id:'btnLayerView',
+		glyphicon: 'plus',
+		attr: 'data-switch="on"',
+		clazz: 'button-on',
+		callback: function(e) {
+			//hotplace.dom.captureToCanvas();
+			_btnCallback($(this), e, null, false, function() {
+				hotplace.maps.cellToggle();
+			}, function() {
+				hotplace.maps.cellToggle();
+			});
 		}
 	}]);
 	

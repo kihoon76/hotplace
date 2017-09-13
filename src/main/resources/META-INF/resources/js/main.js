@@ -614,8 +614,8 @@ $(document).ready(function() {
 	}, {
 		id:'btnLayerView',
 		glyphicon: 'plus',
-		attr: 'data-switch="on"',
-		clazz: 'button-on',
+		attr: 'data-switch="on" title="heatmap보기"',
+		clazz: 'button-on mBtnTooltip',
 		callback: function(e) {
 			//hotplace.dom.captureToCanvas();
 			_btnCallback($(this), e, null, false, function() {

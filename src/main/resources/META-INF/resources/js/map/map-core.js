@@ -327,21 +327,30 @@
 	 * @memerof hotplace.maps
 	 * @function cellToggle
 	 * @desc cell toggle
+	 * {@link https://github.com/kriskowal/q q(promise)}
 	 */
 	maps.cellToggle = function() {
 		
-		if(_isOffCell(true)) {
-			//on 한다.
-			_restoreAllCells();
-			maps.showCellLayer();
-			hotplace.dom.enableYearRangeDiv(true);
-		}
-		else {
-			//off 한다.
-			_removeAllCells();
-			hotplace.dom.enableYearRangeDiv(false);
-			hotplace.database.initLevel(_getCurrentLevel(), _getActiveCellType());
-		}
+		hotplace.dom.addBodyAllMask();
+		
+		//masking 동작을 위해 delay를 준다.
+		setTimeout(function() {
+			if(_isOffCell(true)) {
+				//on 한다.
+				_restoreAllCells();
+				maps.showCellLayer();
+				hotplace.dom.enableYearRangeDiv(true);
+			}
+			else {
+				//off 한다.
+				_removeAllCells();
+				hotplace.dom.enableYearRangeDiv(false);
+				hotplace.database.initLevel(_getCurrentLevel(), _getActiveCellType());
+			}
+			
+			hotplace.dom.removeBodyAllMask();
+		}, 100);
+		
 	}
 	
 	/** 
@@ -2338,7 +2347,8 @@
 			else {
 				i = 0;
 				_yearRangeMode = 'manual';
-				$('#btnAutoYear').bootstrapToggle('off');  
+				$('#btnAutoYear').bootstrapToggle('off');
+				dom.removeBodyAllMask();
 			}
 		};
 		
@@ -2364,14 +2374,15 @@
 			_showCellYear = data.values.max;
 			
 			dom.addBodyAllMask();
-			if(_yearRangeMode == 'auto') {
-				runFn(callback);
-			}
-			else {
-				runFn();
-			}
-			//hotplace.maps.showCellLayer();
-			dom.removeBodyAllMask();
+			setTimeout(function() {
+				if(_yearRangeMode == 'auto') {
+					runFn(callback);
+				}
+				else {
+					runFn();
+					dom.removeBodyAllMask();
+				}
+			}, 100);
 		});
 		
 		el.show();

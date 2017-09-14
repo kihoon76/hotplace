@@ -286,6 +286,7 @@
 		    <version>${bootstrap.toggle-version}</version>
 		</dependency>
 		
+		
 		<!-- html2canvas -->
 		<!-- http://html2canvas.hertzen.com/documentation.html -->	
 		<!-- <dependency>

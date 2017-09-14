@@ -531,11 +531,13 @@ $(document).ready(function() {
 			hotplace.maps.destroyMarkerWindow(hotplace.maps.MarkerTypes.RADIUS_SEARCH);
 		},
 		'dragend' : function(map, bnds) {
-			if(hotplace.maps.isInLocationBounds(bnds)) {
-				hotplace.maps.appendCell();
-			}
-			else {
-				hotplace.maps.showCellLayer();
+			if(!hotplace.maps.isOffCell()) {
+				if(hotplace.maps.isInLocationBounds(bnds)) {
+					hotplace.maps.appendCell();
+				}
+				else {
+					hotplace.maps.showCellLayer();
+				}
 			}
 		},
 		'click' : function(map, latlng) {

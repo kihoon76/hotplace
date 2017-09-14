@@ -333,10 +333,12 @@
 		if(_isOffCell(true)) {
 			//on 한다.
 			_restoreAllCells();
+			maps.showCellLayer();
 		}
 		else {
 			//off 한다.
-			_removeAllCells(true);  //detach
+			_removeAllCells();
+			hotplace.database.initLevel(_getCurrentLevel(), _getActiveCellType());
 		}
 	}
 	
@@ -355,13 +357,6 @@
 		}
 	}
 	
-	/** 
-	 * @private 
-	 * @desc 현재 cell layer가 off 되어있는지 검사
-	 * @function _isOffCell 
-	 * @param {boolean} isWrite - 현재 toggle상태를 바꿀지 여부
-	 * @returns {hotplace.maps.CellTypes} 
-	 */
 	var _isOffCell = function(isWrite) {
 		for(var t in _cellLayerOnOff) {
 			if(_cellLayerOnOff[t] == 1) {
@@ -374,6 +369,16 @@
 			}
 		}
 	}
+	
+	
+	/** 
+	 * @memberof hotplace.maps  
+	 * @desc 현재 cell layer가 off 되어있는지 검사
+	 * @function isOffCell 
+	 * @param {boolean} isWrite - 현재 toggle상태를 바꿀지 여부
+	 * @returns {boolean} 
+	 */
+	maps.isOffCell = _isOffCell;
 	
 	/** 
 	 * @private 
@@ -498,14 +503,6 @@
 		_locationBounds.ney = _marginBounds.ney + locationYRate;
 	}
 	
-	/** 
-	 * @private 
-	 * @function _getCurrentLevel 
-	 * @desc 현재 보이는 지도의 줌레벨.
-	 *  	 daum  zoom : [14 ~ 1]
-	 * 		 naver zoom : [1 ~ 14]
-	 * @return {number}
-	 */
 	function _getCurrentLevel() {
 		var _currentLevel = -1;
 		
@@ -520,6 +517,16 @@
 		
 		return _currentLevel;
 	}
+	
+	/** 
+	 * @memberof hotplace.maps 
+	 * @function getCurrentLevel 
+	 * @desc 현재 보이는 지도의 줌레벨.
+	 *  	 daum  zoom : [14 ~ 1]
+	 * 		 naver zoom : [1 ~ 14]
+	 * @return {number}
+	 */
+	maps.getCurrentLevel = _getCurrentLevel;
 	
 	/** 
 	 * @private 
@@ -732,7 +739,7 @@
 			break;
 		}
 		  
-		_commXY(hotplace.database.getLevelData(level),
+		_commXY(hotplace.database.getLevelData(level, currCellType),
 				/*hotplace.database.getLevelLogMap(level),*/
 				startIdx,
 				function(data) {
@@ -894,24 +901,10 @@
 		var db = hotplace.database;
 		var currentLevel = _getCurrentLevel();
 		
-		if(!db.hasData(currentLevel)) return;
-		var startIdx = db.getStartXIdx(_marginBounds.swx, currentLevel);
+		if(!db.hasData(currentLevel, _getActiveCellType())) return;
+		var startIdx = db.getStartXIdx(_getActiveCellType(), _marginBounds.swx, currentLevel);
 		
 		_createCells(currentLevel, startIdx);
-	}
-	
-	/** 
-	 * @private 
-	 * @deprecated
-	 */
-	function _showGongsiLayer() {
-		var db = hotplace.database;
-		var currentLevel = _getCurrentLevel();
-		
-		if(!db.hasGongsiData(currentLevel)) return;
-		var startIdx = db.getStartXIdx(_marginBounds.swx, currentLevel);
-		
-		_createMarkers(currentLevel, startIdx);
 	}
 	
 	/** 
@@ -1289,22 +1282,12 @@
 		var db = hotplace.database;
 		var _currentLevel = _getCurrentLevel();
 		
-		if(db.hasData(_currentLevel)) {
-			var startIdx = db.getStartXIdx(_marginBounds.swx, _currentLevel);
+		if(db.hasData(_currentLevel, _getActiveCellType())) {
+			var startIdx = db.getStartXIdx(_getActiveCellType(), _marginBounds.swx, _currentLevel);
 			_createCells(_currentLevel, startIdx);
 		}
 	};
 	
-	/*maps.appendGongsi = function() {
-		var db = hotplace.database;
-		var _currentLevel = _getCurrentLevel();
-		
-		if(db.hasGongsiData(_currentLevel)) {
-			var startIdx = db.getStartXIdx(_marginBounds.swx, _currentLevel);
-			_createMarker(_currentLevel, startIdx);
-		}
-	}*/
-	 
 	/**
 	 * @memberof hotplace.maps 
 	 * @function isInLocationBounds
@@ -1331,6 +1314,8 @@
 	 */
 	maps.showCellLayer = function(callback) {
 		
+		if(_isOffCell()) return;
+		
 		var db = hotplace.database;
 		var _currentLevel = _getCurrentLevel();
 		
@@ -1354,17 +1339,7 @@
 					 year: hotplace.dom.getShowCellYear() + '01'
 				}, function(json) {
 					try {
-						var activeCell = _getActiveCellType();
-						
-						switch(activeCell) {
-						case _cellTypes.GONGSI :
-							db.setLevelData(_currentLevel, json.datas);
-							break;
-						default :
-							break;
-							
-						}
-						
+						db.setLevelData(_currentLevel, _getActiveCellType(), json.datas);
 						_showCellLayer();
 						if(callback) callback();
 					}
@@ -1376,44 +1351,6 @@
 		}
 	}
 	
-	/**
-	 * @ignore
-	 */
-	maps.showGongsiLayer = function() {
-		
-		var db = hotplace.database;
-		var _currentLevel = _getCurrentLevel();
-		
-		if(_venderMap) {
-			
-			//location
-			//캐쉬구현
-			if(false/*db.isCached(_currentLevel)*/) {
-				//_showCellsLayer();
-			}
-			else {
-				_initLayers(_currentLevel);
-				
-				hotplace.getPlainText('gongsi', {
-					level: _currentLevel,
-					 swx : _locationBounds.swx,
-					 nex : _locationBounds.nex,
-					 swy : _locationBounds.swy,
-					 ney : _locationBounds.ney
-				}, function(json) {
-					try {
-						db.setGongsiLevelData(_currentLevel, json.datas);
-						console.log(json.datas);
-						_showGongsiLayer();
-						
-					}
-					catch(e) {
-						throw e;
-					}
-				});
-			}
-		}
-	}
 	
 	/**
 	 * @memberof hotplace.maps 
@@ -3220,35 +3157,19 @@
 	
 	var _db = {};
 	
-	/*
-	 * 서버에서 가져온 전 데이터를 저장
-	 * {
-	 * 	 'level' : {
-	 * 		'data' : [{"weight":2.6,"location":[126.80104492131,37.57776528544,126.80329443915,37.57956742328], id:'uuid'}],
-	 *      'log' : {
-	 *      	'uuid' : true  // data의 id => key
-	 *      }		
-	 *    }
-	 * }
-	 * 
-	 *  
-	 * */ 
-	db.isCached = function(level) {
-		return (_db[level]) ? true : false;
-	}
-	
 	/**
 	 * @memberof hotplace.db
 	 * @function getStartXIdx
+	 * @param {string} dataType
 	 * @param {number} boundswx 바운드의 극서값 
 	 * @param {number} level 현재 화면 줌레벨
 	 * @param {number} sIdx 극서로 정렬된 배열 pivot 시작값
 	 * @param {number} eIdx 극서로 정렬된 배열 pivot 마지막값
 	 * @desc 현재  margin이 적용된  화면의 시작점에서 시작할 데이터 index
 	 */
-	db.getStartXIdx = function(boundswx, level, sIdx, eIdx) {
+	db.getStartXIdx = function(dataType, boundswx, level, sIdx, eIdx) {
 		var result;
-		var data = _db[level]['data'];
+		var data = _db[level][dataType];
 		sIdx = (sIdx == undefined) ? 0 : sIdx;
 		eIdx = (eIdx == undefined) ? data.length - 1 : eIdx;
 		
@@ -3263,10 +3184,10 @@
 		
 		//왼쪽에 있슴
 		if(idxValue > boundswx) {
-			result = db.getStartXIdx(boundswx, level, 0, cIdx);
+			result = db.getStartXIdx(dataType, boundswx, level, 0, cIdx);
 		}
 		else {//오른쪽에 있슴
-			result = db.getStartXIdx(boundswx, level, cIdx, eIdx);
+			result = db.getStartXIdx(dataType, boundswx, level, cIdx, eIdx);
 		}
 		
 		//console.log('result ==> ' + result);
@@ -3277,62 +3198,53 @@
 	 * @memberof hotplace.db
 	 * @function setLevelData
 	 * @param {number} level
-	 * @param {object} data RQ 데이터값
-	 * @desc 현재 레벨의 RQ값 저장
+	 * @param {string} dataType
+	 * @param {object} data 데이터값
+	 * @desc 레벨의 dataType의 data를 저장한다
 	 */
-	db.setLevelData = function (level, data) {
+	db.setLevelData = function (level, dataType, data) {
 		if(!_db[level]) _db[level] = {};
-		_db[level].data = data;
-		_db[level].log = {}; 
+		_db[level][dataType] = data;
 	}
 	
 	/**
 	 * @memberof hotplace.db
-	 * @function setGongsiLevelData
+	 * @function getLevelData
 	 * @param {number} level
-	 * @param {object} data 공시지가 데이터값
-	 * @desc 현재 레벨의 공시지가 저장
+	 * @param {string} dataType
+	 * @desc 레벨의 dataType의 data를 저장한다
 	 */
-	db.setGongsiLevelData = function(level, data) {
-		if(!_db[level]) _db[level] = {};
-		_db[level].gongsiData = data;
+	db.getLevelData = function(level, dataType) {
+		 return (_db[level]) ? _db[level][dataType] : null;
 	}
 	
 	/**
 	 * @memberof hotplace.db
 	 * @function hasData
 	 * @param {number} level
+	 * @param {string} dataType
 	 * @returns {boolean} 해당 레벨에 데이터가 있는지 체크
 	 * @desc 해당 레벨에 데이터가 있는지 체크
 	 */
-	db.hasData = function(level) {
-		if(_db[level] && _db[level].data && _db[level].data.length > 0) return true;
+	db.hasData = function(level, dataType) {
+		if(_db[level] && _db[level][dataType] && _db[level][dataType].length > 0) return true;
 		return false;
 	}
 	
-	db.hasGongsiData = function() {
-		if(_db[level] && _db[level].gongsiData && _db[level].gongsiData.length > 0) return true;
-		return false;
-	}
 	
-	db.getLevelData = function(level) {
-		 return (_db[level]) ? _db[level].data : null;
-	}
-	
-	db.getGongsiLevelData = function(level) {
-		 return (_db[level]) ? _db[level].gongsiData : null;
-	}
-	
-	db.getLevelLogMap = function(level) {
-		return _db[level].log;
-	}
-	
-	//레벨 변경시 rectangle을 그렸던 로그를 기록한 맵을 초기화 한다.
-	db.initLevel = function(level) {
-		if(_db[level]) {
-			/*delete _db[level].log;
-			_db[level].log = {};*/
-			_db[level] = null;
+	/**
+	 * @memberof hotplace.db
+	 * @function initLevel
+	 * @param {number} level
+	 * @param {string} dataType
+	 * @desc 레벨의 특정 데이터 타입 또는 전체 데이터를 지운다.
+	 */
+	db.initLevel = function(level, dataType) {
+		if(dataType) {
+			if(_db[level] && _db[level][dataType]) _db[level][dataType];
+		}
+		else {
+			if(_db[level]) _db[level] = null;
 		}
 	}
 }(

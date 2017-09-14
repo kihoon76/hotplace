@@ -28,7 +28,6 @@ import com.google.gson.Gson;
 import me.hotplace.domain.AjaxVO;
 import me.hotplace.service.SampleService;
 import me.hotplace.utils.DataUtil;
-import sample.Heatmap;
 
 @Controller
 @RequestMapping("/sample")
@@ -38,24 +37,6 @@ public class SampleController {
 	//private String PATH;
 	@Autowired
 	SampleService sampleService;
-	
-	@PostMapping("heatmap")
-	@ResponseBody
-	public AjaxVO getHeatmapData() throws Exception  {
-		
-		Gson gson = new Gson();
-		
-		BufferedReader br = new BufferedReader(new FileReader("E:\\hoons\\workspace\\hotplace\\sample\\heatmap.json"));
-		
-		Heatmap obj = gson.fromJson(br, Heatmap.class);
-		
-		AjaxVO ajaxVO = new AjaxVO();
-		ajaxVO.addObject(obj);
-		ajaxVO.setSuccess(true);
-		
-		
-		return ajaxVO;
-	}
 	
 	@GetMapping("standard")
 	@ResponseBody

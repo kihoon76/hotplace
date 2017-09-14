@@ -154,7 +154,7 @@ $(document).ready(function() {
 	
 	/* 검색 > 상세검색 탭 클릭시 slider init */
 	$('#dvAddrSearch a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-		  var target = $(e.target).attr("href") // activated tab
+		  var target = $(e.target).attr('href') // activated tab
 		  if(target == '#tabHPgradeSearch') {
 			  _sliderInit('tabHPgradeSearch', [
 			              'rq', 

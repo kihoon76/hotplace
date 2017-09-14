@@ -31,6 +31,7 @@
 		<bootstrap-version>3.3.7-1</bootstrap-version>
 		<jquery.ui-version>1.10.3</jquery.ui-version>
 		<bootstrap.toggle-version>2.2.2</bootstrap.toggle-version>
+		
 	</properties>
 	
 	<dependencies>
@@ -208,7 +209,7 @@
 		    <version>${jackson.mapper-version}</version>
 		</dependency>
 		
-		
+
 		<!-- view template -->
 		<!-- sitemesh -->
 		<dependency>

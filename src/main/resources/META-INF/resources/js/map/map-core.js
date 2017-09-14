@@ -334,10 +334,12 @@
 			//on 한다.
 			_restoreAllCells();
 			maps.showCellLayer();
+			hotplace.dom.enableYearRangeDiv(true);
 		}
 		else {
 			//off 한다.
 			_removeAllCells();
+			hotplace.dom.enableYearRangeDiv(false);
 			hotplace.database.initLevel(_getCurrentLevel(), _getActiveCellType());
 		}
 	}
@@ -2289,6 +2291,25 @@
 	}
 	
 	var _yearRangeMode = 'manual';
+	
+	/**
+	 * @memberof hotplace.dom
+	 * @function enableYearRangeDiv
+	 * @param {boolean} enabled 타임시리얼 DIV 활성화 여부
+	 * @desc 타임시리얼 DIV 활성화 여부
+	 */
+	dom.enableYearRangeDiv = function(enabled) {
+		var dv = $('#dvYearRange');
+		var autoBtn = $('#btnAutoYear');
+		dv.rangeSlider({enabled:enabled});
+		
+		if(enabled) {
+			autoBtn.removeAttr('disabled');
+		}
+		else {
+			autoBtn.prop('disabled', true);
+		}
+	}
 	
 	/**
 	 * @memberof hotplace.dom

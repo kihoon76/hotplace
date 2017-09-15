@@ -318,9 +318,9 @@ $(document).ready(function() {
 		hotplace.maps.destroyMarkerWindow(hotplace.maps.MarkerTypes.RADIUS_SEARCH);
 		
 		hotplace.maps.panToBounds(lat, lng, function() {
-			hotplace.maps.destroyMarkerType(hotplace.maps.MarkerType.RADIUS_SEARCH);
+			hotplace.maps.destroyMarkerType(hotplace.maps.MarkerTypes.RADIUS_SEARCH);
 			
-			hotplace.maps.getMarker(hotplace.maps.MarkerType.RADIUS_SEARCH, lat, lng, {
+			hotplace.maps.getMarker(hotplace.maps.MarkerTypes.RADIUS_SEARCH, lat, lng, {
 				'click' : function(map, newMarker, newInfoWindow) {
 					 if(newInfoWindow.getMap()) {
 						 newInfoWindow.close();

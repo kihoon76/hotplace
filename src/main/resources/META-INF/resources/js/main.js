@@ -315,7 +315,7 @@ $(document).ready(function() {
 			radius = $('input:radio[name="radioRadius"]:checked').val();
 		}
 		
-		hotplace.maps.destroyMarkerWindow(hotplace.maps.MarkerType.RADIUS_SEARCH);
+		hotplace.maps.destroyMarkerWindow(hotplace.maps.MarkerTypes.RADIUS_SEARCH);
 		
 		hotplace.maps.panToBounds(lat, lng, function() {
 			hotplace.maps.destroyMarkerType(hotplace.maps.MarkerType.RADIUS_SEARCH);

@@ -494,6 +494,7 @@ $(document).ready(function() {
 		});
 	});
 	
+	
 	$('#btnCapture').on('click', function(event) {
 		event.preventDefault();
 		hotplace.dom.captureToCanvas();
@@ -631,4 +632,13 @@ $(document).ready(function() {
 	hotplace.validation.numberOnly('.numberOnly');
 	hotplace.dom.initTooltip('htooltip');
 	hotplace.dom.initTooltip('mBtnTooltip',{side: 'right', trigger: 'hover'});
+	/*
+	 * 
+	 *   $('.spinner .btn:first-of-type').on('click', function() {
+    $('.spinner input').val( parseInt($('.spinner input').val(), 10) + 1);
+  });
+  $('.spinner .btn:last-of-type').on('click', function() {
+    $('.spinner input').val( parseInt($('.spinner input').val(), 10) - 1);
+  });
+	 * */
 });

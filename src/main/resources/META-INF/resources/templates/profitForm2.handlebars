@@ -1,0 +1,392 @@
+<table class="table table-bordered" id="tbProfit">
+<tbody>
+<tr>
+<td style="width:50px">수지</br>분석</td>
+<td style="width:60px">기본</br>사항</td>
+<td>
+<form class="form-horizontal" role="form" method="post">
+    <div class="form-group">
+    	<label class="col-sm-2 control-label">매입(보유)주체</label>
+    	<div class="radio col-sm-10" style="padding-left:30px">
+        	<input id="radioPrivate" name="radioOwn" type="radio" checked>
+            <label for="radioPrivate" class="radio-own">
+                            개인
+            </label>
+            
+            <input id="radioInc" name="radioOwn" type="radio">
+            <label for="radioInc" class="radio-own">
+                           법인
+            </label>
+        </div>
+    </div>
+</form>
+</td>
+</tr>
+<tr>
+<td class="danger" rowspan="7">지출</td>
+<td valign="middle" class="danger">토지비</td>
+<td>
+<form class="form-horizontal" role="form" method="post">
+    <!-- 매입가격 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">매입가격<br/><span class="sub">(3.3㎡당 매입가)</span></label>
+        <div   class="col-sm-2">
+        	<input type="text" class="form-control" readonly id="txtPurchase" val="100">
+        </div>
+        <div class="col-sm-8">
+            <div id="stepPurchase"></div>
+        </div>
+    </div>
+    
+    <!-- 보유기간 --> 
+    <div class="form-group">
+        <label class="col-sm-2 control-label">보유기간</label>
+        <div   class="col-sm-2">
+        	<input type="text" class="form-control" readonly id="txtOwnTerm">
+        </div>
+        <div class="col-sm-8">
+            <div id="stepOwnTerm"></div>
+        </div>
+    </div>
+</form>
+</td>
+</tr>
+<tr> 
+<td class="danger">금융<br/>비용</td>
+<td>
+<form class="form-horizontal" role="form" method="post"> 
+    <!-- 타인자본비율 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">타인자본비율<br/><span class="sub">(금융권등 대출 비용)</span></label>
+        <div   class="col-sm-2">
+        	<input type="text" class="form-control" readonly id="txtOtherAssetRatio">
+        </div>
+        <div class="col-sm-8">
+            <div id="stepOtherAssetRatio"></div>
+        </div>
+    </div>
+    
+     <!-- 대출 금리 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">대출 금리<br/><span class="sub">(금융기관 등 대출금리)</span></label>
+        <div   class="col-sm-2">
+        	<input type="text" class="form-control" readonly id="txtFinancialCost">
+        </div>
+        <div class="col-sm-8">
+            <div id="stepFinancialCost"></div>
+        </div>
+    </div>
+</form>
+</td>
+</tr>
+<tr>
+<td class="danger">제세금</td>
+<td>
+<form class="form-horizontal" role="form" method="post">  
+    <!-- 취득세 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">취득세<br/><span class="sub">(매입금액의 4.5% 내외)</span></label>
+        <div   class="col-sm-2">
+        	<input type="text" class="form-control" readonly id="txtAcquisitionTax">
+        </div>
+        <div class="col-sm-8">
+            <div id="stepAcquisitionTax"></div>
+        </div>
+    </div>
+    
+    <!-- 재산세 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">재산세<br/><span class="sub">(보유기간 합계)</span></label>
+        <div   class="col-sm-2">
+        	<input type="text" class="form-control" readonly id="txtPropertyTax">
+        </div>
+        <div class="col-sm-8">
+            <div id="stepPropertyTax"></div>
+        </div>
+    </div>
+    
+    <!-- 양도세 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">양도세<br/><span class="sub">(보유기간 반영)</span></label>
+        <div   class="col-sm-2">
+        	<input type="text" class="form-control" readonly id="txtTransferTax">
+        </div>
+        <div class="col-sm-8">
+            <div id="stepTransferTax"></div>
+        </div>
+    </div>
+    
+     <!-- 법인세 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">법인세<br/><span class="sub">(3.3㎡당 공사비)</span></label>
+        <div   class="col-sm-2">
+        	<input type="text" class="form-control" readonly id="txtCorporateTax">
+        </div>
+        <div class="col-sm-8">
+            <div id="stepCorporateTax"></div>
+        </div>
+    </div>
+</form>
+</td>
+</tr>
+<tr>
+<td class="danger">공사비</td>
+<td>
+<form class="form-horizontal" role="form" method="post"> 
+    <!-- 토목 공사비 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">토목 공사비<br/><span class="sub">(3.3㎡당 공사비)</span></label>
+        <div   class="col-sm-2">
+        	<input type="text" class="form-control" readonly id="txtCivilWorksFee">
+        </div>
+        <div class="col-sm-8">
+            <div id="stepCivilWorksFee"></div>
+        </div>
+    </div>
+    
+    <!-- 건축 공사비 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">건축 공사비<br/><span class="sub">(리모델링 등)</span></label>
+        <div   class="col-sm-2">
+        	<input type="text" class="form-control" readonly id="txtBuildingWorksFee">
+        </div>
+        <div class="col-sm-8">
+            <div id="stepBuildingWorksFee"></div>
+        </div>
+    </div>
+</form>
+</td>
+</tr>
+<tr>
+<td class="danger">인허가<br/>비용</td>    
+<td>
+<form class="form-horizontal" role="form" method="post">
+    <!-- 인허가 비용 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">인허가 비용<br/><span class="sub">(개발행위허가,건축설계 등)</span></label>
+        <div   class="col-sm-2">
+        	<input type="text" class="form-control" readonly id="txtLicenseCost">
+        </div>
+        <div class="col-sm-8">
+            <div id="stepLicenseCost"></div>
+        </div>
+    </div>
+</form>
+</td>
+</tr>   
+<tr>
+<td class="danger">부담금</td>
+<td>
+<form class="form-horizontal" role="form" method="post">
+    <!-- 개발부담금 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">개발부담금<br/><span class="sub">(개발행위허가시)</span></label>
+        <div   class="col-sm-2">
+        	<input type="text" class="form-control" readonly id="txtDevBudamgeum">
+        </div>
+        <div class="col-sm-8">
+            <div id="stepDevBudamgeum"></div>
+        </div>
+    </div>
+    
+    <!-- 농지보전 부담금 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">농지보전 부담금<br/><span class="sub">(농지전용 부담금)</span></label>
+        <div   class="col-sm-2">
+        	<input type="text" class="form-control" readonly id="txtFarmConserve">
+        </div>
+        <div class="col-sm-8">
+            <div id="stepFarmConserve"></div>
+        </div>
+    </div>
+    
+    <!-- 대체산림자원 조성비 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">대체산림자원 조성비<br/><span class="sub">((구)산지전용부담금)</span></label>
+        <div   class="col-sm-2">
+        	<input type="text" class="form-control" readonly id="txtForestResource">
+        </div>
+        <div class="col-sm-8">
+            <div id="stepForestResource"></div>
+        </div>
+    </div>
+</form>
+</td>
+</tr>
+<tr>
+<td class="danger">사업<br/>경비</td>
+<td>
+<form class="form-horizontal" role="form" method="post">   
+    <!-- 채권매입비 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">채권 매입비</label>
+        <div   class="col-sm-2">
+        	<input type="text" class="form-control" readonly id="txtBondPurchase">
+        </div>
+        <div class="col-sm-8">
+            <div id="stepBondPurchase"></div>
+        </div>
+    </div>
+    
+    <!-- 근저당 설정비 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">근저당 설정비</label>
+        <div   class="col-sm-2">
+        	<input type="text" class="form-control" readonly id="txtGeunJeoDang">
+        </div>
+        <div class="col-sm-8">
+            <div id="stepGeunJeoDang"></div>
+        </div>
+    </div>
+    
+    <!-- 보존등기비 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">보존등기비</label>
+        <div   class="col-sm-2">
+        	<input type="text" class="form-control" readonly id="txtDeungGi">
+        </div>
+        <div class="col-sm-8">
+            <div id="stepDeungGi"></div>
+        </div>
+    </div>
+    
+    <!-- 운영비 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">운영비<br/><span class="sub">(임대관리 등 투입비용)</span></label>
+        <div   class="col-sm-2">
+        	<input type="text" class="form-control" readonly id="txtManageFee">
+        </div>
+        <div class="col-sm-8">
+            <div id="stepManageFee"></div>
+        </div>
+    </div>
+    
+   	<!-- 매각수수료 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">매각수수료<br/><span class="sub">(대출관련)</span></label>
+        <div   class="col-sm-2">
+        	<input type="text" class="form-control" readonly id="txtSaleFee">
+        </div>
+        <div class="col-sm-8">
+            <div id="stepSaleFee"></div>
+        </div>
+    </div>
+    
+    <!-- 예비비 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">예비비<br/><span class="sub">(총사업비의 10% 내외)</span></label>
+        <div   class="col-sm-2">
+        	<input type="text" class="form-control" readonly id="txtResolveMoney">
+        </div>
+        <div class="col-sm-8">
+            <div id="stepResolveMoney"></div>
+        </div>
+    </div>
+</form>
+</td>
+</tr>
+<tr>
+<td class="warning" rowspan="2">수입</td>
+<td class="warning">운영<br/>수입</td>
+<td>
+<form class="form-horizontal" role="form" method="post">
+	<!-- 수입발생기간 -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">수입발생기간<br/><span class="sub">(임대수입 등,처분수익 제외)</span></label>
+        <div   class="col-sm-2">
+        	<input type="text" class="form-control" readonly id="txtIncomeOccurTerm">
+        </div>
+        <div class="col-sm-8">
+            <div id="stepIncomeOccurTerm"></div>
+        </div>
+    </div>
+    
+    <!-- 연간수입 금액-->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">연간수입 금액<br/><span class="sub">(임대수입 등)</span></label>
+        <div   class="col-sm-2">
+        	<input type="text" class="form-control" readonly id="txtIncomeYear">
+        </div>
+        <div class="col-sm-8">
+            <div id="stepIncomeYear"></div>
+        </div>
+    </div>
+</form>
+</td>
+</tr>
+<tr>
+<td class="warning">매각<br/>수입</td>
+<td>
+<form class="form-horizontal" role="form" method="post">   
+    <!-- 토지매도 가격-->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">토지매도 가격<br/><span class="sub">(3.3㎡ 당 매도가)</span></label>
+        <div   class="col-sm-2">
+        	<input type="text" class="form-control" readonly id="txtLandFee">
+        </div>
+        <div class="col-sm-8">
+            <div id="stepLandFee"></div>
+        </div>
+    </div>
+    
+    <!-- 건물매도 가격-->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">건물매도 가격<br/><span class="sub">(3.3㎡ 당 매도가)</span></label>
+        <div   class="col-sm-2">
+        	<input type="text" class="form-control" readonly id="txtBuildingFee">
+        </div>
+        <div class="col-sm-8">
+            <div id="stepBuildingFee"></div>
+        </div>
+    </div>
+    
+    <!-- 설비매도 가격-->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">설비매도 가격<br/><span class="sub">(기계장치 등)</span></label>
+        <div   class="col-sm-2">
+        	<input type="text" class="form-control" readonly id="txtEquipmentFee">
+        </div>
+        <div class="col-sm-8">
+            <div id="stepEquipmentFee"></div>
+        </div>
+    </div>
+</form>
+</td>
+</tr>
+<tr>
+<td colspan="3">
+<form class="form-horizontal" role="form" method="post">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">지출합계</label>
+        <div class="col-sm-1">
+         	<input type="text" class="form-control" id="resultTotalInvestmentPrice" readonly>
+        </div>
+        
+        <label class="col-sm-2 control-label">자기자본 총액</label>
+        <div class="col-sm-1">
+            <input type="text" class="form-control" id="resultEquity" readonly>
+        </div>
+        
+        <label class="col-sm-2 control-label">매출이익(수입-지출)</label>
+        <div class="col-sm-1">
+        	<input type="text" class="form-control" id="resultIncome" readonly>
+        </div>
+        
+        <label class="col-sm-2 control-label">연 수익률</label>
+        <div class="col-sm-1">
+        	<input type="text" class="form-control" id="resultProfitRatio" readonly>
+        </div>
+    </div>
+   
+   	<div class="form-group">
+        <div class="col-sm-12 text-right">
+     		<button class="btn-info btn" type="button" id="btnProfitCalc">계산하기</button>
+     		<button class="btn-info btn" type="button" id="btnProfitOutput">출력하기</button>
+     		<button class="btn-info btn" type="button" id="btnProfitSaveFile">파일로 저장</button>
+		</div>
+    </div>
+</form>
+</td>
+</tr>
+</tbody>
+</table>

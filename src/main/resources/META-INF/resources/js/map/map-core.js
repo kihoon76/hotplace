@@ -1455,6 +1455,7 @@
 	 */
 	var _showCellYear = 2017;
 	
+	
 	/**
 	 * @private
 	 * @function _runWaitMe
@@ -1922,6 +1923,36 @@
 	}
 	
 	/**
+	 * @private
+	 * @function _workSpinner
+	 * @param {object} $txt spinner의 textbox jquery object
+	 * @param {string} upDown spinner updown('up'|'down')
+	 * @desc spinner up/down 동작 컨트롤
+	 */
+	function _workSpinner($txt, upDown) {
+		var step = parseFloat($txt.data('step')), 
+		    viewVal = 0,
+		    dataVal = 0,
+		    suffix = $txt.data('suffix'),
+		    min = parseFloat($txt.data('min')),
+		    max = parseFloat($txt.data('max')),
+		    curVal = parseFloat($txt.data('value'));
+		
+		if(upDown == 'up') {
+			if(curVal == parseFloat(max)) return;
+			dataVal = curVal + step; 
+		}
+		else {
+			if(curVal == parseFloat(min)) return;
+			dataVal = curVal - step; 
+		}
+		
+		viewVal = dataVal + suffix;
+		$txt.data('value', dataVal);
+	    $txt.val(viewVal);
+	}
+	
+	/**
 	 * @memberof hotplace.dom
 	 * @function viewProfit
 	 * @param {string} addr 주소
@@ -1931,9 +1962,45 @@
 	dom.viewProfit = function(addr) {
 		var tForm = dom.getTemplate('profitForm');
 		
-		$('#dvModalContent').html(tForm());
+		$('#dvModalContent').html(tForm({
+			addr: addr,
+			jimok: '전',
+			area: 1000,
+			gongsi: 4000
+		}));
 		
-		var sliderTooltip = function(target, html, defaultV) {
+		//수지분석 상세보기 collapse
+		$('#detailView').on('click', function() {
+			if($(this).hasClass('glyphicon-chevron-up')) {
+				$(this).removeClass('glyphicon-chevron-up');
+				$(this).addClass('glyphicon-chevron-down');
+				
+				$('tr.collapse.out').each(function(idx) {
+					$(this).removeClass('out');
+					$(this).addClass('in');
+				});
+			}
+			else {
+				$(this).removeClass('glyphicon-chevron-down');
+				$(this).addClass('glyphicon-chevron-up');
+				
+				$('tr.collapse.in').each(function(idx) {
+					$(this).removeClass('in');
+					$(this).addClass('out');
+				});
+			}
+		});
+		
+		//spinner
+		$('#tbProfit .spinner .btn:first-of-type').on('click', function() {
+			_workSpinner($(this).parent().parent().children('input:first-child'), 'up');
+		});
+		
+		$('#tbProfit .spinner .btn:last-of-type').on('click', function() {
+			_workSpinner($(this).parent().parent().children('input:first-child'), 'down');
+		});
+		
+		/*var sliderTooltip = function(target, html, defaultV) {
 			
 			return function(event, ui) {
 				console.log(event);
@@ -2293,7 +2360,7 @@
 	        $('#txtEquipmentFee').val(ui.value);
 	    }, create:sliderTooltip('stepEquipmentFee', profitToolHtml.stepEquipmentFee), slide: sliderTooltip('stepEquipmentFee', profitToolHtml.stepEquipmentFee)})
 		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''})
-		.on(event('stepEquipmentFee'));
+		.on(event('stepEquipmentFee'));*/
 		
 		dom.openModal('수지 분석(소재지: ' + addr + ')', 'fullsize');
 		//dom.initTooltip('ui-slider-handle', {trigger:'hover'});
@@ -2460,233 +2527,146 @@
 	jQuery
 ));
 
+
 /**
- * @namespace hotplace.chart
- * */
-(function(chart, $){
-	/**
-	 * @private
-	 * @typedef {object} echartTheme
-	 * @desc echart theme 설정
-	 * {@link https://ecomfe.github.io/echarts-doc/public/en/index.html echart}
-	 */
-	var _echartTheme = {
-		color: ['#26B99A', '#34495E', '#BDC3C7', '#3498DB',
-		        '#9B59B6', '#8abb6f', '#759c6a', '#bfd3b7'
-		],
-
-		title: {
-			itemGap: 8,
-			textStyle: {
-				fontWeight: 'normal',
-				color: '#408829'
-			}
-		},
-
-		dataRange: {
-			color: ['#1f610a', '#97b58d']
-		},
-
-		toolbox: {
-			color: ['#408829', '#408829', '#408829', '#408829']
-		},
-
-		tooltip: {
-			backgroundColor: 'rgba(0,0,0,0.5)',
-			axisPointer: {
-				type: 'line',
-				lineStyle: {
-					color: '#408829',
-					type: 'dashed'
-				},
-				crossStyle: {
-					color: '#408829'
-				},
-				shadowStyle: {
-					color: 'rgba(200,200,200,0.3)'
-				}
-			}
-		},
-
-		dataZoom: {
-			dataBackgroundColor: '#eee',
-			fillerColor: 'rgba(64,136,41,0.2)',
-			handleColor: '#408829'
-		},
-		grid: {
-			borderWidth: 0
-		},
-
-		categoryAxis: {
-			axisLine: {
-				lineStyle: {
-					color: '#408829'
-				 }
-			},
-			splitLine: {
-				lineStyle: {
-					color: ['#eee']
-				}
-			}
-		},
-
-		valueAxis: {
-			axisLine: {
-				lineStyle: {
-					color: '#408829'
-				}
-			},
-			splitArea: {
-				show: true,
-				areaStyle: {
-					color: ['rgba(250,250,250,0.1)', 'rgba(200,200,200,0.1)']
-				}
-			},
-			splitLine: {
-				lineStyle: {
-					color: ['#eee']
-				}
-			}
-		},
-		timeline: {
-			lineStyle: {
-				color: '#408829'
-			 },
-			 controlStyle: {
-				 normal: {color: '#408829'},
-				 emphasis: {color: '#408829'}
-			 }
-		},
-
-		k: {
-			itemStyle: {
-				normal: {
-					color: '#68a54a',
-					color0: '#a9cba2',
-					lineStyle: {
-						width: 1,
-						color: '#408829',
-						color0: '#86b379'
-					}
-				}
-			}
-		},
-		map: {
-			itemStyle: {
-				normal: {
-					areaStyle: {
-						color: '#ddd'
-					},
-					label: {
-						textStyle: {
-							color: '#c12e34'
-						}
-					}
-				},
-				emphasis: {
-					areaStyle: {
-						color: '#99d2dd'
-					},
-					label: {
-						textStyle: {
-							color: '#c12e34'
-						}
-					}
-				}
-			}
-		},
-		force: {
-			itemStyle: {
-				normal: {
-					linkStyle: {
-						  strokeColor: '#408829'
-					}
-				}
-			}
-		},
-		chord: {
-			padding: 4,
-				itemStyle: {
-					normal: {
-						lineStyle: {
-							width: 1,
-							color: 'rgba(128, 128, 128, 0.5)'
-						},
-						chordStyle: {
-							lineStyle: {
-							width: 1,
-							color: 'rgba(128, 128, 128, 0.5)'
-						}
-					}
-				},
-				emphasis: {
-					lineStyle: {
-						width: 1,
-						color: 'rgba(128, 128, 128, 0.5)'
-					},
-					chordStyle: {
-						lineStyle: {
-							width: 1,
-							color: 'rgba(128, 128, 128, 0.5)'
-						}
-					}
-				}
-			}
-		},
-		gauge: {
-			startAngle: 225,
-			endAngle: -45,
-			axisLine: {
-				show: true,
-				lineStyle: {
-					color: [[0.2, '#86b379'], [0.8, '#68a54a'], [1, '#408829']],
-					width: 8
-				}
-			},
-			axisTick: {
-				splitNumber: 10,
-				length: 12,
-				lineStyle: {
-					color: 'auto'
-				}
-			},
-			axisLabel: {
-				textStyle: {
-					color: 'auto'
-				}
-			},
-			splitLine: {
-				length: 18,
-				lineStyle: {
-					color: 'auto'
-				}
-			},
-			pointer: {
-				length: '90%',
-				color: 'auto'
-			},
-			title: {
-				textStyle: {
-					color: '#333'
-				}
-			},
-			detail: {
-				textStyle: {
-					color: 'auto'
-				}
-			}
-		},
-		textStyle: {
-			fontFamily: 'Arial, Verdana, sans-serif'
-		}
-	};
+ * @namespace hotplace.database
+ */
+(function(db, $) {
+	
+	var _db = {};
 	
 	/**
-	 * @private
-	 * @function _echartBar
+	 * @memberof hotplace.database
+	 * @function getStartXIdx
+	 * @param {string} dataType
+	 * @param {number} boundswx 바운드의 극서값 
+	 * @param {number} level 현재 화면 줌레벨
+	 * @param {number} sIdx 극서로 정렬된 배열 pivot 시작값
+	 * @param {number} eIdx 극서로 정렬된 배열 pivot 마지막값
+	 * @desc 현재  margin이 적용된  화면의 시작점에서 시작할 데이터 index
 	 */
-	function _echartBar() {
-		if ($('#mainb').length ){
+	db.getStartXIdx = function(dataType, boundswx, level, sIdx, eIdx) {
+		var result;
+		var data = _db[level][dataType];
+		sIdx = (sIdx == undefined) ? 0 : sIdx;
+		eIdx = (eIdx == undefined) ? data.length - 1 : eIdx;
+		
+		var range = eIdx-sIdx;
+		var cIdx = sIdx + Math.floor(range/2);
+		var idxValue = data[cIdx].location[0];
+		
+		if(idxValue == boundswx) return cIdx;
+		
+		//5개 범위 안에 있으면 그만 찾고 시작점을 반환
+		if(range < 5) return sIdx;
+		
+		//왼쪽에 있슴
+		if(idxValue > boundswx) {
+			result = db.getStartXIdx(dataType, boundswx, level, 0, cIdx);
+		}
+		else {//오른쪽에 있슴
+			result = db.getStartXIdx(dataType, boundswx, level, cIdx, eIdx);
+		}
+		
+		//console.log('result ==> ' + result);
+		return result;
+	}
+	
+	/**
+	 * @memberof hotplace.database
+	 * @function setLevelData
+	 * @param {number} level
+	 * @param {string} dataType
+	 * @param {object} data 데이터값
+	 * @desc 레벨의 dataType의 data를 저장한다
+	 */
+	db.setLevelData = function (level, dataType, data) {
+		if(!_db[level]) _db[level] = {};
+		_db[level][dataType] = data;
+	}
+	
+	/**
+	 * @memberof hotplace.database
+	 * @function getLevelData
+	 * @param {number} level
+	 * @param {string} dataType
+	 * @desc 레벨의 dataType의 data를 저장한다
+	 */
+	db.getLevelData = function(level, dataType) {
+		 return (_db[level]) ? _db[level][dataType] : null;
+	}
+	
+	/**
+	 * @memberof hotplace.db
+	 * @function hasData
+	 * @param {number} level
+	 * @param {string} dataType
+	 * @returns {boolean} 해당 레벨에 데이터가 있는지 체크
+	 * @desc 해당 레벨에 데이터가 있는지 체크
+	 */
+	db.hasData = function(level, dataType) {
+		if(_db[level] && _db[level][dataType] && _db[level][dataType].length > 0) return true;
+		return false;
+	}
+	
+	
+	/**
+	 * @memberof hotplace.database
+	 * @function initLevel
+	 * @param {number} level
+	 * @param {string} dataType
+	 * @desc 레벨의 특정 데이터 타입 또는 전체 데이터를 지운다.
+	 */
+	db.initLevel = function(level, dataType) {
+		if(dataType) {
+			if(_db[level] && _db[level][dataType]) _db[level][dataType];
+		}
+		else {
+			if(_db[level]) _db[level] = null;
+		}
+	}
+}(
+	hotplace.database = hotplace.database || {},
+	jQuery
+));
+
+/**
+ * @namespace hotplace.validation
+ * */
+(function(validation, $) {
+	
+	/**
+	 * @memberof hotplace.validation
+	 * @function numberOnly
+	 * @param {string} CLASS jquery selector
+	 * @desc text 숫자만 입력되게 함
+	 */
+	validation.numberOnly = function(CLASS) {
+		$(CLASS).on('keypress', function(e) {
+			 if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+				 return false;
+			 }
+		});
+	}
+}(
+	hotplace.validation = hotplace.validation || {},
+	jQuery
+));
+
+
+/**
+ * @namespace hotplace.chart
+ */
+(function(chart, $){
+
+	/**
+	 * @memberof hotplace.chart
+	 * @function showEchartBar
+	 * @desc echart bar
+	 * {@link https://ecomfe.github.io/echarts-doc/public/en/index.html echart}
+	 */
+	chart.showEchartBar = function() {
+		if ($('#mainb').length){
 			var echartBar = echarts.init(document.getElementById('mainb'), _echartTheme);
 
 			echartBar.setOption({
@@ -2756,13 +2736,15 @@
 				}]
 			});
 		}
-	}
+	};
 	
 	/**
-	 * @private
-	 * @function _echartScatter
+	 * @memberof hotplace.chart
+	 * @function showEchartScatter
+	 * @desc echart scatter
+	 * {@link https://ecomfe.github.io/echarts-doc/public/en/index.html echart}
 	 */
-	function _echartScatter() {
+	chart.showEchartScatter = function() {
 		if ($('#echart_scatter').length ){ 
 			var echartScatter = echarts.init(document.getElementById('echart_scatter'), _echartTheme);
 
@@ -2924,13 +2906,15 @@
 				}]
 			});
 		} 
-	}
+	};
 	
 	/**
-	 * @private
-	 * @function _echartPie
+	 * @memberof hotplace.chart
+	 * @function showEchartPie
+	 * @desc echart pie
+	 * {@link https://ecomfe.github.io/echarts-doc/public/en/index.html echart}
 	 */
-	function _echartPie() {
+	chart.showEchartPie = function _echartPie() {
 		if ($('#echart_mini_pie').length ){ 
 			var dataStyle = {
 				normal: {
@@ -3053,13 +3037,15 @@
 				}]
 			});
 		} 
-	}
+	};
 	
 	/**
-     * @private
-     * @function _echartLine
-     */
-	function _echartLine() {
+	 * @memberof hotplace.chart
+	 * @function showEchartLine
+	 * @desc echart line
+	 * {@link https://ecomfe.github.io/echarts-doc/public/en/index.html echart}
+	 */
+	chart.showEchartLine = function _echartLine() {
 		if ($('#echart_line').length ){ 
 			var echartLine = echarts.init(document.getElementById('echart_line'), _echartTheme);
 
@@ -3147,165 +3133,12 @@
 				}]
 			});
 		} 
-	}
-	
-	/**
-	 * @memberof hotplace.chart
-	 * @function showEchartBar
-	 * @desc echart bar
-	 * {@link https://ecomfe.github.io/echarts-doc/public/en/index.html echart}
-	 */
-	chart.showEchartBar = _echartBar;
-	/**
-	 * @memberof hotplace.chart
-	 * @function showEchartScatter
-	 * @desc echart scatter
-	 * {@link https://ecomfe.github.io/echarts-doc/public/en/index.html echart}
-	 */
-	chart.showEchartScatter = _echartScatter;
-	/**
-	 * @memberof hotplace.chart
-	 * @function showEchartPie
-	 * @desc echart pie
-	 * {@link https://ecomfe.github.io/echarts-doc/public/en/index.html echart}
-	 */
-	chart.showEchartPie = _echartPie;
-	/**
-	 * @memberof hotplace.chart
-	 * @function showEchartLine
-	 * @desc echart line
-	 * {@link https://ecomfe.github.io/echarts-doc/public/en/index.html echart}
-	 */
-	chart.showEchartLine = _echartLine;
+	};        
 }(
 	hotplace.chart = hotplace.chart || {},
 	jQuery
 ));
 
-/**
- * @namespace hotplace.db
- * */
-(function(db, $) {
-	
-	var _db = {};
-	
-	/**
-	 * @memberof hotplace.db
-	 * @function getStartXIdx
-	 * @param {string} dataType
-	 * @param {number} boundswx 바운드의 극서값 
-	 * @param {number} level 현재 화면 줌레벨
-	 * @param {number} sIdx 극서로 정렬된 배열 pivot 시작값
-	 * @param {number} eIdx 극서로 정렬된 배열 pivot 마지막값
-	 * @desc 현재  margin이 적용된  화면의 시작점에서 시작할 데이터 index
-	 */
-	db.getStartXIdx = function(dataType, boundswx, level, sIdx, eIdx) {
-		var result;
-		var data = _db[level][dataType];
-		sIdx = (sIdx == undefined) ? 0 : sIdx;
-		eIdx = (eIdx == undefined) ? data.length - 1 : eIdx;
-		
-		var range = eIdx-sIdx;
-		var cIdx = sIdx + Math.floor(range/2);
-		var idxValue = data[cIdx].location[0];
-		
-		if(idxValue == boundswx) return cIdx;
-		
-		//5개 범위 안에 있으면 그만 찾고 시작점을 반환
-		if(range < 5) return sIdx;
-		
-		//왼쪽에 있슴
-		if(idxValue > boundswx) {
-			result = db.getStartXIdx(dataType, boundswx, level, 0, cIdx);
-		}
-		else {//오른쪽에 있슴
-			result = db.getStartXIdx(dataType, boundswx, level, cIdx, eIdx);
-		}
-		
-		//console.log('result ==> ' + result);
-		return result;
-	}
-	
-	/**
-	 * @memberof hotplace.db
-	 * @function setLevelData
-	 * @param {number} level
-	 * @param {string} dataType
-	 * @param {object} data 데이터값
-	 * @desc 레벨의 dataType의 data를 저장한다
-	 */
-	db.setLevelData = function (level, dataType, data) {
-		if(!_db[level]) _db[level] = {};
-		_db[level][dataType] = data;
-	}
-	
-	/**
-	 * @memberof hotplace.db
-	 * @function getLevelData
-	 * @param {number} level
-	 * @param {string} dataType
-	 * @desc 레벨의 dataType의 data를 저장한다
-	 */
-	db.getLevelData = function(level, dataType) {
-		 return (_db[level]) ? _db[level][dataType] : null;
-	}
-	
-	/**
-	 * @memberof hotplace.db
-	 * @function hasData
-	 * @param {number} level
-	 * @param {string} dataType
-	 * @returns {boolean} 해당 레벨에 데이터가 있는지 체크
-	 * @desc 해당 레벨에 데이터가 있는지 체크
-	 */
-	db.hasData = function(level, dataType) {
-		if(_db[level] && _db[level][dataType] && _db[level][dataType].length > 0) return true;
-		return false;
-	}
-	
-	
-	/**
-	 * @memberof hotplace.db
-	 * @function initLevel
-	 * @param {number} level
-	 * @param {string} dataType
-	 * @desc 레벨의 특정 데이터 타입 또는 전체 데이터를 지운다.
-	 */
-	db.initLevel = function(level, dataType) {
-		if(dataType) {
-			if(_db[level] && _db[level][dataType]) _db[level][dataType];
-		}
-		else {
-			if(_db[level]) _db[level] = null;
-		}
-	}
-}(
-	hotplace.database = hotplace.database || {},
-	jQuery
-));
-
-/**
- * @namespace hotplace.validation
- * */
-(function(validation, $) {
-	
-	/**
-	 * @memberof hotplace.validation
-	 * @function numberOnly
-	 * @param {string} CLASS jquery selector
-	 * @desc text 숫자만 입력되게 함
-	 */
-	validation.numberOnly = function(CLASS) {
-		$(CLASS).on('keypress', function(e) {
-			 if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
-				 return false;
-			 }
-		});
-	}
-}(
-	hotplace.validation = hotplace.validation || {},
-	jQuery
-));
 
 /**
  * @namespace hotplace.test

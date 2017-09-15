@@ -1,392 +1,1023 @@
 <table class="table table-bordered" id="tbProfit">
+<colgroup>
+	<col style="width:10%">
+    <col style="width:10%">
+    <col style="width:10%">
+    <col style="width:25%">
+    <col style="width:10%">
+    <col style="width:5%">
+    <col style="width:30%">
+</colgroup>
 <tbody>
 <tr>
-<td style="width:50px">수지</br>분석</td>
-<td style="width:60px">기본</br>사항</td>
-<td>
-<form class="form-horizontal" role="form" method="post">
-    <div class="form-group">
-    	<label class="col-sm-2 control-label">매입(보유)주체</label>
-    	<div class="radio col-sm-10" style="padding-left:30px">
-        	<input id="radioPrivate" name="radioOwn" type="radio" checked>
-            <label for="radioPrivate" class="radio-own">
-                            개인
-            </label>
+	<td rowspan="3" class="cell-title success">토지개요</td>
+	<td colspan="2" class="cell-title success">소재지(지번)</td>
+	<td colspan="4" class="cell-title">{{addr}}</td>
+</tr>
+<tr>
+	<td colspan="2" class="cell-title success">지목</td>
+	<td class="cell-title">{{jimok}}</td>
+	<td colspan="2" class="cell-title success">면적:</td>
+	<td class="cell-title">{{area}} ㎡</td>
+</tr>
+<tr>
+	<td colspan="2" class="cell-title success">개별공시지가(㎡당)</td>
+	<td colspan="4" class="cell-title">{{gongsi}} 원</td>
+</tr>
+<tr>
+	<td colspan="7"></td>
+</tr>
+<tr>
+	<td rowspan="5" class="cell-title success">토지이용규제 현황</td>
+	<td colspan="2" class="cell-title success">국토계획법상 지역,지구 등</td>
+	<td colspan="4" class="cell-title">
+	자연녹지지역, 근린공원(2003-09-09)
+	</td>
+</tr>
+<tr>
+	<td colspan="2" class="cell-title success">다른 법령에 따른 지역·지구 등</td>
+	<td colspan="4" class="cell-title">
+	보전산지
+	</td>
+</tr>
+<tr>
+	<td colspan="2" class="cell-title success">기타</td>
+	<td colspan="4" class="cell-title">
+	전원개발사업에 따른 확인협의
+	</td>
+</tr>
+<tr>
+	<td colspan="2" class="cell-title success">(최근 1년간)토지이용규제 변경 여부</td>
+	<td colspan="3" class="cell-title">유/무</td>
+	<td class="cell-title danger" id="btnViewLandLimit">토지이용규제 변경 내역 보기</td>
+</tr>
+<tr>
+	<td colspan="2" class="cell-title success">도입가능 용도(개략 검토)</td>
+	<td colspan="4" class="cell-title">주택, 공장, 창고 (세부사항은 별도 확인 필요)
+	</td>
+</tr>
+<tr>
+	<td colspan="7"></td>
+</tr>
+<tr>
+	<td class="cell-title success">Luris 도면</td>
+	<td colspan="6"  style="height:80px">Luris 도면
+	</td>
+</tr>
+<tr>
+	<td colspan="7"></td>
+</tr>
+<tr>
+	<td rowspan="3" class="cell-title success">수지분석</td>
+	<td colspan="2" class="cell-title success"><span class="cell-title-rdo">매입(보유)주체</span></td>
+	<td colspan="4">
+		<div class="radio col-sm-10" style="padding-left:30px">
+    		<input id="radioPrivate" name="radioOwn" type="radio" checked>
+        	<label for="radioPrivate" class="radio-own">
+                          개인
+        	</label>
             
-            <input id="radioInc" name="radioOwn" type="radio">
-            <label for="radioInc" class="radio-own">
-                           법인
-            </label>
-        </div>
-    </div>
-</form>
-</td>
+        	<input id="radioInc" name="radioOwn" type="radio">
+        	<label for="radioInc" class="radio-own">
+                         법인
+        	</label>
+    	</div>
+	</td>
 </tr>
 <tr>
-<td class="danger" rowspan="7">지출</td>
-<td valign="middle" class="danger">토지비</td>
-<td>
-<form class="form-horizontal" role="form" method="post">
-    <!-- 매입가격 -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">매입가격<br/><span class="sub">(3.3㎡당 매입가)</span></label>
-        <div   class="col-sm-2">
-        	<input type="text" class="form-control" readonly id="txtPurchase" val="100">
-        </div>
-        <div class="col-sm-8">
-            <div id="stepPurchase"></div>
-        </div>
-    </div>
-    
-    <!-- 보유기간 --> 
-    <div class="form-group">
-        <label class="col-sm-2 control-label">보유기간</label>
-        <div   class="col-sm-2">
-        	<input type="text" class="form-control" readonly id="txtOwnTerm">
-        </div>
-        <div class="col-sm-8">
-            <div id="stepOwnTerm"></div>
-        </div>
-    </div>
-</form>
-</td>
-</tr>
-<tr> 
-<td class="danger">금융<br/>비용</td>
-<td>
-<form class="form-horizontal" role="form" method="post"> 
-    <!-- 타인자본비율 -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">타인자본비율<br/><span class="sub">(금융권등 대출 비용)</span></label>
-        <div   class="col-sm-2">
-        	<input type="text" class="form-control" readonly id="txtOtherAssetRatio">
-        </div>
-        <div class="col-sm-8">
-            <div id="stepOtherAssetRatio"></div>
-        </div>
-    </div>
-    
-     <!-- 대출 금리 -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">대출 금리<br/><span class="sub">(금융기관 등 대출금리)</span></label>
-        <div   class="col-sm-2">
-        	<input type="text" class="form-control" readonly id="txtFinancialCost">
-        </div>
-        <div class="col-sm-8">
-            <div id="stepFinancialCost"></div>
-        </div>
-    </div>
-</form>
-</td>
+	<td colspan="2" class="cell-title success"><span class="cell-title-spinner">보유기간</span></td>
+	<td colspan="4">
+		<div class="input-group spinner">
+    		<input type="text" class="form-control" value="5년" id="stepOwnTerm" data-value="5" data-min="0" data-max="10" data-step="0.5" data-suffix="년">
+    		<div class="input-group-btn-vertical">
+      			<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      			<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    		</div>
+    	</div>
+	</td>
 </tr>
 <tr>
-<td class="danger">제세금</td>
-<td>
-<form class="form-horizontal" role="form" method="post">  
-    <!-- 취득세 -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">취득세<br/><span class="sub">(매입금액의 4.5% 내외)</span></label>
-        <div   class="col-sm-2">
-        	<input type="text" class="form-control" readonly id="txtAcquisitionTax">
-        </div>
-        <div class="col-sm-8">
-            <div id="stepAcquisitionTax"></div>
-        </div>
-    </div>
-    
-    <!-- 재산세 -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">재산세<br/><span class="sub">(보유기간 합계)</span></label>
-        <div   class="col-sm-2">
-        	<input type="text" class="form-control" readonly id="txtPropertyTax">
-        </div>
-        <div class="col-sm-8">
-            <div id="stepPropertyTax"></div>
-        </div>
-    </div>
-    
-    <!-- 양도세 -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">양도세<br/><span class="sub">(보유기간 반영)</span></label>
-        <div   class="col-sm-2">
-        	<input type="text" class="form-control" readonly id="txtTransferTax">
-        </div>
-        <div class="col-sm-8">
-            <div id="stepTransferTax"></div>
-        </div>
-    </div>
-    
-     <!-- 법인세 -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">법인세<br/><span class="sub">(3.3㎡당 공사비)</span></label>
-        <div   class="col-sm-2">
-        	<input type="text" class="form-control" readonly id="txtCorporateTax">
-        </div>
-        <div class="col-sm-8">
-            <div id="stepCorporateTax"></div>
-        </div>
-    </div>
-</form>
-</td>
+	<td colspan="2" class="cell-title success"><span class="cell-title-spinner">타인자본비율</span></td>
+	<td colspan="4">
+		<div class="input-group spinner">
+    		<input type="text" class="form-control" value="70%" id="stepOtherAssetRatio" data-value="70" data-min="0" data-max="100" data-step="1" data-suffix="%">
+    		<div class="input-group-btn-vertical">
+      			<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      			<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    		</div>
+    	</div>
+	</td>
 </tr>
 <tr>
-<td class="danger">공사비</td>
-<td>
-<form class="form-horizontal" role="form" method="post"> 
-    <!-- 토목 공사비 -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">토목 공사비<br/><span class="sub">(3.3㎡당 공사비)</span></label>
-        <div   class="col-sm-2">
-        	<input type="text" class="form-control" readonly id="txtCivilWorksFee">
-        </div>
-        <div class="col-sm-8">
-            <div id="stepCivilWorksFee"></div>
-        </div>
-    </div>
-    
-    <!-- 건축 공사비 -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">건축 공사비<br/><span class="sub">(리모델링 등)</span></label>
-        <div   class="col-sm-2">
-        	<input type="text" class="form-control" readonly id="txtBuildingWorksFee">
-        </div>
-        <div class="col-sm-8">
-            <div id="stepBuildingWorksFee"></div>
-        </div>
-    </div>
-</form>
-</td>
+	<td colspan="7"><button type="button" class="btn btn-primary glyphicon glyphicon-chevron-up" id="detailView"> 상세보기 </button></td>
+</tr>
+<tr class="collapse out">
+	<td colspan="7" style="text-align:right">(단위: 평, 천원, 부가세 별도)</td>
+</tr>
+<tr class="collapse out">
+	<th colspan="3">구분</th>
+	<th>내역</th>
+	<th>금액</th>
+	<th>비율</th>
+	<th>비고</th>
+</tr>
+<tr class="collapse out">
+	<td rowspan="31">1.지출</td>
+	<td rowspan="3">A.토지비</td>
+	<td>매입금액</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control " id="txtPurchase" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepPurchase"  data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td>60.3%</td>
+	<td>최근 1년간 반경 1km이내 유사 조건 물건의 실거래가 평균</td>
+</tr>
+<tr class="collapse out">
+	<td>명도비</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtMyeongdobi" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepMyeongdobi" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td>60.3%</td>
+	<td>소송비, 집행비 등</td>
+</tr>
+<tr class="collapse out">
+	<td>토지사용승낙</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtAcceptLandUse" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepAcceptLandUse" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td>60.3%</td>
+	<td>진입도로 토지주 동의서 징구</td>
+</tr>
+<tr class="collapse out">
+	<td colspan="2">소 계</td>
+	<td></td>
+	<td>840,000</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr class="collapse out">
+	<td>금융비용</td>
+	<td>대출이자</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtDaechulIja" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepDaechulIja" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td></td>
+</tr>
+<tr class="collapse out">
+	<td colspan="2">소계</td>
+	<td></td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td></td>
+</tr>
+<tr class="collapse out">
+	<td rowspan="4">B.제세금</td>
+	<td>취득세</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtChwideugse" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepChwideugse" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td>
+		<div>1.토지(농지외) : 4.6% (취득세4%, 농특세 0.2%, 교육세 0.4%)</div> 
+		<div>2. 농지(전,답,과수원,목장용지) : 3.4%(취득세 3.0%+농특세0.2%+교육세0.2%)</div>
+	</td>
+</tr>
+<tr class="collapse out">
+	<td>재산세</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtJaesanse" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepJaesanse" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td>
+		<p>1. 산식 : 공시지가 × 요율 × 보유기간<br/>
+		   2. 요율<br/>
+			1) 주택 : 3억원 초과시 57만원+3억원 초과금액의 0.4%<br/> 
+			2) 일반건축물 : 0.25%<br/>
+			3) 특별시, 광역시내 건축물 : 0.5%<br/> 
+			4) 토지(농지) : 0.07%<br/>
+			5) 토지(공장용지) : 0.2%<br/>
+		</p>
+	</td>
+</tr>
+<tr class="collapse out">
+	<td>양도세</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtYangdose" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepYangdose" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td>
+		<p>1. 개인(양도세)<br/>
+		    1)1년미만 : 50%(비사업용은 60%)<br/>
+			2)2년미만 : 40%(비사업용은 50%)<br/>
+			3)2년이상 : 기본세율<br/>
+			4)기본세율<br/>
+ 			  - 1200만원이하 : 6%<br/>
+ 			  - 1200만원초과~4600만원이하 : 15%<br/>
+ 			  - 4600만원초과~8800만원이하 : 24%<br/>
+ 			  - 8800만원초과~1억5천만원이하 : 35%<br/>
+ 			  - 1억5천만원초과~5억원이하 : 38%<br/>
+ 			  - 5억원 초과 : 40%<br/>
+		   2.법인(법인세)<br/>
+			1)2억원 이하 : 10%<br/>
+			2)2억초과~200억이하 : 20%<br/>
+			3)200억초과 : 22%<br/>
+			4) 비사업용토지는 '토지 등 양도소득에대한 법인세' 10% 추가<br/>
+		</p>
+	</td>
+</tr>
+<tr class="collapse out">
+	<td>소 계</td>
+	<td></td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td></td>
+</tr>
+<tr class="collapse out">
+	<td rowspan="4">C.공사비</td>
+	<td>건축공사비(리모델링)</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtGeonchugGongsa" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepGeonchugGongsa" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td>디폴트값은 평당 450만원</td>
+</tr>
+<tr class="collapse out">
+	<td>토목공사비</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtTomogGongsa" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepTomogGongsa" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td>디폴트값은 평당 15만원</td>
+</tr>
+<tr class="collapse out">
+	<td>포장공사비</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtPojangGongsa" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepPojangGongsa" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td></td>
+</tr>
+<tr class="collapse out">
+	<td>인입공사비</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtInibGongsa" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepInibGongsa" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td></td>
+</tr>
+<tr class="collapse out">
+	<td colspan="2">소 계</td>
+	<td></td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td></td>
+</tr>
+<tr class="collapse out">
+	<td rowspan="5">D.인허가비</td>
+	<td>개발행위허가 등</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtAcceptGaebal" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepAcceptGaebal" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td>인허가 일체, 건축 등 일부 외주</td>
+</tr>
+<tr class="collapse out">
+	<td>감리비</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtGamri" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepGamri" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td></td>
+</tr>
+<tr class="collapse out">
+	<td>측량비</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtCheuglyang" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepCheuglyang" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td>필지분할에 포함</td>
+</tr>
+<tr class="collapse out">
+	<td>감정평가</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtEvalueGamjeung" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepEvalueGamjeung" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td></td>
+</tr>
+<tr class="collapse out">
+	<td>필지분할</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtSplitPilji" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepSplitPilji" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td>분할측량 포함</td>
+</tr>
+<tr class="collapse out">
+	<td colspan="2">소 계</td>
+	<td></td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td></td>
+</tr>
+<tr class="collapse out">
+	<td rowspan="3">E.부담금</td>
+	<td>개발부담금</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtDevBudam" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepDevBudam" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td>
+		<p>
+			1. 산식 : 개발이익×25%<br/>
+			2. 개발이익 = (종료시점지가-개시시점지가)-개발비용-정상지가상승분<br/>
+			3. 부과대상
+		</p>
+	</td>
+</tr>
+<tr class="collapse out">
+	<td>농지보전부담금</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtFarmBudam" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepFarmBudam" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td>
+		<p>
+			1. 산식 : 공시지가의 30%<br/>
+			2. 산식에 따른 산출금액이 50천원/㎡을 초과할 경우, 50천원/㎡적용<br/>
+			3. 도로, 철도 등 주요 산업시설이나 농어업용 시설을 설치하는 경우에는 부담금 감면<br/>
+		</p>
+	</td>
+</tr>
+<tr class="collapse out">
+	<td>대체산림자원조성비</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtAlterSanrim" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepAlterSanrim" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td>
+		<p>
+			1. 산식 : 산지전용면적*(단위면적당금액+공시지가의 1%)<br/>
+			2. 단위면적당 금액<br/>
+			 1) 준보전산지:4,010원/㎡<br/>
+			 2) 보전산지:5,210원/㎡<br/>
+			 3) 산지전용제한지역:8,020원/㎡<br/>
+			3. <a href="http://www.forest.go.kr/newkfsweb/cop/bbs/selectBoardList.do?bbsId=BBSMSTR_1387&orgId=fli&mn=KFS_02_05_02_04" target="_blank">바로가기(산림청)</a>
+		</p>
+	</td>
+</tr>
+<tr class="collapse out">
+	<td rowspan="6">F.사업경비</td>
+	<td>채권매입비</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtPurchaseChaegwon" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepPurchaseChaegwon" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td>
+		<p>
+			<a href="http://nhuf.molit.go.kr/FP/FP07/FP0705/FP070504.jsp" target="_blank">바로가기(주택도시기금 매입대상금액조회 사이트)</a>
+		</p>
+	</td>
+</tr>
+<tr class="collapse out">
+	<td>근저당설정비</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtSetGeunjeodang" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepSetGeunjeodang" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td>
+		<p>
+			1. 산식 : 대출금액의 130% × 요율<br/>
+			2. 요율 : 0.4% 적용
+		</p>
+	</td>
+</tr>
+<tr class="collapse out">
+	<td>보존등기비</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtPreserveDeunggi" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepPreserveDeunggi" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td>
+		<p>공사비의 3.2% 내외</p>
+	</td>
+</tr>
+<tr class="collapse out">
+	<td>운영비</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtManagement" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepManagement" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td>
+		<p>운영수입의 50% 내외</p>
+	</td>
+</tr>
+<tr class="collapse out">
+	<td>매각수수료</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtSellSusulyo" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepSellSusulyo" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td>
+		<p>법정 수수료 최대 0.9%</p>
+	</td>
+</tr>
+<tr class="collapse out">
+	<td>예비비</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtPreparation" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepPreparation" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td>
+		<p>사업비의 10% 내외</p>
+	</td>
+</tr>
+<tr class="collapse out">
+	<td colspan="2">소 계</td>
+	<td></td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td></td>
+</tr>
+<tr class="collapse out">
+	<td colspan="3">지출합계 (A+B+C+D+E)</td>
+	<td></td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td></td>
+</tr>
+<tr class="collapse out">
+	<td rowspan="6">2.수입</td>
+	<td rowspan="3">A.매각</td>
+	<td>건물</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtIncomeSellBuilding" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepIncomeSellBuilding" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td></td>
+</tr>
+<tr class="collapse out">
+	<td>설비</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtIncomeSellSeolbi" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepIncomeSellSeolbi" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td></td>
+</tr>
+<tr class="collapse out">
+	<td>토지</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtIncomeSellLand" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepIncomeSellLand" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td></td>
+</tr>
+<tr class="collapse out">
+	<td colspan="2">소 계</td>
+	<td></td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td></td>
+</tr>
+<tr class="collapse out">
+	<td>B.운영</td>
+	<td>임대</td>
+	<td>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<input class="form-control" id="txtIncomeManageImdae" type="text"> 
+				</div>
+				<div class="col-xs-1 lblX">
+					<label>X</label>
+				</div>
+				<div class="input-group spinner col-xs-6">
+    				<input type="text" class="form-control" value="-10%" id="stepIncomeManageImdae" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<div class="input-group-btn-vertical">
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+	</td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td></td>
+</tr>
+<tr class="collapse out">
+	<td colspan="2">소 계</td>
+	<td></td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td>80평*5만원=400만원</td>
+</tr>
+<tr class="collapse out">
+	<td colspan="3">수입합계 (A+B)</td>
+	<td></td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td></td>
+</tr>
+<tr class="collapse out">
+	<td colspan="7"></td>
 </tr>
 <tr>
-<td class="danger">인허가<br/>비용</td>    
-<td>
-<form class="form-horizontal" role="form" method="post">
-    <!-- 인허가 비용 -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">인허가 비용<br/><span class="sub">(개발행위허가,건축설계 등)</span></label>
-        <div   class="col-sm-2">
-        	<input type="text" class="form-control" readonly id="txtLicenseCost">
-        </div>
-        <div class="col-sm-8">
-            <div id="stepLicenseCost"></div>
-        </div>
-    </div>
-</form>
-</td>
-</tr>   
-<tr>
-<td class="danger">부담금</td>
-<td>
-<form class="form-horizontal" role="form" method="post">
-    <!-- 개발부담금 -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">개발부담금<br/><span class="sub">(개발행위허가시)</span></label>
-        <div   class="col-sm-2">
-        	<input type="text" class="form-control" readonly id="txtDevBudamgeum">
-        </div>
-        <div class="col-sm-8">
-            <div id="stepDevBudamgeum"></div>
-        </div>
-    </div>
-    
-    <!-- 농지보전 부담금 -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">농지보전 부담금<br/><span class="sub">(농지전용 부담금)</span></label>
-        <div   class="col-sm-2">
-        	<input type="text" class="form-control" readonly id="txtFarmConserve">
-        </div>
-        <div class="col-sm-8">
-            <div id="stepFarmConserve"></div>
-        </div>
-    </div>
-    
-    <!-- 대체산림자원 조성비 -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">대체산림자원 조성비<br/><span class="sub">((구)산지전용부담금)</span></label>
-        <div   class="col-sm-2">
-        	<input type="text" class="form-control" readonly id="txtForestResource">
-        </div>
-        <div class="col-sm-8">
-            <div id="stepForestResource"></div>
-        </div>
-    </div>
-</form>
-</td>
+	<td colspan="3">자기자본 총액</td>
+	<td></td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td></td>
 </tr>
 <tr>
-<td class="danger">사업<br/>경비</td>
-<td>
-<form class="form-horizontal" role="form" method="post">   
-    <!-- 채권매입비 -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">채권 매입비</label>
-        <div   class="col-sm-2">
-        	<input type="text" class="form-control" readonly id="txtBondPurchase">
-        </div>
-        <div class="col-sm-8">
-            <div id="stepBondPurchase"></div>
-        </div>
-    </div>
-    
-    <!-- 근저당 설정비 -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">근저당 설정비</label>
-        <div   class="col-sm-2">
-        	<input type="text" class="form-control" readonly id="txtGeunJeoDang">
-        </div>
-        <div class="col-sm-8">
-            <div id="stepGeunJeoDang"></div>
-        </div>
-    </div>
-    
-    <!-- 보존등기비 -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">보존등기비</label>
-        <div   class="col-sm-2">
-        	<input type="text" class="form-control" readonly id="txtDeungGi">
-        </div>
-        <div class="col-sm-8">
-            <div id="stepDeungGi"></div>
-        </div>
-    </div>
-    
-    <!-- 운영비 -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">운영비<br/><span class="sub">(임대관리 등 투입비용)</span></label>
-        <div   class="col-sm-2">
-        	<input type="text" class="form-control" readonly id="txtManageFee">
-        </div>
-        <div class="col-sm-8">
-            <div id="stepManageFee"></div>
-        </div>
-    </div>
-    
-   	<!-- 매각수수료 -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">매각수수료<br/><span class="sub">(대출관련)</span></label>
-        <div   class="col-sm-2">
-        	<input type="text" class="form-control" readonly id="txtSaleFee">
-        </div>
-        <div class="col-sm-8">
-            <div id="stepSaleFee"></div>
-        </div>
-    </div>
-    
-    <!-- 예비비 -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">예비비<br/><span class="sub">(총사업비의 10% 내외)</span></label>
-        <div   class="col-sm-2">
-        	<input type="text" class="form-control" readonly id="txtResolveMoney">
-        </div>
-        <div class="col-sm-8">
-            <div id="stepResolveMoney"></div>
-        </div>
-    </div>
-</form>
-</td>
+	<td colspan="3">매출이익 (수입-지출)</td>
+	<td></td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td></td>
 </tr>
 <tr>
-<td class="warning" rowspan="2">수입</td>
-<td class="warning">운영<br/>수입</td>
-<td>
-<form class="form-horizontal" role="form" method="post">
-	<!-- 수입발생기간 -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">수입발생기간<br/><span class="sub">(임대수입 등,처분수익 제외)</span></label>
-        <div   class="col-sm-2">
-        	<input type="text" class="form-control" readonly id="txtIncomeOccurTerm">
-        </div>
-        <div class="col-sm-8">
-            <div id="stepIncomeOccurTerm"></div>
-        </div>
-    </div>
-    
-    <!-- 연간수입 금액-->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">연간수입 금액<br/><span class="sub">(임대수입 등)</span></label>
-        <div   class="col-sm-2">
-        	<input type="text" class="form-control" readonly id="txtIncomeYear">
-        </div>
-        <div class="col-sm-8">
-            <div id="stepIncomeYear"></div>
-        </div>
-    </div>
-</form>
-</td>
-</tr>
-<tr>
-<td class="warning">매각<br/>수입</td>
-<td>
-<form class="form-horizontal" role="form" method="post">   
-    <!-- 토지매도 가격-->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">토지매도 가격<br/><span class="sub">(3.3㎡ 당 매도가)</span></label>
-        <div   class="col-sm-2">
-        	<input type="text" class="form-control" readonly id="txtLandFee">
-        </div>
-        <div class="col-sm-8">
-            <div id="stepLandFee"></div>
-        </div>
-    </div>
-    
-    <!-- 건물매도 가격-->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">건물매도 가격<br/><span class="sub">(3.3㎡ 당 매도가)</span></label>
-        <div   class="col-sm-2">
-        	<input type="text" class="form-control" readonly id="txtBuildingFee">
-        </div>
-        <div class="col-sm-8">
-            <div id="stepBuildingFee"></div>
-        </div>
-    </div>
-    
-    <!-- 설비매도 가격-->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">설비매도 가격<br/><span class="sub">(기계장치 등)</span></label>
-        <div   class="col-sm-2">
-        	<input type="text" class="form-control" readonly id="txtEquipmentFee">
-        </div>
-        <div class="col-sm-8">
-            <div id="stepEquipmentFee"></div>
-        </div>
-    </div>
-</form>
-</td>
-</tr>
-<tr>
-<td colspan="3">
-<form class="form-horizontal" role="form" method="post">
-    <div class="form-group">
-        <label class="col-sm-2 control-label">지출합계</label>
-        <div class="col-sm-1">
-         	<input type="text" class="form-control" id="resultTotalInvestmentPrice" readonly>
-        </div>
-        
-        <label class="col-sm-2 control-label">자기자본 총액</label>
-        <div class="col-sm-1">
-            <input type="text" class="form-control" id="resultEquity" readonly>
-        </div>
-        
-        <label class="col-sm-2 control-label">매출이익(수입-지출)</label>
-        <div class="col-sm-1">
-        	<input type="text" class="form-control" id="resultIncome" readonly>
-        </div>
-        
-        <label class="col-sm-2 control-label">연 수익률</label>
-        <div class="col-sm-1">
-        	<input type="text" class="form-control" id="resultProfitRatio" readonly>
-        </div>
-    </div>
-   
-   	<div class="form-group">
-        <div class="col-sm-12 text-right">
-     		<button class="btn-info btn" type="button" id="btnProfitCalc">계산하기</button>
-     		<button class="btn-info btn" type="button" id="btnProfitOutput">출력하기</button>
-     		<button class="btn-info btn" type="button" id="btnProfitSaveFile">파일로 저장</button>
-		</div>
-    </div>
-</form>
-</td>
+	<td colspan="3">경상이익(세전)</td>
+	<td></td>
+	<td><input class="form-control" id="1" type="text"></td>
+	<td></td>
+	<td>0.63% 년 수익률</td>
 </tr>
 </tbody>
 </table>

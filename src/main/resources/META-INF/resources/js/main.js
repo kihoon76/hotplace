@@ -333,7 +333,14 @@ $(document).ready(function() {
 				hasInfoWindow: true,
 				infoWinFormName: 'pinpointForm',
 				radius: radius,
-				datas: {content: address}
+				datas: {
+					params : $.extend({address:address}, hotplace.calc.profit.defaultValue, {
+						jimok: '전',
+						area: 1000,
+						gongsi: 4000,
+						limitChange:'Y'
+					})
+				}
 			});
 		});
 	});
@@ -494,6 +501,16 @@ $(document).ready(function() {
 		});
 	});
 	
+	//수지분석 토지이용규제 변경 내역 보기
+	$(document).on('click', '#btnViewLandLimit', function(e) {
+		if(!e.currentTarget.secondCall) {
+			
+			e.currentTarget.secondCall = true;
+			hotplace.dom.initTooltip('profitTooltip',{side: 'right', trigger: 'click'});
+			$(this).trigger('click');
+		}
+	});
+	
 	
 	$('#btnCapture').on('click', function(event) {
 		event.preventDefault();
@@ -632,6 +649,8 @@ $(document).ready(function() {
 	hotplace.validation.numberOnly('.numberOnly');
 	hotplace.dom.initTooltip('htooltip');
 	hotplace.dom.initTooltip('mBtnTooltip',{side: 'right', trigger: 'hover'});
+	
+	hotplace.calc.profit.init();
 	/*
 	 * 
 	 *   $('.spinner .btn:first-of-type').on('click', function() {

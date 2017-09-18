@@ -12,7 +12,7 @@
 <tr>
 	<td rowspan="3" class="cell-title success">토지개요</td>
 	<td colspan="2" class="cell-title success">소재지(지번)</td>
-	<td colspan="4" class="cell-title">{{addr}}</td>
+	<td colspan="4" class="cell-title">{{address}}</td>
 </tr>
 <tr>
 	<td colspan="2" class="cell-title success">지목</td>
@@ -22,7 +22,7 @@
 </tr>
 <tr>
 	<td colspan="2" class="cell-title success">개별공시지가(㎡당)</td>
-	<td colspan="4" class="cell-title">{{gongsi}} 원</td>
+	<td colspan="4" class="cell-title">{{currency gongsi}} 원</td>
 </tr>
 <tr>
 	<td colspan="7"></td>
@@ -47,9 +47,63 @@
 	</td>
 </tr>
 <tr>
-	<td colspan="2" class="cell-title success">(최근 1년간)토지이용규제 변경 여부</td>
-	<td colspan="3" class="cell-title">유/무</td>
-	<td class="cell-title danger" id="btnViewLandLimit">토지이용규제 변경 내역 보기</td>
+	<td colspan="2" class="cell-title success"><span class="cell-title-rdo">(최근 1년간)토지이용규제 변경 여부</span></td>
+	<td colspan="3" class="cell-title">
+		<div class="radio col-sm-10" style="padding-left:30px">
+    		<input id="radioLandChangeY" name="radioLandChange" type="radio" value="gaein" {{#xif " limitChange == 'Y' " }} checked {{/xif}} disabled>
+        	<label for="radioLandChangeY" class="radio-td">
+                          유
+        	</label>
+            
+        	<input id="radioLandChangeN" name="radioLandChange" type="radio" value="beobin" {{#xif " limitChange == 'N' " }} checked {{/xif}} disabled>
+        	<label for="radioLandChangeN" class="radio-td">
+                         무
+        	</label>
+    	</div>
+	</td>
+	<td class="cell-title danger">
+		<button  id="btnViewLandLimit" type="button" class="btn btn-danger {{#xif " limitChange == 'Y' " }} profitTooltip {{else}}  disabled {{/xif}}" style="width:100%; height:100%;" {{#xif " limitChange == 'Y' " }} data-tooltip-content="#profit_tooltip_content"{{/xif}}>토지이용규제 변경 내역 보기</button>
+		{{#xif " limitChange == 'Y' " }}
+		<div style="display:none;">
+    		<div id="profit_tooltip_content">
+    			<table class="table table-bordered" id="tooltipTB">
+    				<colgroup>
+						<col style="width:200px">
+    					<col style="width:200px">
+    					<col style="width:300px">
+					</colgroup>
+					<tbody>
+					<tr>
+						<td rowspan="2">지역지구등 지정여부</td>
+						<td>국토의 계획 및 이용에 관한 법률에 따른 지역, 지구</td>
+						<td>보전 관리 지역, 소로1류</td>
+					</tr>
+					<tr>
+						<td>다른 법령 등에 따른 지역, 지구등</td>
+						<td>가축 사육제한구역(소,젖소,닭,오리,돼지)</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							토지이용 규제 기본값 시행령 <br/>
+							제9조제4항 각 호에 해당하는 사항
+						</td>
+						<td>
+							&lt;추가재&gt;<br/>
+							하천과 인접한 토지의 경우 재난관리과 하천담당(055-359-5533) 별도확인요
+						</td>
+					</tr>
+					<tr>
+						<td>확인도면</td>
+						<td colspan="2">
+							<img src="https://placeimg.com/320/100/any/sepia" />
+						</td>
+					</tr>
+					</tbody>
+    			</table>
+    		</div>
+		</div>
+		{{/xif}}
+	</td>
 </tr>
 <tr>
 	<td colspan="2" class="cell-title success">도입가능 용도(개략 검토)</td>
@@ -67,18 +121,20 @@
 <tr>
 	<td colspan="7"></td>
 </tr>
+
+{{#defaultValue}}
 <tr>
 	<td rowspan="3" class="cell-title success">수지분석</td>
 	<td colspan="2" class="cell-title success"><span class="cell-title-rdo">매입(보유)주체</span></td>
 	<td colspan="4">
 		<div class="radio col-sm-10" style="padding-left:30px">
-    		<input id="radioPrivate" name="radioOwn" type="radio" checked>
-        	<label for="radioPrivate" class="radio-own">
+    		<input id="radioPrivate" name="radioOwn" type="radio" value="gaein" {{#xif " own == 'gaein' " }} checked {{/xif}}>
+        	<label for="radioPrivate" class="radio-td">
                           개인
         	</label>
             
-        	<input id="radioInc" name="radioOwn" type="radio">
-        	<label for="radioInc" class="radio-own">
+        	<input id="radioInc" name="radioOwn" type="radio" value="beobin" {{#xif " own == 'beobin' " }} checked {{/xif}}>
+        	<label for="radioInc" class="radio-td">
                          법인
         	</label>
     	</div>
@@ -88,7 +144,7 @@
 	<td colspan="2" class="cell-title success"><span class="cell-title-spinner">보유기간</span></td>
 	<td colspan="4">
 		<div class="input-group spinner">
-    		<input type="text" class="form-control" value="5년" id="stepOwnTerm" data-value="5" data-min="0" data-max="10" data-step="0.5" data-suffix="년">
+    		<input type="text" class="form-control" value="{{ownTerm}}년" id="stepOwnTerm" data-value="{{ownTerm}}" data-min="0" data-max="10" data-step="0.5" data-suffix="년">
     		<div class="input-group-btn-vertical">
       			<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       			<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -100,7 +156,7 @@
 	<td colspan="2" class="cell-title success"><span class="cell-title-spinner">타인자본비율</span></td>
 	<td colspan="4">
 		<div class="input-group spinner">
-    		<input type="text" class="form-control" value="70%" id="stepOtherAssetRatio" data-value="70" data-min="0" data-max="100" data-step="1" data-suffix="%">
+    		<input type="text" class="form-control" value="{{otherAssetRatio}}%" id="stepOtherAssetRatio" data-value="{{otherAssetRatio}}" data-min="0" data-max="100" data-step="1" data-suffix="%">
     		<div class="input-group-btn-vertical">
       			<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       			<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -122,14 +178,14 @@
 	<th>비고</th>
 </tr>
 <tr class="collapse out">
-	<td rowspan="31">1.지출</td>
-	<td rowspan="3">A.토지비</td>
+	<td rowspan="31" style="border-bottom:0px !important;background-color:darkturquoise;">1.지출</td>
+	<td rowspan="3" style="border-bottom:0px !important">A.토지비</td>
 	<td>매입금액</td>
 	<td>
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control " id="txtPurchase" type="text"> 
+					<input class="form-control" id="txtPurchase" type="text" disabled data-value="{{../area}}"> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -144,8 +200,8 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td>60.3%</td>
+	<td><input class="form-control" id="WPurchase" type="text" disabled></td>
+	<td><span id="ratioPurchase">60.3</span>%</td>
 	<td>최근 1년간 반경 1km이내 유사 조건 물건의 실거래가 평균</td>
 </tr>
 <tr class="collapse out">
@@ -154,7 +210,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtMyeongdobi" type="text"> 
+					<input class="form-control" id="txtMyeongdobi" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -169,8 +225,8 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td>60.3%</td>
+	<td><input class="form-control" id="WMyeongdobi" type="text" disabled></td>
+	<td><span id="ratioMyeongdobi">60.3</span>%</td>
 	<td>소송비, 집행비 등</td>
 </tr>
 <tr class="collapse out">
@@ -179,7 +235,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtAcceptLandUse" type="text"> 
+					<input class="form-control" id="txtAcceptLandUse" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -194,15 +250,16 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td>60.3%</td>
+	<td><input class="form-control" id="WAcceptLandUse" type="text" disabled></td>
+	<td><span id="ratioAcceptLandUse">60.3</span>%</td>
 	<td>진입도로 토지주 동의서 징구</td>
 </tr>
 <tr class="collapse out">
-	<td colspan="2">소 계</td>
+	<td style="border-top:0px !important; border-right:0px !important;"></td>
+	<td style="border-left:0px !important;">소 계</td>
 	<td></td>
-	<td>840,000</td>
-	<td></td>
+	<td><input class="form-control" id="WTojibi" type="text" disabled></td>
+	<td><span id="ratioTojibi"></span>%</td>
 	<td></td>
 </tr>
 <tr class="collapse out">
@@ -212,7 +269,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtDaechulIja" type="text"> 
+					<input class="form-control" id="txtDaechulIja" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -227,25 +284,25 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WDaechulIja" type="text" disabled></td>
+	<td><span id="ratioDaechulIja"></span>%</td>
 	<td></td>
 </tr>
 <tr class="collapse out">
 	<td colspan="2">소계</td>
 	<td></td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="sumFinancial" type="text" disabled></td>
+	<td><span id="ratioFinancial"></span>%</td>
 	<td></td>
 </tr>
 <tr class="collapse out">
-	<td rowspan="4">B.제세금</td>
+	<td rowspan="3" style="border-bottom:0px !important">B.제세금</td>
 	<td>취득세</td>
 	<td>
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtChwideugse" type="text"> 
+					<input class="form-control" id="txtChwideugse" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -260,8 +317,8 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WChwideugse" type="text" disabled></td>
+	<td><span id="ratioChwideugse"></span>%</td>
 	<td>
 		<div>1.토지(농지외) : 4.6% (취득세4%, 농특세 0.2%, 교육세 0.4%)</div> 
 		<div>2. 농지(전,답,과수원,목장용지) : 3.4%(취득세 3.0%+농특세0.2%+교육세0.2%)</div>
@@ -273,7 +330,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtJaesanse" type="text"> 
+					<input class="form-control" id="txtJaesanse" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -288,8 +345,8 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WJaesanse" type="text" disabled></td>
+	<td><span id="ratioJaesanse"></span>%</td>
 	<td>
 		<p>1. 산식 : 공시지가 × 요율 × 보유기간<br/>
 		   2. 요율<br/>
@@ -307,7 +364,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtYangdose" type="text"> 
+					<input class="form-control" id="txtYangdose" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -322,8 +379,8 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WYangdose" type="text" disabled></td>
+	<td><span id="ratioYangdose"></span>%</td>
 	<td>
 		<p>1. 개인(양도세)<br/>
 		    1)1년미만 : 50%(비사업용은 60%)<br/>
@@ -345,20 +402,21 @@
 	</td>
 </tr>
 <tr class="collapse out">
-	<td>소 계</td>
+	<td style="border-top:0px !important;border-right:0px !important"></td>
+	<td style="border-left:0px !important">소 계</td>
 	<td></td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="sumJesegeum" type="text" disabled></td>
+	<td><span id="ratioJesegeum"></span>%</td>
 	<td></td>
 </tr>
 <tr class="collapse out">
-	<td rowspan="4">C.공사비</td>
+	<td rowspan="4" style="border-bottom:0px !important">C.공사비</td>
 	<td>건축공사비(리모델링)</td>
 	<td>
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtGeonchugGongsa" type="text"> 
+					<input class="form-control" id="txtGeonchugGongsa" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -373,8 +431,8 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WGeonchugGongsa" type="text" disabled></td>
+	<td><span id="ratioGeonchugGongsa"></span>%</td>
 	<td>디폴트값은 평당 450만원</td>
 </tr>
 <tr class="collapse out">
@@ -383,7 +441,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtTomogGongsa" type="text"> 
+					<input class="form-control" id="txtTomogGongsa" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -398,8 +456,8 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WTomogGongsa" type="text" disabled></td>
+	<td><span id="ratioTomogGongsa"></span>%</td>
 	<td>디폴트값은 평당 15만원</td>
 </tr>
 <tr class="collapse out">
@@ -408,7 +466,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtPojangGongsa" type="text"> 
+					<input class="form-control" id="txtPojangGongsa" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -423,8 +481,8 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WPojangGongsa" type="text" disabled></td>
+	<td><span id="ratioPojangGongsa"></span>%</td>
 	<td></td>
 </tr>
 <tr class="collapse out">
@@ -433,7 +491,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtInibGongsa" type="text"> 
+					<input class="form-control" id="txtInibGongsa" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -448,25 +506,26 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
-	<td></td>
-</tr>
-<tr class="collapse out">
-	<td colspan="2">소 계</td>
-	<td></td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WInibGongsa" type="text" disabled></td>
+	<td><span id="ratioInibGongsa"></span>%</td>
 	<td></td>
 </tr>
 <tr class="collapse out">
-	<td rowspan="5">D.인허가비</td>
+	<td style="border-top:0px !important;border-right:0px !important;"></td>
+	<td style="border-left:0px !important;">소 계</td>
+	<td></td>
+	<td><input class="form-control" id="sumGongsabi" type="text" disabled></td>
+	<td><span id="ratioGongsabi"></span>%</td>
+	<td></td>
+</tr>
+<tr class="collapse out">
+	<td rowspan="5" style="border-bottom:0px !important;">D.인허가비</td>
 	<td>개발행위허가 등</td>
 	<td>
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtAcceptGaebal" type="text"> 
+					<input class="form-control" id="txtAcceptGaebal" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -481,8 +540,8 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WAcceptGaebal" type="text" disabled></td>
+	<td><span id="ratioAcceptGaebal"></span>%</td>
 	<td>인허가 일체, 건축 등 일부 외주</td>
 </tr>
 <tr class="collapse out">
@@ -491,7 +550,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtGamri" type="text"> 
+					<input class="form-control" id="txtGamri" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -506,8 +565,8 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WGamri" type="text" disabled></td>
+	<td><span id="ratioGamri"></span>%</td>
 	<td></td>
 </tr>
 <tr class="collapse out">
@@ -516,7 +575,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtCheuglyang" type="text"> 
+					<input class="form-control" id="txtCheuglyang" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -531,8 +590,8 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WCheuglyang" type="text" disabled></td>
+	<td><span id="ratioCheuglyang"></span>%</td>
 	<td>필지분할에 포함</td>
 </tr>
 <tr class="collapse out">
@@ -541,7 +600,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtEvalueGamjeung" type="text"> 
+					<input class="form-control" id="txtEvalueGamjeung" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -556,8 +615,8 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WEvalueGamjeung" type="text" disabled></td>
+	<td><span id="ratioEvalueGamjeung"></span>%</td>
 	<td></td>
 </tr>
 <tr class="collapse out">
@@ -566,7 +625,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtSplitPilji" type="text"> 
+					<input class="form-control" id="txtSplitPilji" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -581,15 +640,16 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WSplitPilji" type="text" disabled></td>
+	<td><span id="ratioSplitPilji"></span>%</td>
 	<td>분할측량 포함</td>
 </tr>
 <tr class="collapse out">
-	<td colspan="2">소 계</td>
+	<td style="border-top:0px !important;border-right:0px !important;"></td>
+	<td style="border-left:0px !important;">소 계</td>
 	<td></td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="sumInheogabi" type="text" disabled></td>
+	<td><span id="ratioInheogabi"></span>%</td>
 	<td></td>
 </tr>
 <tr class="collapse out">
@@ -599,7 +659,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtDevBudam" type="text"> 
+					<input class="form-control" id="txtDevBudam" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -614,8 +674,8 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WDevBudam" type="text" disabled></td>
+	<td><span id="ratioDevBudam"></span>%</td>
 	<td>
 		<p>
 			1. 산식 : 개발이익×25%<br/>
@@ -630,7 +690,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtFarmBudam" type="text"> 
+					<input class="form-control" id="txtFarmBudam" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -645,8 +705,8 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WFarmBudam" type="text" disabled></td>
+	<td><span id="ratioFarmBudam"></span>%</td>
 	<td>
 		<p>
 			1. 산식 : 공시지가의 30%<br/>
@@ -661,7 +721,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtAlterSanrim" type="text"> 
+					<input class="form-control" id="txtAlterSanrim" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -676,8 +736,8 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WAlterSanrim" type="text" disabled></td>
+	<td><span id="ratioAlterSanrim"></span>%</td>
 	<td>
 		<p>
 			1. 산식 : 산지전용면적*(단위면적당금액+공시지가의 1%)<br/>
@@ -690,13 +750,13 @@
 	</td>
 </tr>
 <tr class="collapse out">
-	<td rowspan="6">F.사업경비</td>
+	<td rowspan="6" style="border-bottom:0px !important;">F.사업경비</td>
 	<td>채권매입비</td>
 	<td>
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtPurchaseChaegwon" type="text"> 
+					<input class="form-control" id="txtPurchaseChaegwon" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -711,8 +771,8 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WPurchaseChaegwon" type="text" disabled></td>
+	<td><span id="ratioPurchaseChaegwon"></span>%</td>
 	<td>
 		<p>
 			<a href="http://nhuf.molit.go.kr/FP/FP07/FP0705/FP070504.jsp" target="_blank">바로가기(주택도시기금 매입대상금액조회 사이트)</a>
@@ -725,7 +785,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtSetGeunjeodang" type="text"> 
+					<input class="form-control" id="txtSetGeunjeodang" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -740,8 +800,8 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WSetGeunjeodang" type="text" disabled></td>
+	<td><span id="ratioSetGeunjeodang"></span>%</td>
 	<td>
 		<p>
 			1. 산식 : 대출금액의 130% × 요율<br/>
@@ -755,7 +815,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtPreserveDeunggi" type="text"> 
+					<input class="form-control" id="txtPreserveDeunggi" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -770,8 +830,8 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WPreserveDeunggi" type="text" disabled></td>
+	<td><span id="ratioPreserveDeunggi"></span>%</td>
 	<td>
 		<p>공사비의 3.2% 내외</p>
 	</td>
@@ -782,7 +842,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtManagement" type="text"> 
+					<input class="form-control" id="txtManagement" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -797,8 +857,8 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WManagement" type="text" disabled></td>
+	<td><span id="ratioManagement"></span>%</td>
 	<td>
 		<p>운영수입의 50% 내외</p>
 	</td>
@@ -809,7 +869,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtSellSusulyo" type="text"> 
+					<input class="form-control" id="txtSellSusulyo" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -824,8 +884,8 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WSellSusulyo" type="text" disabled></td>
+	<td><span id="ratioSellSusulyo"></span>%</td>
 	<td>
 		<p>법정 수수료 최대 0.9%</p>
 	</td>
@@ -836,7 +896,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtPreparation" type="text"> 
+					<input class="form-control" id="txtPreparation" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -851,35 +911,37 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WPreparation" type="text" disabled></td>
+	<td><span id="ratioPreparation"></span>%</td>
 	<td>
 		<p>사업비의 10% 내외</p>
 	</td>
 </tr>
 <tr class="collapse out">
-	<td colspan="2">소 계</td>
+	<td style="border-top:0px !important;border-right:0px !important;"></td>
+	<td style="border-left:0px !important;">소 계</td>
 	<td></td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
-	<td></td>
-</tr>
-<tr class="collapse out">
-	<td colspan="3">지출합계 (A+B+C+D+E)</td>
-	<td></td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="sumSaeobgyeongbi" type="text" disabled></td>
+	<td><span id="ratioSaeobgyeongbi"></span>%</td>
 	<td></td>
 </tr>
 <tr class="collapse out">
-	<td rowspan="6">2.수입</td>
-	<td rowspan="3">A.매각</td>
+	<td style="border-top:0px !important;border-right:0px !important;background-color:darkturquoise;"></td>
+	<td style="border-left:0px !important;background-color:darkturquoise;" colspan="2">지출합계 (A+B+C+D+E)</td>
+	<td></td>
+	<td><input class="form-control" id="sumJichool" type="text" disabled></td>
+	<td><span id="ratioJichool"></span>%</td>
+	<td></td>
+</tr>
+<tr class="collapse out">
+	<td rowspan="6" style="border-bottom:0px !important;background-color:khaki;">2.수입</td>
+	<td rowspan="3" style="border-bottom:0px !important;">A.매각</td>
 	<td>건물</td>
 	<td>
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtIncomeSellBuilding" type="text"> 
+					<input class="form-control" id="txtIncomeSellBuilding" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -894,8 +956,8 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WIncomeSellBuilding" type="text" disabled></td>
+	<td><span id="ratioIncomeSellBuilding"></span>%</td>
 	<td></td>
 </tr>
 <tr class="collapse out">
@@ -904,7 +966,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtIncomeSellSeolbi" type="text"> 
+					<input class="form-control" id="txtIncomeSellSeolbi" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -919,8 +981,8 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WIncomeSellSeolbi" type="text" disabled></td>
+	<td><span id="ratioIncomeSellSeolbi"></span>%</td>
 	<td></td>
 </tr>
 <tr class="collapse out">
@@ -929,7 +991,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtIncomeSellLand" type="text"> 
+					<input class="form-control" id="txtIncomeSellLand" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -944,25 +1006,26 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
-	<td></td>
-</tr>
-<tr class="collapse out">
-	<td colspan="2">소 계</td>
-	<td></td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WIncomeSellLand" type="text" disabled></td>
+	<td><span id="ratioIncomeSellLand"></span>%</td>
 	<td></td>
 </tr>
 <tr class="collapse out">
-	<td>B.운영</td>
+	<td style="border-top:0px !important;border-right:0px !important;"></td>
+	<td style="border-left:0px !important;">소 계</td>
+	<td></td>
+	<td><input class="form-control" id="sumIncomeSell" type="text" disabled></td>
+	<td><span id="ratioIncomeSell"></span>%</td>
+	<td></td>
+</tr>
+<tr class="collapse out">
+	<td style="border-bottom:0px !important;">B.운영</td>
 	<td>임대</td>
 	<td>
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtIncomeManageImdae" type="text"> 
+					<input class="form-control" id="txtIncomeManageImdae" type="text" disabled> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -977,22 +1040,24 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WIncomeManageImdae" type="text" disabled></td>
+	<td><span id="ratioIncomeManageImdae"></span>%</td>
 	<td></td>
 </tr>
 <tr class="collapse out">
-	<td colspan="2">소 계</td>
+	<td style="border-top:0px !important;border-right:0px !important;"></td>
+	<td style="border-left:0px !important;">소 계</td>
 	<td></td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="sumIncomeManage" type="text" disabled></td>
+	<td><span id="ratioIncomeManage"></span>%</td>
 	<td>80평*5만원=400만원</td>
 </tr>
 <tr class="collapse out">
-	<td colspan="3">수입합계 (A+B)</td>
+	<td style="border-top:0px !important;border-right:0px !important;background-color:khaki;"></td>
+	<td style="border-left:0px !important;background-color:khaki;" colspan="2">수입합계 (A+B)</td>
 	<td></td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="sumIncome" type="text" disabled></td>
+	<td><span id="ratioIncome"></span>%</td>
 	<td></td>
 </tr>
 <tr class="collapse out">
@@ -1001,23 +1066,24 @@
 <tr>
 	<td colspan="3">자기자본 총액</td>
 	<td></td>
-	<td><input class="form-control" id="1" type="text"></td>
+	<td><input class="form-control" id="WMymoney" type="text" disabled></td>
 	<td></td>
 	<td></td>
 </tr>
 <tr>
 	<td colspan="3">매출이익 (수입-지출)</td>
 	<td></td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WMaechool" type="text" disabled></td>
+	<td><span id="ratioMaechool"></span>%</td>
 	<td></td>
 </tr>
 <tr>
 	<td colspan="3">경상이익(세전)</td>
 	<td></td>
-	<td><input class="form-control" id="1" type="text"></td>
-	<td></td>
+	<td><input class="form-control" id="WGyeongsang" type="text" disabled></td>
+	<td><span id="ratioGyeongsang"></span>%</td>
 	<td>0.63% 년 수익률</td>
 </tr>
+{{/defaultValue}}
 </tbody>
 </table>

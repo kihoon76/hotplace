@@ -36,6 +36,61 @@
         return s;  
     };
     
+    Handlebars.registerHelper('json', function(context) {
+        return JSON.stringify(context);
+    });
+    
+    /**
+     * @private
+     * @desc handlebars-helper-x
+     *  <p>
+     *		{{#xif " name == 'Sam' && age === '12' " }}
+     * 		BOOM
+     *		{{else}}
+     * 		BAMM
+     *		{{/xif}}
+   	 *	</p>
+     * {@link https://gist.github.com/akhoury/9118682 handlebars-helper-x}
+     */
+    Handlebars.registerHelper('x', function(expression, options) {
+    	var result;
+
+    	// you can change the context, or merge it with options.data, options.hash
+    	var context = this;
+
+    	// yup, i use 'with' here to expose the context's properties as block variables
+    	// you don't need to do {{x 'this.age + 2'}}
+    	// but you can also do {{x 'age + 2'}}
+    	// HOWEVER including an UNINITIALIZED var in a expression will return undefined as the result.
+    	with(context) {
+    		result = (function() {
+    			try {
+    				return eval(expression);
+    			}
+    			catch (e) {
+    				console.warn('•Expression: {{x \'' + expression + '\'}}\n•JS-Error: ', e, '\n•Context: ', context);
+    			}
+    		})
+    		.call(context); // to make eval's lexical this=context
+    	}
+    	return result;
+    });
+    
+
+    Handlebars.registerHelper('xif', function (expression, options) {
+    	return Handlebars.helpers['x'].apply(this, [expression, options]) ? options.fn(this) : options.inverse(this);
+    });
+
+    
+    /**
+     * @desc 숫자 자리수 
+     */
+    Handlebars.registerHelper('currency', function(amount, options) {
+    	if (typeof(amount) === 'string') { amount = options.contexts[0].get(amount); }
+
+    	return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    });
+
     /**
      * @private
      * @function _s4
@@ -646,7 +701,7 @@
 					data: {},
 					loadEl: '#dvCellDetail',
 					success: function(data, textStatus, jqXHR) {
-						hotplace.dom.createChart('canvas');
+						//hotplace.dom.createChart('canvas');
 					},
 					error:function() {
 						
@@ -1207,7 +1262,7 @@
 			var tForm = hotplace.dom.getTemplate(options.infoWinFormName);
 			
 			newInfoWindow = new _vender.InfoWindow({
-				content: tForm({address: options.datas.content})
+				content: tForm({datas: options.datas.params})
 		    });
 			
 			_infoWindowsForMarker[markerType].push(newInfoWindow);
@@ -1237,7 +1292,7 @@
 			
 			_venderEvent.addListener(radiusSearchCircle, 'click', function(e) {
 				hotplace.dom.insertFormInmodal('radiusSearchResultForm');
-				hotplace.dom.openModal(options.datas.content + ' 일대 (반경: ' + options.radius + 'm)');
+				hotplace.dom.openModal(options.datas.params.address + ' 일대 (반경: ' + options.radius + 'm)');
 				
 				$("#example-table").tabulator({
 				    height:600, // set height of table
@@ -1522,9 +1577,11 @@
 		
 		_infoWindowForCell = new vender.InfoWindow({
 	        content: template(data),
-	        borderWidth: 1,
-	        zIndex: 1000
+	        borderWidth: 1
+	        //zIndex: 1000
 	    });
+		
+		_infoWindowForCell.setOptions('zIndex', 1000);
 		
 		if(listeners) {
 			for(var eventName in listeners) {
@@ -1959,15 +2016,11 @@
 	 * @desc 수지분석 폼 보기
 	 * {@link https://github.com/simeydotme/jQuery-ui-Slider-Pips jQuery-ui-slider-pips} 
 	 */
-	dom.viewProfit = function(addr) {
+	dom.viewProfit = function(params) {
 		var tForm = dom.getTemplate('profitForm');
 		
-		$('#dvModalContent').html(tForm({
-			addr: addr,
-			jimok: '전',
-			area: 1000,
-			gongsi: 4000
-		}));
+		console.log(params)
+		$('#dvModalContent').html(tForm(params));
 		
 		//수지분석 상세보기 collapse
 		$('#detailView').on('click', function() {
@@ -1999,6 +2052,8 @@
 		$('#tbProfit .spinner .btn:last-of-type').on('click', function() {
 			_workSpinner($(this).parent().parent().children('input:first-child'), 'down');
 		});
+		
+		hotplace.calc.profit.initCalc();
 		
 		/*var sliderTooltip = function(target, html, defaultV) {
 			
@@ -2362,7 +2417,7 @@
 		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''})
 		.on(event('stepEquipmentFee'));*/
 		
-		dom.openModal('수지 분석(소재지: ' + addr + ')', 'fullsize');
+		dom.openModal('수지 분석(소재지: ' + params.address + ')', 'fullsize');
 		//dom.initTooltip('ui-slider-handle', {trigger:'hover'});
 	}
 	
@@ -3433,13 +3488,78 @@
 				hasInfoWindow: true,
 				infoWinFormName: 'pinpointForm',
 				radius: 500,
-				datas: {content: '서울특별시 강동구 길동  15-1'}
+				datas: {
+					params : $.extend({address:'서울특별시 강동구 길동  15-1'}, {defaultValue:hotplace.calc.profit.defaultValue}, {
+						jimok: '전',
+						area: 132,
+						gongsi: 4040000,
+						limitChange:'Y'
+					})
+				}
+				
 			});
 		});
 	}
 	
 }(
 	hotplace.test = hotplace.test || {},
+	jQuery
+));
+
+/**
+ * @namespace hotplace.calc
+ */
+(function(calc, $) {
+	/**
+	 * @memberof hotplace.calc
+	 * @property {object} profit
+	 * 
+	 */
+	calc.profit = function() {
+		/**
+		 * @private
+		 * @property {object} defaultValue 
+		 * @property {string} own - 매입(보유)주체 ('gaein' | 'beobin')
+		 * @property {number} ownTerm - 보유기간 (0 - 10년)
+		 * @property {number} otherAssetRatio - 타인자본비율(0 - 100%)    
+		 */
+		var defaultValue = {
+			own: 'gaein',
+			ownTerm:7,
+			otherAssetRatio:70
+			
+		}
+		
+		
+		/**
+		 * @private
+		 * @function onChangeOwn
+		 * @desc 매입(보유)주체 event
+		 */
+		function onBindOwn() {
+			$(document).on('click', 'input[type="radio"][name="radioOwn"]', function(e) {
+				own = $(this).val();
+			});
+		}
+		
+		function initCalc() {
+			//매입금액 면적 설정
+			var $txtPurchase = $('#txtPurchase');
+			var area = $txtPurchase.data('value');
+			
+			$txtPurchase.val(Math.round(area * 0.3025) + '평');
+		}
+		
+		return {
+			init: function() {
+				onBindOwn();
+			},
+			initCalc: initCalc,
+			defaultValue: defaultValue
+		}
+	}();
+}(
+	hotplace.calc = hotplace.calc || {},
 	jQuery
 ));
 

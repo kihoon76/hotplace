@@ -7,10 +7,16 @@ var livereload = require('gulp-livereload');
 var stripDebug = require('gulp-strip-debug');
 var del = require('del');
 var gutil = require('gulp-util');
-var babel = require('gulp-babel');
+var sass = require('gulp-sass');
 
 var resourceDir   = 'src/main/resources/META-INF/resources';
 var exVendorsDir  = '!' + resourceDir + '/vendors/**';
+
+gulp.task('sass', function() {
+	return gulp.src([resourceDir + '/sass/*.scss'])
+		   .pipe(sass.sync().on('error', sass.logError))
+		   .pipe(gulp.dest(resourceDir + '/css'));
+});
 
 gulp.task('js_min', function() {
 	return gulp.src([resourceDir + '/**/*.js', exVendorsDir])

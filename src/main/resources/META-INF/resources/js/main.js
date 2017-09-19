@@ -506,7 +506,7 @@ $(document).ready(function() {
 		if(!e.currentTarget.secondCall) {
 			
 			e.currentTarget.secondCall = true;
-			hotplace.dom.initTooltip('profitTooltip',{side: 'right'});
+			hotplace.dom.initTooltip('profitTooltip',{side: 'left'});
 			//$(this).trigger('click');
 		}
 		

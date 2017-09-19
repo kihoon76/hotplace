@@ -179,7 +179,7 @@
 </tr>
 <tr class="collapse out">
 	<td rowspan="31" style="border-bottom:0px !important;background-color:darkturquoise;">1.지출</td>
-	<td rowspan="3" style="border-bottom:0px !important">A.토지비</td>
+	<td rowspan="3" style="border-bottom:0px !important;background-color:paleturquoise;">A.토지비</td>
 	<td>매입금액</td>
 	<td>
 		<div class="container">
@@ -192,7 +192,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepPurchase"  data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcPurchase">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -217,7 +217,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepMyeongdobi" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcMyeongdobi">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -242,7 +242,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepAcceptLandUse" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcAcceptLandUse">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -255,8 +255,8 @@
 	<td>진입도로 토지주 동의서 징구</td>
 </tr>
 <tr class="collapse out">
-	<td style="border-top:0px !important; border-right:0px !important;"></td>
-	<td style="border-left:0px !important;">소 계</td>
+	<td style="border-top:0px !important; border-right:0px !important;background-color:paleturquoise;"></td>
+	<td style="border-left:0px !important;background-color:paleturquoise;">소 계</td>
 	<td></td>
 	<td><input class="form-control" id="WTojibi" type="text" disabled></td>
 	<td><span id="ratioTojibi"></span>%</td>
@@ -276,7 +276,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepDaechulIja" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcDaechulIja">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -296,7 +296,7 @@
 	<td></td>
 </tr>
 <tr class="collapse out">
-	<td rowspan="3" style="border-bottom:0px !important">B.제세금</td>
+	<td rowspan="3" style="border-bottom:0px !important;background-color:paleturquoise;">B.제세금</td>
 	<td>취득세</td>
 	<td>
 		<div class="container">
@@ -309,7 +309,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepChwideugse" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcChwideugse">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -337,7 +337,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepJaesanse" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcJaesanse">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -371,7 +371,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepYangdose" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcYangdose">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -402,15 +402,15 @@
 	</td>
 </tr>
 <tr class="collapse out">
-	<td style="border-top:0px !important;border-right:0px !important"></td>
-	<td style="border-left:0px !important">소 계</td>
+	<td style="border-top:0px !important;border-right:0px !important;background-color:paleturquoise;"></td>
+	<td style="border-left:0px !important;background-color:paleturquoise;">소 계</td>
 	<td></td>
 	<td><input class="form-control" id="sumJesegeum" type="text" disabled></td>
 	<td><span id="ratioJesegeum"></span>%</td>
 	<td></td>
 </tr>
 <tr class="collapse out">
-	<td rowspan="4" style="border-bottom:0px !important">C.공사비</td>
+	<td rowspan="4" style="border-bottom:0px !important;background-color:paleturquoise;">C.공사비</td>
 	<td>건축공사비(리모델링)</td>
 	<td>
 		<div class="container">
@@ -423,7 +423,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepGeonchugGongsa" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcGeonchugGongsa">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -448,7 +448,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepTomogGongsa" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcTomogGongsa">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -473,7 +473,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepPojangGongsa" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcPojangGongsa">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -498,7 +498,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepInibGongsa" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcInibGongsa">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -511,15 +511,15 @@
 	<td></td>
 </tr>
 <tr class="collapse out">
-	<td style="border-top:0px !important;border-right:0px !important;"></td>
-	<td style="border-left:0px !important;">소 계</td>
+	<td style="border-top:0px !important;border-right:0px !important;background-color:paleturquoise;"></td>
+	<td style="border-left:0px !important;background-color:paleturquoise;">소 계</td>
 	<td></td>
 	<td><input class="form-control" id="sumGongsabi" type="text" disabled></td>
 	<td><span id="ratioGongsabi"></span>%</td>
 	<td></td>
 </tr>
 <tr class="collapse out">
-	<td rowspan="5" style="border-bottom:0px !important;">D.인허가비</td>
+	<td rowspan="5" style="border-bottom:0px !important;background-color:paleturquoise;">D.인허가비</td>
 	<td>개발행위허가 등</td>
 	<td>
 		<div class="container">
@@ -532,7 +532,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepAcceptGaebal" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcAcceptGaebal">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -557,7 +557,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepGamri" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcGamri">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -582,7 +582,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepCheuglyang" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcCheuglyang">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -607,7 +607,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepEvalueGamjeung" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcEvalueGamjeung">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -632,7 +632,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepSplitPilji" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcSplitPilji">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -645,15 +645,15 @@
 	<td>분할측량 포함</td>
 </tr>
 <tr class="collapse out">
-	<td style="border-top:0px !important;border-right:0px !important;"></td>
-	<td style="border-left:0px !important;">소 계</td>
+	<td style="border-top:0px !important;border-right:0px !important;background-color:paleturquoise;"></td>
+	<td style="border-left:0px !important;background-color:paleturquoise;">소 계</td>
 	<td></td>
 	<td><input class="form-control" id="sumInheogabi" type="text" disabled></td>
 	<td><span id="ratioInheogabi"></span>%</td>
 	<td></td>
 </tr>
 <tr class="collapse out">
-	<td rowspan="3">E.부담금</td>
+	<td rowspan="3" style="background-color:paleturquoise;">E.부담금</td>
 	<td>개발부담금</td>
 	<td>
 		<div class="container">
@@ -666,7 +666,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepDevBudam" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcDevBudam">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -697,7 +697,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepFarmBudam" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcFarmBudam">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -728,7 +728,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepAlterSanrim" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcAlterSanrim">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -750,7 +750,7 @@
 	</td>
 </tr>
 <tr class="collapse out">
-	<td rowspan="6" style="border-bottom:0px !important;">F.사업경비</td>
+	<td rowspan="6" style="border-bottom:0px !important;background-color:paleturquoise;">F.사업경비</td>
 	<td>채권매입비</td>
 	<td>
 		<div class="container">
@@ -763,7 +763,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepPurchaseChaegwon" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcPurchaseChaegwon">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -792,7 +792,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepSetGeunjeodang" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcSetGeunjeodang">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -822,7 +822,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepPreserveDeunggi" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcPreserveDeunggi">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -849,7 +849,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepManagement" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcManagement">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -876,7 +876,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepSellSusulyo" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcSellSusulyo">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -903,7 +903,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepPreparation" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcPreparation">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -918,8 +918,8 @@
 	</td>
 </tr>
 <tr class="collapse out">
-	<td style="border-top:0px !important;border-right:0px !important;"></td>
-	<td style="border-left:0px !important;">소 계</td>
+	<td style="border-top:0px !important;border-right:0px !important;background-color:paleturquoise;"></td>
+	<td style="border-left:0px !important;background-color:paleturquoise;">소 계</td>
 	<td></td>
 	<td><input class="form-control" id="sumSaeobgyeongbi" type="text" disabled></td>
 	<td><span id="ratioSaeobgyeongbi"></span>%</td>
@@ -948,7 +948,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepIncomeSellBuilding" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcIncomeSellBuilding">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -973,7 +973,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepIncomeSellSeolbi" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcIncomeSellSeolbi">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -998,7 +998,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepIncomeSellLand" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcIncomeSellLand">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
@@ -1032,7 +1032,7 @@
 				</div>
 				<div class="input-group spinner col-xs-6">
     				<input type="text" class="form-control" value="-10%" id="stepIncomeManageImdae" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical">
+    				<div class="input-group-btn-vertical" data-fn="calcIncomeManageImdae">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>

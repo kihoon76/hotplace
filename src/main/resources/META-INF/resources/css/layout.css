@@ -429,3 +429,19 @@ web-kit scrollbar style hide
 
 #tbProfit .row-right {
   padding-right: 10px; }
+
+/*chrome button outline*/
+.btn:focus, .btn:active {
+  outline: none !important; }
+
+/*
+	checkbox, radio remove blue outline
+*/
+input[type=checkbox]:focus + label::before,
+input[type=radio]:focus + label::before {
+  outline: none;
+  outline: 0px !important;
+  -webkit-appearance: none !important;
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  box-shadow: none !important; }

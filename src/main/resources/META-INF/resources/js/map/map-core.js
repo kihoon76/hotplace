@@ -36,6 +36,13 @@
         return s;  
     };
     
+    String.prototype.money = function() {
+    	 var s = this;
+    	 s = s.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); 
+    	 
+    	 return s;
+    }
+    
     Handlebars.registerHelper('json', function(context) {
         return JSON.stringify(context);
     });
@@ -1599,6 +1606,17 @@
 		return _infoWindowForCell;
 	}
 	
+	/**
+	 * @private
+	 * @function _bindModalCloseEvent
+	 * @param {function} closeFn close event handler
+	 * @desc modal창이 닫힐때 handler 등록
+	 *       생성후 전역변수 _infoWindowForCell에 저장
+	 */
+	function _bindModalCloseEvent(closeFn) {
+		$('#containerModal').on('hidden.bs.modal', closeFn || function () {});
+	}
+	
 	var _layer = {};
 	
 	
@@ -1748,9 +1766,10 @@
 	 * @function openModal
 	 * @param {string} title  modal창 헤더부분에 표시할 title
 	 * @param {string} modalSize modal창 사이즈('bigsize'|'fullsize') 
+	 * @param {function} closeFn modal창 close handler
 	 * @desc 모달창 open
 	 */
-	dom.openModal = function(title, modalSize) {
+	dom.openModal = function(title, modalSize, closeFn) {
 		$('#spModalTitle').text(title);
 		
 		if(!modalSize) modalSize = 'fullsize';
@@ -1763,6 +1782,7 @@
 		
 		
 		$('#containerModal').modal('show');
+		_bindModalCloseEvent(closeFn);
 	}
 	
 	/**
@@ -1850,6 +1870,8 @@
 			elContent.html(tForm());
 		}
 	}
+	
+	
 	
 	/**
 	 * @memberof hotplace.dom
@@ -1986,7 +2008,7 @@
 	 * @param {string} upDown spinner updown('up'|'down')
 	 * @desc spinner up/down 동작 컨트롤
 	 */
-	function _workSpinner($txt, upDown) {
+	function _workSpinner($txt, upDown, fnStr) {
 		var step = parseFloat($txt.data('step')), 
 		    viewVal = 0,
 		    dataVal = 0,
@@ -2007,6 +2029,8 @@
 		viewVal = dataVal + suffix;
 		$txt.data('value', dataVal);
 	    $txt.val(viewVal);
+	    
+	    hotplace.calc.profit[fnStr]();
 	}
 	
 	/**
@@ -2044,17 +2068,23 @@
 			}
 		});
 		
+		
 		//spinner
 		$('#tbProfit .spinner .btn:first-of-type').on('click', function() {
-			_workSpinner($(this).parent().parent().children('input:first-child'), 'up');
+			var parentDv = $(this).parent();
+			_workSpinner(parentDv.parent().children('input:first-child'), 'up', parentDv.data('fn'));
 		});
 		
 		$('#tbProfit .spinner .btn:last-of-type').on('click', function() {
-			_workSpinner($(this).parent().parent().children('input:first-child'), 'down');
+			var parentDv = $(this).parent();
+			_workSpinner($(this).parent().parent().children('input:first-child'), 'down', parentDv.data('fn'));
 		});
 		
 		hotplace.calc.profit.initCalc();
-		
+		dom.openModal('수지 분석(소재지: ' + params.address + ')', 'fullsize', function() {
+			//닫힐때 토지 이용규제 tooltip이 열려있으면 tooltip을 닫는다.
+			dom.closeTooltip('.profitTooltip');
+		});
 		/*var sliderTooltip = function(target, html, defaultV) {
 			
 			return function(event, ui) {
@@ -2417,7 +2447,7 @@
 		.slider('pips',{first: 'label', last: 'label', rest: 'label', labels: false, prefix: '', suffix: ''})
 		.on(event('stepEquipmentFee'));*/
 		
-		dom.openModal('수지 분석(소재지: ' + params.address + ')', 'fullsize');
+
 		//dom.initTooltip('ui-slider-handle', {trigger:'hover'});
 	}
 	
@@ -3555,7 +3585,134 @@
 				onBindOwn();
 			},
 			initCalc: initCalc,
-			defaultValue: defaultValue
+			defaultValue: defaultValue,
+			calcPurchase: function() {
+				console.log($('#stepPurchase').val());
+				$('#WPurchase').val('120000'.money());
+			},
+			calcMyeongdobi: function() {
+				console.log($('#stepMyeongdobi').val());
+			},
+			calcAcceptLandUse: function() {
+				
+			},
+			calcTojibi: function() {
+				
+			},
+			calcDaechulIja: function() {
+				
+			},
+			calcFinancial: function() {
+				
+			},
+			calcChwideugse: function() {
+				
+			},
+			calcJaesanse: function() {
+				
+			},
+			calcYangdose: function() {
+				
+			},
+			calcJesegeum:function() {
+				
+			},
+			calcGeonchugGongsa: function() {
+				
+			},
+			calcTomogGongsa: function() {
+				
+			},
+			calcPojangGongsa: function() {
+				
+			},
+			calcInibGongsa: function() {
+				
+			},
+			calcGongsabi: function() {
+				
+			},
+			calcAcceptGaebal: function() {
+				
+			},
+			calcGamri: function() {
+				
+			},
+			calcCheuglyang: function() {
+				
+			},
+			calcEvalueGamjeung: function() {
+				
+			},
+			calcSplitPilji: function() {
+				
+			},
+			calcInheogabi: function() {
+				
+			},
+			calcDevBudam: function() {
+				
+			},
+			calcFarmBudam: function() {
+				
+			},
+			calcAlterSanrim: function() {
+				
+			},
+			calcPurchaseChaegwon: function() {
+				
+			},
+			calcSetGeunjeodang: function() {
+				
+			},
+			calcPreserveDeunggi: function() {
+				
+			},
+			calcManagement: function() {
+				
+			},
+			calcSellSusulyo: function() {
+				
+			},
+			calcPreparation: function() {
+				
+			},
+			calcSaeobgyeongbi: function() {
+				
+			},
+			calcJichool: function() {
+				
+			},
+			calcIncomeSellBuilding: function() {
+				
+			},
+			calcIncomeSellSeolbi: function() {
+				
+			},
+			calcIncomeSellLand: function() {
+				
+			},
+			calcIncomeSell: function() {
+				
+			},
+			calcIncomeManageImdae: function() {
+				
+			},
+			calcIncomeManage: function() {
+				
+			},
+			calcIncome: function() {
+				
+			},
+			calcMymoney: function() {
+				
+			},
+			calcMaechool: function() {
+				
+			},
+			calcGyeongsang: function() {
+				
+			}
 		}
 	}();
 }(

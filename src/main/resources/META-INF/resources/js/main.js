@@ -506,8 +506,24 @@ $(document).ready(function() {
 		if(!e.currentTarget.secondCall) {
 			
 			e.currentTarget.secondCall = true;
-			hotplace.dom.initTooltip('profitTooltip',{side: 'right', trigger: 'click'});
-			$(this).trigger('click');
+			hotplace.dom.initTooltip('profitTooltip',{side: 'right'});
+			//$(this).trigger('click');
+		}
+		
+		var onOff = $(this).data('switch');
+		if(onOff == 'off') {
+			hotplace.dom.openTooltip('#btnViewLandLimit');
+			$(this).data('switch', 'on');
+			$(this).html(' 토지이용규제 변경내역닫기');
+			$(this).removeClass('glyphicon-folder-close');
+			$(this).addClass('glyphicon-folder-open');
+		}
+		else {
+			hotplace.dom.closeTooltip('#btnViewLandLimit');
+			$(this).data('switch', 'off');
+			$(this).html(' 토지이용규제 변경내역보기');
+			$(this).removeClass('glyphicon-folder-open');
+			$(this).addClass('glyphicon-folder-close');
 		}
 	});
 	

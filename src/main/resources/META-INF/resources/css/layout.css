@@ -385,6 +385,9 @@ input[readonly] {
 #mapButtons .glyphicon {
   font-size: 25px; }
 
+/*#btnViewLandLimit.glyphicon {
+    font-size: 18px;
+}*/
 /*
 web-kit scrollbar style hide
 */
@@ -426,6 +429,3 @@ web-kit scrollbar style hide
 
 #tbProfit .row-right {
   padding-right: 10px; }
-
-#tbProfit .jichool-sum {
-  background-color: #ffbbcc; }

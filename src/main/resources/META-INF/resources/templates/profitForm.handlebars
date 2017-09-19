@@ -62,7 +62,7 @@
     	</div>
 	</td>
 	<td class="cell-title danger">
-		<button  id="btnViewLandLimit" type="button" class="btn btn-danger {{#xif " limitChange == 'Y' " }} profitTooltip {{else}}  disabled {{/xif}}" style="width:100%; height:100%;" {{#xif " limitChange == 'Y' " }} data-tooltip-content="#profit_tooltip_content"{{/xif}}>토지이용규제 변경 내역 보기</button>
+		<button  id="btnViewLandLimit" type="button" class="btn btn-danger glyphicon glyphicon-folder-close {{#xif " limitChange == 'Y' " }} profitTooltip {{else}}  disabled {{/xif}}" style="width:100%; height:100%;" {{#xif " limitChange == 'Y' " }} data-tooltip-content="#profit_tooltip_content"{{/xif}} data-switch="off"> 토지이용규제 변경내역보기</button>
 		{{#xif " limitChange == 'Y' " }}
 		<div style="display:none;">
     		<div id="profit_tooltip_content">

@@ -95,10 +95,10 @@ public class PdfItext {
 		// 폰트 설정에서 별칭으로 줬던 "MalgunGothic"을 html 안에 폰트로 지정한다.
 		StringBuilder htmlStr = new StringBuilder();
 		htmlStr.append("<html><head><body style='font-family: NanumGothic;'>");
-		System.out.println(getHtmlString(jo));
 		htmlStr.append(getHtmlString(jo));
 		htmlStr.append("</body></head></html>");
 		
+		System.out.println(htmlStr.toString());
 		StringReader strReader = new StringReader(htmlStr.toString());
 		xmlParser.parse(strReader);
 		 

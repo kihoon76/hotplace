@@ -586,7 +586,7 @@ $(document).ready(function() {
 			console.log('idle');
 		}*/
 	}, function(map) {
-		//hotplace.maps.showCellLayer();
+		hotplace.maps.showCellLayer();
 		hotplace.dom.showYearRangeDiv();
 		hotplace.dom.showAutoYearRangeDiv();
 	});

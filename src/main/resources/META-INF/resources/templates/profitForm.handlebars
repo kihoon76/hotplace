@@ -95,7 +95,7 @@
 					<tr>
 						<td>확인도면</td>
 						<td colspan="2">
-							<img src="https://placeimg.com/320/100/any/sepia" />
+							<!--<img src="https://placeimg.com/320/100/any/sepia" />-->
 						</td>
 					</tr>
 					</tbody>
@@ -145,7 +145,7 @@
 	<td colspan="4">
 		<div class="input-group spinner">
     		<input type="text" class="form-control" value="{{ownTerm}}년" id="stepOwnTerm" data-value="{{ownTerm}}" data-min="0" data-max="10" data-step="0.5" data-suffix="년">
-    		<div class="input-group-btn-vertical">
+    		<div class="input-group-btn-vertical" data-fn="calcOwnTerm">
       			<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       			<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     		</div>
@@ -157,7 +157,7 @@
 	<td colspan="4">
 		<div class="input-group spinner">
     		<input type="text" class="form-control" value="{{otherAssetRatio}}%" id="stepOtherAssetRatio" data-value="{{otherAssetRatio}}" data-min="0" data-max="100" data-step="1" data-suffix="%">
-    		<div class="input-group-btn-vertical">
+    		<div class="input-group-btn-vertical" data-fn="calcOtherAssetRatio">
       			<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       			<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     		</div>
@@ -178,7 +178,7 @@
 	<th>비고</th>
 </tr>
 <tr class="collapse out">
-	<td rowspan="31" style="border-bottom:0px !important;background-color:darkturquoise;">1.지출</td>
+	<td rowspan="32" style="border-bottom:0px !important;background-color:darkturquoise;">1.지출</td>
 	<td rowspan="3" style="border-bottom:0px !important;background-color:paleturquoise;">A.토지비</td>
 	<td>매입금액</td>
 	<td>
@@ -201,7 +201,7 @@
     	</div>
 	</td>
 	<td><input class="form-control" id="WPurchase" type="text" disabled></td>
-	<td><span id="ratioPurchase">60.3</span>%</td>
+	<td><span id="ratioPurchase">100</span>%</td>
 	<td>최근 1년간 반경 1km이내 유사 조건 물건의 실거래가 평균</td>
 </tr>
 <tr class="collapse out">
@@ -226,7 +226,7 @@
     	</div>
 	</td>
 	<td><input class="form-control" id="WMyeongdobi" type="text" disabled></td>
-	<td><span id="ratioMyeongdobi">60.3</span>%</td>
+	<td><span id="ratioMyeongdobi">0</span>%</td>
 	<td>소송비, 집행비 등</td>
 </tr>
 <tr class="collapse out">
@@ -251,7 +251,7 @@
     	</div>
 	</td>
 	<td><input class="form-control" id="WAcceptLandUse" type="text" disabled></td>
-	<td><span id="ratioAcceptLandUse">60.3</span>%</td>
+	<td><span id="ratioAcceptLandUse">0</span>%</td>
 	<td>진입도로 토지주 동의서 징구</td>
 </tr>
 <tr class="collapse out">
@@ -259,7 +259,7 @@
 	<td style="border-left:0px !important;background-color:paleturquoise;">소 계</td>
 	<td></td>
 	<td><input class="form-control" id="WTojibi" type="text" disabled></td>
-	<td><span id="ratioTojibi"></span>%</td>
+	<td><span id="ratioTojibi">0</span>%</td>
 	<td></td>
 </tr>
 <tr class="collapse out">
@@ -285,14 +285,14 @@
     	</div>
 	</td>
 	<td><input class="form-control" id="WDaechulIja" type="text" disabled></td>
-	<td><span id="ratioDaechulIja"></span>%</td>
+	<td><span id="ratioDaechulIja">0</span>%</td>
 	<td></td>
 </tr>
 <tr class="collapse out">
 	<td colspan="2">소계</td>
 	<td></td>
 	<td><input class="form-control" id="sumFinancial" type="text" disabled></td>
-	<td><span id="ratioFinancial"></span>%</td>
+	<td><span id="ratioFinancial">100</span>%</td>
 	<td></td>
 </tr>
 <tr class="collapse out">
@@ -318,7 +318,7 @@
     	</div>
 	</td>
 	<td><input class="form-control" id="WChwideugse" type="text" disabled></td>
-	<td><span id="ratioChwideugse"></span>%</td>
+	<td><span id="ratioChwideugse">0</span>%</td>
 	<td>
 		<div>1.토지(농지외) : 4.6% (취득세4%, 농특세 0.2%, 교육세 0.4%)</div> 
 		<div>2. 농지(전,답,과수원,목장용지) : 3.4%(취득세 3.0%+농특세0.2%+교육세0.2%)</div>
@@ -653,7 +653,7 @@
 	<td></td>
 </tr>
 <tr class="collapse out">
-	<td rowspan="3" style="background-color:paleturquoise;">E.부담금</td>
+	<td rowspan="3" style="border-bottom:0px !important;background-color:paleturquoise;">E.부담금</td>
 	<td>개발부담금</td>
 	<td>
 		<div class="container">
@@ -748,6 +748,14 @@
 			3. <a href="http://www.forest.go.kr/newkfsweb/cop/bbs/selectBoardList.do?bbsId=BBSMSTR_1387&orgId=fli&mn=KFS_02_05_02_04" target="_blank">바로가기(산림청)</a>
 		</p>
 	</td>
+</tr>
+<tr class="collapse out">
+	<td style="border-top:0px !important;border-right:0px !important;background-color:paleturquoise;"></td>
+	<td style="border-left:0px !important;background-color:paleturquoise;">소 계</td>
+	<td></td>
+	<td><input class="form-control" id="sumBudamgeum" type="text" disabled></td>
+	<td><span id="ratioBudamgeum"></span>%</td>
+	<td></td>
 </tr>
 <tr class="collapse out">
 	<td rowspan="6" style="border-bottom:0px !important;background-color:paleturquoise;">F.사업경비</td>
@@ -927,7 +935,7 @@
 </tr>
 <tr class="collapse out">
 	<td style="border-top:0px !important;border-right:0px !important;background-color:darkturquoise;"></td>
-	<td style="border-left:0px !important;background-color:darkturquoise;" colspan="2">지출합계 (A+B+C+D+E)</td>
+	<td style="border-left:0px !important;background-color:darkturquoise;" colspan="2">지출합계 (A+B+C+D+E+F)</td>
 	<td></td>
 	<td><input class="form-control" id="sumJichool" type="text" disabled></td>
 	<td><span id="ratioJichool"></span>%</td>
@@ -1085,5 +1093,10 @@
 	<td>0.63% 년 수익률</td>
 </tr>
 {{/defaultValue}}
+<tr>
+	<td colspan="7">
+		<button type="button" class="btn" onclick="hotplace.report.PDF.profit();">파일저장</button>
+	</td>
+</tr>
 </tbody>
 </table>

@@ -9,6 +9,7 @@
  * @namespace hotplace
  * */
 (function(hotplace, $) {
+	
 	var _version = '1.0';
 	var _ROOT_CONTEXT = $('body').data('url');
 	
@@ -60,6 +61,7 @@
      * {@link https://gist.github.com/akhoury/9118682 handlebars-helper-x}
      */
     Handlebars.registerHelper('x', function(expression, options) {
+    	
     	var result;
 
     	// you can change the context, or merge it with options.data, options.hash
@@ -96,6 +98,30 @@
     	if (typeof(amount) === 'string') { amount = options.contexts[0].get(amount); }
 
     	return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    });
+    
+    /**
+     * @desc 숫자 연산 
+     * {@link https://gist.github.com/FrankFang/6603970 math.js}
+     */
+    Handlebars.registerHelper('math', function(lvalue, operator, rvalue, options) {
+        if (arguments.length < 4) {
+            // Operator omitted, assuming "+"
+            options = rvalue;
+            rvalue = operator;
+            operator = "+";
+        }
+            
+        lvalue = parseFloat(lvalue);
+        rvalue = parseFloat(rvalue);
+            
+        return {
+            '+': lvalue + rvalue,
+            '-': lvalue - rvalue,
+            '*': lvalue * rvalue,
+            '/': lvalue / rvalue,
+            '%': lvalue % rvalue
+        }[operator];
     });
 
     /**
@@ -2080,10 +2106,13 @@
 			_workSpinner($(this).parent().parent().children('input:first-child'), 'down', parentDv.data('fn'));
 		});
 		
-		hotplace.calc.profit.initCalc();
+		hotplace.calc.profit.initCalc(params);
 		dom.openModal('수지 분석(소재지: ' + params.address + ')', 'fullsize', function() {
-			//닫힐때 토지 이용규제 tooltip이 열려있으면 tooltip을 닫는다.
-			dom.closeTooltip('.profitTooltip');
+			try {
+				//닫힐때 토지 이용규제 tooltip이 열려있으면 tooltip을 닫는다.
+				dom.closeTooltip('.profitTooltip');
+			}
+			catch(e) {} //툴팁을 한번도 open 하지 않은 상태에서 close하면 error 발생
 		});
 		/*var sliderTooltip = function(target, html, defaultV) {
 			
@@ -2605,6 +2634,21 @@
 	 */
 	dom.removeBodyAllMask = function() {
 		$('#dimScreen').hide();
+	}
+	
+	/**
+	 * @memberof hotplace.dom
+	 * @function loadScript
+	 * @param {string} url - script 경로
+	 * @param {function} loadFn - script onload handler
+	 * @desc 스크립트를 동적으로 로딩한다
+	 */
+	dom.loadScript = function(url, loadFn) {
+		var script = document.createElement('script');
+		
+		if(loadFn) 	script.onload = loadFn;
+		script.src = hotplace.getContextUrl() + url;
+		document.body.appendChild(script);
 	}
 	
 }(
@@ -3521,6 +3565,7 @@
 				datas: {
 					params : $.extend({address:'서울특별시 강동구 길동  15-1'}, {defaultValue:hotplace.calc.profit.defaultValue}, {
 						jimok: '전',
+						valPerPyeung:21000000,
 						area: 132,
 						gongsi: 4040000,
 						limitChange:'Y'
@@ -3542,8 +3587,44 @@
 (function(calc, $) {
 	/**
 	 * @memberof hotplace.calc
-	 * @property {object} profit
+	 * @name profit
+	 * @type {object} 
+	 * @property {object} defaultValue
+	 * @property {string} defaultValue.own - 매입(보유)주체 ('gaein' | 'beobin')
+	 * @property {number} defaultValue.ownTerm - 보유기간 (0 - 10년)
+	 * @property {number} defaultValue.otherAssetRatio - 타인자본비율(0 - 100%)   
 	 * 
+	 * @property {function} initCalc 				로딩시 기본적으로 수행하는 연산 초기화
+	 * @property {function} calcOwnTerm				보유기간 연산함수  
+	 * @property {function} calcPurchase 			매입금액 연산함수
+	 * @property {function} calcMyeongdobi 			명도비 연산함수
+	 * @property {function} calcAcceptLandUse 		토지사용승낙 연산함수
+	 * @property {function} calcDaechulIja 			대출이자 연산함수
+	 * @property {function} calcChwideugse 			취득세 연산함수
+	 * @property {function} calcJaesanse 			재산세 연산함수
+	 * @property {function} calcYangdose 			양도세 연산함수
+	 * @property {function} calcGeonchugGongsa		건축공사비 연산함수  
+	 * @property {function} calcTomogGongsa			토목공사비 연산함수
+	 * @property {function} calcPojangGongsa		포장공사비 연산함수
+	 * @property {function} calcInibGongsa  		인입공사비 연산함수
+	 * @property {function} calcAcceptGaebal  		개발행위허가 연산함수
+	 * @property {function} calcGamri  		    	감리비 연산함수
+	 * @property {function} calcCheuglyang	    	측량비 연산함수
+	 * @property {function} calcEvalueGamjeung  	감정평가비 연산함수
+	 * @property {function} calcSplitPilji      	필지분할비 연산함수
+	 * @property {function} calcDevBudam			개발부담금 연산함수
+	 * @property {function} calcFarmBudam  			농지보전부담금 연산함수
+	 * @property {function} calcAlterSanrim  		대체산림자원조성비 연산함수
+	 * @property {function} calcPurchaseChaegwon	채권매입비 연산함수
+	 * @property {function} calcSetGeunjeodang      근저당설정비 연산함수
+	 * @property {function} calcPreserveDeunggi     보존등기비 연산함수
+	 * @property {function} calcManagement          운영비 연산함수
+	 * @property {function} calcSellSusulyo         매각수수료 연산함수
+	 * @property {function} calcPreparation         예비비 연산함수
+	 * @property {function} calcIncomeSellBuilding  수입>매각>건물 연산함수
+	 * @property {function} calcIncomeSellSeolbi    수입>매각>설비 연산함수
+	 * @property {function} calcIncomeSellLand  	수입>매각>토지 연산함수
+	 * @property {function} calcIncomeManageImdae	수입>운영>임대 연산함수
 	 */
 	calc.profit = function() {
 		/**
@@ -3560,7 +3641,6 @@
 			
 		}
 		
-		
 		/**
 		 * @private
 		 * @function onChangeOwn
@@ -3572,12 +3652,205 @@
 			});
 		}
 		
-		function initCalc() {
-			//매입금액 면적 설정
-			var $txtPurchase = $('#txtPurchase');
-			var area = $txtPurchase.data('value');
+		var data = null;
+		var moneyUnit = 1000;
+		/**
+		 * @private 
+		 * @function initCalc
+		 * @desc 로딩시 기본적으로 수행하는 연산 초기화
+		 */
+		function initCalc(params) {
+			data = params;
+			calc.profit.calcPurchase(function() {
+				//매입금액 면적 설정
+				var $txtPurchase = $('#txtPurchase');
+				var $WPurchase = $('#WPurchase');
+				var area = $txtPurchase.data('value');
+				var pyeung = Math.round(area * 0.3025);
+				var val = (pyeung * data.valPerPyeung)/moneyUnit;
+				
+				$txtPurchase.val(pyeung + '평');
+				$WPurchase.data('value', val);
+				$WPurchase.val(val.toString().money());
+			});
+		}
+		
+		/**
+		 * @private 
+		 * @function calcRatio
+		 * @desc 비율
+		 */
+		function calcRatio() {
 			
-			$txtPurchase.val(Math.round(area * 0.3025) + '평');
+		}
+		
+		/**
+		 * @private 
+		 * @function calcTojibi
+		 * @desc 토지비 (매입금액, 명도비, 토지사용승낙)
+		 */
+		function calcTojibi(changedEl) {
+			console.log('토지비 (매입금액, 명도비, 토지사용승낙)');
+			calcJichool();
+		}
+		
+		/**
+		 * @private 
+		 * @function calcFinancial
+		 * @desc 금융비용 (대출이자)
+		 */
+		function calcFinancial() {
+			console.log('금융비용 (대출이자)');
+		}
+		
+		/**
+		 * @private 
+		 * @function calcJesegeum
+		 * @desc 제세금 (취득세,재산세,양도세)
+		 */
+		function calcJesegeum() {
+			console.log('제세금 (취득세,재산세,양도세)');
+			calcJichool();
+		}
+		
+		/**
+		 * @private 
+		 * @function calcGongsabi
+		 * @desc 공사비 (건축공사비, 토목공사비, 포장공사비, 인입공사비)
+		 */
+		function calcGongsabi() {
+			console.log('공사비 (건축공사비, 토목공사비, 포장공사비, 인입공사비)');
+			calcJichool();
+		}
+		
+		/**
+		 * @private 
+		 * @function calcInheogabi
+		 * @desc 인허가비 (개발행위, 감리비, 측량비, 감정평가, 필지분할)
+		 */
+		function calcInheogabi() {
+			console.log('인허가비 (개발행위, 감리비, 측량비, 감정평가, 필지분할)');
+			calcJichool();
+		}
+		
+		/**
+		 * @private 
+		 * @function calcBudamgeum
+		 * @desc 부담금 (개발부담금, 농지보전부담금, 대체산림자원조성비)
+		 */
+		function calcBudamgeum() {
+			console.log('부담금 (개발부담금, 농지보전부담금, 대체산림자원조성비)');
+			calcJichool();
+		}
+		
+		/**
+		 * @private 
+		 * @function calcSaeobgyeongbi
+		 * @desc 사업경비(채권매입비, 근저당설정비, 보존등기비, 운영비, 매각수수료, 예비비)
+		 */
+		function calcSaeobgyeongbi() {
+			console.log('사업경비(채권매입비, 근저당설정비, 보존등기비, 운영비, 매각수수료, 예비비)');
+			calcJichool();
+		}
+		
+		/**
+		 * @private 
+		 * @function calcJichool
+		 * @desc 지출합계(토지비, 제세금, 공사비, 인허가비, 부담금, 사업경비)
+		 */
+		function calcJichool() {
+			console.log('지출합계(토지비, 제세금, 공사비, 인허가비, 부담금, 사업경비)');
+			calcMaechool();
+		}
+		
+		/**
+		 * @private 
+		 * @function calcIncomeSell
+		 * @desc 수입>매각(건물,설비,토지)
+		 */
+		function calcIncomeSell() {
+			console.log('수입>매각(건물,설비,토지)');
+			calcIncome();
+		}
+		
+		/**
+		 * @private 
+		 * @function calcIncomeManage
+		 * @desc 수입>운영(임대)
+		 */
+		function calcIncomeManage() {
+			console.log('수입>운영(임대)');
+			calcIncome();
+		}
+		
+		/**
+		 * @private 
+		 * @function calcIncome
+		 * @desc 수입합계
+		 */
+		function calcIncome() {
+			console.log('수입합계');
+			calcMaechool();
+		}
+		
+		/**
+		 * @private 
+		 * @function calcMymoney
+		 * @desc 자기자본 총액 (매입금액 + 명도비 + 토지사용승낙 + 취득세 + 공사비 + 개발행위허가 + 부담금 + 
+		 *          		채권매입비 + 근저당설정비 + 보존등기비)
+		 */
+		function calcMymoney() {
+			console.log('자기자본 총액');
+			//매입금액의 30%
+			var purchase30 = parseFloat($('#WPurchase').data('value') || 0) * 0.3;
+			//명도비
+			var myeongdobi = parseFloat($('#WMyeongdobi').data('value') || 0);
+			//토지사용승낙
+			var acceptLandUse = parseFloat($('#WAcceptLandUse').data('value') || 0);
+			//취득세
+			var chwideugse = parseFloat($('#WChwideugse').data('value') || 0);
+			//건축공사비
+			var geonchugGongsa = parseFloat($('#WGeonchugGongsa').data('value') || 0);
+			//토목공사비
+			var tomogGongsa = parseFloat($('#WTomogGongsa').data('value') || 0);
+			//포장공사비
+			var pojangGongsa = parseFloat($('#WPojangGongsa').data('value') || 0);
+			//인입공사비
+			var inibGongsa = parseFloat($('#WInibGongsa').data('value') || 0);
+			//개발행위허가
+			var acceptGaebal = parseFloat($('#WAcceptGaebal').data('value') || 0);
+			//개발부담금
+			var devBudam = parseFloat($('#WDevBudam').data('value') || 0);
+			//농지보전부담금
+			var farmBudam = parseFloat($('#WFarmBudam').data('value') || 0);
+			//대체산림자원조성비
+			var alterSanrim = parseFloat($('#WAlterSanrim').data('value') || 0);
+			//채권매입비
+			var purchaseChaegwon = parseFloat($('#WPurchaseChaegwon').data('value') || 0);
+			//근저당설정비
+			var setGeunjeodang = parseFloat($('#WSetGeunjeodang').data('value') || 0);
+			//보존등기비
+			var preserveDeunggi = parseFloat($('#WPreserveDeunggi').data('value') || 0);
+			
+			var sum = 0;
+				sum += purchase30  + myeongdobi   + acceptLandUse;
+			    sum += chwideugse;
+			    sum += geonchugGongsa + tomogGongsa + pojangGongsa + inibGongsa;
+			    sum += acceptGaebal;
+			    sum += devBudam + farmBudam + alterSanrim;
+			    sum += purchaseChaegwon + setGeunjeodang + preserveDeunggi;
+			sum = Math.round(sum) + '';
+			    
+			$('#WMymoney').val(sum.money());
+		}
+		
+		/**
+		 * @private 
+		 * @function calcMaechool
+		 * @desc 매출이익 (수입-지출)
+		 */
+		function calcMaechool() {
+			console.log('매출이익 (수입-지출)');
 		}
 		
 		return {
@@ -3586,129 +3859,142 @@
 			},
 			initCalc: initCalc,
 			defaultValue: defaultValue,
-			calcPurchase: function() {
-				console.log($('#stepPurchase').val());
-				$('#WPurchase').val('120000'.money());
+			calcOwnTerm: function() {
+				
+			},
+			calcPurchase: function(initFn) {
+				console.log('매입금액');
+				if(initFn) initFn();
+				
+				//$('#WPurchase').val('120000'.money());
+				calcMymoney();//자기자본
+				calcTojibi();
 			},
 			calcMyeongdobi: function() {
-				console.log($('#stepMyeongdobi').val());
+				console.log('명도비');
+				calcMymoney();//자기자본
+				calcTojibi();
 			},
 			calcAcceptLandUse: function() {
-				
-			},
-			calcTojibi: function() {
-				
+				console.log('토지사용승낙');
+				calcMymoney();//자기자본
+				calcTojibi();
 			},
 			calcDaechulIja: function() {
-				
-			},
-			calcFinancial: function() {
-				
+				console.log('대출이자');
+				calcFinancial();
 			},
 			calcChwideugse: function() {
-				
+				console.log('취득세');
+				calcMymoney();//자기자본
+				calcJesegeum();
 			},
 			calcJaesanse: function() {
-				
+				console.log('재산세');
+				calcJesegeum();
 			},
 			calcYangdose: function() {
-				
-			},
-			calcJesegeum:function() {
-				
+				console.log('양도세');
+				calcJesegeum();
 			},
 			calcGeonchugGongsa: function() {
-				
+				console.log('건축공사비');
+				calcMymoney();//자기자본
+				calcGongsabi();
 			},
 			calcTomogGongsa: function() {
-				
+				console.log('토목공사비');
+				calcMymoney();//자기자본
+				calcGongsabi();
 			},
 			calcPojangGongsa: function() {
-				
+				console.log('포장공사비');
+				calcMymoney();//자기자본
+				calcGongsabi();
 			},
 			calcInibGongsa: function() {
-				
-			},
-			calcGongsabi: function() {
-				
+				console.log('인입공사비');
+				calcMymoney();//자기자본
+				calcGongsabi();
 			},
 			calcAcceptGaebal: function() {
-				
+				console.log('개발행위허가');
+				calcMymoney();//자기자본
+				calcInheogabi();
 			},
 			calcGamri: function() {
-				
+				console.log('감리비');
+				calcInheogabi();
 			},
 			calcCheuglyang: function() {
-				
+				console.log('측량비');
+				calcInheogabi();
 			},
 			calcEvalueGamjeung: function() {
-				
+				console.log('감정평가');
+				calcInheogabi();
 			},
 			calcSplitPilji: function() {
-				
-			},
-			calcInheogabi: function() {
-				
+				console.log('필지분할');
+				calcInheogabi();
 			},
 			calcDevBudam: function() {
-				
+				console.log('개발부담금');
+				calcMymoney();//자기자본
+				calcBudamgeum();
 			},
 			calcFarmBudam: function() {
-				
+				console.log('농지보전부담금');
+				calcMymoney();//자기자본
+				calcBudamgeum();
 			},
 			calcAlterSanrim: function() {
-				
+				console.log('대체산림자원조성비');
+				calcMymoney();//자기자본
+				calcBudamgeum();
 			},
 			calcPurchaseChaegwon: function() {
-				
+				console.log('채권매입비');
+				calcMymoney();//자기자본
+				calcSaeobgyeongbi();
 			},
 			calcSetGeunjeodang: function() {
-				
+				console.log('근저당 설정비');
+				calcMymoney();//자기자본
+				calcSaeobgyeongbi();
 			},
 			calcPreserveDeunggi: function() {
-				
+				console.log('보존등기비');
+				calcMymoney();//자기자본
+				calcSaeobgyeongbi();
 			},
 			calcManagement: function() {
-				
+				console.log('운영비');
+				calcSaeobgyeongbi();
 			},
 			calcSellSusulyo: function() {
-				
+				console.log('매각수수료');
+				calcSaeobgyeongbi();
 			},
 			calcPreparation: function() {
-				
-			},
-			calcSaeobgyeongbi: function() {
-				
-			},
-			calcJichool: function() {
-				
+				console.log('예비비');
+				calcSaeobgyeongbi();
 			},
 			calcIncomeSellBuilding: function() {
-				
+				console.log('수입>매각>건물');
+				calcIncomeSell();
 			},
 			calcIncomeSellSeolbi: function() {
-				
+				console.log('수입>매각>설비');
+				calcIncomeSell();
 			},
 			calcIncomeSellLand: function() {
-				
-			},
-			calcIncomeSell: function() {
-				
+				console.log('수입>매각>토지');
+				calcIncomeSell();
 			},
 			calcIncomeManageImdae: function() {
-				
-			},
-			calcIncomeManage: function() {
-				
-			},
-			calcIncome: function() {
-				
-			},
-			calcMymoney: function() {
-				
-			},
-			calcMaechool: function() {
-				
+				console.log('수입>운영>임대');
+				calcIncomeManage();
 			},
 			calcGyeongsang: function() {
 				
@@ -3717,6 +4003,45 @@
 	}();
 }(
 	hotplace.calc = hotplace.calc || {},
+	jQuery
+));
+
+/**
+ * @namespace hotplace.report 
+ * https://brunch.co.kr/@ourlove/60
+ * @desc printThis jquery library
+ */
+(function(report, $) {
+	
+	function send(type, cfg) {
+		var form = document.createElement('form');
+		form.action = hotplace.getContextUrl() + 'download/' + type;
+		form.method = 'POST';
+		form.target = '_blank';
+		
+		var input = document.createElement('input');
+		input.type = 'hidden';
+	    input.name = 'json';
+	    input.value = JSON.stringify(cfg);
+	   
+	    form.appendChild(input);
+		form.style.display = 'none';
+		document.body.appendChild(form);
+		form.submit();
+	}
+	
+	report.PDF = {
+		profit : function() {
+			send('pdf', {
+					fileName:'profitFormPdf',
+					cssName: 'profitPdf',
+					docName: '수지분석',
+			});
+		}
+	}
+
+}(
+	hotplace.report = hotplace.report || {},
 	jQuery
 ));
 

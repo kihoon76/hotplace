@@ -336,6 +336,7 @@ $(document).ready(function() {
 				datas: {
 					params : $.extend({address:address}, hotplace.calc.profit.defaultValue, {
 						jimok: '전',
+						valPerPyeung:21000000,
 						area: 1000,
 						gongsi: 4000,
 						limitChange:'Y'
@@ -585,7 +586,7 @@ $(document).ready(function() {
 			console.log('idle');
 		}*/
 	}, function(map) {
-		hotplace.maps.showCellLayer();
+		//hotplace.maps.showCellLayer();
 		hotplace.dom.showYearRangeDiv();
 		hotplace.dom.showAutoYearRangeDiv();
 	});

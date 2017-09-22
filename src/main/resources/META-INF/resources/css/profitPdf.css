@@ -1,0 +1,12 @@
+/**
+	java html parser에서 사용함
+*/
+
+.table {border-collapse:collapse; width:100%; font-size:10pt;}
+.table td.col0 {width:2%;}  
+.table td.col1 {width:15%;}
+.table td.col2 {width:20%;}
+.table td.col3 {width:43%;}
+.table td.col4 {width:10%;}
+.table td.col5 {width:10%;}
+.table th, .table td { border:0.5px solid black; padding:10 10 10 10;}

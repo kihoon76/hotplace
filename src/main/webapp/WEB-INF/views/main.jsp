@@ -22,8 +22,6 @@
 <!-- bootstrap toggle -->
 <script type="text/javascript" src="/resources/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 
-<!-- html2canvas -->
-<script type="text/javascript" src="/resources/vendors/html2canvas/html2canvas.js"></script>
-<script type="text/javascript" src="/resources/vendors/html2canvas/html2canvas.svg.js"></script>
 </content>
+
 </body>

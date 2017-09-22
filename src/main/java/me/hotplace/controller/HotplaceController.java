@@ -1,23 +1,32 @@
 package me.hotplace.controller;
 
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.itextpdf.text.DocumentException;
 import com.mysql.jdbc.StringUtils;
 
 import me.hotplace.domain.Address;
 import me.hotplace.domain.HpSearch;
+import me.hotplace.reporter.PdfItext;
 import me.hotplace.service.HotplaceService;
 import me.hotplace.types.MapTypes;
 import me.hotplace.utils.DataUtil;
@@ -28,6 +37,9 @@ public class HotplaceController {
 
 	@Resource(name = "hotplaceService")
 	HotplaceService hotplaceService;
+	
+	@Resource(name="pdfItext")
+	PdfItext pdfItext;
 	
 	@GetMapping("main")
 	public String layout(@RequestParam(name="mType", required=false) String mType, HttpServletRequest request) {
@@ -131,5 +143,35 @@ public class HotplaceController {
 		Thread.sleep(2000);
 		return hpSearch;
 	}
+	
+	@PostMapping("/download/{type}")
+	public void downloadReport(@PathVariable("type") String type, 
+							   @RequestParam(name="json") String data, HttpServletRequest request, HttpServletResponse response) throws Exception  {
+		
+		if(!"pdf".equals(type)) throw new Exception();
+		
+		Gson gson = new Gson();
+		JsonElement element = gson.fromJson(data, JsonElement.class);
+		JsonObject jsonObject = element.getAsJsonObject();
+		
+		String fileName = jsonObject.get("docName").getAsString();
+		
+		//한글파일명 라우저 별 처리
+		
+		if(request.getHeader("User-Agent").contains("MSIE") || request.getHeader("User-Agent").contains("Trident")) {
+			fileName = URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
+		}
+		else {
+			fileName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
+		}
+		
+		response.setHeader("Content-Transper-Encoding", "binary");
+		response.setHeader("Content-Disposition", "inline; filename=" + fileName + "." + type);
+		response.setContentType("application/octet-stream");
+		
+		
+		pdfItext.make(response, jsonObject);
+		
 
+	}
 }

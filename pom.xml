@@ -32,6 +32,8 @@
 		<jquery.ui-version>1.10.3</jquery.ui-version>
 		<bootstrap.toggle-version>2.2.2</bootstrap.toggle-version>
 		
+		<itext.pdf-version>5.5.8</itext.pdf-version>
+		<jsoup-version>1.10.2</jsoup-version>
 	</properties>
 	
 	<dependencies>
@@ -286,15 +288,27 @@
 		    <version>${bootstrap.toggle-version}</version>
 		</dependency>
 		
+		<!-- itextpdf -->
+		<!-- http://zero-gravity.tistory.com/251 -->
+		<dependency>
+		    <groupId>com.itextpdf</groupId>
+		    <artifactId>itextpdf</artifactId>
+		    <version>${itext.pdf-version}</version>
+		</dependency>
 		
-		<!-- html2canvas -->
-		<!-- http://html2canvas.hertzen.com/documentation.html -->	
-		<!-- <dependency>
-		    <groupId>org.webjars</groupId>
-		    <artifactId>html2canvas</artifactId>
-		    <version>${html2canvas-version}</version>
-		</dependency>-->
+		<!-- xmlworker -->
+		<dependency>
+		    <groupId>com.itextpdf.tool</groupId>
+		    <artifactId>xmlworker</artifactId>
+		    <version>${itext.pdf-version}</version>
+		</dependency>
 		
+		<!-- jsoup (java html parser) -->
+		<dependency>
+		    <groupId>org.jsoup</groupId>
+		    <artifactId>jsoup</artifactId>
+		    <version>${jsoup-version}</version>
+		</dependency>
 	</dependencies>
 	
     <build>

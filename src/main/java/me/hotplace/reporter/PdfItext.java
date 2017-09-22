@@ -24,6 +24,8 @@ import com.itextpdf.tool.xml.XMLWorkerFontProvider;
 import com.itextpdf.tool.xml.XMLWorkerHelper;
 import com.itextpdf.tool.xml.css.CssFile;
 import com.itextpdf.tool.xml.css.StyleAttrCSSResolver;
+import com.itextpdf.tool.xml.html.CssAppliers;
+import com.itextpdf.tool.xml.html.CssAppliersImpl;
 import com.itextpdf.tool.xml.html.Tags;
 import com.itextpdf.tool.xml.parser.XMLParser;
 import com.itextpdf.tool.xml.pipeline.css.CSSResolver;
@@ -76,9 +78,9 @@ public class PdfItext {
 		//HTML font
 		XMLWorkerFontProvider fontProvider = new XMLWorkerFontProvider(XMLWorkerFontProvider.DONTLOOKFORFONTS);
 		fontProvider.register(fontsRootPath + "NanumGothic.ttf", "NanumGothic");   // NanumGothic은 alias
-		//CssAppliers cssAppliers = new
+		CssAppliers cssAppliers = new CssAppliersImpl(fontProvider); 
 		
-		HtmlPipelineContext htmlContext = new HtmlPipelineContext(null);
+		HtmlPipelineContext htmlContext = new HtmlPipelineContext(cssAppliers);
 		htmlContext.setTagFactory(Tags.getHtmlTagProcessorFactory());
 		
 		PdfWriterPipeline pdf = new PdfWriterPipeline(doc, writer);

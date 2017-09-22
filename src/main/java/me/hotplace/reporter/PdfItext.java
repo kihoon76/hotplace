@@ -113,7 +113,6 @@ public class PdfItext {
 	private String getHtmlString(JsonObject jo) {
 		String r = "<p>문서내용이 존재하지 않습니다.</p>";
 		try {
-			System.err.println(jo.get("fileName").getAsString());
 			org.jsoup.nodes.Document doc = getJsoupDoc(jo.get("fileName").getAsString());
 			r = doc.toString();
 		} 

@@ -20,6 +20,7 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.tool.xml.XMLWorker;
+import com.itextpdf.tool.xml.XMLWorkerFontProvider;
 import com.itextpdf.tool.xml.XMLWorkerHelper;
 import com.itextpdf.tool.xml.css.CssFile;
 import com.itextpdf.tool.xml.css.StyleAttrCSSResolver;
@@ -40,6 +41,9 @@ public class PdfItext {
 	@Value("#{pathCfg['css']}")
 	String cssRootPath;
 	
+	@Value("#{pathCfg['fonts']}")
+	String fontsRootPath;
+	
 	//http://zero-gravity.tistory.com/251
 	public void make(HttpServletResponse response, JsonObject jo) throws DocumentException, IOException {
 		String docName = "다운로드_문서";
@@ -55,9 +59,8 @@ public class PdfItext {
 		
 		if(jo != null && jo.get("docName") != null) docName = jo.get("docName").getAsString();
 		
-		String fileName = URLEncoder.encode(docName, "UTF-8"); // 파일명이 한글일 땐 인코딩 필요
-		//response.setHeader("Content-Transper-Encoding", "binary");
-		//response.setHeader("Content-Disposition", "inline; filename=" + fileName + ".pdf");
+		//String fileName = URLEncoder.encode(docName, "UTF-8"); // 파일명이 한글일 땐 인코딩 필요
+		
 		//doc open
 		doc.open();
 		XMLWorkerHelper helper = XMLWorkerHelper.getInstance();
@@ -71,8 +74,8 @@ public class PdfItext {
 		}
 		
 		//HTML font
-		//XMLWorkerFontProvider fontProvider = new XMLWorkerFontProvider(XMLWorkerFontProvider.DONTLOOKFORFONTS);
-		//fontProvider.register("", "");   // MalgunGothic은 alias
+		XMLWorkerFontProvider fontProvider = new XMLWorkerFontProvider(XMLWorkerFontProvider.DONTLOOKFORFONTS);
+		fontProvider.register(fontsRootPath + "NanumGothic.ttf", "NanumGothic");   // NanumGothic은 alias
 		//CssAppliers cssAppliers = new
 		
 		HtmlPipelineContext htmlContext = new HtmlPipelineContext(null);
@@ -89,7 +92,7 @@ public class PdfItext {
 		
 		// 폰트 설정에서 별칭으로 줬던 "MalgunGothic"을 html 안에 폰트로 지정한다.
 		StringBuilder htmlStr = new StringBuilder();
-		htmlStr.append("<html><head><body style='font-family: MalgunGothic;'>");
+		htmlStr.append("<html><head><body style='font-family: NanumGothic;'>");
 		System.out.println(getHtmlString(jo));
 		htmlStr.append(getHtmlString(jo));
 		htmlStr.append("</body></head></html>");

@@ -1,19 +1,382 @@
 <table class="table">
 <tbody>
 <tr>
-	<td rowspan="3" class="col0">1.지 출</td>
-	<td rowspan="3" class="col1">토지개요</td>
-	<td colspan="4">소재지(지번)</td>
+	<td rowspan="3" style="width:8%">토지개요</td>
+	<td>소재지(지번)</td>
+	<td colspan="3" class="last"><span id="address"></span></td>
 </tr>
 <tr>
-	<td class="col2">지목</td>
-	<td class="col3"></td>
-	<td class="col4">면적:</td>
-	<td class="col5">1000 ㎡</td>
+	<td style="width:14%">지목</td>
+	<td style="width:33%"><span id="jimok"></span></td>
+	<td style="width:4%">면적:</td>
+	<td class="last"><span id="area"></span> ㎡</td>
 </tr>
 <tr>
 	<td>개별공시지가(㎡당)</td>
-	<td colspan="3">111 원</td>
+	<td colspan="3" class="last"><span id="gongsi"></span> 원</td>
+</tr>
+<tr>
+	<td rowspan="5">
+		토지이용<br/>
+		규제현황
+	</td>
+	<td>국토계획법상 <br/>지역·지구 등</td>
+	<td colspan="3" class="last"></td>
+</tr>
+<tr>
+	<td>
+		다른 법령에 따른<br/> 
+		지역·지구 등
+	</td> 
+	<td colspan="4" class="last"></td>
+</tr>
+<tr>
+	<td>
+		기타
+	</td> 
+	<td colspan="4" class="last"></td>
+</tr>
+<tr>
+	<td>
+		토지이용규제 변경<br/>
+		여부(최근 1년간) 
+	</td> 
+	<td colspan="4" class="last"><span id="limitChange"></span></td>
+</tr>
+<tr>
+	<td>
+		도입가능 용도<br/>
+		(개략 검토) 
+	</td> 
+	<td colspan="4" class="last"></td>
+</tr>
+<tr>
+	<td>
+		Luris<br/>도면
+	</td> 
+	<td colspan="4" style="height:500px;" class="last">
+		<img id="luris" style="height:200px;">
+	</td>
+</tr> 
+<tr>
+	<td rowspan="3" class="tb-last">수지분석</td>
+	<td>매입(보유)주체</td>
+	<td colspan="3" class="last"></td>
+</tr>
+<tr>
+	<td>보유기간</td> 
+	<td colspan="3" class="last"></td>
+</tr>
+<tr>
+	<td class="tb-last">타인자본비율</td> 
+	<td colspan="3" class="last tb-last"></td>
+</tr>
+</tbody>
+</table>
+
+<table class="table" style="margin-top:40px;">
+<tbody>
+<tr>
+	<td colspan="6" style="text-align:right;border-left:0px;border-top:0px;border-right:0px;">(단위:평, 천원, 부가세 별도)</td>
+</tr>
+<tr>
+	<td colspan="3">구분</td>
+	<td>내역</td>
+	<td>금액</td>
+	<td class="last">비율</td>
+</tr>
+<tr>
+	<td style="width:3%" rowspan="21" class="tb-last">지출</td>
+	<td style="width:13%" rowspan="3">A.토지비</td>
+	<td style="width:13%">매입금액</td>
+	<td style="width:32%"></td>
+	<td style="width:20%"></td>
+	<td style="width:19%" class="last"></td>
+</tr>
+<tr>
+	<td>명도비</td>
+	<td>10 X 10</td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td>
+		토지사용<br/>
+		승낙<br/>
+	</td>
+	<td>10 X 10</td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td class="sogye-cate"></td>
+	<td class="sogye">소 계</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td>금융비용</td>
+	<td>대출이자</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td  class="sogye-cate"></td>
+	<td class="sogye">소 계</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td rowspan="3">B.제세금</td>
+	<td>취득세</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td>재산세</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td>양도세</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td  class="sogye-cate"></td>
+	<td  class="sogye">소 계</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td rowspan="4">C.공사비</td>
+	<td>건축공사비<br/>
+	(리모델링)</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td>토목공사비</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td>포장공사비</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td>인입공사비</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td  class="sogye-cate"></td>
+	<td  class="sogye">소 계</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td rowspan="5">D.인허가비</td>
+	<td>개발행위<br/>허가 등</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td>감리비</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td>측량비</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td>감정평가</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td>필지분할</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td class="tb-last sogye-cate"></td>
+	<td class="tb-last sogye">소 계</td>
+	<td class="tb-last"></td>
+	<td class="tb-last"></td>
+	<td class="last tb-last"></td>
+</tr>
+</tbody>
+</table>
+
+<table class="table" style="margin-top:90px;">
+<tbody>
+<tr>
+	<td style="width:3%" rowspan="11">지출</td>
+	<td style="width:13%" rowspan="3">E.부담금</td>
+	<td style="width:13%">개발부담금</td>
+	<td style="width:32%"></td>
+	<td style="width:20%"></td>
+	<td style="width:19%" class="last"></td>
+</tr>
+<tr>
+	<td>농지보전<br/>부담금</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td>대체산림<br/>자원조성비</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td class="sogye-cate"></td>
+	<td class="sogye">소 계</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td rowspan="6">F.사업경비</td>
+	<td>채권매입비</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td>근저당<br/>설정비</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td>보존등기비</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td>운영비</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td>매각수수료</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td>예비비</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td class="sogye-cate"></td>
+	<td class="sogye">소 계</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td class="sogye-cate"></td>
+	<td colspan="2" class="sogye">지출합계(A+B+C+D+E+F)</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td rowspan="6">수입</td>
+	<td rowspan="3">A.매각</td>
+	<td>건물</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td>설비</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td>토지</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td class="sogye-cate"></td>
+	<td class="sogye">소계</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td>B.운영</td>
+	<td>임대</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td class="sogye-cate"></td>
+	<td class="sogye">소계</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td class="sogye-cate"></td>
+	<td colspan="2" class="sogye">수입합계(A+B)</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td colspan="6" style="height:30px;border-left:0px;border-right:0px;"></td>
+</tr>
+<tr>
+	<td colspan="3">자기자본 총액</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td colspan="3">매출이익(수입-지출)</td>
+	<td></td>
+	<td></td>
+	<td class="last"></td>
+</tr>
+<tr>
+	<td colspan="3" class="tb-last">경상이익(세전)</td>
+	<td class="tb-last"></td>
+	<td class="tb-last"></td>
+	<td class="tb-last last"></td>
 </tr>
 </tbody>
 </table>

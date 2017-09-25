@@ -4017,7 +4017,7 @@
 		var form = document.createElement('form');
 		form.action = hotplace.getContextUrl() + 'download/' + type;
 		form.method = 'POST';
-		form.target = '_blank';
+		form.target = '_self';
 		
 		var input = document.createElement('input');
 		input.type = 'hidden';
@@ -4036,6 +4036,13 @@
 					fileName:'profitFormPdf',
 					cssName: 'profitPdf',
 					docName: '수지분석',
+					address: '서울시 강남구 도곡동 963',
+					jimok: '전',
+					valPerPyeung:'21,000',
+					area: '132',
+					gongsi: '4,040,000',
+					limitChange:'Y'
+					
 			});
 		}
 	}

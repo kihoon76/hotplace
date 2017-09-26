@@ -51,7 +51,7 @@ $(document).ready(function() {
 	function _enableMapButton(level, targetBtnId) {
 		var target = $('#' + targetBtnId);
 		
-		if(level >= 8) {
+		if(level >= hotplace.config.salesViewLevel) {
 			if(_buttonsThreshold[targetBtnId]) return;
 			target.removeAttr('disabled');
 			target.toggleClass('button-disabled');
@@ -528,6 +528,19 @@ $(document).ready(function() {
 		}
 	});
 	
+	//물건보기 체크 이벤트
+	$('#btnSearchSalesView').on('click', function(e) {
+		var obj = {}
+		$('#dvSalesView input[type="checkbox"]:not(:disabled)').each(function() {
+			var type = $(this).data('value');
+			obj[type] = $(this).prop('checked') ? 1 : 0;
+		})
+		.promise()
+		.done(function() {
+			hotplace.maps.setMarkers(obj);
+			hotplace.maps.showMarkers();
+		})
+	});
 	
 	$('#btnCapture').on('click', function(event) {
 		event.preventDefault();
@@ -544,15 +557,16 @@ $(document).ready(function() {
 	}
 	
 	hotplace.maps.init('naver', {
-		X: 127.9204629,
-		Y: 36.0207091, 
-		level: 3
+		X: hotplace.config.mapDefaultX,
+		Y: hotplace.config.mapDefaultY, 
+		level: hotplace.config.minZoomLevel
 	}, {
 		'zoom_changed' : function(map, level) {
 			_currLevel = level;
 			hotplace.dom.addBodyAllMask();
 			
 			setTimeout(function() {
+				hotplace.maps.showMarkers();
 				hotplace.maps.showCellLayer();
 				hotplace.dom.removeBodyAllMask();
 				_enableMapButton(level, 'btnSalesView');
@@ -566,12 +580,24 @@ $(document).ready(function() {
 			hotplace.maps.destroyMarkerWindow(hotplace.maps.MarkerTypes.RADIUS_SEARCH);
 		},
 		'dragend' : function(map, bnds) {
+			//cell과 marker가 동시에 켜져있을 경우 
 			if(!hotplace.maps.isOffCell()) {
 				if(hotplace.maps.isInLocationBounds(bnds)) {
 					hotplace.maps.appendCell();
+					hotplace.maps.appendMarker();
 				}
 				else {
-					hotplace.maps.showCellLayer();
+					hotplace.dom.showMaskTransaction((hotplace.maps.isActiveSalesView()) ? 2 : 1);
+					hotplace.maps.showCellLayer(null, true);
+					hotplace.maps.showMarkers(null, true);
+				}
+			}
+			else {//marker만 켜져 있을 경우
+				if(hotplace.maps.isInLocationBounds(bnds)) {
+					hotplace.maps.appendMarker();
+				}
+				else {
+					hotplace.maps.showMarkers();
 				}
 			}
 		},
@@ -619,7 +645,6 @@ $(document).ready(function() {
 		glyphicon: 'user',
 		//attr: 'data-switch="off"',
 		callback: function() {
-			
 		}
 	},{
 		id:'btnInfo',
@@ -636,7 +661,9 @@ $(document).ready(function() {
 		disabled: true,
 		clazz: 'mBtnTooltip',
 		callback: function(e) {
-			_btnCallback($(this), e, 'dvSalesView', true);
+			_btnCallback($(this), e, 'dvSalesView', true, null, function() {
+				
+			});
 		}
 	},{
 		id:'btnCadastral',

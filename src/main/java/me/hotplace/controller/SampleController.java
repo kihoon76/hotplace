@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -86,9 +88,19 @@ public class SampleController {
         return ausgabe;
 	}
 	
-	@GetMapping("naverForm")
-	public String proxy() {
+	@GetMapping("gyeongmae")
+	@ResponseBody
+	public String getGyeongmae(@RequestParam(name="nex") String nex,
+			  				   @RequestParam(name="swx") String swx,
+			  				   @RequestParam(name="swy") String swy,
+			  				   @RequestParam(name="ney") String ney) {
 		
-		return "proxyRequest";
+		Map<String, String> param = new HashMap<String, String>();
+		param.put("nex", nex);
+		param.put("swx", swx);
+		param.put("swy", swy);
+		param.put("ney", ney);
+		
+		return  sampleService.getGyeongmae(param);
 	}
 }

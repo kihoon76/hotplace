@@ -24,6 +24,12 @@ public class SampleDaoImpl implements SampleDao {
 		return result;
 	}
 
+	@Override
+	public List<String> selectGyeongmaeTest(Map<String, String> param) {
+		// TODO Auto-generated method stub
+		return msSqlSession.selectList(namespace + ".selectGyeongmaeTest", param);
+	}
+
 	
 	
 }

@@ -28,6 +28,21 @@
 		   and b.레벨 = #{level}
 		 order by a.극서 asc
 	</select>
+	
+	<select id="selectGyeongmaeTest" resultType="string" parameterType="hashmap">
+		select  concat(c.센터, '|', e.센터)
+		  from [온비드].[dbo].[토지매각원장] a with (nolock, index (IX_토지매각원장))
+		 inner join [좌표계].dbo.가로축PNU b with (nolock) on (b.PNU=a.PNU)
+		 inner join [좌표계].dbo.가로축 c with (nolock) on (c.고유번호=b.가로축_고유번호 and c.레벨=13)
+		 inner join [좌표계].dbo.세로축PNU d with (nolock) on (d.PNU=a.PNU)
+		 inner join [좌표계].dbo.세로축 e with (nolock) on (e.고유번호=d.세로축_고유번호 and e.레벨=13)
+		 where c.레벨=13
+		     and c.센터 >= convert(float, #{swx})
+		     and c.센터 <![CDATA[<=]]> convert(float, #{nex})
+		     and e.센터 >= convert(float, #{swy})
+		     and e.센터 <![CDATA[<=]]> convert(float, #{ney}) 
+		 order by c.센터 asc
+	</select>
 </mapper>
 <!-- 
 select  top 10000 concat(b.경도, '□',b.위도,'□', round(rand(convert(varbinary, newid()))*10, 1))

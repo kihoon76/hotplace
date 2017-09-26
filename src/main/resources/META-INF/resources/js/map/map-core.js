@@ -44,6 +44,21 @@
     	 return s;
     }
     
+    /**
+	 * @memberof hotplace
+     * @property {object} config
+     * @property {number} config.salesViewLevel  물건보기 레벨
+     * @property {number} config.minZoomLevel    지도 최소 줌레벨
+     * @property {number} config.mapDefaultX     지도 초기 경도
+     * @property {number} config.mapDefaultY     지도 초기 위도
+     */
+    hotplace.config = {
+    	salesViewLevel: 13,
+    	minZoomLevel: 3,
+    	mapDefaultX: 127.9204629,
+    	mapDefaultY: 36.0207091
+    }
+    
     Handlebars.registerHelper('json', function(context) {
         return JSON.stringify(context);
     });
@@ -167,6 +182,7 @@
      * @param {string} 	   		params.url - 전송URL (처음에 '/' 반드시 생략)
      * @param {boolean}    		params.async - 비동기 여부 (default 'true')
      * @param {boolean}    		params.activeMask - ajax 마스크 사용여부 (default 'true')
+     * @param {boolean}    		params.isMaskTran - multi ajax 마스크 사용여부 (default 'false')      
      * @param {string}			params.loadEl - 마스크할 element selector( ex: #id )
      * @param {string}			params.loadMsg - 마스크시 메시지 (default '로딩중입니다')
      * @param {ajax_beforeSend} params.beforeSend - 전송전 실행할 함수
@@ -184,7 +200,7 @@
 			async: (params.async == null)? true : params.async,
 			beforeSend: function(xhr) {
 				var activeMask = (params.activeMask == undefined) ? true : params.activeMask; //전체설정 이후 마스크 개별설정
-				if(activeMask) dom.showMask(params.loadEl, params.loadMsg);
+				if(activeMask && !params.isMaskTran) dom.showMask(params.loadEl, params.loadMsg);
 				
 				if(params.beforeSend && typeof params.beforeSend === 'function') {
 					params.beforeSend(xhr);
@@ -210,7 +226,14 @@
 				} 
 				finally {
 					var activeMask = (params.activeMask == undefined) ? true : params.activeMask; 
-					if(activeMask) dom.hideMask();
+					if(activeMask) {
+						if(params.isMaskTran) {
+							dom.hideMaskTransaction();
+						}
+						else {
+							dom.hideMask();
+						}
+					} 
 				}
 			},
 			error: function(jqXHR, textStatus, e) {
@@ -222,7 +245,14 @@
 				}
 				
 				var activeMask = (params.activeMask == undefined) ? true : params.activeMask; 
-				if(activeMask) dom.hideMask();
+				if(activeMask) {
+					if(params.isMaskTran) {
+						dom.hideMaskTransaction();
+					}
+					else {
+						dom.hideMask();
+					}
+				} 
 			},
 			timeout: params.timeout || 300000
 		});
@@ -235,8 +265,9 @@
      * @param {object} 	   		param - data
      * @param {ajax_success}    cbSucc	
      * @param {boolean}    		isActiveMask - ajax 마스크 사용여부 (default 'true')
+     * @param {boolean}    		isMaskTran - multi ajax 마스크 사용여부 (default 'false')
      */
-	hotplace.getPlainText = function(url, param, cbSucc, isActiveMask) {
+	hotplace.getPlainText = function(url, param, cbSucc, isActiveMask, isMaskTran) {
 			
 		hotplace.ajax({
 			url: url,
@@ -244,6 +275,7 @@
 			dataType: 'text',
 			data: param || {},
 			activeMask: (isActiveMask != undefined) ? isActiveMask : true,
+			isMaskTran: isMaskTran,
 			success: function(data, textStatus, jqXHR) {
 				var jo = $.parseJSON(data);
 				//console.log('data count : ' + jo.datas.length);
@@ -389,7 +421,46 @@
 	 */
 	var _cellLayerOnOff = {DEFAULT:0, GONGSI:1};
 	
-	var _isCellChanged = false;
+	/** 
+	 * @private 
+	 * @desc 표시하고자 하는 마커그룹 0:off, 1:on  
+	 * @type {object} 
+	 * @property {string} GYEONGMAE - 경매
+	 */
+	var _markerGroupOnOff = {GYEONGMAE:0};
+	
+	/**
+	 * @memerof hotplace.maps
+	 * @function getActiveMarkers
+	 * @returns {Array} 활성화된 marker types
+	 * @desc 활성화된 marker type
+	 */
+	maps.getActiveMarkers = function() {
+		var types = [];
+		for(var t in _markerGroupOnOff) {
+			if(_markerGroupOnOff[t] == 1) {
+				types.push(t);
+			}
+		}
+		
+		return types;
+	}
+	
+	/**
+	 * @memerof hotplace.maps
+	 * @function getActiveMarkers
+	 * @param {object} markerState 
+	 * @param {number} markerState.GYEONGMAE
+	 * @desc 활성화된 marker type
+	 */
+	maps.setMarkers = function(markerState) {
+		for(var t in markerState) {
+			if(_markerGroupOnOff[t] == undefined) throw new Error('마커타입 [' + t + ']가 존재하지 않습니다');
+			
+			_markerGroupOnOff[t] = markerState[t];
+			
+		}
+	}
 	
 	/**
 	 * @memerof hotplace.maps
@@ -497,6 +568,7 @@
 	
 	var _markerTypes = {
 		RADIUS_SEARCH: 'RADIUS_SEARCH',
+		GYEONGMAE: 'GYEONGMAE',    
 	};
 	
 	/** 
@@ -504,6 +576,7 @@
 	 * @desc 지도위에 그려진 마커그룹 타입
 	 * @typedef {object} hotplace.maps.MarkerTypes 
 	 * @property {string} RADIUS_SEARCH - 반경검색 후 지도상에 보이는 마커(1개)
+	 * @property {string} GYEONGMAE - 경매물건 마커들
 	 */
 	maps.MarkerTypes = _markerTypes;
 	
@@ -523,12 +596,17 @@
 	 * @param {object} RADIUS_SEARCH 반경검색 마커그룹
 	 * @param {Array}  RADIUS_SEARCH.m 반경검색 marker
 	 * @param {Array}  RADIUS_SEARCH.c 반경검색 circle
+	 * @param {object} GYEONGMAE 경매
+	 * @param {Array}  GYEONGMAE.m 경매물건 마커들
 	 */
 	var _markers = {
 		RADIUS_SEARCH : {
 			m: [],	
 			c: []   
-		}    
+		},
+		GYEONGMAE : {
+			m: [],
+		}
 	};
 	
 	/** 
@@ -536,9 +614,11 @@
 	 * @desc 마커그룹의 마커 위에 보여질 infoWindow 팝업
 	 * @type  {object} 
 	 * @param {Array}  RADIUS_SEARCH 반경검색 마커윈도우
+	 * @param {Array}  GYEONGMAE 경매마커 윈도우
 	 */
 	var _infoWindowsForMarker = {
-		RADIUS_SEARCH : []
+		RADIUS_SEARCH : [],
+		GYEONGMAE : [],
 	};
 	
 	
@@ -742,7 +822,7 @@
 				});
 			});
 			
-			if(triggerable)	_venderEvent.trigger(rec, 'click')
+			if(triggerable)	_venderEvent.trigger(rec, 'click');
 			
 			break;
 		}
@@ -801,22 +881,23 @@
 	 */
 	function _createMarkers(level, startIdx, markerType) {
 		var markerData;
-		/*switch(markerType) {
-		case _markerType.GONGSI :
-			markerData = hotplace.database.getGongsiLevelData(level);
+		switch(markerType) {
+		case _markerTypes.GYEONGMAE :
+			markerData = hotplace.database.getLevelData(level, _markerTypes.GYEONGMAE);
 			break;
-		}*/
+		}
 		
 		_commXY(markerData,
 				startIdx,
 				function(data) {
-					maps.getMarker(markerType, lat, lng, {}, {
+					maps.getMarker(markerType, data.location[1], data.location[0], {}, {
 						hasInfoWindow: false,
 						radius:0
 					});
 				}
 		);
 	}
+	
 	
 	/** 
 	 * @private 
@@ -1008,6 +1089,21 @@
 	
 	/** 
 	 * @private 
+	 * @function _showMarkers 
+	 * @desc  활성화시킨 marker group 보여주기 
+	 */
+	function _showMarkers() {
+		var db = hotplace.database;
+		var currentLevel = _getCurrentLevel();
+		
+		if(!db.hasData(currentLevel, _markerTypes.GYEONGMAE)) return;
+		var startIdx = db.getStartXIdx(_markerTypes.GYEONGMAE, _marginBounds.swx, currentLevel);
+		
+		_createMarkers(currentLevel, startIdx, _markerTypes.GYEONGMAE);
+	}
+	
+	/** 
+	 * @private 
 	 * @function _initLayers 
 	 * @param {number} level 줌레벨
 	 * @desc  hotplace.maps.showCellLayer가 호출될 때 동작함
@@ -1020,7 +1116,16 @@
 		hotplace.database.initLevel(level);
 	}
 	
-
+	/** 
+	 * @memberof hotplace.maps 
+	 * @function isActiveSalesView 
+	 * @returns {boolean}
+	 * @desc  현재 레벨이 물건보기 활성화 레벨인지 여부
+	 */
+	maps.isActiveSalesView = function() {
+		return _getCurrentLevel() >= hotplace.config.salesViewLevel;
+	}
+	
 	/** 
 	 * @memberof hotplace.maps 
 	 * @function destroyMarkerWindow 
@@ -1389,6 +1494,21 @@
 	
 	/**
 	 * @memberof hotplace.maps 
+	 * @function appendMarker
+	 * @desc 마우스로 드래그시 화면밖에 있다가 안으로 들어왔을때 안그려진 marker를 찾아 그린다.
+	 */
+	maps.appendMarker = function() {
+		var db = hotplace.database;
+		var _currentLevel = _getCurrentLevel();
+		
+		if(db.hasData(_currentLevel, _markerTypes.GYEONGMAE)) {
+			var startIdx = db.getStartXIdx(_markerTypes.GYEONGMAE, _marginBounds.swx, _currentLevel);
+			_createMarkers(_currentLevel, startIdx, _markerTypes.GYEONGMAE);
+		}
+	};
+	
+	/**
+	 * @memberof hotplace.maps 
 	 * @function isInLocationBounds
 	 * @desc 현재 화면이 location bounds범위안에 있는지 여부  
 	 * @param {object} bnds
@@ -1408,10 +1528,11 @@
 	/**
 	 * @memberof hotplace.maps 
 	 * @function showCellLayer
-	 * @desc celltype의 cell layer를 보여준다 
 	 * @param {function} callback
+	 * @param {boolean} isMaskTran multi ajax사용여부 
+	 * @desc celltype의 cell layer를 보여준다  
 	 */
-	maps.showCellLayer = function(callback) {
+	maps.showCellLayer = function(callback, isMaskTran) {
 		
 		if(_isOffCell()) return;
 		
@@ -1445,11 +1566,51 @@
 					catch(e) {
 						throw e;
 					}
-				});
+				}, 
+				true,
+				isMaskTran);
 			}
 		}
 	}
 	
+	/**
+	 * @memberof hotplace.maps 
+	 * @function showMarkers
+	 * @param {function} callback
+	 * @param {boolean} isMaskTran multi ajax사용여부 
+	 * @desc marker type의 marker를 보여준다  
+	 */
+	maps.showMarkers = function(callback, isMaskTran) {
+		var currentLevel = _getCurrentLevel();
+		//active level 비교
+		if(maps.isActiveSalesView() && maps.getActiveMarkers().length > 0) {
+			_destroyMarkerType(_markerTypes.GYEONGMAE);
+			_setLocationBounds();
+			if(_venderMap) {
+				hotplace.getPlainText('sample/gyeongmae', {
+					 swx : _locationBounds.swx,
+					 nex : _locationBounds.nex,
+					 swy : _locationBounds.swy,
+					 ney : _locationBounds.ney
+				}, function(json) {
+					try {
+						hotplace.database.setLevelData(currentLevel, _markerTypes.GYEONGMAE, json);
+						_showMarkers();
+						if(callback) callback();
+						console.log(json)
+					}
+					catch(e) {
+						throw e;
+					}
+				},
+				true,
+				isMaskTran);
+			}
+		}
+		else {
+			
+		}
+	}
 	
 	/**
 	 * @memberof hotplace.maps 
@@ -1493,6 +1654,7 @@
 	
 	var _loadEl;
 	var _loadTxt = '로딩 중입니다';
+	var _loadEndCount = 0;
 	
 	/**
 	 * @private
@@ -1838,6 +2000,18 @@
 		}
 		_runWaitMe(loadEl, 1, _loadEffects.timer, msg);
 	};
+	
+	dom.showMaskTransaction = function(count, loadEl, msg) {
+		_loadEndCount = count || 0;
+		dom.showMask(loadEl, msg);
+	}
+	
+	dom.hideMaskTransaction = function() {
+		--_loadEndCount;
+		if(_loadEndCount == 0) {
+			dom.hideMask();
+		}
+	}
 	
 	/**
 	 * @memberof hotplace.dom
@@ -3573,6 +3747,12 @@
 				}
 				
 			});
+		});
+	}
+	
+	test.marker = function() {
+		hotplace.maps.panToBounds(37.539648921, 127.152615967, function() {
+			hotplace.maps.showMarkers();
 		});
 	}
 	

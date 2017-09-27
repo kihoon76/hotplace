@@ -895,9 +895,12 @@
 	 */
 	function _createMarkers(level, startIdx, markerType) {
 		var markerData;
+		var markerIcon;
+		
 		switch(markerType) {
 		case _markerTypes.GYEONGMAE :
 			markerData = hotplace.database.getLevelData(level, _markerTypes.GYEONGMAE);
+			markerIcon = 'blink.gif';
 			break;
 		}
 		
@@ -906,7 +909,8 @@
 				function(data) {
 					maps.getMarker(markerType, data.location[1], data.location[0], {}, {
 						hasInfoWindow: false,
-						radius:0
+						radius:0,
+						icon:markerIcon,
 					});
 				}
 		);
@@ -1399,14 +1403,17 @@
 		newMarker = new _vender.Marker({
 		    position: new _vender.LatLng(lat, lng),
 		    map: _venderMap,
-		    /*icon: {
-		        content: '<img src="'+ hotplace.getContextUrl() +'resources/img/marker/blink.gif" alt="" ' +
-		                 'style="margin: 0px; padding: 0px; border: 0px solid transparent; display: block; max-width: none; max-height: none; ' +
-		                 '-webkit-user-select: none; position: absolute; width: 80px; height: 100px; left: 0px; top: 0px;">',
-		        size: new naver.maps.Size(80, 100),
-		        anchor: new naver.maps.Point(40, 100)
-		    }*/
 		});
+		
+		if(options.icon) {
+			newMarker.setOptions('icon', {
+		        content: '<img src="'+ hotplace.getContextUrl() +'resources/img/marker/' + options.icon + '" alt="" ' +
+                		 'style="margin: 0px; padding: 0px; border: 0px solid transparent; display: block; max-width: none; max-height: none; ' +
+                		 '-webkit-user-select: none; position: absolute; width: 80px; height: 100px; left: 0px; top: 0px;">',
+                size: new _vender.Size(80, 100),
+                anchor: new _vender.Point(40, 100)
+			});
+		}
 		
 		_markers[markerType].m.push(newMarker);
 		

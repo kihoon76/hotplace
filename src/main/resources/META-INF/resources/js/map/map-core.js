@@ -47,16 +47,18 @@
     /**
 	 * @memberof hotplace
      * @property {object} config
-     * @property {number} config.salesViewLevel  물건보기 레벨
-     * @property {number} config.minZoomLevel    지도 최소 줌레벨
-     * @property {number} config.mapDefaultX     지도 초기 경도
-     * @property {number} config.mapDefaultY     지도 초기 위도
+     * @property {number} config.salesViewLevel  	물건보기 레벨
+     * @property {number} config.minZoomLevel    	지도 최소 줌레벨
+     * @property {number} config.mapDefaultX     	지도 초기 경도
+     * @property {number} config.mapDefaultY     	지도 초기 위도
+     * @property {number} config.addrSearchPanLevel 주소검색 후 panto 이동시 레벨설정
      */
     hotplace.config = {
     	salesViewLevel: 13,
     	minZoomLevel: 3,
     	mapDefaultX: 127.9204629,
-    	mapDefaultY: 36.0207091
+    	mapDefaultY: 36.0207091,
+    	addrSearchPanLevel: 10
     }
     
     Handlebars.registerHelper('json', function(context) {
@@ -448,10 +450,22 @@
 	
 	/**
 	 * @memerof hotplace.maps
+	 * @function isActiveMarker
+	 * @param {hotplace.maps.MarkerTypes} markerType 
+	 * @returns {boolean} 
+	 * @desc 마커타입 활성화 여부
+	 */
+	maps.isActiveMarker = function(markerType) {
+		if(_markerGroupOnOff[markerType] == undefined) throw new Error('[ ' + markerType + ' ]는 지원되지 않는 마커타입입니다');
+		return _markerGroupOnOff[markerType] == 1 ? true : false;
+	}
+	
+	/**
+	 * @memerof hotplace.maps
 	 * @function getActiveMarkers
 	 * @param {object} markerState 
 	 * @param {number} markerState.GYEONGMAE
-	 * @desc 활성화된 marker type
+	 * @desc markertype 활성화 설정
 	 */
 	maps.setMarkers = function(markerState) {
 		for(var t in markerState) {
@@ -1353,7 +1367,7 @@
 	maps.panToBounds = function(lat, lng, moveAfterFn) {
 		
 		if(_venderStr == 'naver') {
-			_venderMap.morph(new _vender.LatLng(lat, lng), 10, {duration: 100});
+			_venderMap.morph(new _vender.LatLng(lat, lng), hotplace.config.addrSearchPanLevel, {duration: 100});
 		}
 		else if(_venderStr == 'daum') {
 			/*_venderMap.panTo(new _vender.LatLngBounds(

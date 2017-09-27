@@ -662,7 +662,7 @@ $(document).ready(function() {
 		clazz: 'mBtnTooltip',
 		callback: function(e) {
 			_btnCallback($(this), e, 'dvSalesView', true, null, function() {
-				
+				$('#salesGyeongmae').prop('checked', hotplace.maps.isActiveMarker(hotplace.maps.MarkerTypes.GYEONGMAE));
 			});
 		}
 	},{
@@ -695,13 +695,4 @@ $(document).ready(function() {
 	hotplace.dom.initTooltip('mBtnTooltip',{side: 'right', trigger: 'hover'});
 	
 	hotplace.calc.profit.init();
-	/*
-	 * 
-	 *   $('.spinner .btn:first-of-type').on('click', function() {
-    $('.spinner input').val( parseInt($('.spinner input').val(), 10) + 1);
-  });
-  $('.spinner .btn:last-of-type').on('click', function() {
-    $('.spinner input').val( parseInt($('.spinner input').val(), 10) - 1);
-  });
-	 * */
 });

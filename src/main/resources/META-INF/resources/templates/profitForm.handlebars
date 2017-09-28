@@ -22,7 +22,15 @@
 </tr>
 <tr>
 	<td colspan="2" class="cell-title success">개별공시지가(㎡당)</td>
-	<td colspan="4" class="cell-title">{{currency gongsi}} 원</td>
+	<td colspan="3" class="cell-title">{{currency gongsi}} 원</td>
+	<td>
+		<button  id="btnGongsiList" type="button" class="btn btn-danger glyphicon glyphicon-folder-close  profitTooltip" style="width:100%; height:100%;" data-switch="off" data-tooltip-content="#profit_tooltip_content_gongsi">공시지가 변동보기</button>
+		<div style="display:none;">
+    		<div id="profit_tooltip_content_gongsi">
+    		
+    		</div>
+    	</div>
+    </td>
 </tr>
 <tr>
 	<td colspan="7"></td>
@@ -61,7 +69,7 @@
         	</label>
     	</div>
 	</td>
-	<td class="cell-title danger">
+	<td class="cell-title">
 		<button  id="btnViewLandLimit" type="button" class="btn btn-danger glyphicon glyphicon-folder-close {{#xif " limitChange == 'Y' " }} profitTooltip {{else}}  disabled {{/xif}}" style="width:100%; height:100%;" {{#xif " limitChange == 'Y' " }} data-tooltip-content="#profit_tooltip_content"{{/xif}} data-switch="off"> 토지이용규제 변경내역보기</button>
 		{{#xif " limitChange == 'Y' " }}
 		<div style="display:none;">
@@ -145,7 +153,7 @@
 	<td colspan="2" class="cell-title success"><span class="cell-title-spinner">보유기간</span></td>
 	<td colspan="4">
 		<div class="input-group spinner">
-    		<input type="text" class="form-control" value="{{ownTerm}}년" id="stepOwnTerm" data-value="{{ownTerm}}" data-min="0" data-max="10" data-step="0.5" data-suffix="년">
+    		<input type="text" class="form-control numberNdot" value="{{ownTerm}}년" id="stepOwnTerm" data-value="{{ownTerm}}" data-min="0" data-max="10" data-step="0.5" data-suffix="년">
     		<div class="input-group-btn-vertical" data-fn="calcOwnTerm">
       			<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       			<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -157,7 +165,7 @@
 	<td colspan="2" class="cell-title success"><span class="cell-title-spinner">타인자본비율</span></td>
 	<td colspan="4">
 		<div class="input-group spinner">
-    		<input type="text" class="form-control" value="{{otherAssetRatio}}%" id="stepOtherAssetRatio" data-value="{{otherAssetRatio}}" data-min="0" data-max="100" data-step="1" data-suffix="%">
+    		<input type="text" class="form-control" value="{{otherAssetRatio}}%" id="stepOtherAssetRatio" data-value="{{otherAssetRatio}}" data-min="0" data-max="100" data-step="5" data-suffix="%">
     		<div class="input-group-btn-vertical" data-fn="calcOtherAssetRatio">
       			<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       			<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -192,7 +200,13 @@
 					<label>X</label>
 				</div>
 				<div class="input-group spinner col-xs-6">
-    				<input type="text" class="form-control" value="-10%" id="stepPurchase"  data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<input type="text" class="form-control" id="stepPurchase"
+    					   value="{{currency ../valPerPyeung}}원"  
+    					   data-value="{{../valPerPyeung}}"
+    					   data-min="0"
+    					   data-step="{{step ../valPerPyeung 5}}"
+    					   data-suffix="원"
+    					   data-type="money">
     				<div class="input-group-btn-vertical" data-fn="calcPurchase">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -217,7 +231,13 @@
 					<label>X</label>
 				</div>
 				<div class="input-group spinner col-xs-6">
-    				<input type="text" class="form-control" value="-10%" id="stepMyeongdobi" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<input type="text" class="form-control" id="stepMyeongdobi" 
+    					   value="{{myeongdobi}}%"
+    					   data-value="{{myeongdobi}}"
+    					   data-min="0"
+    					   data-max="100"
+    					   data-step="1"
+    					   data-suffix="%">
     				<div class="input-group-btn-vertical" data-fn="calcMyeongdobi">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -242,7 +262,13 @@
 					<label>X</label>
 				</div>
 				<div class="input-group spinner col-xs-6">
-    				<input type="text" class="form-control" value="-10%" id="stepAcceptLandUse" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<input type="text" class="form-control" id="stepAcceptLandUse"
+    					   value="{{acceptLandUse}}%" 
+    					   data-value="{{acceptLandUse}}"
+    					   data-min="0"
+    					   data-max="100"
+    					   data-step="1"
+    					   data-suffix="%">
     				<div class="input-group-btn-vertical" data-fn="calcAcceptLandUse">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>

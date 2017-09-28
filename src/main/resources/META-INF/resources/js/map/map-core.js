@@ -140,6 +140,23 @@
             '%': lvalue % rvalue
         }[operator];
     });
+    
+    Handlebars.registerHelper('step', function(numValue, ratio) {
+    	var s = numValue.toString();
+    	var sLen = s.length; 
+    	var s1 = '';
+    	for(var i=0; i<sLen; i++) {
+    		if(i == 0) {
+    			s1 += '1';
+    		}
+    		else {
+    			s1 += '0';
+    		}
+    	}
+    	
+    	var n = parseInt(s1);
+    	return Math.round(n * (ratio * 0.01));
+    });
 
     /**
      * @private
@@ -2234,23 +2251,39 @@
 		    viewVal = 0,
 		    dataVal = 0,
 		    suffix = $txt.data('suffix'),
-		    min = parseFloat($txt.data('min')),
-		    max = parseFloat($txt.data('max')),
+		    min = $txt.data('min'),
+		    max = $txt.data('max'),
+		    type = $txt.data('type'),
 		    curVal = parseFloat($txt.data('value'));
 		
 		if(upDown == 'up') {
-			if(curVal == parseFloat(max)) return;
-			dataVal = curVal + step; 
+			if(max == undefined || curVal != parseFloat(max)) {
+				dataVal = curVal + step;
+			}
+			else  {
+				return;
+			}
 		}
 		else {
-			if(curVal == parseFloat(min)) return;
-			dataVal = curVal - step; 
+			if(min == undefined || curVal != parseFloat(min)) {
+				dataVal = curVal - step;
+			}
+			else  {
+				return;
+			}
 		}
 		
-		viewVal = dataVal + suffix;
 		$txt.data('value', dataVal);
+		switch(type) {
+		case 'money' :
+			viewVal = dataVal.toString().money() + suffix;
+			break;
+		default :
+			viewVal = dataVal + suffix;
+			break;
+		}
+		
 	    $txt.val(viewVal);
-	    
 	    hotplace.calc.profit[fnStr]();
 	}
 	
@@ -2959,6 +2992,13 @@
  * */
 (function(validation, $) {
 	
+	//var regNumberOnly
+	function _keyLimit($this, e, regEx) {
+		if (!(e.keyCode >=37 && e.keyCode<=40)) {
+			$this.val( $this.val().replace(regEx,'') );
+		}
+	}
+	
 	/**
 	 * @memberof hotplace.validation
 	 * @function numberOnly
@@ -2966,10 +3006,20 @@
 	 * @desc text 숫자만 입력되게 함
 	 */
 	validation.numberOnly = function(CLASS) {
-		$(CLASS).on('keypress', function(e) {
-			 if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
-				 return false;
-			 }
+		$(document).on('keydown', CLASS, function(e) {
+			_keyLimit($(this), e, /[^0-9]/gi);
+		});
+	}
+	
+	/**
+	 * @memberof hotplace.validation
+	 * @function numberNdot
+	 * @param {string} CLASS jquery selector
+	 * @desc text 숫자와 . 입력되게 함
+	 */
+	validation.numberNdot = function(CLASS) {
+		$(document).on('keyup', CLASS, function(e) {
+			_keyLimit($(this), e, /[^0-9|\.]/gi);
 		});
 	}
 }(
@@ -3766,7 +3816,7 @@
 						limitChange:'Y'
 					})
 				},
-				icon:'test.gif'
+				//icon:'test.gif'
 				
 			});
 		});
@@ -3838,9 +3888,10 @@
 		 */
 		var defaultValue = {
 			own: 'gaein',
-			ownTerm:7,
-			otherAssetRatio:70
-			
+			ownTerm:2,
+			otherAssetRatio:70,
+			myeongdobi:0,
+			acceptLandUse:0
 		}
 		
 		/**
@@ -3855,7 +3906,7 @@
 		}
 		
 		var data = null;
-		var moneyUnit = 1000;
+		var moneyUnit = 1;
 		/**
 		 * @private 
 		 * @function initCalc
@@ -3863,18 +3914,14 @@
 		 */
 		function initCalc(params) {
 			data = params;
-			calc.profit.calcPurchase(function() {
-				//매입금액 면적 설정
-				var $txtPurchase = $('#txtPurchase');
-				var $WPurchase = $('#WPurchase');
-				var area = $txtPurchase.data('value');
-				var pyeung = Math.round(area * 0.3025);
-				var val = (pyeung * data.valPerPyeung)/moneyUnit;
-				
-				$txtPurchase.val(pyeung + '평');
-				$WPurchase.data('value', val);
-				$WPurchase.val(val.toString().money());
-			});
+			var $txtPurchase = $('#txtPurchase');
+			var area = $txtPurchase.data('value');
+			var pyeung = Math.round(area * 0.3025);
+			var val = (pyeung * data.valPerPyeung)/moneyUnit;
+			$txtPurchase.val(pyeung + '평');
+			$txtPurchase.data('value', pyeung);
+			
+			calc.profit.calcPurchase();
 		}
 		
 		/**
@@ -3893,6 +3940,15 @@
 		 */
 		function calcTojibi(changedEl) {
 			console.log('토지비 (매입금액, 명도비, 토지사용승낙)');
+			
+			var $$1 = $('#WPurchase').data('value');
+			var $$2 = $('#WMyeongdobi').data('value');
+			var $$3 = $('#WAcceptLandUse').data('value');
+			var $$r = parseFloat($$1) + parseFloat($$2) + parseFloat($$3);
+			
+			var $WTojibi = $('#WTojibi');
+			$WTojibi.data('value', $$r)
+			$WTojibi.val($$r.toString().money());
 			calcJichool();
 		}
 		
@@ -4066,19 +4122,69 @@
 			},
 			calcPurchase: function(initFn) {
 				console.log('매입금액');
-				if(initFn) initFn();
+				//if(initFn) initFn();
 				
-				//$('#WPurchase').val('120000'.money());
+				var $$1 = $('#txtPurchase').data('value');
+				var $$2 = $('#stepPurchase').data('value');
+				var $$r = parseFloat($$1) * parseFloat($$2);
+				
+				var $WPurchase = $('#WPurchase');
+				$WPurchase.data('value', $$r);
+				$WPurchase.val($$r.toString().money());
+				
+				//명도비 : 매입금액 * 비율
+				hotplace.calc.profit.calcMyeongdobi(true);
+				//토지승낙비 : 매입금액 * 비율
+				hotplace.calc.profit.calcAcceptLandUse(true);
+				
 				calcMymoney();//자기자본
 				calcTojibi();
 			},
-			calcMyeongdobi: function() {
+			calcMyeongdobi: function(isSet) {
 				console.log('명도비');
+				
+				var $txtMyeongdobi = $('#txtMyeongdobi');
+				
+				if(isSet) {
+					var WPurchase = $('#WPurchase').data('value');
+					$txtMyeongdobi.data('value', WPurchase);
+					$txtMyeongdobi.val(WPurchase.toString().money());
+				}
+				
+				var $stepMyeongdobi = $('#stepMyeongdobi');
+				
+				var $$1 = $txtMyeongdobi.data('value');
+				var $$2 = $stepMyeongdobi.data('value');
+				var $$r = parseFloat($$1) * (0.01 * parseFloat($$2));
+				
+				var $WMyeongdobi = $('#WMyeongdobi');
+				$WMyeongdobi.data('value', $$r);
+				$WMyeongdobi.val($$r.toString().money());
+				
 				calcMymoney();//자기자본
 				calcTojibi();
 			},
-			calcAcceptLandUse: function() {
+			calcAcceptLandUse: function(isSet) {
 				console.log('토지사용승낙');
+				
+				var $txtAcceptLandUse = $('#txtAcceptLandUse');
+				
+				if(isSet) {
+					var WPurchase = $('#WPurchase').data('value');
+					$txtAcceptLandUse.data('value', WPurchase);
+					$txtAcceptLandUse.val(WPurchase.toString().money());
+				}
+				
+				var $stepAcceptLandUse = $('#stepAcceptLandUse');
+				
+				var $$1 = $txtAcceptLandUse.data('value');
+				var $$2 = $stepAcceptLandUse.data('value');
+				var $$r = parseFloat($$1) * (0.01 * parseFloat($$2));
+				
+				var $WAcceptLandUse = $('#WAcceptLandUse');
+				$WAcceptLandUse.data('value', $$r);
+				$WAcceptLandUse.val($$r.toString().money());
+				
 				calcMymoney();//자기자본
 				calcTojibi();
 			},

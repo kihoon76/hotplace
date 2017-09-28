@@ -691,6 +691,8 @@ $(document).ready(function() {
 	}]);
 	
 	hotplace.validation.numberOnly('.numberOnly');
+	hotplace.validation.numberNdot('.numberNdot');
+	
 	hotplace.dom.initTooltip('htooltip');
 	hotplace.dom.initTooltip('mBtnTooltip',{side: 'right', trigger: 'hover'});
 	

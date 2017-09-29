@@ -2247,7 +2247,7 @@
 	 * @desc spinner up/down 동작 컨트롤
 	 */
 	function _workSpinner($txt, upDown, fnStr) {
-		var step = parseFloat($txt.data('step')), 
+		var step, 
 		    viewVal = 0,
 		    dataVal = 0,
 		    suffix = $txt.data('suffix'),
@@ -2256,22 +2256,56 @@
 		    type = $txt.data('type'),
 		    curVal = parseFloat($txt.data('value'));
 		
-		if(upDown == 'up') {
-			if(max == undefined || curVal != parseFloat(max)) {
-				dataVal = curVal + step;
+		// min max가 0일 경우 step안에 있는 값만 허용
+		if(min == '0' && max == '0') {
+			step = $txt.data('step');
+			
+			//초기 index 설정
+			var idx = $txt.data('index');
+			
+			if(idx == undefined) {
+				for(var i=0; i<step.length; i++) {
+					if(step[i] == curVal) {
+						$txt.data('index', idx = i)
+						break;
+					}
+				}
 			}
-			else  {
-				return;
+			
+			if(idx == undefined) throw new Error(curVal + '값은 step에 없습니다.');
+			
+			if(upDown == 'up') {
+				if(idx == step.length - 1) return;
+				dataVal = step[++idx]; 
 			}
+			else {
+				if(idx == 0) return;
+				dataVal = step[--idx];
+			}
+			
+			$txt.data('index', idx);
 		}
 		else {
-			if(min == undefined || curVal != parseFloat(min)) {
-				dataVal = curVal - step;
+			step = parseFloat($txt.data('step'));
+			if(upDown == 'up') {
+				if(max == undefined || curVal != parseFloat(max)) {
+					dataVal = curVal + step;
+				}
+				else  {
+					return;
+				}
 			}
-			else  {
-				return;
+			else {
+				if(min == undefined || curVal != parseFloat(min)) {
+					dataVal = curVal - step;
+				}
+				else  {
+					return;
+				}
 			}
 		}
+		
+		
 		
 		$txt.data('value', dataVal);
 		switch(type) {
@@ -2300,6 +2334,9 @@
 		console.log(params)
 		$('#dvModalContent').html(tForm(params));
 		
+		//txt tooltip 
+		hotplace.dom.initTooltip('txtProfitTooltip',{trigger: 'hover'});
+		
 		//수지분석 상세보기 collapse
 		$('#detailView').on('click', function() {
 			if($(this).hasClass('glyphicon-chevron-up')) {
@@ -2322,6 +2359,50 @@
 			}
 		});
 		
+		//재
+		//수지분석 토지이용규제 변경 내역 보기
+		$('#btnViewLandLimit').on('click', function(e) {
+			if(!e.currentTarget.secondCall) {
+				
+				e.currentTarget.secondCall = true;
+				dom.initTooltip('profitTooltip',{side: 'left'});
+				//$(this).trigger('click');
+			}
+			
+			var onOff = $(this).data('switch');
+			if(onOff == 'off') {
+				hotplace.dom.openTooltip('#btnViewLandLimit');
+				$(this).data('switch', 'on');
+				$(this).html(' 토지이용규제 변경내역닫기');
+				$(this).removeClass('glyphicon-folder-close');
+				$(this).addClass('glyphicon-folder-open');
+			}
+			else {
+				hotplace.dom.closeTooltip('#btnViewLandLimit');
+				$(this).data('switch', 'off');
+				$(this).html(' 토지이용규제 변경내역보기');
+				$(this).removeClass('glyphicon-folder-open');
+				$(this).addClass('glyphicon-folder-close');
+			}
+		});
+		
+		//재산세 checkbox (주택)
+		$('#chkJaesanse').on('change', function() {
+			var $txtJaesanseH1 = $('#txtJaesanseH1');
+			var $txtJaesanseH2 = $('#txtJaesanseH2');
+			var $txtJaesanseH3 = $('#txtJaesanseH3');
+			
+			if($(this).is(':checked')) {
+				$txtJaesanseH1.prop('disabled', false);
+				$txtJaesanseH2.prop('disabled', false);
+				$txtJaesanseH3.prop('disabled', false);
+			}
+			else {
+				$txtJaesanseH1.prop('disabled', true);
+				$txtJaesanseH2.prop('disabled', true);
+				$txtJaesanseH3.prop('disabled', true);
+			}
+		});
 		
 		//spinner
 		$('#tbProfit .spinner .btn:first-of-type').on('click', function() {
@@ -3891,7 +3972,10 @@
 			ownTerm:2,
 			otherAssetRatio:70,
 			myeongdobi:0,
-			acceptLandUse:0
+			acceptLandUse:0,
+			daechulIja:5.0,
+			chwideugse:4.6,
+			jaesanse:0.07,
 		}
 		
 		/**
@@ -3913,24 +3997,35 @@
 		 * @desc 로딩시 기본적으로 수행하는 연산 초기화
 		 */
 		function initCalc(params) {
-			data = params;
+			/*data = params;
 			var $txtPurchase = $('#txtPurchase');
 			var area = $txtPurchase.data('value');
-			var pyeung = Math.round(area * 0.3025);
+			//var pyeung = Math.round(area * 0.3025);
 			var val = (pyeung * data.valPerPyeung)/moneyUnit;
-			$txtPurchase.val(pyeung + '평');
-			$txtPurchase.data('value', pyeung);
+			$txtPurchase.val(pyeung + '㎡');
+			$txtPurchase.data('value', pyeung);*/
 			
 			calc.profit.calcPurchase();
 		}
 		
 		/**
 		 * @private 
-		 * @function calcRatio
+		 * @function calcJichoolRatio
 		 * @desc 비율
 		 */
-		function calcRatio() {
-			
+		function calcJichoolRatio(sum) {
+			//매입금액 비율
+			$('#ratioPurchase').text((parseFloat($('#WPurchase').data('value'))/sum) * 100);
+			//명도비 비율
+			$('#ratioMyeongdobi').text((parseFloat($('#WMyeongdobi').data('value'))/sum) * 100);
+			//토지사용승낙 비율
+			$('#ratioAcceptLandUse').text((parseFloat($('#WAcceptLandUse').data('value'))/sum) * 100);
+			//토지비 비율
+			$('#ratioTojibi').text((parseFloat($('#WTojibi').data('value'))/sum) * 100);
+			//대출이자
+			$('#ratioDaechulIja').text((parseFloat($('#WDaechulIja').data('value'))/sum) * 100);
+			//취득세
+			$('#ratioChwideugse').text((parseFloat($('#WChwideugse').data('value'))/sum) * 100);
 		}
 		
 		/**
@@ -3952,14 +4047,7 @@
 			calcJichool();
 		}
 		
-		/**
-		 * @private 
-		 * @function calcFinancial
-		 * @desc 금융비용 (대출이자)
-		 */
-		function calcFinancial() {
-			console.log('금융비용 (대출이자)');
-		}
+
 		
 		/**
 		 * @private 
@@ -3968,6 +4056,16 @@
 		 */
 		function calcJesegeum() {
 			console.log('제세금 (취득세,재산세,양도세)');
+			
+			var $$1 = $('#WChwideugse').data('value');
+			var $$2 = $('#WJaesanse').data('value');
+			var $$3 = $('#WYangdose').data('value');
+			var $$r = parseFloat($$1) + parseFloat($$2) + parseFloat($$3);
+			
+			var $WJesegeum = $('#WJesegeum');
+			$WJesegeum.data('value', $$r)
+			$WJesegeum.val($$r.toString().money());
+			
 			calcJichool();
 		}
 		
@@ -4017,7 +4115,31 @@
 		 * @desc 지출합계(토지비, 제세금, 공사비, 인허가비, 부담금, 사업경비)
 		 */
 		function calcJichool() {
-			console.log('지출합계(토지비, 제세금, 공사비, 인허가비, 부담금, 사업경비)');
+			console.log('지출합계(토지비, 금융비용, 제세금, 공사비, 인허가비, 부담금, 사업경비)');
+			
+			//토지비
+			var WTojibi = $('#WTojibi').data('value');
+			//대출이자
+			var WDaechulIja = $('#WDaechulIja').data('value');
+			//제세금
+			var WJesegeum = $('#WJesegeum').data('value');
+			//공사비
+			var WGongsabi = $('#WGongsabi').data('value');
+			//인허가비
+			var WInheogabi = $('#WInheogabi').data('value');
+			//부담금
+			var WBudamgeum = $('#WBudamgeum').data('value');
+			//사업경비
+			var WSaeobgyeongbi = $('#WSaeobgyeongbi').data('value');
+			
+			var $WJichool = $('#WJichool');
+			var $$r = parseFloat(WTojibi) + parseFloat(WDaechulIja) + parseFloat(WJesegeum) + 
+					  parseFloat(WGongsabi) + parseFloat(WInheogabi) + parseFloat(WBudamgeum) + parseFloat(WSaeobgyeongbi);
+			
+			$WJichool.data('value', $$r);
+			$WJichool.val($$r.toString().money());
+			
+			calcJichoolRatio($$r);
 			calcMaechool();
 		}
 		
@@ -4120,6 +4242,10 @@
 			calcOwnTerm: function() {
 				
 			},
+			calcOtherAssetRatio: function() {
+				console.log('타인자본비율');
+				hotplace.calc.profit.calcDaechulIja(true);
+			},
 			calcPurchase: function(initFn) {
 				console.log('매입금액');
 				//if(initFn) initFn();
@@ -4136,6 +4262,12 @@
 				hotplace.calc.profit.calcMyeongdobi(true);
 				//토지승낙비 : 매입금액 * 비율
 				hotplace.calc.profit.calcAcceptLandUse(true);
+				//대출이자 : 매입가 * 타인자본비율
+				hotplace.calc.profit.calcDaechulIja(true);
+				//취득세 : 매입가 * 비율
+				hotplace.calc.profit.calcChwideugse(true);
+				//재산세
+				hotplace.calc.profit.calcJaesanse(true);
 				
 				calcMymoney();//자기자본
 				calcTojibi();
@@ -4188,17 +4320,85 @@
 				calcMymoney();//자기자본
 				calcTojibi();
 			},
-			calcDaechulIja: function() {
-				console.log('대출이자');
-				calcFinancial();
+			calcDaechulIja: function(isSet) {
+				console.log('대출이자(매입가 X 타인자본 비율)');
+				
+				var $txtDaechulIja = $('#txtDaechulIja');
+				
+				if(isSet) {
+					//매입가
+					var _$$1 = $('#WPurchase').data('value');
+					var _$$2 = $('#stepOtherAssetRatio').data('value');
+					var _$$r = parseFloat(_$$1) * (0.01 * parseFloat(_$$2));
+					
+					$txtDaechulIja.data('value', _$$r);
+					$txtDaechulIja.val(_$$r.toString().money());
+				}
+				
+				var $stepDaechulIja = $('#stepDaechulIja');
+				
+				var $$1 = $txtDaechulIja.data('value');
+				var $$2 = $stepDaechulIja.data('value');
+				var $$r = parseFloat($$1) * (0.01 * parseFloat($$2));
+				
+				var $WDaechulIja = $('#WDaechulIja');
+				$WDaechulIja.data('value', $$r);
+				$WDaechulIja.val($$r.toString().money());
+				calcJichool();
 			},
-			calcChwideugse: function() {
-				console.log('취득세');
+			calcChwideugse: function(isSet) {
+				console.log('취득세(매입가 X 비율)');
+				
+				var $txtChwideugse = $('#txtChwideugse');
+				
+				if(isSet) {
+					var WPurchase = $('#WPurchase').data('value');
+					$txtChwideugse.data('value', WPurchase);
+					$txtChwideugse.val(WPurchase.toString().money());
+				}
+				
+				var $stepChwideugse = $('#stepChwideugse');
+				
+				var $$1 = $txtChwideugse.data('value');
+				var $$2 = $stepChwideugse.data('value');
+				var $$r = parseFloat($$1) * (0.01 * parseFloat($$2));
+				
+				var $WChwideugse = $('#WChwideugse');
+				$WChwideugse.data('value', $$r);
+				$WChwideugse.val($$r.toString().money());
+				
 				calcMymoney();//자기자본
 				calcJesegeum();
 			},
-			calcJaesanse: function() {
+			calcJaesanse: function(isSet) {
 				console.log('재산세');
+				
+				//주택외
+				var $txtJaesanseT1 = $('#txtJaesanseT1');
+				var $txtJaesanseT2 = $('#txtJaesanseT2');
+				var $stepJaesanseT3 = $('#stepJaesanseT3');
+				
+				if(isSet) {
+					//매입가
+					var _$$1 = $('#WPurchase').data('value');
+					var _$$2 = $('#stepOwnTerm').data('value');
+					
+					$txtJaesanseT1.data('value', _$$1);
+					$txtJaesanseT1.val(_$$1.toString().money());
+					
+					$txtJaesanseT2.data('value', _$$2);
+					$txtJaesanseT2.val($('#stepOwnTerm').val());
+				}
+				
+				var $$1 = $txtJaesanseT1.data('value');
+				var $$2 = $txtJaesanseT2.data('value');
+				var $$3 = $stepJaesanseT3.data('value');
+				var $$r = Math.round(parseFloat($$1) * parseFloat($$2) * (0.01 * parseFloat($$3)));
+				
+				var $WJaesanse = $('#WJaesanse');
+				$WJaesanse.data('value', $$r);
+				$WJaesanse.val($$r.toString().money());
+				
 				calcJesegeum();
 			},
 			calcYangdose: function() {

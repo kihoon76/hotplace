@@ -502,32 +502,6 @@ $(document).ready(function() {
 		});
 	});
 	
-	//수지분석 토지이용규제 변경 내역 보기
-	$(document).on('click', '#btnViewLandLimit', function(e) {
-		if(!e.currentTarget.secondCall) {
-			
-			e.currentTarget.secondCall = true;
-			hotplace.dom.initTooltip('profitTooltip',{side: 'left'});
-			//$(this).trigger('click');
-		}
-		
-		var onOff = $(this).data('switch');
-		if(onOff == 'off') {
-			hotplace.dom.openTooltip('#btnViewLandLimit');
-			$(this).data('switch', 'on');
-			$(this).html(' 토지이용규제 변경내역닫기');
-			$(this).removeClass('glyphicon-folder-close');
-			$(this).addClass('glyphicon-folder-open');
-		}
-		else {
-			hotplace.dom.closeTooltip('#btnViewLandLimit');
-			$(this).data('switch', 'off');
-			$(this).html(' 토지이용규제 변경내역보기');
-			$(this).removeClass('glyphicon-folder-open');
-			$(this).addClass('glyphicon-folder-close');
-		}
-	});
-	
 	//물건보기 체크 이벤트
 	$('#btnSearchSalesView').on('click', function(e) {
 		var obj = {}

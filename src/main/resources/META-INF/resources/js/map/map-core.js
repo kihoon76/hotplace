@@ -44,6 +44,15 @@
     	 return s;
     }
     
+    String.prototype.getDecimalCount = function() {
+    	var s = this;
+    	var idx = s.indexOf('.');
+    	
+    	if(idx == -1) return -1;
+    	
+    	return s.length - (idx + 1);
+    }
+    
     /**
 	 * @memberof hotplace
      * @property {object} config
@@ -2286,26 +2295,28 @@
 			$txt.data('index', idx);
 		}
 		else {
-			step = parseFloat($txt.data('step'));
+			var strStep = $txt.data('step');
+			var fractionDigits = strStep.toString().getDecimalCount();
+			step = parseFloat(strStep);
 			if(upDown == 'up') {
-				if(max == undefined || curVal != parseFloat(max)) {
-					dataVal = curVal + step;
+				var nextVal = curVal + step;
+				if(max == undefined || nextVal <= parseFloat(max)) {
+					dataVal = nextVal.toFixed(fractionDigits);
 				}
 				else  {
-					return;
+					dataVal = max;
 				}
 			}
 			else {
-				if(min == undefined || curVal != parseFloat(min)) {
-					dataVal = curVal - step;
+				var prevVal = curVal - step;
+				if(min == undefined || prevVal >= parseFloat(min)) {
+					dataVal = prevVal.toFixed(fractionDigits);
 				}
 				else  {
-					return;
+					dataVal = min;
 				}
 			}
 		}
-		
-		
 		
 		$txt.data('value', dataVal);
 		switch(type) {
@@ -2359,7 +2370,6 @@
 			}
 		});
 		
-		//재
 		//수지분석 토지이용규제 변경 내역 보기
 		$('#btnViewLandLimit').on('click', function(e) {
 			if(!e.currentTarget.secondCall) {
@@ -2391,18 +2401,41 @@
 			var $txtJaesanseH1 = $('#txtJaesanseH1');
 			var $txtJaesanseH2 = $('#txtJaesanseH2');
 			var $txtJaesanseH3 = $('#txtJaesanseH3');
+			var $WJaesanse2    = $('#WJaesanse2');
+			var $stepOwnTerm   = $('#stepOwnTerm');
 			
 			if($(this).is(':checked')) {
 				$txtJaesanseH1.prop('disabled', false);
 				$txtJaesanseH2.prop('disabled', false);
 				$txtJaesanseH3.prop('disabled', false);
+				$WJaesanse2.prop('disabled', false);
 			}
 			else {
 				$txtJaesanseH1.prop('disabled', true);
 				$txtJaesanseH2.prop('disabled', true);
 				$txtJaesanseH3.prop('disabled', true);
+				$WJaesanse2.prop('disabled', true);
 			}
+			
+			hotplace.calc.profit.calcJaesanse2(false, true);
 		});
+		
+		hotplace.validation.numberOnly('#txtJaesanseH1', function() {
+			hotplace.calc.profit.calcJaesanse2();
+		});
+		
+		/*$('#txtJaesanseH1').on('blur', function() {
+			hotplace.calc.profit.calcJaesanse2();
+			console.log($(this).data('ttt'));
+		});
+		
+		$('#txtJaesanseH1').on('keyup', function(e) {
+			var v = $(this).val();
+			v = v.replace(/,/gm, '');
+			
+			$(this).data('value', v);
+			$(this).val(v.money());
+		});*/
 		
 		//spinner
 		$('#tbProfit .spinner .btn:first-of-type').on('click', function() {
@@ -3073,35 +3106,92 @@
  * */
 (function(validation, $) {
 	
-	//var regNumberOnly
-	function _keyLimit($this, e, regEx) {
-		if (!(e.keyCode >=37 && e.keyCode<=40)) {
-			$this.val( $this.val().replace(regEx,'') );
-		}
+	$(document).on('focus', '.readonly', function() {
+		$(this).trigger('blur')
+	});
+	
+	//숫자관련 제한 공통함수
+	function _digitKeyLimit(selector, regEx, isComma, blurFn) {
+		$(document).on('keyup', selector, function(e) {
+			if (!(e.keyCode >=37 && e.keyCode<=40)) {
+				$(this).val( $(this).val().replace(regEx, '') );
+				
+			}
+			
+			if(isComma) {
+				var v = $(this).val();
+				v = v.replace(/,/gm, '');
+				$(this).val(v.money());
+			}
+		});
+		
+		//tab키 눌렀을 때 버그로 인해서 blur이후 다시 설정, max 점검
+		$(document).on('blur', selector, function(e) {
+			//max 점검
+			var maxObj = $(this).data('max');
+			var suffix = $(this).data('suffix');
+			
+			$(this).val($(this).val().replace(regEx,''));
+			var v = $(this).val();
+			v = v.replace(/,/gm, '');
+			
+			if(suffix != undefined) {
+				v = v.replace(new RegExp(suffix, 'ig'), '');
+			}
+			
+			var fIdx = v.indexOf('.');
+			//소수점 있을 경우 
+			if(fIdx > -1) {
+				v = v.replace(/\./gm, '');
+				v = v.slice(0, fIdx) + '.' + v.slice(fIdx);
+				
+				//입력을 5...이런식으로 했을경우
+				if(v.length - 1 == v.lastIndexOf('.')) {
+					v = v + '0';
+				}
+			}
+			
+			if(maxObj != undefined) {
+				if(parseFloat(v) > parseFloat(maxObj)) {
+					v = $(this).data('value');
+				}
+			}
+			
+			$(this).data('value', v);
+			
+			if(isComma) {
+				v = v.toString().money(); 
+			}
+			
+			$(this).val(v + (suffix || ''));
+			if(blurFn) blurFn();
+			
+			//spinner textbox일 경우
+			var $next = $(this).next();
+			var fnStr = $next.data('fn');
+			if(fnStr != undefined) hotplace.calc.profit[fnStr]();
+			
+		});
 	}
 	
 	/**
 	 * @memberof hotplace.validation
 	 * @function numberOnly
-	 * @param {string} CLASS jquery selector
+	 * @param {string} selector jquery selector
 	 * @desc text 숫자만 입력되게 함
 	 */
-	validation.numberOnly = function(CLASS) {
-		$(document).on('keydown', CLASS, function(e) {
-			_keyLimit($(this), e, /[^0-9]/gi);
-		});
+	validation.numberOnly = function(selector, blurFn) {
+		_digitKeyLimit(selector, /[^0-9]/gi, true, blurFn);
 	}
 	
 	/**
 	 * @memberof hotplace.validation
 	 * @function numberNdot
-	 * @param {string} CLASS jquery selector
+	 * @param {string} selector jquery selector
 	 * @desc text 숫자와 . 입력되게 함
 	 */
-	validation.numberNdot = function(CLASS) {
-		$(document).on('keyup', CLASS, function(e) {
-			_keyLimit($(this), e, /[^0-9|\.]/gi);
-		});
+	validation.numberNdot = function(selector, blurFn) {
+		_digitKeyLimit(selector, /[^0-9|\.]/gi, true, blurFn);
 	}
 }(
 	hotplace.validation = hotplace.validation || {},
@@ -4059,8 +4149,9 @@
 			
 			var $$1 = $('#WChwideugse').data('value');
 			var $$2 = $('#WJaesanse').data('value');
+			var $$2_1 = $('#WJaesanse2').data('value');
 			var $$3 = $('#WYangdose').data('value');
-			var $$r = parseFloat($$1) + parseFloat($$2) + parseFloat($$3);
+			var $$r = parseFloat($$1) + parseFloat($$2) + parseFloat($$2_1) + parseFloat($$3);
 			
 			var $WJesegeum = $('#WJesegeum');
 			$WJesegeum.data('value', $$r)
@@ -4240,7 +4331,8 @@
 			initCalc: initCalc,
 			defaultValue: defaultValue,
 			calcOwnTerm: function() {
-				
+				hotplace.calc.profit.calcJaesanse(true);
+				hotplace.calc.profit.calcJaesanse2(true);
 			},
 			calcOtherAssetRatio: function() {
 				console.log('타인자본비율');
@@ -4399,6 +4491,56 @@
 				$WJaesanse.data('value', $$r);
 				$WJaesanse.val($$r.toString().money());
 				
+				calcJesegeum();
+			},
+			calcJaesanse2: function(isSet, isInit) {
+				
+				var $txtJaesanseH1 = $('#txtJaesanseH1');
+				var $txtJaesanseH2 = $('#txtJaesanseH2');
+				var $txtJaesanseH3 = $('#txtJaesanseH3');
+				var $stepOwnTerm = $('#stepOwnTerm');
+				
+				if(isSet) {
+					$txtJaesanseH2.data('value', $stepOwnTerm.data('value'));
+					$txtJaesanseH2.val($stepOwnTerm.val());
+				}
+				
+				if(isInit) {
+					$txtJaesanseH1.val('0');
+					$txtJaesanseH1.data('value', '0');
+					$txtJaesanseH2.val($stepOwnTerm.val());
+					$txtJaesanseH2.data('value', $stepOwnTerm.data('value'));
+					$txtJaesanseH3.val('0');
+					$txtJaesanseH3.data('value', '0');
+				}
+				
+				var $$1 = parseFloat($txtJaesanseH1.data('value'));
+				var $$2 = parseFloat($txtJaesanseH2.data('value'));
+				var $$3 = 0;
+				var $$r = 0;
+				
+				//6천만원 이하 0.1%
+				if($$1 <= 60000000) {
+					$$3 = $$1 * 0.001;
+				}
+				else if($$1 > 60000000 && $$1 <= 150000000) {
+					$$3 = 60000 + ($$1 - 60000000) * 0.0015;
+				}
+				else if($$1 > 150000000 && $$1 <= 300000000) {
+					$$3 = 195000 + ($$1 - 150000000) * 0.0025;
+				}
+				else {
+					$$3 = 570000 + ($$1 - 300000000) * 0.004;
+				}
+				
+				$$r = Math.round($$2 * $$3);
+				
+				$txtJaesanseH3.data('value', $$3);
+				$txtJaesanseH3.val($$3.toString().money());
+				
+				var $WJaesanse2 = $('#WJaesanse2');
+				$WJaesanse2.data('value', $$r);
+				$WJaesanse2.val($$r.toString().money());
 				calcJesegeum();
 			},
 			calcYangdose: function() {

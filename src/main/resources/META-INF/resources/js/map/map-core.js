@@ -920,25 +920,21 @@
 	 * @param {hotplace.maps.MarkerTypes} markerType
 	 * @desc  margin bound 범위내에 있는 좌표 찾은후 넘겨받은 callback에 파라미터로 넘겨줌
 	 */
-	function _createMarkers(level, startIdx, markerType) {
+	function _createMarkers(level, startIdx, markerType, listeners, options) {
 		var markerData;
-		var markerIcon;
+		//var markerIcon;
 		
 		switch(markerType) {
 		case _markerTypes.GYEONGMAE :
 			markerData = hotplace.database.getLevelData(level, _markerTypes.GYEONGMAE);
-			markerIcon = 'blink.gif';
+			//markerIcon = 'blink.gif';
 			break;
 		}
 		
 		_commXY(markerData,
 				startIdx,
 				function(data) {
-					maps.getMarker(markerType, data.location[1], data.location[0], {}, {
-						hasInfoWindow: false,
-						radius:0,
-						icon:markerIcon,
-					});
+					maps.getMarker(markerType, data, listeners, options);
 				}
 		);
 	}
@@ -1144,7 +1140,35 @@
 		if(!db.hasData(currentLevel, _markerTypes.GYEONGMAE)) return;
 		var startIdx = db.getStartXIdx(_markerTypes.GYEONGMAE, _marginBounds.swx, currentLevel);
 		
-		_createMarkers(currentLevel, startIdx, _markerTypes.GYEONGMAE);
+		_createMarkers(currentLevel, startIdx, _markerTypes.GYEONGMAE, {
+			click : function(map, marker, win) {
+				console.log(marker._data);
+				
+				win.open(map, marker);
+				var tForm = hotplace.dom.getTemplate('gyeongmaeForm');
+				
+				hotplace.ajax({
+					url: 'sample/celldetail',
+					method: 'GET',
+					//async: false,
+					dataType: 'json',
+					data: {},
+					loadEl: '#dvGyeongmae',
+					success: function(data, textStatus, jqXHR) {
+						//hotplace.dom.createChart('canvas');
+					},
+					error:function() {
+						
+					}
+				});
+				
+			}
+		}, {
+			hasInfoWindow: true,
+			isAjaxContent: true,
+			radius:0,
+			icon: 'blink.gif',
+		});
 	}
 	
 	/** 
@@ -1424,32 +1448,38 @@
 	 * @param {object}  options.datas 
 	 * @desc 해당지점에 마커를 그리고 옵션값에 따라 해당지점을 중심으로 원을 그림 
 	 */
-	maps.getMarker = function(markerType, lat, lng, listeners, options) {
+	maps.getMarker = function(markerType, data, listeners, options) {
 		var newMarker, newInfoWindow;
 		
 		newMarker = new _vender.Marker({
-		    position: new _vender.LatLng(lat, lng),
+		    position: new _vender.LatLng(data.location[1], data.location[0]),
 		    map: _venderMap,
 		});
+		
+		newMarker._data = data;
 		
 		if(options.icon) {
 			newMarker.setOptions('icon', {
 		        content: '<img src="'+ hotplace.getContextUrl() +'resources/img/marker/' + options.icon + '" alt="" ' +
                 		 'style="margin: 0px; padding: 0px; border: 0px solid transparent; display: block; max-width: none; max-height: none; ' +
                 		 '-webkit-user-select: none; position: absolute; width: 22px; height: 33px; left: 0px; top: 0px;">',
-                size: new _vender.Size(80, 100),
-                anchor: new _vender.Point(40, 100)
+                size: new _vender.Size(22, 33),
+                anchor: new _vender.Point(11, 33)
 			});
 		}
 		
 		_markers[markerType].m.push(newMarker);
 		
 		if(options.hasInfoWindow) {
-			var tForm = hotplace.dom.getTemplate(options.infoWinFormName);
+			var winContent = {};
 			
-			newInfoWindow = new _vender.InfoWindow({
-				content: tForm({datas: options.datas.params})
-		    });
+			//로컬정보로 윈도우 창 정보를 설정할 지 여부
+			if(!options.isAjaxContent) {
+				var tForm = hotplace.dom.getTemplate(options.infoWinFormName);
+	            winContent.content = tForm({datas: options.datas.params});
+	        } 
+			 
+			newInfoWindow = new _vender.InfoWindow(winContent);
 			
 			_infoWindowsForMarker[markerType].push(newInfoWindow);
 		}
@@ -1468,7 +1498,7 @@
 		if(options.radius) {
 			var radiusSearchCircle = new _vender.Circle({
 			    map: _venderMap,
-			    center:  new _vender.LatLng(lat, lng),
+			    center:  new _vender.LatLng(data.location[1], data.location[0]),
 			    radius: options.radius,
 			    fillColor: 'rgba(250,245,245)',
 			    fillOpacity: 0,
@@ -1551,7 +1581,16 @@
 		
 		if(db.hasData(_currentLevel, _markerTypes.GYEONGMAE)) {
 			var startIdx = db.getStartXIdx(_markerTypes.GYEONGMAE, _marginBounds.swx, _currentLevel);
-			_createMarkers(_currentLevel, startIdx, _markerTypes.GYEONGMAE);
+			_createMarkers(_currentLevel, startIdx, _markerTypes.GYEONGMAE, {
+				click : function(map, marker, win) {
+					
+				}
+			}, {
+				hasInfoWindow: true,
+				isAjaxContent: true,
+				radius:0,
+				icon: 'blink.gif',
+			});
 		}
 	};
 	
@@ -1645,7 +1684,7 @@
 						hotplace.database.setLevelData(currentLevel, _markerTypes.GYEONGMAE, json);
 						_showMarkers();
 						if(callback) callback();
-						console.log(json)
+						console.log(json);
 					}
 					catch(e) {
 						throw e;
@@ -4006,7 +4045,7 @@
 	 */
 	test.searchRadius = function() {
 		hotplace.maps.panToBounds(37.539648921, 127.152615967, function() {
-			hotplace.maps.getMarker(hotplace.maps.MarkerTypes.RADIUS_SEARCH,37.539648921, 127.152615967, {
+			hotplace.maps.getMarker(hotplace.maps.MarkerTypes.RADIUS_SEARCH,{location:[127.152615967, 37.539648921]}, {
 				'click' : function(map, newMarker, newInfoWindow) {
 					 if(newInfoWindow.getMap()) {
 						 newInfoWindow.close();
@@ -4017,6 +4056,7 @@
 				}
 			}, {
 				hasInfoWindow: true,
+				isAjaxContent: false,
 				infoWinFormName: 'pinpointForm',
 				radius: 500,
 				datas: {

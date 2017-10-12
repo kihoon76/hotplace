@@ -552,6 +552,7 @@ $(document).ready(function() {
 			
 			hotplace.maps.destroyMarkers();
 			hotplace.maps.destroyMarkerWindow(hotplace.maps.MarkerTypes.RADIUS_SEARCH);
+			hotplace.database.initLevel(level);
 		},
 		'dragend' : function(map, bnds) {
 			//cell과 marker가 동시에 켜져있을 경우 

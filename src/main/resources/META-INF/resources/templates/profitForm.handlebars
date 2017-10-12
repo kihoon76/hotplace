@@ -412,17 +412,12 @@
 	<td>
 		<div class="container">
 			<div class="row">
-			
 				<div class="checkbox checkbox-primary col-xs-4">
         			<input id="chkJaesanse" class="styled" type="checkbox">
             		<label for="chkJaesanse">
                                            주택
             		</label>
         		</div>
-        		
-        		<!--<div class="col-xs-4" style="positiohn:relative; left:100px;">
-        			<button class="btn btn-primary" id="btnJaesanse" disabled>계산하기</button>
-        		</div>-->
 			</div>
 			<div class="row">
 				<div class="col-xs-3" style="padding:0px;">
@@ -450,23 +445,35 @@
 	<td>
 		<div class="container">
 			<div class="row">
-				<div class="col-xs-5">
-					<input class="form-control" id="txtYangdose" type="text" disabled> 
-				</div>
-				<div class="col-xs-1 lblX">
-					<label>X</label>
-				</div>
-				<div class="input-group spinner col-xs-6">
-    				<input type="text" class="form-control" value="-10%" id="stepYangdose" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+				<div class="checkbox checkbox-primary col-xs-4">
+        			<input id="chkYangdose" class="styled" type="checkbox">
+            		<label for="chkYangdose">
+                                           비사업용
+            		</label>
+        		</div>
+			</div>
+			
+			<div class="row">
+				<div class="input-group spinner">
+    				<input type="text" class="form-control" id="stepYangdose"
+    					   data-min="0"
+    					   data-type="money"
+    					   data-suffix="원">
     				<div class="input-group-btn-vertical" data-fn="calcYangdose">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
     			</div>
+				<div style="position:relative; top:-27px;left:130px;">
+					<label>X</label>
+				</div>
+				<div style="position:relative;top:-60px;left:150px;">
+    				<input type="text" class="form-control readonly" value="-10%" id="stepYangdose2" data-suffix="%">
+    			</div>
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="WYangdose" type="text" disabled></td>
+	<td><input class="form-control" id="WYangdose" type="text" readonly></td>
 	<td><span id="ratioYangdose"></span>%</td>
 	<td>
 		<p>1. 개인(양도세)<br/>
@@ -492,7 +499,7 @@
 	<td style="border-top:0px !important;border-right:0px !important;background-color:paleturquoise;"></td>
 	<td style="border-left:0px !important;background-color:paleturquoise;">소 계</td>
 	<td></td>
-	<td><input class="form-control" id="WJesegeum" type="text" disabled></td>
+	<td><input class="form-control" id="WJesegeum" type="text" readonly></td>
 	<td><span id="ratioJesegeum"></span>%</td>
 	<td></td>
 </tr>
@@ -503,13 +510,19 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtGeonchugGongsa" type="text" disabled> 
+					<input class="form-control" id="txtGeonchugGongsa" type="text" readonly data-area="{{../area}}"> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
 				</div>
 				<div class="input-group spinner col-xs-6">
-    				<input type="text" class="form-control" value="-10%" id="stepGeonchugGongsa" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<input type="text" class="form-control" id="stepGeonchugGongsa" 
+    					   value="50%"
+    					   data-value="50"
+    					   data-min="-50"
+    					   data-max="100"
+    					   data-step="5"
+    					   data-suffix="%">
     				<div class="input-group-btn-vertical" data-fn="calcGeonchugGongsa">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -518,7 +531,7 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="WGeonchugGongsa" type="text" disabled></td>
+	<td><input class="form-control" id="WGeonchugGongsa" type="text" readonly></td>
 	<td><span id="ratioGeonchugGongsa"></span>%</td>
 	<td>디폴트값은 평당 450만원</td>
 </tr>
@@ -528,13 +541,19 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtTomogGongsa" type="text" disabled> 
+					<input class="form-control" id="txtTomogGongsa" type="text" readonly data-area="{{../area}}"> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
 				</div>
 				<div class="input-group spinner col-xs-6">
-    				<input type="text" class="form-control" value="-10%" id="stepTomogGongsa" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<input type="text" class="form-control" id="stepTomogGongsa"
+    					   value="50%"
+    					   data-value="50"
+    					   data-min="-50"
+    					   data-max="100"
+    					   data-step="5"
+    					   data-suffix="%">
     				<div class="input-group-btn-vertical" data-fn="calcTomogGongsa">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -543,7 +562,7 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="WTomogGongsa" type="text" disabled></td>
+	<td><input class="form-control" id="WTomogGongsa" type="text" readonly></td>
 	<td><span id="ratioTomogGongsa"></span>%</td>
 	<td>디폴트값은 평당 15만원</td>
 </tr>
@@ -553,13 +572,19 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtPojangGongsa" type="text" disabled> 
+					<input class="form-control" id="txtPojangGongsa" type="text" readonly data-area="{{../area}}"> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
 				</div>
 				<div class="input-group spinner col-xs-6">
-    				<input type="text" class="form-control" value="-10%" id="stepPojangGongsa" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<input type="text" class="form-control" id="stepPojangGongsa" 
+    				  	   value="50%"
+    					   data-value="50"
+    					   data-min="-50"
+    					   data-max="100"
+    					   data-step="5"
+    					   data-suffix="%">
     				<div class="input-group-btn-vertical" data-fn="calcPojangGongsa">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -568,9 +593,9 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="WPojangGongsa" type="text" disabled></td>
+	<td><input class="form-control" id="WPojangGongsa" type="text" readonly></td>
 	<td><span id="ratioPojangGongsa"></span>%</td>
-	<td></td>
+	<td>디폴트값은 평당 15만원</td>
 </tr>
 <tr class="collapse out">
 	<td>인입공사비</td>
@@ -578,13 +603,19 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtInibGongsa" type="text" disabled> 
+					<input class="form-control" id="txtInibGongsa" type="text" readonly data-area="{{../area}}"> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
 				</div>
 				<div class="input-group spinner col-xs-6">
-    				<input type="text" class="form-control" value="-10%" id="stepInibGongsa" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<input type="text" class="form-control" id="stepInibGongsa" 
+    				  	   value="50%"
+    					   data-value="50"
+    					   data-min="-50"
+    					   data-max="100"
+    					   data-step="5"
+    					   data-suffix="%">
     				<div class="input-group-btn-vertical" data-fn="calcInibGongsa">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -593,15 +624,15 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="WInibGongsa" type="text" disabled></td>
+	<td><input class="form-control" id="WInibGongsa" type="text" readonly></td>
 	<td><span id="ratioInibGongsa"></span>%</td>
-	<td></td>
+	<td>디폴트값은 평당 15만원</td>
 </tr>
 <tr class="collapse out">
 	<td style="border-top:0px !important;border-right:0px !important;background-color:paleturquoise;"></td>
 	<td style="border-left:0px !important;background-color:paleturquoise;">소 계</td>
 	<td></td>
-	<td><input class="form-control" id="WGongsabi" type="text" disabled></td>
+	<td><input class="form-control" id="WGongsabi" type="text" readonly></td>
 	<td><span id="ratioGongsabi"></span>%</td>
 	<td></td>
 </tr>

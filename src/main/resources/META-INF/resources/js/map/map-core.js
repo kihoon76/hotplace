@@ -67,7 +67,8 @@
     	minZoomLevel: 3,
     	mapDefaultX: 127.9204629,
     	mapDefaultY: 36.0207091,
-    	addrSearchPanLevel: 10
+    	addrSearchPanLevel: 10,
+    	yangdoseStepPercent: 5
     }
     
     Handlebars.registerHelper('json', function(context) {
@@ -2301,7 +2302,12 @@
 			if(upDown == 'up') {
 				var nextVal = curVal + step;
 				if(max == undefined || nextVal <= parseFloat(max)) {
-					dataVal = nextVal.toFixed(fractionDigits);
+					if(fractionDigits > -1) {
+						dataVal = nextVal.toFixed(fractionDigits) 
+					}
+					else {
+						dataVal = nextVal;
+					}
 				}
 				else  {
 					dataVal = max;
@@ -2310,7 +2316,12 @@
 			else {
 				var prevVal = curVal - step;
 				if(min == undefined || prevVal >= parseFloat(min)) {
-					dataVal = prevVal.toFixed(fractionDigits);
+					if(fractionDigits > -1) {
+						dataVal = prevVal.toFixed(fractionDigits);
+					}
+					else {
+						dataVal = prevVal;
+					}
 				}
 				else  {
 					dataVal = min;
@@ -2396,6 +2407,22 @@
 			}
 		});
 		
+		var stepYangdose2 = $('#stepYangdose2');
+		
+		//매입주체 
+		$('input[name="radioOwn"]').on('click', function(e) {
+			var targetId = e.target.id;
+			//개인 (양도세 세율)
+			if(id == 'radioPrivate') {
+				
+			}
+			else {
+				
+			}
+			
+		});
+		
+		
 		//재산세 checkbox (주택)
 		$('#chkJaesanse').on('change', function() {
 			var $txtJaesanseH1 = $('#txtJaesanseH1');
@@ -2420,22 +2447,36 @@
 			hotplace.calc.profit.calcJaesanse2(false, true);
 		});
 		
+		//양도세 비사업용 체크 
+		$('#chkYangdose').on('click', function() {
+			hotplace.calc.profit.calcYangdose();
+		});
+		
 		hotplace.validation.numberOnly('#txtJaesanseH1', function() {
 			hotplace.calc.profit.calcJaesanse2();
 		});
 		
-		/*$('#txtJaesanseH1').on('blur', function() {
-			hotplace.calc.profit.calcJaesanse2();
-			console.log($(this).data('ttt'));
+		hotplace.validation.numberOnly('#stepYangdose', function($this) {
+			var step = hotplace.calc.profit.makeStep($this.data('value'), hotplace.config.yangdoseStepPercent);
+			$this.data('step', step);
+			hotplace.calc.profit.calcYangdose();
 		});
 		
-		$('#txtJaesanseH1').on('keyup', function(e) {
-			var v = $(this).val();
-			v = v.replace(/,/gm, '');
-			
-			$(this).data('value', v);
-			$(this).val(v.money());
-		});*/
+		hotplace.validation.numberOnly('#stepGeonchugGongsa', function($this) {
+			hotplace.calc.profit.calcGeonchugGongsa();
+		});
+		
+		hotplace.validation.numberOnly('#stepTomogGongsa', function($this) {
+			hotplace.calc.profit.calcTomogGongsa();
+		});
+		
+		hotplace.validation.numberOnly('#stepPojangGongsa', function($this) {
+			hotplace.calc.profit.calcPojangGongsa();
+		});
+		
+		hotplace.validation.numberOnly('#stepInibGongsa', function($this) {
+			hotplace.calc.profit.calcInibGongsa();
+		});
 		
 		//spinner
 		$('#tbProfit .spinner .btn:first-of-type').on('click', function() {
@@ -3164,7 +3205,7 @@
 			}
 			
 			$(this).val(v + (suffix || ''));
-			if(blurFn) blurFn();
+			if(blurFn) blurFn($(this));
 			
 			//spinner textbox일 경우
 			var $next = $(this).next();
@@ -4096,6 +4137,29 @@
 			$txtPurchase.data('value', pyeung);*/
 			
 			calc.profit.calcPurchase();
+			calc.profit.calcYangdose(true);
+			calc.profit.calcGeonchugGongsa(true);
+			calc.profit.calcTomogGongsa(true);
+			calc.profit.calcPojangGongsa(true);
+			calc.profit.calcInibGongsa(true);
+		}
+		
+		/**
+		 * @private 
+		 * @function makeStep
+		 * @returns {number} 입력값의 백분율 값
+		 * @desc 입력값의 백분율 값으로 spinner의 step값을 설정
+		 */
+		function makeStep(value, percent) {
+			value = value.toString();
+			var len = value.length;
+			var s = value.slice(0,1);
+			
+			for(var i=0; i<len-1; i++) {
+				s += '0';
+			}
+			
+			return Math.round(parseInt(s) * 0.01 * percent);
 		}
 		
 		/**
@@ -4167,6 +4231,17 @@
 		 */
 		function calcGongsabi() {
 			console.log('공사비 (건축공사비, 토목공사비, 포장공사비, 인입공사비)');
+			
+			var $$1 = $('#WGeonchugGongsa').data('value');
+			var $$2 = $('#WTomogGongsa').data('value');
+			var $$3 = $('#WPojangGongsa').data('value');
+			var $$4 = $('#WInibGongsa').data('value');
+			
+			var $$r = $$1 + $$2 + $$3 + $$4;
+			
+			var $WGongsabi = $('#WGongsabi');
+			$WGongsabi.data('value', $$r);
+			$WGongsabi.val($$r.toString().money());
 			calcJichool();
 		}
 		
@@ -4329,10 +4404,12 @@
 				onBindOwn();
 			},
 			initCalc: initCalc,
+			makeStep: makeStep,
 			defaultValue: defaultValue,
 			calcOwnTerm: function() {
 				hotplace.calc.profit.calcJaesanse(true);
 				hotplace.calc.profit.calcJaesanse2(true);
+				hotplace.calc.profit.calcYangdose();
 			},
 			calcOtherAssetRatio: function() {
 				console.log('타인자본비율');
@@ -4431,7 +4508,7 @@
 				
 				var $$1 = $txtDaechulIja.data('value');
 				var $$2 = $stepDaechulIja.data('value');
-				var $$r = parseFloat($$1) * (0.01 * parseFloat($$2));
+				var $$r = Math.round(parseFloat($$1) * (0.01 * parseFloat($$2)));
 				
 				var $WDaechulIja = $('#WDaechulIja');
 				$WDaechulIja.data('value', $$r);
@@ -4543,27 +4620,168 @@
 				$WJaesanse2.val($$r.toString().money());
 				calcJesegeum();
 			},
-			calcYangdose: function() {
+			calcYangdose: function(isSet) {
 				console.log('양도세');
+				var $stepYangdose = $('#stepYangdose');
+				var $stepYangdose2 = $('#stepYangdose2');
+				var $WYangdose = $('#WYangdose');
+				
+				if(isSet) {
+					var $WPurchase = $('#WPurchase');
+					var _$$1 = $WPurchase.data('value');
+					
+					$stepYangdose.data('value', _$$1);
+					$stepYangdose.val($WPurchase.val() + $stepYangdose.data('suffix'));
+					
+					$stepYangdose.data('step', makeStep(_$$1, hotplace.config.yangdoseStepPercent));
+				}
+				
+				var $$1 = parseInt($stepYangdose.data('value')); 
+				var $$2 = 0;
+				var isNonSaeob = $('#chkYangdose').is(':checked');
+				
+				//개인
+				if($('#radioPrivate').is(':checked')) {
+					//보유기간
+					var term = parseFloat($('#stepOwnTerm').data('value'));
+					if(term < 1) {
+						$$2 = isNonSaeob ? 60 : 50;
+					}
+					else if(term >=1 && term < 2) {
+						$$2 = isNonSaeob ? 50 : 40;
+					}
+					else {
+						if($$1 <= 12000000) {
+							$$2 = isNonSaeob ? 16 : 6;
+						}
+						else if($$1 > 12000000 && $$1 <= 46000000) {
+							$$2 = isNonSaeob ? 25 : 15;
+						}
+						else if($$1 > 46000000 && $$1 <= 88000000) {
+							$$2 = isNonSaeob ? 34 : 24;
+						}
+						else if($$1 > 88000000 && $$1 <= 150000000) {
+							$$2 = isNonSaeob ? 45 : 35;
+						}
+						else if($$1 > 150000000 && $$1 <= 500000000) {
+							$$2 = isNonSaeob ? 48 : 38;
+						}
+						else {
+							$$2 = isNonSaeob ? 50 : 40;
+						}
+					}
+				}
+				else {//법인
+					if($$1 <= 200000000) {
+						$$2 = isNonSaeob ? 20 : 10;
+					}
+					else if($$1 > 200000000 && $$1 <= 20000000000) {
+						$$2 = isNonSaeob ? 30 : 20;
+					}
+					else {
+						$$2 = isNonSaeob ? 32 : 22;
+					}
+				}
+				
+				$stepYangdose2.data('value', $$2);
+				$stepYangdose2.val($$2 + $stepYangdose2.data('suffix'));
+				
+				var $$r = Math.round($$1 * 0.01 * $$2);
+				$WYangdose.data('value', $$r);
+				$WYangdose.val($$r.toString().money());
 				calcJesegeum();
 			},
-			calcGeonchugGongsa: function() {
+			calcGeonchugGongsa: function(isSet) {
 				console.log('건축공사비');
+				var $txtGeonchugGongsa = $('#txtGeonchugGongsa');
+				var $stepGeonchugGongsa = $('#stepGeonchugGongsa');
+				var $WGeonchugGongsa = $('#WGeonchugGongsa');
+				
+				if(isSet) {
+					var _$$1 = Math.round(parseFloat($txtGeonchugGongsa.data('area') / 3.3));
+					_$$1 = _$$1 * 4500000;
+					$txtGeonchugGongsa.data('value', _$$1);
+					$txtGeonchugGongsa.val(_$$1.toString().money());
+				}
+				
+				var $$1 = parseInt($txtGeonchugGongsa.data('value'));
+				var $$2 = parseInt($stepGeonchugGongsa.data('value'));
+				var $$r = Math.round($$1 * 0.01 * $$2);
+				
+				$WGeonchugGongsa.data('value', $$r);
+				$WGeonchugGongsa.val($$r.toString().money());
 				calcMymoney();//자기자본
 				calcGongsabi();
 			},
-			calcTomogGongsa: function() {
+			calcTomogGongsa: function(isSet) {
 				console.log('토목공사비');
+				
+				var $txtTomogGongsa = $('#txtTomogGongsa');
+				var $stepTomogGongsa = $('#stepTomogGongsa');
+				var $WTomogGongsa = $('#WTomogGongsa');
+				
+				if(isSet) {
+					var _$$1 = Math.round(parseFloat($txtTomogGongsa.data('area') / 3.3));
+					_$$1 = _$$1 * 1500000;
+					$txtTomogGongsa.data('value', _$$1);
+					$txtTomogGongsa.val(_$$1.toString().money());
+				}
+				
+				var $$1 = parseInt($txtTomogGongsa.data('value'));
+				var $$2 = parseInt($stepTomogGongsa.data('value'));
+				var $$r = Math.round($$1 * 0.01 * $$2);
+				
+				$WTomogGongsa.data('value', $$r);
+				$WTomogGongsa.val($$r.toString().money());
+				
 				calcMymoney();//자기자본
 				calcGongsabi();
 			},
-			calcPojangGongsa: function() {
+			calcPojangGongsa: function(isSet) {
 				console.log('포장공사비');
+				
+				var $txtPojangGongsa = $('#txtPojangGongsa');
+				var $stepPojangGongsa = $('#stepPojangGongsa');
+				var $WPojangGongsa = $('#WPojangGongsa');
+				
+				if(isSet) {
+					var _$$1 = Math.round(parseFloat($txtPojangGongsa.data('area') / 3.3));
+					_$$1 = _$$1 * 1500000;
+					$txtPojangGongsa.data('value', _$$1);
+					$txtPojangGongsa.val(_$$1.toString().money());
+				}
+				
+				var $$1 = parseInt($txtPojangGongsa.data('value'));
+				var $$2 = parseInt($stepPojangGongsa.data('value'));
+				var $$r = Math.round($$1 * 0.01 * $$2);
+				
+				$WPojangGongsa.data('value', $$r);
+				$WPojangGongsa.val($$r.toString().money());
+				
 				calcMymoney();//자기자본
 				calcGongsabi();
 			},
-			calcInibGongsa: function() {
+			calcInibGongsa: function(isSet) {
 				console.log('인입공사비');
+				
+				var $txtInibGongsa = $('#txtInibGongsa');
+				var $stepInibGongsa = $('#stepInibGongsa');
+				var $WInibGongsa = $('#WInibGongsa');
+				
+				if(isSet) {
+					var _$$1 = Math.round(parseFloat($txtInibGongsa.data('area') / 3.3));
+					_$$1 = _$$1 * 1500000;
+					$txtInibGongsa.data('value', _$$1);
+					$txtInibGongsa.val(_$$1.toString().money());
+				}
+				
+				var $$1 = parseInt($txtInibGongsa.data('value'));
+				var $$2 = parseInt($stepInibGongsa.data('value'));
+				var $$r = Math.round($$1 * 0.01 * $$2);
+				
+				$WInibGongsa.data('value', $$r);
+				$WInibGongsa.val($$r.toString().money());
+				
 				calcMymoney();//자기자본
 				calcGongsabi();
 			},

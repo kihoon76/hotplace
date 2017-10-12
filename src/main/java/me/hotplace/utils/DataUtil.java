@@ -90,7 +90,7 @@ public class DataUtil {
 		return m.build(list, deli);
 	}
 	
-	public static String makeLatLngMarker(List<String> list, String deli) {
+	public static String makeLatLngGyeongmaeMarker(List<String> list, String deli) {
 		
 		Make m = new Make() {
 			
@@ -99,12 +99,12 @@ public class DataUtil {
 				// TODO Auto-generated method stub
 				for(String token : list) {
 					String[] s = StringUtils.splitByWholeSeparator(token, deli);
-					sb.append("{\"info\":{}");
+					sb.append("{\"info\":{\"pnu\":\"" + s[0] + "\"}");
 					sb.append(",");
 					sb.append("\"location\":[");
-					sb.append(s[0]);
-					sb.append(",");
 					sb.append(s[1]);
+					sb.append(",");
+					sb.append(s[2]);
 					sb.append("]},");
 				}
 			}

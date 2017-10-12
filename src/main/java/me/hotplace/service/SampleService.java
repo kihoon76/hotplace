@@ -23,9 +23,9 @@ public class SampleService {
 		//return "[[125.4,37.75],[128.56,35.42],[128.34,35.57],[125.91,33.51],[125.89,33.53],[125.92,33.52]]";
 	}
 
-	public String getGyeongmae(Map<String, String> param) {
+	/*public String getGyeongmae(Map<String, String> param) {
 		// TODO Auto-generated method stub
 		List<String> list = sampleDao.selectGyeongmaeTest(param);
 		return DataUtil.makeLatLngMarker(list, "|");
-	}
+	}*/
 }

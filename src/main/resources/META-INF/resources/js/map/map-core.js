@@ -63,7 +63,7 @@
      * @property {number} config.addrSearchPanLevel 주소검색 후 panto 이동시 레벨설정
      */
     hotplace.config = {
-    	salesViewLevel: 13,
+    	salesViewLevel: 8,
     	minZoomLevel: 3,
     	mapDefaultX: 127.9204629,
     	mapDefaultY: 36.0207091,
@@ -1436,7 +1436,7 @@
 			newMarker.setOptions('icon', {
 		        content: '<img src="'+ hotplace.getContextUrl() +'resources/img/marker/' + options.icon + '" alt="" ' +
                 		 'style="margin: 0px; padding: 0px; border: 0px solid transparent; display: block; max-width: none; max-height: none; ' +
-                		 '-webkit-user-select: none; position: absolute; width: 80px; height: 100px; left: 0px; top: 0px;">',
+                		 '-webkit-user-select: none; position: absolute; width: 22px; height: 33px; left: 0px; top: 0px;">',
                 size: new _vender.Size(80, 100),
                 anchor: new _vender.Point(40, 100)
 			});
@@ -1635,7 +1635,7 @@
 			_destroyMarkerType(_markerTypes.GYEONGMAE);
 			_setLocationBounds();
 			if(_venderMap) {
-				hotplace.getPlainText('sample/gyeongmae', {
+				hotplace.getPlainText('gyeongmaemarker', {
 					 swx : _locationBounds.swx,
 					 nex : _locationBounds.nex,
 					 swy : _locationBounds.swy,

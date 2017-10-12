@@ -15,5 +15,5 @@ public interface HotplaceDao {
 
 	public List<String> selectListLocationBounds(Map<String, String> param);
 
-	public List<String> selectListGongsiBounds(Map<String, String> param);
+	public List<String> selectGyeongmaeMarker(Map<String, String> param);
 }

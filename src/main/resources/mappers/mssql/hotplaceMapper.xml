@@ -87,8 +87,14 @@
          
 	</select>
 	
-	<select id="selectGongsiBounds" resultType="string" parameterType="hashmap">
-	
+	<select id="selectGyeongmaeMarker" resultType="string" parameterType="hashmap">
+		select concat(a.PNU, '|', 경도, '|', 위도)
+		  from [데이터수집].dbo.경매_목록 a with (nolock, index(IX_경매_목록))
+		 inner join 좌표계.dbo.가로축13 b with (nolock) on (b.PNU=a.PNU)
+		 inner join 좌표계.dbo.세로축13 c with (nolock) on (c.PNU=a.PNU)
+		 where a.위도 between convert(float, #{swy}) and convert(float, #{ney})
+		   and 경도 between convert(float, #{swx}) and convert(float, #{nex})
+		 order by 경도 asc
 	</select>
 </mapper>
 <!-- 

@@ -38,10 +38,11 @@ public class HotplaceDaoImpl implements HotplaceDao {
 	public List<String> selectListLocationBounds(Map<String, String> param) {
 		return msSqlSession.selectList(namespace + ".selectLocationBounds", param);
 	}
-
+	
 	@Override
-	public List<String> selectListGongsiBounds(Map<String, String> param) {
-		return msSqlSession.selectList(namespace + ".selectGongsiBounds", param);
+	public List<String> selectGyeongmaeMarker(Map<String, String> param) {
+		// TODO Auto-generated method stub
+		return msSqlSession.selectList(namespace + ".selectGyeongmaeMarker", param);
 	}
 
 }

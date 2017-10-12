@@ -38,8 +38,8 @@ public class HotplaceService {
 		return DataUtil.makeLatLngWeight(list, "|");
 	}
 
-	public String getGongsiBounds(Map<String, String> param) {
-		List<String> list = hotplaceDao.selectListGongsiBounds(param);
-		return DataUtil.makeLatLngWeight(list, ",");
+	public String getGyeongmaeMarker(Map<String, String> param) {
+		List<String> list = hotplaceDao.selectGyeongmaeMarker(param);
+		return DataUtil.makeLatLngGyeongmaeMarker(list, "|");
 	}
 }

@@ -87,20 +87,4 @@ public class SampleController {
         System.err.println(ausgabe);
         return ausgabe;
 	}
-	
-	@GetMapping("gyeongmae")
-	@ResponseBody
-	public String getGyeongmae(@RequestParam(name="nex") String nex,
-			  				   @RequestParam(name="swx") String swx,
-			  				   @RequestParam(name="swy") String swy,
-			  				   @RequestParam(name="ney") String ney) {
-		
-		Map<String, String> param = new HashMap<String, String>();
-		param.put("nex", nex);
-		param.put("swx", swx);
-		param.put("swy", swy);
-		param.put("ney", ney);
-		
-		return  sampleService.getGyeongmae(param);
-	}
 }

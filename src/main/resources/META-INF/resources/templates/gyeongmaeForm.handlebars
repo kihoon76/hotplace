@@ -1,10 +1,45 @@
-<div id="dvGyeongmae" class="container body">
-<div style="padding-top:5px">
-	<button type="button" id="btnCellClose" class="glyphicon glyphicon-remove close" aria-label="Close"></button>
-</div>
+<div id="dvGyeongmae" class="container body" style="width:300px;height:450px; ">
+	<div style="padding-top:10px">
+		<button type="button" id="btnGyeongmaeClose" class="glyphicon glyphicon-remove close" aria-label="Close"></button>
+	</div>
 
-<table class="table table-bordered">
-	
-</table>
-
+	<table class="table table-bordered" id="tbGyeongmae" >
+	<colgroup>
+		<col style="width:25%">
+    	<col style="width:65%">
+	</colgroup>
+	<tbody>
+		<tr>
+			<td colspan="2" style="text-align:right">
+				<button id="btnGyeongmaeDetail" class="btn-xs btn-info">물건상세조회</button>
+			</td>
+		</tr>
+		<tr>
+			<td>소재지</td>
+			<td><span id="gSojaeji"></span></td>
+		</tr>
+		<tr>
+			<td>용도</td>
+			<td><span id="gYongdo"></span></td>
+		</tr>
+		<tr>
+			<td>감정평가액</td>
+			<td><span id="gGamjeongpyeongga"></span></td>
+		</tr>
+		<tr>
+			<td>유 찰</td>
+			<td><span id="gYuchal"></span></td>
+		</tr>
+		<tr>
+			<td>매각기일</td>
+			<td><span id="gMaegaggiil"></span></td>
+		</tr>
+		<tr>
+			<td>사진</td>
+			<td>
+				<img id="gImgThumb" src="http://placehold.it/100x100/E8117F/ffffff?text=NoImage" style="width:100px; height:100px"/>
+			</td>
+		</tr>
+	</tbody>
+	</table>
 </div>

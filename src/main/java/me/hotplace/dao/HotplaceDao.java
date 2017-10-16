@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import me.hotplace.domain.Address;
+import me.hotplace.domain.Gyeongmae;
 
 public interface HotplaceDao {
 
@@ -16,4 +17,8 @@ public interface HotplaceDao {
 	public List<String> selectListLocationBounds(Map<String, String> param);
 
 	public List<String> selectGyeongmaeMarker(Map<String, String> param);
+	
+	public Gyeongmae selectGyeongmaeThumb(String unu);
+
+	public Gyeongmae selectGyeongmaeDetail(Map<String, String> param);
 }

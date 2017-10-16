@@ -68,7 +68,8 @@
     	mapDefaultX: 127.9204629,
     	mapDefaultY: 36.0207091,
     	addrSearchPanLevel: 10,
-    	yangdoseStepPercent: 5
+    	yangdoseStepPercent: 5,
+    	gyeongmaeDetailImgInterval: 2000
     }
     
     Handlebars.registerHelper('json', function(context) {
@@ -1128,6 +1129,186 @@
 		_createCells(currentLevel, startIdx);
 	}
 	
+	
+	function _makeGyeongmaeGiils(giils) {
+		var cnt = giils.length;
+		var html = '';
+		if(cnt >= 1) {
+			for(var i=0; i<cnt; i++) {
+				html += '<tr>';
+				html += '<td colspan="2">' + giils[i].giil + '</td>';
+				html += '<td>' + giils[i].giiljonglyu + '</td>';
+				html += '<td>' + giils[i].giiljangso + '</td>';
+				html += '<td>' + ((giils[i].minmaegaggagyeog != undefined) ? giils[i].minmaegaggagyeog.money() : '') + '</td>';
+				html += '<td>' + giils[i].giilresult + '</td>';
+				html += '</tr>';
+			}
+		}
+		else {
+			html = '<tr><td colspan="6">기일내역이 없습니다.</td></tr>';
+		}
+		
+		$(html).insertAfter('#gDgiilhistory');
+	}
+	/**
+	 * {@link https://bootsnipp.com/snippets/kEK7M bootstrap carousel}
+	 */
+	function _makeGyeongmaeImages(images) {
+		var cnt = images.length;
+		var $gDimageCarousels = $('#gDimageCarousels');
+		var currentRow = 0;
+		var html = '';
+		var gwanlyeonsajin = 0;
+		var jeongyeongdo = 0;
+		var wichido = 0;
+		var jijeogdo = 0;
+		var naebugujo = 0;
+		var etc = 0;
+		
+		if(cnt >= 1) {
+			
+			$('#gDimages').carousel({
+				interval: hotplace.config.gyeongmaeDetailImgInterval
+			});
+			
+			for(var i=0; i<cnt; i++) {
+				if(i%4 == 0) { //새로운 row
+					if(i == 0) {
+						html += '<div class="item active">';
+					}
+					else {
+						html += '<div class="item">';
+					}
+					
+					html += '<div class="row">';
+				}
+				
+				html += '<div class="col-sm-3"><a href="#x" class="thumbnail"><img src="' + images[i].image + '" class="img-responsive" style="width:250px; height:250px;"></a></div>';
+				
+				if(i%4 == 3) {
+					html += '</div></div>';
+				}
+				
+				//사진구분
+				switch(images[i].gubun) {
+				case '관련사진':
+					gwanlyeonsajin++;
+					break;
+				case '전경도':
+					jeongyeongdo++;
+					break;
+				case '지적도':
+					jijeogdo++;
+					break;
+				case '위치도':
+					wichido++;
+					break;
+				case '내부구조도':
+					naebugujo++;
+					break;
+				default : 
+					etc++;
+					break;
+				}
+			}
+			
+			if((cnt - 1)%4 < 3) {
+				html += '</div></div>';
+			}
+			
+			html += '<a class="left carousel-control" href="#gDimages" data-slide="prev">‹</a>';
+			html += '<a class="right carousel-control" href="#gDimages" data-slide="next">›</a>';
+			
+			$('#gDjeongyeongdo').text(jeongyeongdo);
+			$('#gDjijeogdo').text(jijeogdo);
+			$('#gDwichido').text(wichido);
+			$('#gDgwanlyeonsajin').text(gwanlyeonsajin);
+			$('#gDnaebugujo').text(naebugujo);
+			$('#gDetc').text(etc);
+		}
+		
+		$gDimageCarousels.html(html);
+	}
+	
+	function _createMarkerClick(map, marker, win) {
+		var data = marker._data;
+		win.open(map, marker);
+		var tForm = hotplace.dom.getTemplate('gyeongmaeForm');
+		
+		//win.setOptions('anchorSkew', true);
+		win.setOptions('maxWidth', 300);
+		win.setOptions('content', tForm());
+		
+		$('#btnGyeongmaeClose').on('click', function() {
+			win.close();
+		});
+		
+		$('#btnGyeongmaeDetail').on('click', function() {
+			var param = {
+				goyubeonho: $(this).data('goyubeonho'),
+				pnu: $(this).data('pnu'),
+				deunglogbeonho: $(this).data('deunglogbeonho')
+			}
+			
+			hotplace.dom.insertFormInmodal('gyeongmaeDetailForm');
+			hotplace.dom.openModal('');
+			hotplace.ajax({
+				url: 'gyeongmae/detail',
+				method: 'GET',
+				dataType: 'json',
+				data: param,
+				loadEl: '#dvGyeongmaeDetail',
+				success: function(data, textStatus, jqXHR) {
+					console.log(data)
+					$('#gDsageonbeonho').text(data.sageonbeonho);
+					$('#gDdamdang').text(data.damdang);
+					$('#gDsageonjeobsuil').text(data.sageonjeobsuil);
+					$('#gDsojaeji').text(data.sojaeji);
+					$('#gDyongdo').text(data.yongdo);
+					$('#gDibchalbangbeob').text(data.ibchalbangbeob);
+					$('#gDgamjeongpyeongga').text((data.gamjeongpyeongga) ? data.gamjeongpyeongga.money() + ' 원' : '');
+					$('#gDminmaegaggagyeog').text((data.minmaegaggagyeog) ? data.minmaegaggagyeog.money() + ' 원' : '');
+					$('#gDyuchal').text(data.yuchal);
+					$('#gDbaedangyogu').text(data.baedangyogu);
+					$('#gDcheonggu').text((data.cheonggu) ? data.cheonggu.money() + ' 원': '');
+					_makeGyeongmaeImages(data.images);
+					_makeGyeongmaeGiils(data.giils);
+				},
+				error:function() {
+					
+				}
+			});
+			
+		});
+		
+		hotplace.ajax({
+			url: 'gyeongmae/thumb',
+			method: 'GET',
+			dataType: 'json',
+			data: {unu: data.info.unu},
+			loadEl: '#dvGyeongmae',
+			success: function(data, textStatus, jqXHR) {
+				//hotplace.dom.createChart('canvas');
+				console.log(data);
+				$('#gSojaeji').text(data.sojaeji || '');
+				$('#gYongdo').text((data.yongdo || '').replace(/\|/gm, ','));
+				$('#gGamjeongpyeongga').text((data.gamjeongpyeongga || '').money());
+				$('#gYuchal').text(data.yuchal || '');
+				$('#gMaegaggiil').text(data.maegaggiil || '');
+				
+				if(data.imgThumb) {
+					$('#gImgThumb').prop('src', data.imgThumb);
+				}
+				
+				$('#btnGyeongmaeDetail').data('goyubeonho', data.goyubeonho);
+				$('#btnGyeongmaeDetail').data('pnu', data.pnu);
+				$('#btnGyeongmaeDetail').data('deunglogbeonho', data.deunglogbeonho);
+			},
+			error:function() {
+				
+			}
+		});
+	}
 	/** 
 	 * @private 
 	 * @function _showMarkers 
@@ -1142,26 +1323,7 @@
 		
 		_createMarkers(currentLevel, startIdx, _markerTypes.GYEONGMAE, {
 			click : function(map, marker, win) {
-				console.log(marker._data);
-				
-				win.open(map, marker);
-				var tForm = hotplace.dom.getTemplate('gyeongmaeForm');
-				
-				hotplace.ajax({
-					url: 'sample/celldetail',
-					method: 'GET',
-					//async: false,
-					dataType: 'json',
-					data: {},
-					loadEl: '#dvGyeongmae',
-					success: function(data, textStatus, jqXHR) {
-						//hotplace.dom.createChart('canvas');
-					},
-					error:function() {
-						
-					}
-				});
-				
+				_createMarkerClick(map, marker, win);
 			}
 		}, {
 			hasInfoWindow: true,
@@ -1471,7 +1633,7 @@
 		_markers[markerType].m.push(newMarker);
 		
 		if(options.hasInfoWindow) {
-			var winContent = {};
+			var winContent = {anchorSkew: true};
 			
 			//로컬정보로 윈도우 창 정보를 설정할 지 여부
 			if(!options.isAjaxContent) {
@@ -1583,7 +1745,7 @@
 			var startIdx = db.getStartXIdx(_markerTypes.GYEONGMAE, _marginBounds.swx, _currentLevel);
 			_createMarkers(_currentLevel, startIdx, _markerTypes.GYEONGMAE, {
 				click : function(map, marker, win) {
-					
+					_createMarkerClick(map, marker, win);
 				}
 			}, {
 				hasInfoWindow: true,

@@ -9,6 +9,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import me.hotplace.domain.Address;
+import me.hotplace.domain.Gyeongmae;
 
 @Repository("hotplaceDao")
 public class HotplaceDaoImpl implements HotplaceDao {
@@ -43,6 +44,16 @@ public class HotplaceDaoImpl implements HotplaceDao {
 	public List<String> selectGyeongmaeMarker(Map<String, String> param) {
 		// TODO Auto-generated method stub
 		return msSqlSession.selectList(namespace + ".selectGyeongmaeMarker", param);
+	}
+
+	@Override
+	public Gyeongmae selectGyeongmaeThumb(String unu) {
+		return msSqlSession.selectOne(namespace + ".selectGyeongmaeThumb", unu);
+	}
+
+	@Override
+	public Gyeongmae selectGyeongmaeDetail(Map<String, String> param) {
+		return msSqlSession.selectOne(namespace + ".selectGyeongmaeDetail", param);
 	}
 
 }

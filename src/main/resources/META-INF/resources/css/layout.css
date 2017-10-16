@@ -445,3 +445,12 @@ input[type=radio]:focus + label::before {
   -webkit-box-shadow: none !important;
   -moz-box-shadow: none !important;
   box-shadow: none !important; }
+  
+  /**********************************************************
+ 경매 상세 페이지 이미지 carousel
+**********************************************************/
+#gDimages .carousel-control {
+	height: 123px;
+	top:5px;
+	width:5%;
+}

@@ -1,6 +1,5 @@
 package me.hotplace.controller;
 
-import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,10 +20,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.itextpdf.text.DocumentException;
 import com.mysql.jdbc.StringUtils;
 
 import me.hotplace.domain.Address;
+import me.hotplace.domain.Gyeongmae;
 import me.hotplace.domain.HpSearch;
 import me.hotplace.reporter.PdfItext;
 import me.hotplace.service.HotplaceService;
@@ -164,5 +163,27 @@ public class HotplaceController {
 		pdfItext.make(response, jsonObject);
 		
 
+	}
+	
+	@GetMapping("gyeongmae/thumb")
+	@ResponseBody
+	public Gyeongmae getGyeongmaeThumb(@RequestParam("unu") String unu) {
+		
+		return hotplaceService.getGyeongmaeThumb(unu);
+	}
+	
+	@GetMapping("gyeongmae/detail")
+	@ResponseBody
+	public Gyeongmae getGyeongmaeDetail(@RequestParam("goyubeonho") String goyubeonho,
+									 @RequestParam("deunglogbeonho") String deunglogbeonho,
+									 @RequestParam("pnu") String pnu) {
+		
+		System.err.println("goyubeonho ==> " + goyubeonho);
+		System.err.println("deunglogbeonho ==> " + deunglogbeonho);
+		System.err.println("pnu ==> " + pnu);
+		
+		Gyeongmae g = hotplaceService.getGyeongmaeDetail(goyubeonho, deunglogbeonho);
+		
+		return g;
 	}
 }

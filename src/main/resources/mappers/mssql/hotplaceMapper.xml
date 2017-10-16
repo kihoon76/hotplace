@@ -88,13 +88,77 @@
 	</select>
 	
 	<select id="selectGyeongmaeMarker" resultType="string" parameterType="hashmap">
-		select concat(a.PNU, '|', 경도, '|', 위도)
+		select concat(a.PNU, '|$', a.고유번호, '|$', a.등록번호, '|$', a.경도, '|$', a.위도)
 		  from [데이터수집].dbo.경매_목록 a with (nolock, index(IX_경매_목록))
 		 inner join 좌표계.dbo.가로축13 b with (nolock) on (b.PNU=a.PNU)
 		 inner join 좌표계.dbo.세로축13 c with (nolock) on (c.PNU=a.PNU)
+		 inner join (select 등록번호, 위도, 경도  from  [데이터수집].dbo.경매_목록 tb1 group by 등록번호, 위도, 경도 having 위도 is not null and 경도 is not null) d on a.등록번호 = d.등록번호 and a.위도 = d.위도 and a.경도 = d.경도
 		 where a.위도 between convert(float, #{swy}) and convert(float, #{ney})
-		   and 경도 between convert(float, #{swx}) and convert(float, #{nex})
-		 order by 경도 asc
+		   and a.경도 between convert(float, #{swx}) and convert(float, #{nex})
+		   and a.용도 != '자동차'
+		 order by a.경도 asc
+	</select>
+	
+	<resultMap id="RM_selectGyeongmae"  type="Gyeongmae">
+		<result column="고유번호" property="goyubeonho" javaType="string" />
+		<result column="등록번호" property="deunglogbeonho" javaType="string" />
+		<result column="PNU" property="pnu" javaType="string" />
+		<result column="사건번호" property="sageonbeonho" javaType="string"/>
+		<result column="담당" property="damdang" javaType="string"/>
+		<result column="소재지" property="sojaeji" javaType="string" />
+		<result column="용도" property="yongdo" javaType="string" />
+		<result column="입찰방법" property="ibchalbangbeob" javaType="string" />
+		<result column="감정평가액" property="gamjeongpyeongga" javaType="string" />
+		<result column="최저매각가격" property="minmaegaggagyeog" javaType="string"/>
+		<result column="청구금액" property="cheonggu" javaType="string"/>
+		<result column="유찰회수" property="yuchal" javaType="string" />
+		<result column="매각기일" property="maegaggiil" javaType="string" />
+		<result column="사건접수일" property="sageonjeobsuil" javaType="string"/>
+		<result column="배당요구종기일" property="baedangyogu" javaType="string"/>
+		<result column="imgThumb" property="imgThumb" javaType="string" />
+		<result column="imgThumbExt" property="imgThumbExt" javaType="string" />
+		<collection property="images" column="고유번호" 
+					javaType="java.util.ArrayList"
+					ofType="GyeongmaeImage" 
+					select="selectGyeongmaeImages"
+					/>
+		<collection property="giils" column="고유번호"
+					javaType="java.util.ArrayList"
+					ofType="GyongmaeGiilHistory"
+					select="selectGyeongmaeGiilHistory"
+					/>
+	</resultMap>
+	
+	<select id="selectGyeongmaeThumb" parameterType="string" resultMap="RM_selectGyeongmae">
+		select  top 1 a.고유번호, a.등록번호, a.PNU, a.소재지, a.용도, a.감정평가액, a.유찰회수, CONVERT(char(19), a.매각기일, 120) as 매각기일, CONVERT(varchar(max), c.이미지 ,2) as imgThumb, c.확장자 as imgThumbExt
+  		  from [데이터수집].[dbo].[경매_목록] a
+  		  left outer join [데이터수집].[dbo].[경매_이미지_목록] b
+  		    on a.고유번호 = b.경매_목록_고유번호
+  		 left outer join [데이터수집].[dbo].[경매_이미지_Bin] c
+  		 	on b.이미지명 = c.이미지명 and b.확장자 = c.확장자 
+ 		 where a.고유번호 = #{unu}
+	</select>
+	
+	<select id="selectGyeongmaeDetail" parameterType="map" resultMap="RM_selectGyeongmae">
+		select a.고유번호, a.등록번호, a.PNU, a.사건번호, concat(a.법원명, ' | ', a.담당계) as 담당, a.소재지, a.용도, a.감정평가액, a.유찰회수,
+			   CONVERT(char(19), a.매각기일, 120) as 매각기일, CONVERT(char(10), a.사건접수일, 23) as 사건접수일, CONVERT(char(10), a.배당요구종기일, 23) as 배당요구종기일,
+			   a.입찰방법, a.최저매각가격, a.청구금액
+  		  from [데이터수집].[dbo].[경매_목록] a
+ 		 where a.고유번호 = #{goyubeonho}
+	</select>
+	
+	<select id="selectGyeongmaeImages" resultType="GyeongmaeImage">
+		select a.이미지구분 as gubun, a.이미지명 as name, a.확장자 as ext, CONVERT(varchar(max), b.이미지 ,2) as image
+  		  from [데이터수집].[dbo].[경매_이미지_목록] a
+  		 inner join [데이터수집].[dbo].[경매_이미지_Bin] b
+  		 	on a.이미지명 = b.이미지명 and a.확장자 = b.확장자
+  		 where a.경매_목록_고유번호 = #{goyubeonho}
+	</select>
+	
+	<select id="selectGyeongmaeGiilHistory" resultType="GyongmaeGiilHistory">
+		select CONVERT(char(19), 기일, 120) as giil, 기일종류 as giiljonglyu, 기일장소 as giiljangso, 최저매각가격 as minmaegaggagyeog, 기일결과 as giilresult
+		  from [데이터수집].[dbo].[경매_기일내역]
+		 where 경매_목록_고유번호 = #{goyubeonho}
 	</select>
 </mapper>
 <!-- 

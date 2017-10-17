@@ -99,6 +99,19 @@
 		 order by a.경도 asc
 	</select>
 	
+	<resultMap id="RM_selectGyeongmaeThumb"  type="Gyeongmae">
+		<result column="고유번호" property="goyubeonho" javaType="string" />
+		<result column="등록번호" property="deunglogbeonho" javaType="string" />
+		<result column="PNU" property="pnu" javaType="string" />
+		<result column="소재지" property="sojaeji" javaType="string" />
+		<result column="용도" property="yongdo" javaType="string" />
+		<result column="유찰회수" property="yuchal" javaType="string" />
+		<result column="매각기일" property="maegaggiil" javaType="string" />
+		<result column="감정평가액" property="gamjeongpyeongga" javaType="string" />
+		<result column="imgThumb" property="imgThumb" javaType="string" />
+		<result column="imgThumbExt" property="imgThumbExt" javaType="string" />
+	</resultMap>
+	
 	<resultMap id="RM_selectGyeongmae"  type="Gyeongmae">
 		<result column="고유번호" property="goyubeonho" javaType="string" />
 		<result column="등록번호" property="deunglogbeonho" javaType="string" />
@@ -113,6 +126,7 @@
 		<result column="청구금액" property="cheonggu" javaType="string"/>
 		<result column="유찰회수" property="yuchal" javaType="string" />
 		<result column="매각기일" property="maegaggiil" javaType="string" />
+		<result column="비고" property="bigo" javaType="string"/>
 		<result column="사건접수일" property="sageonjeobsuil" javaType="string"/>
 		<result column="배당요구종기일" property="baedangyogu" javaType="string"/>
 		<result column="imgThumb" property="imgThumb" javaType="string" />
@@ -127,9 +141,32 @@
 					ofType="GyongmaeGiilHistory"
 					select="selectGyeongmaeGiilHistory"
 					/>
+					
+		<collection property="lists" column="고유번호"
+					javaType="java.util.ArrayList"
+					ofType="GyeongmaeListHistory"
+					select="selectGyeongmaeListHistory"
+					/>
+		<collection property="tonggyes" column="고유번호"
+					javaType="java.util.ArrayList"
+					ofType="GyeongmaeMaegagtonggye"
+					select="selectGyeongmaeMaegagtonggye"
+					/>
+					
+		<collection property="maegagmulgeons" column="고유번호"
+					javaType="java.util.ArrayList"
+					ofType="GyeongmaeMaegagmulgeon"
+					select="selectGyeongmaeMaegagmulgeon"
+					/>
+					
+		<collection property="jinhaengmulgeons" column="고유번호"
+					javaType="java.util.ArrayList"
+					ofType="GyeongaeJinhaengmulgeon"
+					select="selectGyeongaeJinhaengmulgeon"
+					/>
 	</resultMap>
 	
-	<select id="selectGyeongmaeThumb" parameterType="string" resultMap="RM_selectGyeongmae">
+	<select id="selectGyeongmaeThumb" parameterType="string" resultMap="RM_selectGyeongmaeThumb">
 		select  top 1 a.고유번호, a.등록번호, a.PNU, a.소재지, a.용도, a.감정평가액, a.유찰회수, CONVERT(char(19), a.매각기일, 120) as 매각기일, CONVERT(varchar(max), c.이미지 ,2) as imgThumb, c.확장자 as imgThumbExt
   		  from [데이터수집].[dbo].[경매_목록] a
   		  left outer join [데이터수집].[dbo].[경매_이미지_목록] b
@@ -142,11 +179,12 @@
 	<select id="selectGyeongmaeDetail" parameterType="map" resultMap="RM_selectGyeongmae">
 		select a.고유번호, a.등록번호, a.PNU, a.사건번호, concat(a.법원명, ' | ', a.담당계) as 담당, a.소재지, a.용도, a.감정평가액, a.유찰회수,
 			   CONVERT(char(19), a.매각기일, 120) as 매각기일, CONVERT(char(10), a.사건접수일, 23) as 사건접수일, CONVERT(char(10), a.배당요구종기일, 23) as 배당요구종기일,
-			   a.입찰방법, a.최저매각가격, a.청구금액
+			   a.입찰방법, a.최저매각가격, a.청구금액, a.비고
   		  from [데이터수집].[dbo].[경매_목록] a
  		 where a.고유번호 = #{goyubeonho}
 	</select>
 	
+	<!-- 경매이미지 -->
 	<select id="selectGyeongmaeImages" resultType="GyeongmaeImage">
 		select a.이미지구분 as gubun, a.이미지명 as name, a.확장자 as ext, CONVERT(varchar(max), b.이미지 ,2) as image
   		  from [데이터수집].[dbo].[경매_이미지_목록] a
@@ -155,9 +193,46 @@
   		 where a.경매_목록_고유번호 = #{goyubeonho}
 	</select>
 	
+	<!-- 경매기일내역 -->
 	<select id="selectGyeongmaeGiilHistory" resultType="GyongmaeGiilHistory">
 		select CONVERT(char(19), 기일, 120) as giil, 기일종류 as giiljonglyu, 기일장소 as giiljangso, 최저매각가격 as minmaegaggagyeog, 기일결과 as giilresult
 		  from [데이터수집].[dbo].[경매_기일내역]
+		 where 경매_목록_고유번호 = #{goyubeonho}
+	</select>
+	
+	<!-- 경매목록내역 -->
+	<select id="selectGyeongmaeListHistory" resultType="GyeongmaeListHistory">
+		select 목록번호 as listnum, 목록구분 as listgubun, 상세내역 as detailhistory
+		  from [데이터수집].[dbo].[경매_목록내역]
+		 where 경매_목록_고유번호 = #{goyubeonho}
+	</select>
+	
+	<!-- 경매인근매각통계 -->
+	<select id="selectGyeongmaeMaegagtonggye" resultType="GyeongmaeMaegagtonggye">
+		select 기간 as gigan, Round(매각건수, 0) as maegaggeonsu, 
+			   LTRIM(STR(Round(평균감정가, 0), 25, 0)) as avggamjeongga,
+		       LTRIM(STR(Round(평균매각가, 0), 25, 0)) as avgmaegagga,
+		       Round(매각가율, 1) as maegaggaratio,
+		       Round(평균유찰회수,1) as avgyuchal
+		  from [데이터수집].[dbo].[경매_인근매각통계]
+		 where 경매_목록_고유번호 = #{goyubeonho}
+		 order by 평균감정가 asc
+	</select>
+	
+	<!-- 경매인근매각물건 -->
+	<select id="selectGyeongmaeMaegagmulgeon" resultType="GyeongmaeMaegagmulgeon">
+		select 사건번호 as sageonbeonho, 용도 as yongdo, 소재지 as sojaeji, 
+			      감정평가액 as gamjeongpyeongga, 매각월 as maegagmonth, 매각대금 as maegagdaegeum
+		  from [데이터수집].[dbo].[경매_인근매각물건] 
+		 where 경매_목록_고유번호 = #{goyubeonho}
+	</select>
+	
+	<!-- 경매인근진행물건 -->
+	<select id="selectGyeongaeJinhaengmulgeon" resultType="GyeongaeJinhaengmulgeon">
+		select 사건번호 as sageonbeonho, 물건번호용도 as numyongdo, 소재지및내역 as sojaejinaeyeog,
+			      비고 as bigo, 감정평가액 as gamjeongpyeongga, 최저매각가격 as minmaegaggagyeog,
+			     담당계매각기일 as damdangmaegaggiil, 진행상태 as status
+		  from [데이터수집].[dbo].[경매_인근진행물건]
 		 where 경매_목록_고유번호 = #{goyubeonho}
 	</select>
 </mapper>

@@ -1129,6 +1129,159 @@
 		_createCells(currentLevel, startIdx);
 	}
 	
+	function _makeGyeongmaeJinhaengmulgeons(jinhaengmulgeons) {
+		var cnt = jinhaengmulgeons.length;
+		var html = '';
+		
+		if(cnt >= 1) {
+			html += '<table class="table table-bordered">';
+			html += '<colgroup>';
+			html += '<col style="width:15%">';
+	    	html += '<col style="width:10%">';
+	    	html += '<col style="width:25%">';
+	    	html += '<col style="width:10%">';
+	    	html += '<col style="width:15%">';
+	    	html += '<col style="width:15%">';
+	    	html += '<col style="width:10%">';
+	    	html += '</colgroup>';
+	    	html += '<tr>';
+	    	html += '<td>사건번호</td>';
+	    	html += '<td>물건번호<br/>용도</td>';
+	    	html += '<td>소재지 및 내역</td>';
+	    	html += '<td>비고</td>';
+	    	html += '<td>감정평가액<br/>최저매각가격</td>';
+	    	html += '<td>담당계<br/>매각기일<br/>(입찰기간)</td>';
+	    	html += '<td>진행<br/>상태</td>';
+	    	html += '</tr>';
+			
+	    	var num, yongdo, maegaggiil, damdang;
+			for(var i=0; i<cnt; i++) {
+				num = jinhaengmulgeons[i].numyongdo.match(/\s*^[0-9]+/g);
+				yongdo = jinhaengmulgeons[i].numyongdo.match(/[^0-9]+\d*/g);
+				maegaggiil = jinhaengmulgeons[i].damdangmaegaggiil.match(/\s*[0-9]+\.\d*\.\d+/g);
+				damdang = jinhaengmulgeons[i].damdangmaegaggiil.match(/\s*[^0-9\.]+\d*\W*/g);
+				
+				html += '<tr>';
+				html += '<td>' + jinhaengmulgeons[i].sageonbeonho + '</td>';
+				html += '<td>' + num + '<br/>' + yongdo + '</td>';
+				html += '<td>' + jinhaengmulgeons[i].sojaejinaeyeog + '</td>';
+				html += '<td>' + jinhaengmulgeons[i].bigo + '</td>';
+				html += '<td>' + jinhaengmulgeons[i].gamjeongpyeongga.money() + '원<hr/>' + jinhaengmulgeons[i].minmaegaggagyeog.money() + '원</td>';
+				html += '<td>' + damdang + '<br/>' + maegaggiil + '</td>';
+				html += '<td>' + jinhaengmulgeons[i].status + '</td>';
+				html += '</tr>';
+			}
+			
+			html += '</table>';
+		}
+		else {
+			html = '정보가 존재하지 않습니다.';
+		}
+		
+		$('#tabJinhaengmulgeon').html(html);
+	}
+	
+	function _makeGyeongmaeMaegagmulgeons(maegagmulgeons) {
+		var cnt = maegagmulgeons.length;
+		var html = '';
+		
+		if(cnt >= 1) {
+			html += '<table class="table table-bordered">';
+			html += '<colgroup>';
+			html += '<col style="width:15%">';
+	    	html += '<col style="width:10%">';
+	    	html += '<col style="width:25%">';
+	    	html += '<col style="width:25%">';
+	    	html += '<col style="width:10%">';
+	    	html += '<col style="width:25%">';
+	    	html += '</colgroup>';
+	    	html += '<tr>';
+	    	html += '<td>사건번호</td>';
+	    	html += '<td>용도</td>';
+	    	html += '<td>소재지 및 내역</td>';
+	    	html += '<td>감정평가액</td>';
+	    	html += '<td>매각월</td>';
+	    	html += '<td>매각대금</td>';
+	    	html += '</tr>';
+			
+			for(var i=0; i<cnt; i++) {
+				html += '<tr>';
+				html += '<td>' + maegagmulgeons[i].sageonbeonho + '</td>';
+				html += '<td>' + maegagmulgeons[i].yongdo + '</td>';
+				html += '<td>' + maegagmulgeons[i].sojaeji + '</td>';
+				html += '<td>' + maegagmulgeons[i].gamjeongpyeongga.money() + ' 원</td>';
+				html += '<td>' + maegagmulgeons[i].maegagmonth + '</td>';
+				html += '<td>' + maegagmulgeons[i].maegagdaegeum.money() + ' 원</td>';
+				html += '</tr>';
+			}
+			
+			html += '</table>';
+		}
+		else {
+			html = '정보가 존재하지 않습니다.';
+		}
+		
+		$('#tabMaegagmulgeon').html(html);
+	}
+	
+	function _makeGyeongmaeTonggyes(tonggyes) {
+		var cnt = tonggyes.length;
+		var html = '';
+		
+		if(cnt >= 1) {
+			html += '<table class="table table-bordered">';
+			html += '<colgroup>';
+			html += '<col style="width:10%">';
+	    	html += '<col style="width:10%">';
+	    	html += '<col style="width:20%">';
+	    	html += '<col style="width:20%">';
+	    	html += '<col style="width:10%">';
+	    	html += '<col style="width:10%">';
+	    	html += '</colgroup>';
+	    	html += '<tr>';
+	    	html += '<td>기간</td>';
+	    	html += '<td>매각건수</td>';
+	    	html += '<td>평균감정가</td>';
+	    	html += '<td>평균매각가</td>';
+	    	html += '<td>매각가율</td>';
+	    	html += '<td>평균유찰횟수</td>';
+	    	html += '</tr>';
+			
+			for(var i=0; i<cnt; i++) {
+				html += '<tr>';
+				html += '<td>' + tonggyes[i].gigan + '</td>';
+				html += '<td>' + tonggyes[i].maegaggeonsu + ' 건</td>';
+				html += '<td>' + tonggyes[i].avggamjeongga.money() + ' 원</td>';
+				html += '<td>' + tonggyes[i].avgmaegagga.money() + ' 원</td>';
+				html += '<td>' + tonggyes[i].maegaggaratio + ' %</td>';
+				html += '<td>' + tonggyes[i].avgyuchal + ' 회</td>';
+				html += '</tr>';
+			}
+			
+			html += '</table>';
+		}
+		else {
+			html = '정보가 존재하지 않습니다.';
+		}
+		
+		$('#tabMaegagtonggye').html(html);
+	}
+	
+	function _makeGyeongmaeLists(lists) {
+		var cnt = lists.length;
+		var html = '';
+		if(cnt >= 1) {
+			for(var i=0; i<cnt; i++) {
+				html += '<tr>';
+				html += '<td>' + lists[i].listnum + '</td>';
+				html += '<td>' + lists[i].listgubun + '</td>';
+				html += '<td>' + lists[i].detailhistory + '</td>';
+				html += '</tr>';
+			}
+		}
+		
+		$('#tbGyeongmaeListHistory tbody').html(html);
+	}
 	
 	function _makeGyeongmaeGiils(giils) {
 		var cnt = giils.length;
@@ -1149,6 +1302,11 @@
 		}
 		
 		$(html).insertAfter('#gDgiilhistory');
+	}
+	
+	maps.gyeongmaeImageClick = function(e) {
+		e.preventDefault();
+		comsole.log('pp');
 	}
 	/**
 	 * {@link https://bootsnipp.com/snippets/kEK7M bootstrap carousel}
@@ -1183,7 +1341,7 @@
 					html += '<div class="row">';
 				}
 				
-				html += '<div class="col-sm-3"><a href="#x" class="thumbnail"><img src="' + images[i].image + '" class="img-responsive" style="width:250px; height:250px;"></a></div>';
+				html += '<div class="col-sm-3"><a href="#x" class="thumbnail" onclick="hotplace.maps.gyeongmaeImageClick();"><img src="' + images[i].image + '" class="img-responsive" style="width:250px; height:250px;"></a></div>';
 				
 				if(i%4 == 3) {
 					html += '</div></div>';
@@ -1271,8 +1429,15 @@
 					$('#gDyuchal').text(data.yuchal);
 					$('#gDbaedangyogu').text(data.baedangyogu);
 					$('#gDcheonggu').text((data.cheonggu) ? data.cheonggu.money() + ' 원': '');
+					$('#gDmaegaggiil').text(data.maegaggiil);
+					$('#gDbigo').text(data.bigo);
+					
 					_makeGyeongmaeImages(data.images);
 					_makeGyeongmaeGiils(data.giils);
+					_makeGyeongmaeLists(data.lists);
+					_makeGyeongmaeTonggyes(data.tonggyes);
+					_makeGyeongmaeMaegagmulgeons(data.maegagmulgeons);
+					_makeGyeongmaeJinhaengmulgeons(data.jinhaengmulgeons);
 				},
 				error:function() {
 					

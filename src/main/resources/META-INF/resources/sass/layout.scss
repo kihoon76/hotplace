@@ -447,3 +447,12 @@ input[type=radio]:focus + label::before {
 	top:5px;
 	width:5%;
 }
+
+#gDlisthistory {
+	overflow-y:scroll;
+	overflow-x:auto;
+}
+
+.no-info {
+	padding-top:5px;
+}

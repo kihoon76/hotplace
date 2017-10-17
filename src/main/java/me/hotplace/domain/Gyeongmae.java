@@ -7,25 +7,42 @@ import org.apache.ibatis.type.Alias;
 @Alias("Gyeongmae")
 public class Gyeongmae {
 
-	private String goyubeonho;					//고유번호
-	private String pnu;							//PNU 코드
-	private String sageonbeonho;				//사건번호
-	private String damdang;						//담당
-	private String deunglogbeonho;				//등록번호
-	private String sojaeji;						//소재지
-	private String yongdo;						//용도
-	private String gamjeongpyeongga;			//감정평가액
-	private String minmaegaggagyeog;			//최저매각가격
-	private String yuchal;						//유찰회수
-	private String ibchalbangbeob;				//입찰방법
-	private String maegaggiil;					//매각기일
-	private String baedangyogu;					//배당요구종기일
-	private String cheonggu;					//청구금액
-	private String sageonjeobsuil;				//사건접수일
-	private String imgThumb;					//대표이미지
-	private String imgThumbExt;					//대표이미지 확장자
-	private List<GyeongmaeImage> images;		//이미지들
-	private List<GyongmaeGiilHistory> giils; 	//기일내역
+	private String goyubeonho;									//고유번호
+	public List<GyeongmaeMaegagmulgeon> getMaegagmulgeons() {
+		return maegagmulgeons;
+	}
+	public void setMaegagmulgeons(List<GyeongmaeMaegagmulgeon> maegagmulgeons) {
+		this.maegagmulgeons = maegagmulgeons;
+	}
+	public List<GyeongaeJinhaengmulgeon> getJinhaengmulgeons() {
+		return jinhaengmulgeons;
+	}
+	public void setJinhaengmulgeons(List<GyeongaeJinhaengmulgeon> jinhaengmulgeons) {
+		this.jinhaengmulgeons = jinhaengmulgeons;
+	}
+	private String pnu;											//PNU 코드
+	private String sageonbeonho;								//사건번호
+	private String damdang;										//담당
+	private String deunglogbeonho;								//등록번호
+	private String sojaeji;										//소재지
+	private String yongdo;										//용도
+	private String gamjeongpyeongga;							//감정평가액
+	private String minmaegaggagyeog;							//최저매각가격
+	private String yuchal;										//유찰회수
+	private String ibchalbangbeob;								//입찰방법
+	private String bigo;										//비고
+	private String maegaggiil;									//매각기일
+	private String baedangyogu;									//배당요구종기일
+	private String cheonggu;									//청구금액
+	private String sageonjeobsuil;								//사건접수일
+	private String imgThumb;									//대표이미지
+	private String imgThumbExt;									//대표이미지 확장자
+	private List<GyeongmaeImage> images;						//이미지들
+	private List<GyongmaeGiilHistory> giils; 					//기일내역
+	private List<GyeongmaeListHistory> lists;					//목록내역
+	private List<GyeongmaeMaegagtonggye> tonggyes;				//인근매각통계 
+	private List<GyeongmaeMaegagmulgeon> maegagmulgeons;		//인근매각물건
+	private List<GyeongaeJinhaengmulgeon> jinhaengmulgeons;		//인근진행물건
 	
 	public String getSageonjeobsuil() {
 		return sageonjeobsuil;
@@ -53,6 +70,12 @@ public class Gyeongmae {
 	}
 	public String getGoyubeonho() {
 		return goyubeonho;
+	}
+	public List<GyeongmaeMaegagtonggye> getTonggyes() {
+		return tonggyes;
+	}
+	public void setTonggyes(List<GyeongmaeMaegagtonggye> tonggyes) {
+		this.tonggyes = tonggyes;
 	}
 	public String getImgThumb() {
 		return imgThumb;
@@ -140,6 +163,18 @@ public class Gyeongmae {
 	}
 	public void setCheonggu(String cheonggu) {
 		this.cheonggu = cheonggu;
+	}
+	public List<GyeongmaeListHistory> getLists() {
+		return lists;
+	}
+	public void setLists(List<GyeongmaeListHistory> lists) {
+		this.lists = lists;
+	}
+	public String getBigo() {
+		return bigo;
+	}
+	public void setBigo(String bigo) {
+		this.bigo = bigo;
 	}
 	
 }

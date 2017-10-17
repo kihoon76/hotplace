@@ -562,7 +562,7 @@ $(document).ready(function() {
 					hotplace.maps.appendMarker();
 				}
 				else {
-					hotplace.dom.showMaskTransaction((hotplace.maps.isActiveSalesView()) ? 2 : 1);
+					hotplace.dom.showMaskTransaction((hotplace.maps.isActiveSalesView()) ? (1 + hotplace.maps.getActiveMarkers().length) : 1);
 					hotplace.maps.showCellLayer(null, true);
 					hotplace.maps.showMarkers(null, true);
 				}

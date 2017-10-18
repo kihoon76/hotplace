@@ -67,7 +67,7 @@
 </div>
 
 <!-- modal -->
-<div class="modal fade" id="containerModal" tabindex="-1" role="dialog" aria-labelledby="containerModalLabel">
+<div class="modal fade" id="containerModal" tabindex="-1" role="dialog" aria-labelledby="containerModalLabel" style="z-index:1050;">
 	<div class="modal-dialog " role="document">
     <div class="modal-content ">
     	<div class="modal-header">

@@ -7,7 +7,6 @@
 	<link href="/resources/vendors/nprogress/nprogress.css" rel="stylesheet">
 	<!-- bootstrap toggle -->
 	<link href="/resources/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-	
 </head>
 <body>
 <content tag="script">
@@ -19,6 +18,7 @@
 <!-- ECharts -->
 <script type="text/javascript" src="/resources/vendors/echarts/dist/echarts.min.js"></script>
 <script type="text/javascript" src="/resources/vendors/echarts/map/js/world.js"></script>
+
 <!-- bootstrap toggle -->
 <script type="text/javascript" src="/resources/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 

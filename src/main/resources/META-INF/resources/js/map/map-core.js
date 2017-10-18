@@ -1304,10 +1304,35 @@
 		$(html).insertAfter('#gDgiilhistory');
 	}
 	
-	maps.gyeongmaeImageClick = function(e) {
-		e.preventDefault();
-		comsole.log('pp');
+	var _jqmodalApi = null;
+	/** 
+	 * @memberof hotplace.maps 
+	 * @function gyeongmaeImageClick 
+	 * @param {object} me (a 태그 > img 태그)
+	 * @desc  경매상세보기에서 이미지 클릭시 확대이미지 보여주는 handler
+	 * {@link http://api.jqueryui.com/dialog/#method-open jquery-ui-dialog}
+	 */
+	maps.gyeongmaeImageClick = function(me) {
+		console.log(me);
+		//$('.enlargeImageModalSource').prop('src');
+		//$('#enlargeImageModal').dialog('open');
+		/*$('#enlargeImageModal').dialog({
+			dialogClass: 'innerPopups',
+			modal:false,
+			draggable: false,
+			resizable: false,
+			width:'300',
+			height: '300'
+		});*/
+		var img = $(me).children().prop('src');
+		$('#enlargeImageModalSource').prop('src', img);
+		$('#enlargeImageModal').modal('show');
+		
+		return false;
+		//$('#enlargeImageModal').dialog('open');
+		//_jqmodalApi.open('<div>test</div>')
 	}
+	
 	/**
 	 * {@link https://bootsnipp.com/snippets/kEK7M bootstrap carousel}
 	 */
@@ -1341,7 +1366,7 @@
 					html += '<div class="row">';
 				}
 				
-				html += '<div class="col-sm-3"><a href="#x" class="thumbnail" onclick="hotplace.maps.gyeongmaeImageClick();"><img src="' + images[i].image + '" class="img-responsive" style="width:250px; height:250px;"></a></div>';
+				html += '<div class="col-sm-3"><a href="#x"  data-toggle="modal" class="thumbnail" onclick="hotplace.maps.gyeongmaeImageClick(this);"><img src="' + images[i].image + '" class="img-responsive" style="width:250px; height:250px;"></a></div>';
 				
 				if(i%4 == 3) {
 					html += '</div></div>';
@@ -1410,6 +1435,7 @@
 			
 			hotplace.dom.insertFormInmodal('gyeongmaeDetailForm');
 			hotplace.dom.openModal('');
+			
 			hotplace.ajax({
 				url: 'gyeongmae/detail',
 				method: 'GET',
@@ -2376,11 +2402,11 @@
 		
 		if(!modalSize) modalSize = 'fullsize';
 		
-		$('#containerModal .modal-dialog').removeClass('modal-fullsize modal-bigsize');
-		$('#containerModal .modal-content').removeClass('modal-fullsize modal-bigsize'); 
+		$('#containerModal > .modal-dialog').removeClass('modal-fullsize modal-bigsize');
+		$('#containerModal > .modal-content').removeClass('modal-fullsize modal-bigsize'); 
 		
-		$('#containerModal .modal-dialog').addClass('modal-' + modalSize);
-		$('#containerModal .modal-content').addClass('modal-' + modalSize);
+		$('#containerModal > .modal-dialog').addClass('modal-' + modalSize);
+		$('#containerModal > .modal-content').addClass('modal-' + modalSize);
 		
 		
 		$('#containerModal').modal('show');

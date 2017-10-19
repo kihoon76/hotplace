@@ -642,14 +642,21 @@
 	<td>
 		<div class="container">
 			<div class="row">
-				<div class="col-xs-5">
+				<div class="col-xs-5" style="visibility:hidden;">
 					<input class="form-control" id="txtAcceptGaebal" type="text" disabled> 
 				</div>
-				<div class="col-xs-1 lblX">
+				<div class="col-xs-1 lblX" style="visibility:hidden;">
 					<label>X</label>
 				</div>
 				<div class="input-group spinner col-xs-6">
-    				<input type="text" class="form-control" value="-10%" id="stepAcceptGaebal" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<input type="text" class="form-control readonly" id="stepAcceptGaebal"
+    					   value="0원"
+    					   data-value="0"
+    					   data-min="0"
+    					   data-max="0"
+    					   data-type="money"
+    					   data-step="[0, 10000000, 30000000, 50000000, 100000000, 200000000, 300000000, 500000000, 1000000000, 2000000000, 3000000000, 4000000000, 5000000000]"
+    					   data-suffix="원">
     				<div class="input-group-btn-vertical" data-fn="calcAcceptGaebal">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -658,7 +665,7 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="WAcceptGaebal" type="text" disabled></td>
+	<td><input class="form-control" id="WAcceptGaebal" type="text" readonly></td>
 	<td><span id="ratioAcceptGaebal"></span>%</td>
 	<td>인허가 일체, 건축 등 일부 외주</td>
 </tr>
@@ -668,13 +675,19 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtGamri" type="text" disabled> 
+					<input class="form-control" id="txtGamri" type="text" readonly> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
 				</div>
 				<div class="input-group spinner col-xs-6">
-    				<input type="text" class="form-control" value="-10%" id="stepGamri" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<input type="text" class="form-control readonly" id="stepGamri"
+    					   value="10%"
+    					   data-value="10"
+    					   data-min="0"
+    					   data-max="20"
+    					   data-step="1"
+    					   data-suffix="%">
     				<div class="input-group-btn-vertical" data-fn="calcGamri">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -683,7 +696,7 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="WGamri" type="text" disabled></td>
+	<td><input class="form-control" id="WGamri" type="text" readonly></td>
 	<td><span id="ratioGamri"></span>%</td>
 	<td></td>
 </tr>
@@ -692,14 +705,21 @@
 	<td>
 		<div class="container">
 			<div class="row">
-				<div class="col-xs-5">
+				<div class="col-xs-5" style="visibility:hidden;">
 					<input class="form-control" id="txtCheuglyang" type="text" disabled> 
 				</div>
-				<div class="col-xs-1 lblX">
+				<div class="col-xs-1 lblX" style="visibility:hidden;">
 					<label>X</label>
 				</div>
-				<div class="input-group spinner col-xs-6">
-    				<input type="text" class="form-control" value="-10%" id="stepCheuglyang" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+				<div class="input-group spinner col-xs-12">
+    				<input type="text" class="form-control readonly" id="stepCheuglyang"
+    					   value="0원"
+    					   data-value="0"
+    					   data-min="0"
+    					   data-max="0"
+    					   data-type="money"
+    					   data-step="[0, 10000000, 30000000, 50000000, 100000000, 200000000, 300000000, 500000000, 1000000000, 2000000000, 3000000000, 4000000000, 5000000000]"
+    					   data-suffix="원">
     				<div class="input-group-btn-vertical" data-fn="calcCheuglyang">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -708,7 +728,7 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="WCheuglyang" type="text" disabled></td>
+	<td><input class="form-control" id="WCheuglyang" type="text" readonly></td>
 	<td><span id="ratioCheuglyang"></span>%</td>
 	<td>필지분할에 포함</td>
 </tr>
@@ -717,14 +737,21 @@
 	<td>
 		<div class="container">
 			<div class="row">
-				<div class="col-xs-5">
+				<div class="col-xs-5" style="visibility:hidden;">
 					<input class="form-control" id="txtEvalueGamjeung" type="text" disabled> 
 				</div>
-				<div class="col-xs-1 lblX">
+				<div class="col-xs-1 lblX" style="visibility:hidden;">
 					<label>X</label>
 				</div>
-				<div class="input-group spinner col-xs-6">
-    				<input type="text" class="form-control" value="-10%" id="stepEvalueGamjeung" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+				<div class="input-group spinner col-xs-12">
+    				<input type="text" class="form-control readonly" id="stepEvalueGamjeung"
+    				 	   value="0원"
+    				 	   data-value="0"
+    				 	   data-min="0"
+    				 	   data-max="0"
+    				 	   data-type="money"
+    				 	   data-step="[0, 10000000, 30000000, 50000000, 100000000, 200000000, 300000000, 500000000, 1000000000, 2000000000, 3000000000, 4000000000, 5000000000]"
+    				 	   data-suffix="원">
     				<div class="input-group-btn-vertical" data-fn="calcEvalueGamjeung">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -733,7 +760,7 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="WEvalueGamjeung" type="text" disabled></td>
+	<td><input class="form-control" id="WEvalueGamjeung" type="text" readonly></td>
 	<td><span id="ratioEvalueGamjeung"></span>%</td>
 	<td></td>
 </tr>
@@ -742,14 +769,21 @@
 	<td>
 		<div class="container">
 			<div class="row">
-				<div class="col-xs-5">
+				<div class="col-xs-5" style="visibility:hidden;">
 					<input class="form-control" id="txtSplitPilji" type="text" disabled> 
 				</div>
-				<div class="col-xs-1 lblX">
+				<div class="col-xs-1 lblX" style="visibility:hidden;">
 					<label>X</label>
 				</div>
-				<div class="input-group spinner col-xs-6">
-    				<input type="text" class="form-control" value="-10%" id="stepSplitPilji" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+				<div class="input-group spinner col-xs-12">
+    				<input type="text" class="form-control readonly" id="stepSplitPilji"
+    					   value="0원"
+    					   data-value="0"
+    					   data-min="0"
+    					   data-max="0"
+    					   data-type="money"
+    					   data-step="[0, 10000000, 30000000, 50000000, 100000000, 200000000, 300000000, 500000000, 1000000000, 2000000000, 3000000000, 4000000000, 5000000000]"
+    					   data-suffix="원">
     				<div class="input-group-btn-vertical" data-fn="calcSplitPilji">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -758,7 +792,7 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="WSplitPilji" type="text" disabled></td>
+	<td><input class="form-control" id="WSplitPilji" type="text" readonly></td>
 	<td><span id="ratioSplitPilji"></span>%</td>
 	<td>분할측량 포함</td>
 </tr>
@@ -766,7 +800,7 @@
 	<td style="border-top:0px !important;border-right:0px !important;background-color:paleturquoise;"></td>
 	<td style="border-left:0px !important;background-color:paleturquoise;">소 계</td>
 	<td></td>
-	<td><input class="form-control" id="WInheogabi" type="text" disabled></td>
+	<td><input class="form-control" id="WInheogabi" type="text" readonly></td>
 	<td><span id="ratioInheogabi"></span>%</td>
 	<td></td>
 </tr>
@@ -777,22 +811,28 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtDevBudam" type="text" disabled> 
+					<input class="form-control" id="txtDevBudam" type="text" readonly> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
 				</div>
 				<div class="input-group spinner col-xs-6">
-    				<input type="text" class="form-control" value="-10%" id="stepDevBudam" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<input type="text" class="form-control readonly" id="stepDevBudam"
+    					   value="25%"
+    					   data-value="25"
+    					   data-min="0"
+    					   data-max="100"
+    					   data-step="5"
+    					   data-suffix="%">
     				<div class="input-group-btn-vertical" data-fn="calcDevBudam">
-      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
-      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+      					<button class="btn btn-default" type="button" disabled><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button" disabled><i class="fa fa-caret-down"></i></button>
     				</div>
     			</div>
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="WDevBudam" type="text" disabled></td>
+	<td><input class="form-control" id="WDevBudam" type="text" readonly></td>
 	<td><span id="ratioDevBudam"></span>%</td>
 	<td>
 		<p>
@@ -807,23 +847,38 @@
 	<td>
 		<div class="container">
 			<div class="row">
+				<div class="checkbox checkbox-primary col-xs-6" style="padding-left:35px;">
+        			<input id="chkFarmBudam" class="styled" type="checkbox">
+            		<label for="chkFarmBudam">
+                                           부담금 감면
+            		</label>
+        		</div>
+			</div>
+			
+			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtFarmBudam" type="text" disabled> 
+					<input class="form-control txtProfitTooltip" id="txtFarmBudam" type="text" readonly title="공시지가" value="{{currency ../gongsi}}" data-value="{{../gongsi}}"> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
 				</div>
 				<div class="input-group spinner col-xs-6">
-    				<input type="text" class="form-control" value="-10%" id="stepFarmBudam" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<input type="text" class="form-control readonly" id="stepFarmBudam"
+    				 	   value="30%"
+    				 	   data-value="30"
+    				 	   data-min="0"
+    				 	   data-max="100"
+    				 	   data-step="10"
+    				 	   data-suffix="%">
     				<div class="input-group-btn-vertical" data-fn="calcFarmBudam">
-      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
-      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+      					<button class="btn btn-default" type="button" disabled><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button" disabled><i class="fa fa-caret-down"></i></button>
     				</div>
     			</div>
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="WFarmBudam" type="text" disabled></td>
+	<td><input class="form-control" id="WFarmBudam" type="text" readonly></td>
 	<td><span id="ratioFarmBudam"></span>%</td>
 	<td>
 		<p>
@@ -882,7 +937,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtPurchaseChaegwon" type="text" disabled> 
+					<input class="form-control" id="txtPurchaseChaegwon" type="text" readonly> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -897,7 +952,7 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="WPurchaseChaegwon" type="text" disabled></td>
+	<td><input class="form-control" id="WPurchaseChaegwon" type="text" readonly></td>
 	<td><span id="ratioPurchaseChaegwon"></span>%</td>
 	<td>
 		<p>
@@ -911,22 +966,28 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtSetGeunjeodang" type="text" disabled> 
+					<input class="form-control" id="txtSetGeunjeodang" type="text" readonly> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
 				</div>
 				<div class="input-group spinner col-xs-6">
-    				<input type="text" class="form-control" value="-10%" id="stepSetGeunjeodang" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<input type="text" class="form-control" id="stepSetGeunjeodang"
+    					   value="0.4%"
+    					   data-value="0.4"
+    					   data-min="0"
+    					   data-max="1"
+    					   data-step="0.1"
+    					   data-suffix="%">
     				<div class="input-group-btn-vertical" data-fn="calcSetGeunjeodang">
-      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
-      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+      					<button class="btn btn-default" type="button" disabled><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button" disabled><i class="fa fa-caret-down"></i></button>
     				</div>
     			</div>
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="WSetGeunjeodang" type="text" disabled></td>
+	<td><input class="form-control" id="WSetGeunjeodang" type="text" readonly></td>
 	<td><span id="ratioSetGeunjeodang"></span>%</td>
 	<td>
 		<p>
@@ -941,7 +1002,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtPreserveDeunggi" type="text" disabled> 
+					<input class="form-control" id="txtPreserveDeunggi" type="text" readonly> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -956,7 +1017,7 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="WPreserveDeunggi" type="text" disabled></td>
+	<td><input class="form-control" id="WPreserveDeunggi" type="text" readonly></td>
 	<td><span id="ratioPreserveDeunggi"></span>%</td>
 	<td>
 		<p>공사비의 3.2% 내외</p>
@@ -968,7 +1029,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtManagement" type="text" disabled> 
+					<input class="form-control" id="txtManagement" type="text" readonly> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -983,7 +1044,7 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="WManagement" type="text" disabled></td>
+	<td><input class="form-control" id="WManagement" type="text" readonly></td>
 	<td><span id="ratioManagement"></span>%</td>
 	<td>
 		<p>운영수입의 50% 내외</p>
@@ -995,7 +1056,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtSellSusulyo" type="text" disabled> 
+					<input class="form-control" id="txtSellSusulyo" type="text" readonly> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -1010,7 +1071,7 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="WSellSusulyo" type="text" disabled></td>
+	<td><input class="form-control" id="WSellSusulyo" type="text" readonly></td>
 	<td><span id="ratioSellSusulyo"></span>%</td>
 	<td>
 		<p>법정 수수료 최대 0.9%</p>
@@ -1022,7 +1083,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtPreparation" type="text" disabled> 
+					<input class="form-control" id="txtPreparation" type="text" readonly> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
@@ -1037,7 +1098,7 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="WPreparation" type="text" disabled></td>
+	<td><input class="form-control" id="WPreparation" type="text" readonly></td>
 	<td><span id="ratioPreparation"></span>%</td>
 	<td>
 		<p>사업비의 10% 내외</p>

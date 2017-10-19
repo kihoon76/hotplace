@@ -77,4 +77,9 @@ public class HotplaceService {
 		
 		return g;
 	}
+
+	public String getGongmaeMarker(Map<String, String> param) {
+		List<String> list = hotplaceDao.selectGongmaeMarker(param);
+		return DataUtil.makeLatLngGongmaeMarker(list, "|");
+	}
 }

@@ -112,7 +112,7 @@ public class HotplaceController {
 	
 	@GetMapping("gyeongmaemarker")
 	@ResponseBody
-	public String getGongsiBounds(@RequestParam(name="nex") String nex,
+	public String getGyeongmaeMarker(@RequestParam(name="nex") String nex,
 								  @RequestParam(name="swx") String swx,
 								  @RequestParam(name="swy") String swy,
 								  @RequestParam(name="ney") String ney) throws Exception  {
@@ -124,6 +124,22 @@ public class HotplaceController {
 		param.put("ney", ney);
 		
 		return hotplaceService.getGyeongmaeMarker(param);
+	}
+	
+	@GetMapping("gongmaemarker")
+	@ResponseBody
+	public String getGongmaemarker(@RequestParam(name="nex") String nex,
+								   @RequestParam(name="swx") String swx,
+								   @RequestParam(name="swy") String swy,
+								   @RequestParam(name="ney") String ney) throws Exception  {
+		
+		Map<String, String> param = new HashMap<String, String>();
+		param.put("nex", nex);
+		param.put("swx", swx);
+		param.put("swy", swy);
+		param.put("ney", ney);
+		
+		return hotplaceService.getGongmaeMarker(param);
 	}
 	
 	@PostMapping("hpgrade/search")

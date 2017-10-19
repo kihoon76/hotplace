@@ -235,6 +235,9 @@
 		  from [데이터수집].[dbo].[경매_인근진행물건]
 		 where 경매_목록_고유번호 = #{goyubeonho}
 	</select>
+	
+	<select id="selectGongmaeMarker" resultType="string" parameterType="hashmap" />
+
 </mapper>
 <!-- 
 		select 

@@ -11,6 +11,8 @@
 <body>
 <content tag="script">
 <script type="text/javascript" src="/resources/js/main.js"></script>
+<script type="text/javascript" src="/resources/js/gyeongmae.js"></script>
+
 <!-- FastClick -->
 <script type="text/javascript" src="/resources/vendors/fastclick/lib/fastclick.js"></script>
 <!-- NProgress -->

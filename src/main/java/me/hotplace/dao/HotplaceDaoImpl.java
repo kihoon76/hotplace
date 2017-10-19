@@ -42,7 +42,6 @@ public class HotplaceDaoImpl implements HotplaceDao {
 	
 	@Override
 	public List<String> selectGyeongmaeMarker(Map<String, String> param) {
-		// TODO Auto-generated method stub
 		return msSqlSession.selectList(namespace + ".selectGyeongmaeMarker", param);
 	}
 
@@ -54,6 +53,11 @@ public class HotplaceDaoImpl implements HotplaceDao {
 	@Override
 	public Gyeongmae selectGyeongmaeDetail(Map<String, String> param) {
 		return msSqlSession.selectOne(namespace + ".selectGyeongmaeDetail", param);
+	}
+
+	@Override
+	public List<String> selectGongmaeMarker(Map<String, String> param) {
+		return msSqlSession.selectList("mappers.mssql.sampleMapper.selectGyeongmaeTest", param);
 	}
 
 }

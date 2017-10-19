@@ -456,8 +456,9 @@
 	 * @desc 표시하고자 하는 마커그룹 0:off, 1:on  
 	 * @type {object} 
 	 * @property {string} GYEONGMAE - 경매
+	 * @property {string} GONGMAE - 공매
 	 */
-	var _markerGroupOnOff = {GYEONGMAE:0};
+	var _markerGroupOnOff = {GYEONGMAE:0, GONGMAE:0};
 	
 	/**
 	 * @memerof hotplace.maps
@@ -493,6 +494,7 @@
 	 * @function getActiveMarkers
 	 * @param {object} markerState 
 	 * @param {number} markerState.GYEONGMAE
+	 * @param {number} markerState.GONGMAE
 	 * @desc markertype 활성화 설정
 	 */
 	maps.setMarkers = function(markerState) {
@@ -528,7 +530,6 @@
 	 * @memerof hotplace.maps
 	 * @function cellToggle
 	 * @desc cell toggle
-	 * {@link https://github.com/kriskowal/q q(promise)}
 	 */
 	maps.cellToggle = function() {
 		
@@ -610,7 +611,8 @@
 	
 	var _markerTypes = {
 		RADIUS_SEARCH: 'RADIUS_SEARCH',
-		GYEONGMAE: 'GYEONGMAE',    
+		GYEONGMAE: 'GYEONGMAE', 
+		GONGMAE: 'GONGMAE'
 	};
 	
 	/** 
@@ -642,13 +644,9 @@
 	 * @param {Array}  GYEONGMAE.m 경매물건 마커들
 	 */
 	var _markers = {
-		RADIUS_SEARCH : {
-			m: [],	
-			c: []   
-		},
-		GYEONGMAE : {
-			m: [],
-		}
+		RADIUS_SEARCH : { m: [], c: [], url: '' },
+		GYEONGMAE : { m: [], url: 'gyeongmaemarker', icon:'blink.gif' },
+		GONGMAE : { m: [], url: 'gongmaemarker', icon: 'gongmae.png' }
 	};
 	
 	/** 
@@ -657,10 +655,12 @@
 	 * @type  {object} 
 	 * @param {Array}  RADIUS_SEARCH 반경검색 마커윈도우
 	 * @param {Array}  GYEONGMAE 경매마커 윈도우
+	 * @param {Array}  GONGMAE 공매마커 윈도우
 	 */
 	var _infoWindowsForMarker = {
 		RADIUS_SEARCH : [],
 		GYEONGMAE : [],
+		GONGMAE : []
 	};
 	
 	
@@ -923,12 +923,13 @@
 	 */
 	function _createMarkers(level, startIdx, markerType, listeners, options) {
 		var markerData;
-		//var markerIcon;
 		
 		switch(markerType) {
 		case _markerTypes.GYEONGMAE :
 			markerData = hotplace.database.getLevelData(level, _markerTypes.GYEONGMAE);
-			//markerIcon = 'blink.gif';
+			break;
+		case _markerTypes.GONGMAE :
+			markerData = hotplace.database.getLevelData(level, _markerTypes.GONGMAE);
 			break;
 		}
 		
@@ -1015,8 +1016,9 @@
 		}
 	}
 	
-	function _destroyMarkers () {
+	function _destroyMarkers(isRadiusExcept) {
 		for(var type in _markers) {
+			if(type == 'RADIUS_SEARCH' && isRadiusExcept) continue;
 			_destroyMarkerType(type);
 		}
 	}
@@ -1129,390 +1131,23 @@
 		_createCells(currentLevel, startIdx);
 	}
 	
-	function _makeGyeongmaeJinhaengmulgeons(jinhaengmulgeons) {
-		var cnt = jinhaengmulgeons.length;
-		var html = '';
-		
-		if(cnt >= 1) {
-			html += '<table class="table table-bordered">';
-			html += '<colgroup>';
-			html += '<col style="width:15%">';
-	    	html += '<col style="width:10%">';
-	    	html += '<col style="width:25%">';
-	    	html += '<col style="width:10%">';
-	    	html += '<col style="width:15%">';
-	    	html += '<col style="width:15%">';
-	    	html += '<col style="width:10%">';
-	    	html += '</colgroup>';
-	    	html += '<tr>';
-	    	html += '<td>사건번호</td>';
-	    	html += '<td>물건번호<br/>용도</td>';
-	    	html += '<td>소재지 및 내역</td>';
-	    	html += '<td>비고</td>';
-	    	html += '<td>감정평가액<br/>최저매각가격</td>';
-	    	html += '<td>담당계<br/>매각기일<br/>(입찰기간)</td>';
-	    	html += '<td>진행<br/>상태</td>';
-	    	html += '</tr>';
-			
-	    	var num, yongdo, maegaggiil, damdang;
-			for(var i=0; i<cnt; i++) {
-				num = jinhaengmulgeons[i].numyongdo.match(/\s*^[0-9]+/g);
-				yongdo = jinhaengmulgeons[i].numyongdo.match(/[^0-9]+\d*/g);
-				maegaggiil = jinhaengmulgeons[i].damdangmaegaggiil.match(/\s*[0-9]+\.\d*\.\d+/g);
-				damdang = jinhaengmulgeons[i].damdangmaegaggiil.match(/\s*[^0-9\.]+\d*\W*/g);
-				
-				html += '<tr>';
-				html += '<td>' + jinhaengmulgeons[i].sageonbeonho + '</td>';
-				html += '<td>' + num + '<br/>' + yongdo + '</td>';
-				html += '<td>' + jinhaengmulgeons[i].sojaejinaeyeog + '</td>';
-				html += '<td>' + jinhaengmulgeons[i].bigo + '</td>';
-				html += '<td>' + jinhaengmulgeons[i].gamjeongpyeongga.money() + '원<hr/>' + jinhaengmulgeons[i].minmaegaggagyeog.money() + '원</td>';
-				html += '<td>' + damdang + '<br/>' + maegaggiil + '</td>';
-				html += '<td>' + jinhaengmulgeons[i].status + '</td>';
-				html += '</tr>';
-			}
-			
-			html += '</table>';
-		}
-		else {
-			html = '정보가 존재하지 않습니다.';
-		}
-		
-		$('#tabJinhaengmulgeon').html(html);
-	}
-	
-	function _makeGyeongmaeMaegagmulgeons(maegagmulgeons) {
-		var cnt = maegagmulgeons.length;
-		var html = '';
-		
-		if(cnt >= 1) {
-			html += '<table class="table table-bordered">';
-			html += '<colgroup>';
-			html += '<col style="width:15%">';
-	    	html += '<col style="width:10%">';
-	    	html += '<col style="width:25%">';
-	    	html += '<col style="width:25%">';
-	    	html += '<col style="width:10%">';
-	    	html += '<col style="width:25%">';
-	    	html += '</colgroup>';
-	    	html += '<tr>';
-	    	html += '<td>사건번호</td>';
-	    	html += '<td>용도</td>';
-	    	html += '<td>소재지 및 내역</td>';
-	    	html += '<td>감정평가액</td>';
-	    	html += '<td>매각월</td>';
-	    	html += '<td>매각대금</td>';
-	    	html += '</tr>';
-			
-			for(var i=0; i<cnt; i++) {
-				html += '<tr>';
-				html += '<td>' + maegagmulgeons[i].sageonbeonho + '</td>';
-				html += '<td>' + maegagmulgeons[i].yongdo + '</td>';
-				html += '<td>' + maegagmulgeons[i].sojaeji + '</td>';
-				html += '<td>' + maegagmulgeons[i].gamjeongpyeongga.money() + ' 원</td>';
-				html += '<td>' + maegagmulgeons[i].maegagmonth + '</td>';
-				html += '<td>' + maegagmulgeons[i].maegagdaegeum.money() + ' 원</td>';
-				html += '</tr>';
-			}
-			
-			html += '</table>';
-		}
-		else {
-			html = '정보가 존재하지 않습니다.';
-		}
-		
-		$('#tabMaegagmulgeon').html(html);
-	}
-	
-	function _makeGyeongmaeTonggyes(tonggyes) {
-		var cnt = tonggyes.length;
-		var html = '';
-		
-		if(cnt >= 1) {
-			html += '<table class="table table-bordered">';
-			html += '<colgroup>';
-			html += '<col style="width:10%">';
-	    	html += '<col style="width:10%">';
-	    	html += '<col style="width:20%">';
-	    	html += '<col style="width:20%">';
-	    	html += '<col style="width:10%">';
-	    	html += '<col style="width:10%">';
-	    	html += '</colgroup>';
-	    	html += '<tr>';
-	    	html += '<td>기간</td>';
-	    	html += '<td>매각건수</td>';
-	    	html += '<td>평균감정가</td>';
-	    	html += '<td>평균매각가</td>';
-	    	html += '<td>매각가율</td>';
-	    	html += '<td>평균유찰횟수</td>';
-	    	html += '</tr>';
-			
-			for(var i=0; i<cnt; i++) {
-				html += '<tr>';
-				html += '<td>' + tonggyes[i].gigan + '</td>';
-				html += '<td>' + tonggyes[i].maegaggeonsu + ' 건</td>';
-				html += '<td>' + tonggyes[i].avggamjeongga.money() + ' 원</td>';
-				html += '<td>' + tonggyes[i].avgmaegagga.money() + ' 원</td>';
-				html += '<td>' + tonggyes[i].maegaggaratio + ' %</td>';
-				html += '<td>' + tonggyes[i].avgyuchal + ' 회</td>';
-				html += '</tr>';
-			}
-			
-			html += '</table>';
-		}
-		else {
-			html = '정보가 존재하지 않습니다.';
-		}
-		
-		$('#tabMaegagtonggye').html(html);
-	}
-	
-	function _makeGyeongmaeLists(lists) {
-		var cnt = lists.length;
-		var html = '';
-		if(cnt >= 1) {
-			for(var i=0; i<cnt; i++) {
-				html += '<tr>';
-				html += '<td>' + lists[i].listnum + '</td>';
-				html += '<td>' + lists[i].listgubun + '</td>';
-				html += '<td>' + lists[i].detailhistory + '</td>';
-				html += '</tr>';
-			}
-		}
-		
-		$('#tbGyeongmaeListHistory tbody').html(html);
-	}
-	
-	function _makeGyeongmaeGiils(giils) {
-		var cnt = giils.length;
-		var html = '';
-		if(cnt >= 1) {
-			for(var i=0; i<cnt; i++) {
-				html += '<tr>';
-				html += '<td colspan="2">' + giils[i].giil + '</td>';
-				html += '<td>' + giils[i].giiljonglyu + '</td>';
-				html += '<td>' + giils[i].giiljangso + '</td>';
-				html += '<td>' + ((giils[i].minmaegaggagyeog != undefined) ? giils[i].minmaegaggagyeog.money() : '') + '</td>';
-				html += '<td>' + giils[i].giilresult + '</td>';
-				html += '</tr>';
-			}
-		}
-		else {
-			html = '<tr><td colspan="6">기일내역이 없습니다.</td></tr>';
-		}
-		
-		$(html).insertAfter('#gDgiilhistory');
-	}
-	
-	var _jqmodalApi = null;
-	/** 
-	 * @memberof hotplace.maps 
-	 * @function gyeongmaeImageClick 
-	 * @param {object} me (a 태그 > img 태그)
-	 * @desc  경매상세보기에서 이미지 클릭시 확대이미지 보여주는 handler
-	 * {@link http://api.jqueryui.com/dialog/#method-open jquery-ui-dialog}
-	 */
-	maps.gyeongmaeImageClick = function(me) {
-		console.log(me);
-		//$('.enlargeImageModalSource').prop('src');
-		//$('#enlargeImageModal').dialog('open');
-		/*$('#enlargeImageModal').dialog({
-			dialogClass: 'innerPopups',
-			modal:false,
-			draggable: false,
-			resizable: false,
-			width:'300',
-			height: '300'
-		});*/
-		var img = $(me).children().prop('src');
-		$('#enlargeImageModalSource').prop('src', img);
-		$('#enlargeImageModal').modal('show');
-		
-		return false;
-		//$('#enlargeImageModal').dialog('open');
-		//_jqmodalApi.open('<div>test</div>')
-	}
-	
-	/**
-	 * {@link https://bootsnipp.com/snippets/kEK7M bootstrap carousel}
-	 */
-	function _makeGyeongmaeImages(images) {
-		var cnt = images.length;
-		var $gDimageCarousels = $('#gDimageCarousels');
-		var currentRow = 0;
-		var html = '';
-		var gwanlyeonsajin = 0;
-		var jeongyeongdo = 0;
-		var wichido = 0;
-		var jijeogdo = 0;
-		var naebugujo = 0;
-		var etc = 0;
-		
-		if(cnt >= 1) {
-			
-			$('#gDimages').carousel({
-				interval: hotplace.config.gyeongmaeDetailImgInterval
-			});
-			
-			for(var i=0; i<cnt; i++) {
-				if(i%4 == 0) { //새로운 row
-					if(i == 0) {
-						html += '<div class="item active">';
-					}
-					else {
-						html += '<div class="item">';
-					}
-					
-					html += '<div class="row">';
-				}
-				
-				html += '<div class="col-sm-3"><a href="#x"  data-toggle="modal" class="thumbnail" onclick="hotplace.maps.gyeongmaeImageClick(this);"><img src="' + images[i].image + '" class="img-responsive" style="width:250px; height:250px;"></a></div>';
-				
-				if(i%4 == 3) {
-					html += '</div></div>';
-				}
-				
-				//사진구분
-				switch(images[i].gubun) {
-				case '관련사진':
-					gwanlyeonsajin++;
-					break;
-				case '전경도':
-					jeongyeongdo++;
-					break;
-				case '지적도':
-					jijeogdo++;
-					break;
-				case '위치도':
-					wichido++;
-					break;
-				case '내부구조도':
-					naebugujo++;
-					break;
-				default : 
-					etc++;
-					break;
-				}
-			}
-			
-			if((cnt - 1)%4 < 3) {
-				html += '</div></div>';
-			}
-			
-			html += '<a class="left carousel-control" href="#gDimages" data-slide="prev">‹</a>';
-			html += '<a class="right carousel-control" href="#gDimages" data-slide="next">›</a>';
-			
-			$('#gDjeongyeongdo').text(jeongyeongdo);
-			$('#gDjijeogdo').text(jijeogdo);
-			$('#gDwichido').text(wichido);
-			$('#gDgwanlyeonsajin').text(gwanlyeonsajin);
-			$('#gDnaebugujo').text(naebugujo);
-			$('#gDetc').text(etc);
-		}
-		
-		$gDimageCarousels.html(html);
-	}
-	
 	function _createMarkerClick(map, marker, win) {
-		var data = marker._data;
-		win.open(map, marker);
-		var tForm = hotplace.dom.getTemplate('gyeongmaeForm');
-		
-		//win.setOptions('anchorSkew', true);
-		win.setOptions('maxWidth', 300);
-		win.setOptions('content', tForm());
-		
-		$('#btnGyeongmaeClose').on('click', function() {
-			win.close();
-		});
-		
-		$('#btnGyeongmaeDetail').on('click', function() {
-			var param = {
-				goyubeonho: $(this).data('goyubeonho'),
-				pnu: $(this).data('pnu'),
-				deunglogbeonho: $(this).data('deunglogbeonho')
-			}
-			
-			hotplace.dom.insertFormInmodal('gyeongmaeDetailForm');
-			hotplace.dom.openModal('');
-			
-			hotplace.ajax({
-				url: 'gyeongmae/detail',
-				method: 'GET',
-				dataType: 'json',
-				data: param,
-				loadEl: '#dvGyeongmaeDetail',
-				success: function(data, textStatus, jqXHR) {
-					console.log(data)
-					$('#gDsageonbeonho').text(data.sageonbeonho);
-					$('#gDdamdang').text(data.damdang);
-					$('#gDsageonjeobsuil').text(data.sageonjeobsuil);
-					$('#gDsojaeji').text(data.sojaeji);
-					$('#gDyongdo').text(data.yongdo);
-					$('#gDibchalbangbeob').text(data.ibchalbangbeob);
-					$('#gDgamjeongpyeongga').text((data.gamjeongpyeongga) ? data.gamjeongpyeongga.money() + ' 원' : '');
-					$('#gDminmaegaggagyeog').text((data.minmaegaggagyeog) ? data.minmaegaggagyeog.money() + ' 원' : '');
-					$('#gDyuchal').text(data.yuchal);
-					$('#gDbaedangyogu').text(data.baedangyogu);
-					$('#gDcheonggu').text((data.cheonggu) ? data.cheonggu.money() + ' 원': '');
-					$('#gDmaegaggiil').text(data.maegaggiil);
-					$('#gDbigo').text(data.bigo);
-					
-					_makeGyeongmaeImages(data.images);
-					_makeGyeongmaeGiils(data.giils);
-					_makeGyeongmaeLists(data.lists);
-					_makeGyeongmaeTonggyes(data.tonggyes);
-					_makeGyeongmaeMaegagmulgeons(data.maegagmulgeons);
-					_makeGyeongmaeJinhaengmulgeons(data.jinhaengmulgeons);
-				},
-				error:function() {
-					
-				}
-			});
-			
-		});
-		
-		hotplace.ajax({
-			url: 'gyeongmae/thumb',
-			method: 'GET',
-			dataType: 'json',
-			data: {unu: data.info.unu},
-			loadEl: '#dvGyeongmae',
-			success: function(data, textStatus, jqXHR) {
-				//hotplace.dom.createChart('canvas');
-				console.log(data);
-				$('#gSojaeji').text(data.sojaeji || '');
-				$('#gYongdo').text((data.yongdo || '').replace(/\|/gm, ','));
-				$('#gGamjeongpyeongga').text((data.gamjeongpyeongga || '').money());
-				$('#gYuchal').text(data.yuchal || '');
-				$('#gMaegaggiil').text(data.maegaggiil || '');
-				
-				if(data.imgThumb) {
-					$('#gImgThumb').prop('src', data.imgThumb);
-				}
-				
-				$('#btnGyeongmaeDetail').data('goyubeonho', data.goyubeonho);
-				$('#btnGyeongmaeDetail').data('pnu', data.pnu);
-				$('#btnGyeongmaeDetail').data('deunglogbeonho', data.deunglogbeonho);
-			},
-			error:function() {
-				
-			}
-		});
+		hotplace.gyeongmae.markerClick(map, marker, win);
 	}
+	
 	/** 
 	 * @private 
 	 * @function _showMarkers 
 	 * @desc  활성화시킨 marker group 보여주기 
 	 */
-	function _showMarkers() {
+	function _showMarkers(markerType) {
 		var db = hotplace.database;
 		var currentLevel = _getCurrentLevel();
 		
-		if(!db.hasData(currentLevel, _markerTypes.GYEONGMAE)) return;
-		var startIdx = db.getStartXIdx(_markerTypes.GYEONGMAE, _marginBounds.swx, currentLevel);
+		if(!db.hasData(currentLevel, markerType/*_markerTypes.GYEONGMAE*/)) return;
+		var startIdx = db.getStartXIdx(markerType/*_markerTypes.GYEONGMAE*/, _marginBounds.swx, currentLevel);
 		
-		_createMarkers(currentLevel, startIdx, _markerTypes.GYEONGMAE, {
+		_createMarkers(currentLevel, startIdx, markerType/*_markerTypes.GYEONGMAE*/, {
 			click : function(map, marker, win) {
 				_createMarkerClick(map, marker, win);
 			}
@@ -1520,7 +1155,7 @@
 			hasInfoWindow: true,
 			isAjaxContent: true,
 			radius:0,
-			icon: 'blink.gif',
+			icon: _markers[markerType].icon/*'blink.gif'*/,
 		});
 	}
 	
@@ -2021,30 +1656,46 @@
 	 * @desc marker type의 marker를 보여준다  
 	 */
 	maps.showMarkers = function(callback, isMaskTran) {
-		var currentLevel = _getCurrentLevel();
+		var currentLevel = _getCurrentLevel(),
+		    activeMarkers = maps.getActiveMarkers(),
+		    activeMarkerCnt = activeMarkers.length,
+		    url = '';
+		
 		//active level 비교
-		if(maps.isActiveSalesView() && maps.getActiveMarkers().length > 0) {
-			_destroyMarkerType(_markerTypes.GYEONGMAE);
+		if(maps.isActiveSalesView() && activeMarkerCnt > 0) {
+			//_destroyMarkerType(_markerTypes.GYEONGMAE);
+			_destroyMarkers(true);
 			_setLocationBounds();
 			if(_venderMap) {
-				hotplace.getPlainText('gyeongmaemarker', {
-					 swx : _locationBounds.swx,
-					 nex : _locationBounds.nex,
-					 swy : _locationBounds.swy,
-					 ney : _locationBounds.ney
-				}, function(json) {
-					try {
-						hotplace.database.setLevelData(currentLevel, _markerTypes.GYEONGMAE, json);
-						_showMarkers();
-						if(callback) callback();
-						console.log(json);
-					}
-					catch(e) {
-						throw e;
-					}
-				},
-				true,
-				isMaskTran);
+				
+				for(var k=0; k<activeMarkerCnt; k++) {
+					url = _markers[activeMarkers[k]].url;
+					
+					(function(x) {
+						hotplace.getPlainText(url, {
+							 swx : _locationBounds.swx,
+							 nex : _locationBounds.nex,
+							 swy : _locationBounds.swy,
+							 ney : _locationBounds.ney
+						}, function(json) {
+							try {
+								hotplace.database.setLevelData(currentLevel, _markerTypes[activeMarkers[x]], json);
+								_showMarkers(_markerTypes[activeMarkers[x]]);
+								if(callback) callback();
+								console.log(json);
+							}
+							catch(e) {
+								throw e;
+							}
+						},
+						true,
+						isMaskTran);
+					}(k));
+					
+					
+				}
+				
+				
 			}
 		}
 		else {

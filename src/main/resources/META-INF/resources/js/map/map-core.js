@@ -645,7 +645,7 @@
 	 */
 	var _markers = {
 		RADIUS_SEARCH : { m: [], c: [], url: '' },
-		GYEONGMAE : { m: [], url: 'gyeongmaemarker', icon:'blink.gif' },
+		GYEONGMAE : { m: [], url: 'gyeongmaemarker', icon:'gyeongmae.gif' },
 		GONGMAE : { m: [], url: 'gongmaemarker', icon: 'gongmae.png' }
 	};
 	

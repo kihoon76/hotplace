@@ -894,13 +894,19 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtAlterSanrim" type="text" disabled> 
+					<input class="form-control txtProfitTooltip" id="txtAlterSanrim" type="text" readonly title="공시지가" value="{{currency ../gongsi}}" data-value="{{../gongsi}}"> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
 				</div>
 				<div class="input-group spinner col-xs-6">
-    				<input type="text" class="form-control" value="-10%" id="stepAlterSanrim" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<input type="text" class="form-control" id="stepAlterSanrim"
+    				 	   value="30%"
+    				 	   data-value="30"
+    				 	   data-min="0"
+    				 	   data-max="100"
+    				 	   data-step="10"
+    				 	   data-suffix="%">
     				<div class="input-group-btn-vertical" data-fn="calcAlterSanrim">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -943,7 +949,13 @@
 					<label>X</label>
 				</div>
 				<div class="input-group spinner col-xs-6">
-    				<input type="text" class="form-control" value="-10%" id="stepPurchaseChaegwon" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<input type="text" class="form-control" id="stepPurchaseChaegwon"
+    					   value="4.5%"
+    				 	   data-value="4.5"
+    				 	   data-min="0"
+    				 	   data-max="10"
+    				 	   data-step="0.1"
+    				 	   data-suffix="%">
     				<div class="input-group-btn-vertical" data-fn="calcPurchaseChaegwon">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -1008,7 +1020,13 @@
 					<label>X</label>
 				</div>
 				<div class="input-group spinner col-xs-6">
-    				<input type="text" class="form-control" value="-10%" id="stepPreserveDeunggi" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<input type="text" class="form-control readonly" id="stepPreserveDeunggi"
+    					   value="3.2%"
+    					   data-value="3.2"
+    					   data-min="0"
+    					   data-max="5"
+    					   data-step="0.1"
+    					   data-suffix="%">
     				<div class="input-group-btn-vertical" data-fn="calcPreserveDeunggi">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -1029,13 +1047,19 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtManagement" type="text" readonly> 
+					<input class="form-control" id="txtManagement" type="text" value="0" data-value="0"> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
 				</div>
 				<div class="input-group spinner col-xs-6">
-    				<input type="text" class="form-control" value="-10%" id="stepManagement" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<input type="text" class="form-control" id="stepManagement"
+    				 	   value="30%"
+    				 	   data-value="30"
+    				 	   data-min="0"
+    				 	   data-max="100"
+    				 	   data-step="10"
+    				 	   data-suffix="%">
     				<div class="input-group-btn-vertical" data-fn="calcManagement">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -1062,7 +1086,13 @@
 					<label>X</label>
 				</div>
 				<div class="input-group spinner col-xs-6">
-    				<input type="text" class="form-control" value="-10%" id="stepSellSusulyo" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<input type="text" class="form-control readonly" id="stepSellSusulyo"
+    					   value="0.9%"
+    					   data-value="0.9"
+    					   data-min="0"
+    					   data-max="0.9"
+    					   data-step="0.1"
+    					   data-suffix="%">
     				<div class="input-group-btn-vertical" data-fn="calcSellSusulyo">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -1089,7 +1119,13 @@
 					<label>X</label>
 				</div>
 				<div class="input-group spinner col-xs-6">
-    				<input type="text" class="form-control" value="-10%" id="stepPreparation" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<input type="text" class="form-control readonly" id="stepPreparation"
+    					   value="10%"
+    					   data-value="10"
+    					   data-min="0"
+    					   data-max="20"
+    					   data-step="1"
+    					   data-suffix="%">
     				<div class="input-group-btn-vertical" data-fn="calcPreparation">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -1108,7 +1144,7 @@
 	<td style="border-top:0px !important;border-right:0px !important;background-color:paleturquoise;"></td>
 	<td style="border-left:0px !important;background-color:paleturquoise;">소 계</td>
 	<td></td>
-	<td><input class="form-control" id="WSaeobgyeongbi" type="text" disabled></td>
+	<td><input class="form-control" id="WSaeobgyeongbi" type="text" readonly></td>
 	<td><span id="ratioSaeobgyeongbi"></span>%</td>
 	<td></td>
 </tr>
@@ -1117,7 +1153,7 @@
 	<td style="border-left:0px !important;background-color:darkturquoise;" colspan="2">지출합계 (A+B+C+D+E+F+G)</td>
 	<td></td>
 	<td><input class="form-control" id="WJichool" type="text" disabled></td>
-	<td><span id="ratioJichool"></span>%</td>
+	<td><span id="ratioJichool">100</span>%</td>
 	<td></td>
 </tr>
 <tr class="collapse out">
@@ -1128,13 +1164,19 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtIncomeSellBuilding" type="text" disabled> 
+					<input class="form-control" id="txtIncomeSellBuilding" type="text" readonly value="0" data-value="0"> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
 				</div>
 				<div class="input-group spinner col-xs-6">
-    				<input type="text" class="form-control" value="-10%" id="stepIncomeSellBuilding" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<input type="text" class="form-control  readonly" id="stepIncomeSellBuilding"
+    					   value="75%"
+    					   data-value="75"
+    					   data-min="0"
+    					   data-max="100"
+    					   data-step="5"
+    					   data-suffix="%">
     				<div class="input-group-btn-vertical" data-fn="calcIncomeSellBuilding">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -1143,7 +1185,7 @@
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="WIncomeSellBuilding" type="text" disabled></td>
+	<td><input class="form-control" id="WIncomeSellBuilding" type="text" readonly></td>
 	<td><span id="ratioIncomeSellBuilding"></span>%</td>
 	<td></td>
 </tr>
@@ -1153,22 +1195,28 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtIncomeSellSeolbi" type="text" disabled> 
+					<input class="form-control" id="txtIncomeSellSeolbi" type="text" value="0" data-value="0"> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
 				</div>
 				<div class="input-group spinner col-xs-6">
-    				<input type="text" class="form-control" value="-10%" id="stepIncomeSellSeolbi" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<input type="text" class="form-control readonly" id="stepIncomeSellSeolbi"
+    					   value="150%"
+    					   data-value="150"
+    					   data-min="0"
+    					   data-max="200"
+    					   data-step="10"
+    					   data-suffix="%">
     				<div class="input-group-btn-vertical" data-fn="calcIncomeSellSeolbi">
-      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
-      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+      					<button class="btn btn-default" type="button" disabled><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button" disabled><i class="fa fa-caret-down"></i></button>
     				</div>
     			</div>
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="WIncomeSellSeolbi" type="text" disabled></td>
+	<td><input class="form-control" id="WIncomeSellSeolbi" type="text" readonly></td>
 	<td><span id="ratioIncomeSellSeolbi"></span>%</td>
 	<td></td>
 </tr>
@@ -1178,22 +1226,28 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-5">
-					<input class="form-control" id="txtIncomeSellLand" type="text" disabled> 
+					<input class="form-control" id="txtIncomeSellLand" type="text" value="0" data-value="0"> 
 				</div>
 				<div class="col-xs-1 lblX">
 					<label>X</label>
 				</div>
 				<div class="input-group spinner col-xs-6">
-    				<input type="text" class="form-control" value="-10%" id="stepIncomeSellLand" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
+    				<input type="text" class="form-control readonly" id="stepIncomeSellLand"
+    				 	   value="150%"
+    				 	   data-value="150"
+    				 	   data-min="0"
+    				 	   data-max="200"
+    				 	   data-step="10"
+    				 	   data-suffix="%">
     				<div class="input-group-btn-vertical" data-fn="calcIncomeSellLand">
-      					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
-      					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+      					<button class="btn btn-default" type="button" disabled><i class="fa fa-caret-up"></i></button>
+      					<button class="btn btn-default" type="button" disabled><i class="fa fa-caret-down"></i></button>
     				</div>
     			</div>
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="WIncomeSellLand" type="text" disabled></td>
+	<td><input class="form-control" id="WIncomeSellLand" type="text" readonly></td>
 	<td><span id="ratioIncomeSellLand"></span>%</td>
 	<td></td>
 </tr>
@@ -1201,7 +1255,7 @@
 	<td style="border-top:0px !important;border-right:0px !important;"></td>
 	<td style="border-left:0px !important;">소 계</td>
 	<td></td>
-	<td><input class="form-control" id="sumIncomeSell" type="text" disabled></td>
+	<td><input class="form-control" id="WIncomeSell" type="text" readonly></td>
 	<td><span id="ratioIncomeSell"></span>%</td>
 	<td></td>
 </tr>
@@ -1210,24 +1264,33 @@
 	<td>임대</td>
 	<td>
 		<div class="container">
-			<div class="row">
-				<div class="col-xs-5">
-					<input class="form-control" id="txtIncomeManageImdae" type="text" disabled> 
-				</div>
-				<div class="col-xs-1 lblX">
-					<label>X</label>
-				</div>
-				<div class="input-group spinner col-xs-6">
-    				<input type="text" class="form-control" value="-10%" id="stepIncomeManageImdae" data-value="-10" data-min="-10" data-max="200" data-step="10" data-suffix="%">
-    				<div class="input-group-btn-vertical" data-fn="calcIncomeManageImdae">
+			<div class="row" style="padding-left:15px;">
+				<div class="input-group spinner col-xs-5">
+    				<input type="text" class="form-control" id="stepIncomeManageImdae"
+    					   value="{{math ownTerm '*' 12}}개월"
+    					   data-value="{{math ownTerm '*' 12}}"
+    					   data-min="0"
+    					   data-step="1"
+    					   data-suffix="개월"
+    					   style="width:60px;">
+    				<div class="input-group-btn-vertical" data-fn="calcIncomeManageImdae" style="position:relative; left:-23px;">
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
       					<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
     				</div>
     			</div>
+				<div class="col-xs-1 lblX" style="position:relative; top:-35px; left:85px;">
+					<label>X</label>
+				</div>
+				<div >
+    				<input type="text" class="form-control" id="txtIncomeManageImdae"
+    					   style="position:relative; top:-34px; left:85px; width:127px;"
+    					   value="0" 
+    				 	   data-value="0">
+    			</div>
     		</div>
     	</div>
 	</td>
-	<td><input class="form-control" id="WIncomeManageImdae" type="text" disabled></td>
+	<td><input class="form-control" id="WIncomeManageImdae" type="text" readonly></td>
 	<td><span id="ratioIncomeManageImdae"></span>%</td>
 	<td></td>
 </tr>
@@ -1235,7 +1298,7 @@
 	<td style="border-top:0px !important;border-right:0px !important;"></td>
 	<td style="border-left:0px !important;">소 계</td>
 	<td></td>
-	<td><input class="form-control" id="sumIncomeManage" type="text" disabled></td>
+	<td><input class="form-control" id="WIncomeManage" type="text" readonly></td>
 	<td><span id="ratioIncomeManage"></span>%</td>
 	<td>80평*5만원=400만원</td>
 </tr>
@@ -1243,8 +1306,8 @@
 	<td style="border-top:0px !important;border-right:0px !important;background-color:khaki;"></td>
 	<td style="border-left:0px !important;background-color:khaki;" colspan="2">수입합계 (A+B)</td>
 	<td></td>
-	<td><input class="form-control" id="sumIncome" type="text" disabled></td>
-	<td><span id="ratioIncome"></span>%</td>
+	<td><input class="form-control" id="WIncome" type="text" readonly></td>
+	<td><span id="ratioIncome">100</span>%</td>
 	<td></td>
 </tr>
 <tr class="collapse out">
@@ -1253,21 +1316,21 @@
 <tr>
 	<td colspan="3">자기자본 총액</td>
 	<td></td>
-	<td><input class="form-control" id="WMymoney" type="text" disabled></td>
+	<td><input class="form-control" id="WMymoney" type="text" readonly></td>
 	<td></td>
 	<td></td>
 </tr>
 <tr>
 	<td colspan="3">매출이익 (수입-지출)</td>
 	<td></td>
-	<td><input class="form-control" id="WMaechool" type="text" disabled></td>
+	<td><input class="form-control" id="WMaechool" type="text" readonly></td>
 	<td><span id="ratioMaechool"></span>%</td>
 	<td></td>
 </tr>
 <tr>
 	<td colspan="3">경상이익(세전)</td>
 	<td></td>
-	<td><input class="form-control" id="WGyeongsang" type="text" disabled></td>
+	<td><input class="form-control" id="WGyeongsang" type="text" readonly></td>
 	<td><span id="ratioGyeongsang"></span>%</td>
 	<td>0.63% 년 수익률</td>
 </tr>

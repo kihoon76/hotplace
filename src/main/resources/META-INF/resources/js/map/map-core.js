@@ -3607,6 +3607,11 @@
 			calc.profit.calcSplitPilji();				//인허가비 > 필지분할
 			calc.profit.calcDevBudam();					//부담금 > 개별부담금
 			calc.profit.calcFarmBudam();				//부담금 > 농지보전부담금
+			calc.profit.calcAlterSanrim();				//부담금 > 대체산림자원조성비
+			calc.profit.calcManagement();				//사업경비 > 운영비
+			calc.profit.calcIncomeSellSeolbi();			//매각 > 설비
+			calc.profit.calcIncomeSellLand();			//매각 > 토지
+			calc.profit.calcIncomeManageImdae();		//운영 > 임대
 		}
 		
 		/**
@@ -3627,24 +3632,67 @@
 			return Math.round(parseInt(s) * 0.01 * percent);
 		}
 		
+		
+		function calcRatio(selectorRatio, Warray, sum) {
+			var WarrayLen = Warray.length;
+			var v = 0;
+			
+			for(var i=0; i<WarrayLen; i++) {
+				v += parseInt($(Warray[i]).data('value'));
+			}
+			
+			$(selectorRatio).text(Math.floor((v/sum) * 100 * 100)/100);
+		}
 		/**
 		 * @private 
 		 * @function calcJichoolRatio
 		 * @desc 비율
 		 */
 		function calcJichoolRatio(sum) {
-			//매입금액 비율
-			$('#ratioPurchase').text((parseFloat($('#WPurchase').data('value'))/sum) * 100);
-			//명도비 비율
-			$('#ratioMyeongdobi').text((parseFloat($('#WMyeongdobi').data('value'))/sum) * 100);
-			//토지사용승낙 비율
-			$('#ratioAcceptLandUse').text((parseFloat($('#WAcceptLandUse').data('value'))/sum) * 100);
-			//토지비 비율
-			$('#ratioTojibi').text((parseFloat($('#WTojibi').data('value'))/sum) * 100);
-			//대출이자
-			$('#ratioDaechulIja').text((parseFloat($('#WDaechulIja').data('value'))/sum) * 100);
-			//취득세
-			$('#ratioChwideugse').text((parseFloat($('#WChwideugse').data('value'))/sum) * 100);
+			
+			calcRatio('#ratioPurchase', ['#WPurchase'], sum);					//매입금액 
+			calcRatio('#ratioMyeongdobi', ['#WMyeongdobi'], sum);				//명도비 
+			calcRatio('#ratioAcceptLandUse', ['#WAcceptLandUse'], sum);			//토지사용승낙 
+			calcRatio('#ratioTojibi', ['#WTojibi'], sum);						//[토지비 비율]
+			calcRatio('#ratioDaechulIja', ['#WDaechulIja'], sum);				//대출이자
+			calcRatio('#ratioChwideugse', ['#WChwideugse'], sum);				//취득세
+			calcRatio('#ratioJaesanse', ['#WJaesanse', '#WJaesanse2'], sum);	//재산세
+			calcRatio('#ratioYangdose', ['#WYangdose'], sum);					//양도세
+			calcRatio('#ratioJesegeum', ['#WJesegeum'], sum);					//[제세금 비율]
+			calcRatio('#ratioGeonchugGongsa', ['#WGeonchugGongsa'], sum);		//건축공사비
+			calcRatio('#ratioTomogGongsa', ['#WTomogGongsa'], sum);				//토목공사비
+			calcRatio('#ratioPojangGongsa', ['#WPojangGongsa'], sum);			//포장공사비
+			calcRatio('#ratioInibGongsa', ['#WInibGongsa'], sum);				//인입공사비
+			calcRatio('#ratioGongsabi', ['#WGongsabi'], sum);					//[공사비 비율]
+			calcRatio('#ratioAcceptGaebal', ['#WAcceptGaebal'], sum);			//개발행위허가 등
+			calcRatio('#ratioGamri', ['#WGamri'], sum);							//감리비
+			calcRatio('#ratioCheuglyang', ['#WCheuglyang'], sum);				//측량비
+			calcRatio('#ratioEvalueGamjeung', ['#WEvalueGamjeung'], sum);		//감정평가
+			calcRatio('#ratioSplitPilji', ['#WSplitPilji'], sum);				//필지분할
+			calcRatio('#ratioInheogabi', ['#WInheogabi'], sum);					//[인허가비 비율]
+			calcRatio('#ratioDevBudam', ['#WDevBudam'], sum);					//개발부담금
+			calcRatio('#ratioFarmBudam', ['#WFarmBudam'], sum);					//농지보전부담금
+			calcRatio('#ratioAlterSanrim', ['#WAlterSanrim'], sum);				//대체산림자원조성비
+			calcRatio('#ratioBudamgeum', ['#WBudamgeum'], sum);					//부담금
+			calcRatio('#ratioPurchaseChaegwon', ['#WPurchaseChaegwon'], sum);	//채권매입비
+			calcRatio('#ratioSetGeunjeodang', ['#WSetGeunjeodang'], sum);		//근저당설정비
+			calcRatio('#ratioPreserveDeunggi', ['#WPreserveDeunggi'], sum);		//보존등기비
+			calcRatio('#ratioManagement', ['#WManagement'], sum);				//운영비
+			calcRatio('#ratioSellSusulyo', ['#WSellSusulyo'], sum);				//매각수수료
+			calcRatio('#ratioPreparation', ['#WPreparation'], sum);				//예비비
+			calcRatio('#ratioSaeobgyeongbi', ['#WSaeobgyeongbi'], sum);			//[사업경비 비율]
+			
+			
+		}
+		
+		function calcIncomeRatio(sum) {
+			calcRatio('#ratioIncomeSellBuilding', ['#WIncomeSellBuilding'], sum);		//건물
+			calcRatio('#ratioIncomeSellSeolbi', ['#WIncomeSellBuilding'], sum);			//설비
+			calcRatio('#ratioIncomeSellLand', ['#WIncomeSellLand'], sum);				//토지
+			calcRatio('#ratioIncomeSell', ['#WIncomeSell'], sum);						//[매각 비율]
+			calcRatio('#ratioIncomeManageImdae', ['#WIncomeManageImdae'], sum);			//임대
+			calcRatio('#ratioIncomeManage', ['#WIncomeManage'], sum);					//[운영 비율]
+			calcRatio('#ratioIncomeManage', ['#WIncomeManage'], sum);
 		}
 		
 		/**
@@ -3710,6 +3758,8 @@
 			
 			//감리비 : 공사비 X 비율
 			hotplace.calc.profit.calcGamri(true);
+			//보존등기비 : 공사비 X 비율
+			hotplace.calc.profit.calcPreserveDeunggi(true);
 			calcJichool();
 		}
 		
@@ -3835,6 +3885,18 @@
 		 */
 		function calcIncomeSell() {
 			console.log('수입>매각(건물,설비,토지)');
+			
+			var $WIncomeSellBuilding = $('#WIncomeSellBuilding');
+			var $WIncomeSellSeolbi = $('#WIncomeSellSeolbi');
+			var $WIncomeSellLand = $('#WIncomeSellLand')
+			
+			var $$r = parseInt($WIncomeSellBuilding.data('value')) + parseInt($WIncomeSellSeolbi.data('value')) + parseInt($WIncomeSellLand.data('value'))
+			var $WIncomeSell = $('#WIncomeSell');
+			$WIncomeSell.data('value', $$r);
+			$WIncomeSell.val($$r.toString().money());
+			
+			//사업경비 > 매각수수료
+			calc.profit.calcSellSusulyo(true);
 			calcIncome();
 		}
 		
@@ -3845,6 +3907,13 @@
 		 */
 		function calcIncomeManage() {
 			console.log('수입>운영(임대)');
+			var $WIncomeManageImdae = $('#WIncomeManageImdae');
+			
+			var $$r = parseInt($WIncomeManageImdae.data('value'));
+			
+			var $WIncomeManage = $('#WIncomeManage');
+			$WIncomeManage.data('value', $$r);
+			$WIncomeManage.val($$r.toString().money());
 			calcIncome();
 		}
 		
@@ -3855,6 +3924,21 @@
 		 */
 		function calcIncome() {
 			console.log('수입합계');
+			//매각 + 운영
+			var $WIncomeSell = $('#WIncomeSell');
+			var $WIncomeManage = $('#WIncomeManage');
+			var $$1 = parseInt($WIncomeSell.data('value'));
+			var $$2 = parseInt($WIncomeManage.data('value'));
+			var $$r = $$1 + $$2;
+			
+			var $WIncome = $('#WIncome');
+			$WIncome.data('value', $$r);
+			$WIncome.val($$r.toString().money());
+			
+			//사업경비 > 예비비
+			calc.profit.calcPreparation(true);
+			
+			calcIncomeRatio($$r);
 			calcMaechool();
 		}
 		
@@ -3916,6 +4000,17 @@
 		 */
 		function calcMaechool() {
 			console.log('매출이익 (수입-지출)');
+			
+			var $WJichool = $('#WJichool');
+			var $WIncome = $('#WIncome');
+			
+			var $$1 = parseInt($WIncome.data('value'));
+			var $$2 = parseInt($WJichool.data('value'));
+			var $$r = $$1 - $$2;
+			
+			var $WMaechool = $('#WMaechool');
+			$WMaechool.data('value', $$r);
+			$WMaechool.val($$r.toString().money());
 		}
 		
 		/**
@@ -3965,6 +4060,8 @@
 				hotplace.calc.profit.calcChwideugse(true);
 				//재산세
 				hotplace.calc.profit.calcJaesanse(true);
+				//채권매입비
+				hotplace.calc.profit.calcPurchaseChaegwon(true);
 				
 				calcMymoney();//자기자본
 				calcTojibi();
@@ -4241,6 +4338,9 @@
 				
 				$WGeonchugGongsa.data('value', $$r);
 				$WGeonchugGongsa.val($$r.toString().money());
+				
+				//수입 > 매각 > 건물
+				hotplace.calc.profit.calcIncomeSellBuilding(true);
 				calcMymoney();//자기자본
 				calcGongsabi();
 			},
@@ -4265,6 +4365,8 @@
 				$WTomogGongsa.data('value', $$r);
 				$WTomogGongsa.val($$r.toString().money());
 				
+				//수입 > 매각 > 건물
+				hotplace.calc.profit.calcIncomeSellBuilding(true);
 				calcMymoney();//자기자본
 				calcGongsabi();
 			},
@@ -4325,6 +4427,8 @@
 				$WAcceptGaebal.data('value', $stepAcceptGaebal.data('value'));
 				$WAcceptGaebal.val($stepAcceptGaebal.data('value').toString().money());
 				
+				//수입 > 매각 > 건물
+				hotplace.calc.profit.calcIncomeSellBuilding(true);
 				calcMymoney();//자기자본
 				calcInheogabi();
 			},
@@ -4435,11 +4539,42 @@
 			},
 			calcAlterSanrim: function() {
 				console.log('대체산림자원조성비');
+				
+				var $txtAlterSanrim = $('#txtAlterSanrim');
+				var $stepAlterSanrim = $('#stepAlterSanrim');
+				
+				var $$1 = parseInt($txtAlterSanrim.data('value'));
+				var $$2 = parseInt($stepAlterSanrim.data('value'));
+				var $$r = Math.round($$1 * $$2 * 0.01);
+				
+				var $WAlterSanrim = $('#WAlterSanrim');
+				$WAlterSanrim.data('value', $$r);
+				$WAlterSanrim.val($$r.toString().money());
+				
 				calcMymoney();//자기자본
 				calcBudamgeum();
 			},
-			calcPurchaseChaegwon: function() {
+			calcPurchaseChaegwon: function(isSet) {
 				console.log('채권매입비');
+				
+				var $txtPurchaseChaegwon = $('#txtPurchaseChaegwon');
+				var $stepPurchaseChaegwon = $('#stepPurchaseChaegwon');
+				var WPurchase;
+				
+				if(isSet) {
+					WPurchase = $('#WPurchase').data('value');
+					$txtPurchaseChaegwon.data('value', WPurchase);
+					$txtPurchaseChaegwon.val(WPurchase.toString().money());
+				}
+				
+				var $$1 = parseInt($txtPurchaseChaegwon.data('value'));
+				var $$2 = parseFloat($stepPurchaseChaegwon.data('value'));
+				var $$r = Math.round($$1 * $$2 * 0.01);
+				
+				var $WPurchaseChaegwon = $('#WPurchaseChaegwon');
+				$WPurchaseChaegwon.data('value', $$r);
+				$WPurchaseChaegwon.val($$r.toString().money());
+				
 				calcMymoney();//자기자본
 				calcSaeobgyeongbi();
 			},
@@ -4470,37 +4605,167 @@
 				calcMymoney();//자기자본
 				calcSaeobgyeongbi();
 			},
-			calcPreserveDeunggi: function() {
+			calcPreserveDeunggi: function(isSet) {
 				console.log('보존등기비');
+				//공사비의 3.2% 내외
+				
+				var WGongsabi;
+				var $txtPreserveDeunggi = $('#txtPreserveDeunggi');
+				var $stepPreserveDeunggi = $('#stepPreserveDeunggi');
+				
+				if(isSet) {
+					WGongsabi = $('#WGongsabi').data('value');
+					$txtPreserveDeunggi.data('value', WGongsabi);
+					$txtPreserveDeunggi.val(WGongsabi.toString().money());
+				}
+				
+				var $$1 = parseInt($txtPreserveDeunggi.data('value'));
+				var $$2 = parseFloat($stepPreserveDeunggi.data('value'));
+				var $$r = Math.round($$1 * $$2* 0.01);
+				
+				var $WPreserveDeunggi = $('#WPreserveDeunggi');
+				$WPreserveDeunggi.data('value', $$r);
+				$WPreserveDeunggi.val($$r.toString().money());
+				
 				calcMymoney();//자기자본
 				calcSaeobgyeongbi();
 			},
 			calcManagement: function() {
 				console.log('운영비');
+				
+				var $txtManagement = $('#txtManagement');
+				var $stepManagement = $('#stepManagement');
+				
+				var $$1 = parseInt($txtManagement.data('value'));
+				var $$2 = parseFloat($stepManagement.data('value'));
+				var $$r = Math.round($$1 * $$2 * 0.01);
+				
+				var $WManagement = $('#WManagement');
+				$WManagement.data('value', $$r);
+				$WManagement.val($$r.toString().money());
+				
 				calcSaeobgyeongbi();
 			},
-			calcSellSusulyo: function() {
+			calcSellSusulyo: function(isSet) {
 				console.log('매각수수료');
+				
+				//매각 X 비율
+				var WIncomeSell;
+				var $txtSellSusulyo = $('#txtSellSusulyo');
+				var $stepSellSusulyo = $('#stepSellSusulyo');
+				
+				if(isSet) {
+					WIncomeSell= $('#WIncomeSell').data('value');
+					$txtSellSusulyo.data('value', WIncomeSell);
+					$txtSellSusulyo.val(WIncomeSell.toString().money());
+				}
+				
+				var $$1 = parseInt($txtSellSusulyo.data('value'));
+				var $$2 = parseFloat($stepSellSusulyo.data('value'));
+				var $$r = Math.round($$1 * $$2 * 0.01);
+				
+				var $WSellSusulyo = $('#WSellSusulyo');
+				$WSellSusulyo.data('value', $$r);
+				$WSellSusulyo.val($$r.toString().money());
+				
 				calcSaeobgyeongbi();
 			},
-			calcPreparation: function() {
+			calcPreparation: function(isSet) {
 				console.log('예비비');
+				
+				var WIncome;
+				var $txtPreparation = $('#txtPreparation');
+				var $stepPreparation = $('#stepPreparation');
+				
+				if(isSet) {
+					WIncome = $('#WIncome').data('value');
+					$txtPreparation.data('value', WIncome);
+					$txtPreparation.val(WIncome.toString().money());
+				}
+				
+				var $$1 = parseInt($txtPreparation.data('value'));
+				var $$2 = parseInt($stepPreparation.data('value'));
+				var $$r = Math.round($$1 * $$2 * 0.01);
+				
+				var $WPreparation = $('#WPreparation');
+				$WPreparation.data('value', $$r);
+				$WPreparation.val($$r.toString().money());
+				
 				calcSaeobgyeongbi();
 			},
-			calcIncomeSellBuilding: function() {
+			calcIncomeSellBuilding: function(isSet) {
 				console.log('수입>매각>건물');
+				
+				//건물 : 건축공사비 + 토목공사비 + 개발행위 허가등
+				var $txtIncomeSellBuilding = $('#txtIncomeSellBuilding');
+				var $stepIncomeSellBuilding = $('#stepIncomeSellBuilding');
+				
+				var WGeonchugGongsa, WTomogGongsa, WAcceptGaebal, _$$r;
+				
+				if(isSet) {
+					WGeonchugGongsa = $('#WGeonchugGongsa').data('value');
+					WTomogGongsa = $('#WTomogGongsa').data('value');
+					WAcceptGaebal = $('#WAcceptGaebal').data('value');
+					_$$r = parseInt(WGeonchugGongsa) + parseInt(WTomogGongsa) + parseInt(WAcceptGaebal);
+					$txtIncomeSellBuilding.data('value', _$$r);
+					$txtIncomeSellBuilding.val(_$$r.toString().money());
+				}
+				
+				var $$1 = parseInt($txtIncomeSellBuilding.data('value'));
+				var $$2 = parseInt($stepIncomeSellBuilding.data('value'));
+				var $$r = Math.round($$1 * $$2 * 0.01);
+				
+				var $WIncomeSellBuilding = $('#WIncomeSellBuilding');
+				$WIncomeSellBuilding.data('value', $$r);
+				$WIncomeSellBuilding.val($$r.toString().money());
+				
 				calcIncomeSell();
 			},
 			calcIncomeSellSeolbi: function() {
 				console.log('수입>매각>설비');
+				
+				var $txtIncomeSellSeolbi = $('#txtIncomeSellSeolbi');
+				var $stepIncomeSellSeolbi = $('#stepIncomeSellSeolbi');
+				
+				var $$1 = parseInt($txtIncomeSellSeolbi.data('value'));
+				var $$2 = parseInt($stepIncomeSellSeolbi.data('value'));
+				var $$r = Math.round($$1 * $$2 * 0.01);
+				
+				var $WIncomeSellSeolbi = $('#WIncomeSellSeolbi');
+				$WIncomeSellSeolbi.data('value', $$r);
+				$WIncomeSellSeolbi.val($$r.toString().money());
+				
 				calcIncomeSell();
 			},
 			calcIncomeSellLand: function() {
 				console.log('수입>매각>토지');
+				
+				var $txtIncomeSellLand = $('#txtIncomeSellLand');
+				var $stepIncomeSellLand = $('#stepIncomeSellLand');
+				
+				var $$1 = parseInt($txtIncomeSellLand.data('value'));
+				var $$2 = parseInt($stepIncomeSellLand.data('value'));
+				var $$r = Math.round($$1 * $$2 * 0.01);
+				
+				var $WIncomeSellLand = $('#WIncomeSellLand');
+				$WIncomeSellLand.data('value', $$r);
+				$WIncomeSellLand.val($$r.toString().money());
+				
 				calcIncomeSell();
 			},
 			calcIncomeManageImdae: function() {
 				console.log('수입>운영>임대');
+				
+				var $stepIncomeManageImdae = $('#stepIncomeManageImdae');
+				var $txtIncomeManageImdae = $('#txtIncomeManageImdae');
+				var $$1 = parseInt($stepIncomeManageImdae.data('value'));
+				var $$2 = parseInt($txtIncomeManageImdae.data('value'));
+				var $$r = $$1 * $$2;
+				
+				var $WIncomeManageImdae = $('#WIncomeManageImdae');
+				$WIncomeManageImdae.data('value', $$r);
+				$WIncomeManageImdae.val($$r.toString().money());
+				
 				calcIncomeManage();
 			},
 			calcGyeongsang: function() {

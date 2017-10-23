@@ -233,6 +233,26 @@
 			hotplace.calc.profit.calcInibGongsa();
 		});
 		
+		//운영비
+		hotplace.validation.numberOnly('#txtManagement', function($this) {
+			hotplace.calc.profit.calcManagement();
+		});
+		
+		//매각 > 설비
+		hotplace.validation.numberOnly('#txtIncomeSellSeolbi', function($this) {
+			hotplace.calc.profit.calcIncomeSellSeolbi();
+		});
+		
+		//매각 > 토지
+		hotplace.validation.numberOnly('#txtIncomeSellLand', function($this) {
+			hotplace.calc.profit.calcIncomeSellLand();
+		});
+		
+		//운영 > 임대
+		hotplace.validation.numberOnly('#txtIncomeManageImdae', function($this) {
+			hotplace.calc.profit.calcIncomeManageImdae();
+		});
+		
 		//spinner
 		$('#tbProfit .spinner .btn:first-of-type').on('click', function() {
 			var parentDv = $(this).parent();

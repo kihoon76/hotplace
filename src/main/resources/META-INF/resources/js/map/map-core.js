@@ -4123,7 +4123,7 @@
 					//매입가
 					var _$$1 = $('#WPurchase').data('value');
 					var _$$2 = $('#stepOtherAssetRatio').data('value');
-					var _$$r = parseFloat(_$$1) * (0.01 * parseFloat(_$$2));
+					var _$$r = Math.round(parseFloat(_$$1) * (0.01 * parseFloat(_$$2)));
 					
 					$txtDaechulIja.data('value', _$$r);
 					$txtDaechulIja.val(_$$r.toString().money());
@@ -4804,18 +4804,53 @@
 	
 	report.PDF = {
 		profit : function() {
-			send('pdf', {
-					fileName:'profitFormPdf',
-					cssName: 'profitPdf',
-					docName: '수지분석',
-					address: '서울시 강남구 도곡동 963',
-					jimok: '전',
-					valPerPyeung:'21,000',
-					area: '132',
-					gongsi: '4,040,000',
-					limitChange:'Y'
-					
-			});
+			var cfg = {
+				fileName:'profitFormPdf',
+				cssName: 'profitPdf',
+				docName: '수지분석',
+				address: '서울시 강남구 도곡동 963',
+				jimok: '전',
+				valPerPyeung:'21,000',
+				area: '132',
+				gongsi: '4,040,000',
+				limitChange:'Y',
+				ownTerm: $('#stepOwnTerm').val(),
+				otherAssetRatio: $('#stepOtherAssetRatio').val(),
+				tPurchase: $('#txtPurchase').val(),
+				sPurchase: $('#stepPurchase').val(),
+				wPurchase: $('#WPurchase').val(),
+				rPurchase: $('#ratioPurchase').text(),
+				tMyeongdobi: $('#txtMyeongdobi').val(),
+				sMyeongdobi: $('#stepMyeongdobi').val(),
+				wMyeongdobi: $('#WMyeongdobi').val(),
+				rMyeongdobi: $('#ratioMyeongdobi').text(),
+				
+				tAcceptLandUse: $('#txtAcceptLandUse').val(),
+				sAcceptLandUse: $('#stepAcceptLandUse').val(),
+				wAcceptLandUse: $('#WAcceptLandUse').val(),
+				rAcceptLandUse: $('#ratioAcceptLandUse').text(),
+				
+				wTojibi: $('#WTojibi').val(),
+				rTojibi: $('#ratioTojibi').text(),
+				
+				tDaechulIja: $('#txtDaechulIja').val(),
+				sDaechulIja: $('#stepDaechulIja').val(),
+				wDaechulIja: $('#WDaechulIja').val(),
+				rDaechulIja: $('#ratioDaechulIja').text(),
+				
+				tChwideugse: $('#txtChwideugse').val(),
+				sChwideugse: $('#stepChwideugse').val(),
+				wChwideugse: $('#WChwideugse').val(),
+				rChwideugse: $('#ratioChwideugse').text(),
+				
+				//재산세
+				tYangdose: $('#stepYangdose').val(),
+				sYangdose: $('#stepYangdose2').val(),
+				wYangdose: $('#WYangdose').val(),
+				rYangdose: $('#ratioYangdose').text(),
+			};
+			
+			send('pdf', cfg);
 		}
 	}
 

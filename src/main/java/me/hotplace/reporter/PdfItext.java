@@ -171,6 +171,40 @@ public class PdfItext {
 			doc.select("span#gongsi").first().text(jo.get("gongsi").getAsString());
 			doc.select("span#area").first().text(jo.get("area").getAsString());
 			doc.select("span#limitChange").first().text("Y".equals(jo.get("limitChange").getAsString()) ? "유" : "무"); 
+			doc.select("span#ownTerm").first().text(jo.get("ownTerm").getAsString());
+			doc.select("span#otherAssetRatio").first().text(jo.get("otherAssetRatio").getAsString());
+			doc.select("span#tPurchase").first().text(jo.get("tPurchase").getAsString());
+			doc.select("span#sPurchase").first().text(jo.get("sPurchase").getAsString());
+			doc.select("span#wPurchase").first().text(jo.get("wPurchase").getAsString() + "원");
+			doc.select("span#rPurchase").first().text(jo.get("rPurchase").getAsString() + "%");
+			
+			doc.select("span#tMyeongdobi").first().text(jo.get("tMyeongdobi").getAsString());
+			doc.select("span#sMyeongdobi").first().text(jo.get("sMyeongdobi").getAsString());
+			doc.select("span#wMyeongdobi").first().text(jo.get("wMyeongdobi").getAsString() + "원");
+			doc.select("span#rMyeongdobi").first().text(jo.get("rMyeongdobi").getAsString() + "%");
+			
+			doc.select("span#tAcceptLandUse").first().text(jo.get("tAcceptLandUse").getAsString());
+			doc.select("span#sAcceptLandUse").first().text(jo.get("sAcceptLandUse").getAsString());
+			doc.select("span#wAcceptLandUse").first().text(jo.get("wAcceptLandUse").getAsString() + "원");
+			doc.select("span#rAcceptLandUse").first().text(jo.get("rAcceptLandUse").getAsString() + "%");
+			
+			doc.select("span#wTojibi").first().text(jo.get("wTojibi").getAsString() + "원");
+			doc.select("span#rTojibi").first().text(jo.get("rTojibi").getAsString() + "%");
+			
+			doc.select("span#tDaechulIja").first().text(jo.get("tDaechulIja").getAsString());
+			doc.select("span#sDaechulIja").first().text(jo.get("sDaechulIja").getAsString());
+			doc.select("span#wDaechulIja").first().text(jo.get("wDaechulIja").getAsString() + "원");
+			doc.select("span#rDaechulIja").first().text(jo.get("rDaechulIja").getAsString() + "%");
+			
+			doc.select("span#tChwideugse").first().text(jo.get("tChwideugse").getAsString());
+			doc.select("span#sChwideugse").first().text(jo.get("sChwideugse").getAsString());
+			doc.select("span#wChwideugse").first().text(jo.get("wChwideugse").getAsString() + "원");
+			doc.select("span#rChwideugse").first().text(jo.get("rChwideugse").getAsString() + "%");
+			
+			doc.select("span#tYangdose").first().text(jo.get("tYangdose").getAsString());
+			doc.select("span#sYangdose").first().text(jo.get("sYangdose").getAsString());
+			doc.select("span#wYangdose").first().text(jo.get("wYangdose").getAsString() + "원");
+			doc.select("span#rYangdose").first().text(jo.get("rYangdose").getAsString() + "%");
 			r = doc.toString();
 		} 
 		catch (IOException e) {

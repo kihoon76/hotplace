@@ -123,7 +123,7 @@ $(document).ready(function() {
 		if(sw == 'off') {
 			if(isUseDiv) {
 				var padding = 5;
-				var top  = e.currentTarget.offsetTop;
+				var top  = $('#btnLayerView').get(0).offsetTop;//e.currentTarget.offsetTop;
 				var left = e.currentTarget.offsetLeft + e.currentTarget.offsetWidth + padding;
 				
 				hotplace.dom.openLayer(targetId, {top:top, left:left});
@@ -727,6 +727,7 @@ $(document).ready(function() {
 		clazz: 'button-on mBtnTooltip',
 		callback: function(e) {
 			//hotplace.dom.captureToCanvas();
+			console.log($('#btnLayerView').get(0));
 			_btnCallback($(this), e, null, false, function() {
 				hotplace.maps.cellToggle();
 			}, function() {

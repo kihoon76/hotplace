@@ -131,7 +131,7 @@ public class PdfItext {
 		XMLWorker worker = new XMLWorker(css, true);
 		XMLParser xmlParser = new XMLParser(worker, Charset.forName("UTF-8"));
 		
-		System.out.println(getHtmlString(jo));
+		//System.out.println(getHtmlString(jo));
 		StringReader strReader = new StringReader(getHtmlString(jo));
 		xmlParser.parse(strReader);
 		 

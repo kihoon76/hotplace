@@ -225,6 +225,15 @@ html, body, #map {
   overflow: auto;
   border: 1px solid #ccc;
   border-radius: 4px; }
+  
+.div-addr-result2 {
+  height: 200px;
+  overflow: auto;
+  /*border: 1px solid #ccc;
+  border-radius: 4px;*/
+  margin-left:15px;
+  width:95%;
+}
 
 /*상세검색*/
 #fmPin .form-group {

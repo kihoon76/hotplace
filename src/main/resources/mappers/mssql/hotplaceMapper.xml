@@ -25,6 +25,23 @@
 	      order by name
 	</select>
 	
+	<select id="selectMulgeonAddress" resultType="string" parameterType="Address">
+		select concat('"',[PNU], '","', [시도명], ' ', [시군구명], ' ', [읍면동명], ' ', [리명], case when [필지구분코드] = '1' then '' else '산' end, case when [부번숫자] <![CDATA[<>]]> '0' then [본번숫자] + '-' + [부번숫자] else [본번숫자] end, '",',  [위도], ',', [경도])  
+		  from [지번주소].[dbo].[전국지번통합]
+		  <where>
+		  	[필지구분코드] = #{san}
+		  	<if test='beonjiF != null'>
+		  	and [본번숫자] = #{beonjiF}
+		  	</if>
+		  	<if test='beonjiS != null'>
+		  	and [부번숫자] = #{beonjiS}
+		  	</if>
+		  	<if test='detail != null'>
+		  	and [읍면동명] like #{detail} + '%'
+		  	</if>
+		  </where>
+	</select> 
+	
 	<select id="selectAddress" resultType="string" parameterType="Address">
 		<if test='type == "N"'>
 		select concat('"',[PNU], '","', [시도명], ' ', [시군구명], ' ', [읍면동명], ' ', [리명], <if test="san == '2'">' 산',</if> ' ', [본번숫자], '-', [부번숫자], '",',  [위도], ',', [경도], ',', [극북], ',', [극서]) 

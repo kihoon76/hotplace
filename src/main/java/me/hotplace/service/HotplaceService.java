@@ -82,4 +82,9 @@ public class HotplaceService {
 		List<String> list = hotplaceDao.selectGongmaeMarker(param);
 		return DataUtil.makeLatLngGongmaeMarker(list, "|");
 	}
+
+	public String getMulgeonAddressList(Address address) {
+		List<String> list = hotplaceDao.selectListMulgeonAddress(address);
+		return DataUtil.makeAddress(list);
+	}
 }

@@ -125,7 +125,7 @@
 			if(!e.currentTarget.secondCall) {
 				
 				e.currentTarget.secondCall = true;
-				dom.initTooltip('profitTooltip',{side: 'left'});
+				hotplace.dom.initTooltip('profitTooltip',{side: 'left'});
 				//$(this).trigger('click');
 			}
 			

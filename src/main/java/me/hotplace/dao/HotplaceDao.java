@@ -23,4 +23,6 @@ public interface HotplaceDao {
 	public Gyeongmae selectGyeongmaeDetail(Map<String, String> param);
 
 	public List<String> selectGongmaeMarker(Map<String, String> param);
+
+	public List<String> selectListMulgeonAddress(Address address);
 }

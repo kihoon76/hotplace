@@ -79,8 +79,15 @@ public class HotplaceController {
 	@ResponseBody
 	public String getAddress(@RequestBody Address address) {
 		
-		System.out.println(address);
 		return hotplaceService.getAddressList(address);
+	}
+	
+	@PostMapping(value="mulgeon/search", produces="application/text; charset=utf8")
+	@ResponseBody
+	public String getMulgeonAddress(@RequestBody Address address) {
+		
+		System.out.println(address);
+		return hotplaceService.getMulgeonAddressList(address);
 	}
 	
 	@GetMapping("locationbounds")

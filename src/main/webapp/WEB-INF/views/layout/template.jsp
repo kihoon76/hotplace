@@ -57,6 +57,7 @@
       		<li><a href="">도시재생 사업(사상스마트시티) 실시계획인가, 부산시, 201707.10</a></li>
 		</ul>
 	</div>
+	<div id="dvMulgeon" class="layer-popup" style="width:600px;"></div>
 	<div id="dvAddrSearch" class="layer-popup" style="width:600px; height:810px"></div>
 	<div id="dvInfo"       class="layer-popup" style="width:600px; height:800px"></div>
 	<div id="dvSalesView"  class="layer-popup" style="width:250px; height:330px"></div>

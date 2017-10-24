@@ -47,6 +47,7 @@ $(document).ready(function() {
 	 * */
 	_searchFormLoad();
 	_salesViewFormLoad(); 
+	_mulgeonFormLoad();
 	
 	function _enableMapButton(level, targetBtnId) {
 		var target = $('#' + targetBtnId);
@@ -108,6 +109,11 @@ $(document).ready(function() {
 	function _salesViewFormLoad() {
 		var tForm = hotplace.dom.getTemplate('salesViewForm');
 		$('#dvSalesView').append(tForm());
+	}
+	
+	function _mulgeonFormLoad() {
+		var tForm = hotplace.dom.getTemplate('mulgeonForm');
+		$('#dvMulgeon').append(tForm());
 	}
 	
 	function _btnCallback($this, e, targetId, isUseDiv, onFn, offFn) {
@@ -516,9 +522,130 @@ $(document).ready(function() {
 		})
 	});
 	
-	$('#btnCapture').on('click', function(event) {
-		event.preventDefault();
-		hotplace.dom.captureToCanvas();
+	//검색변경
+	$(document).on('keydown', '#txtMulgeon', function(e) {
+		if (e.which == 13) {
+			var txt = e.target.value;
+			$('#btnMulgeon').trigger('click', $.trim(txt)); 
+	    }
+	});
+	
+	$('#btnMulgeon').on('click', function(e, arg) {
+		if(arg == undefined) {
+			arg = $.trim($('#txtMulgeon').val());
+		}
+		
+		if(arg) {
+			var param = {san:'1'};
+			
+			var beonji, beonjiF, beonjiS, beonjiArr, beonjiArrLen;
+			
+			var token = arg.split(' ');
+			var tokenLen = token.length;
+			var t;
+			var arr = [];
+			
+			for(var i=0; i<tokenLen; i++) {
+				t = token[i];
+				if(t == ' ') continue;
+				arr.push(t);
+			}
+			
+			var arrLen = arr.length;
+			for(var k=0; k<arrLen; k++) {
+				if(arr[k] == '산') {
+					param.san = '2';
+				}
+				else if(beonji = arr[k].match(/[0-9]+\-?[0-9]*/g)){
+					if(beonji) {
+						beonjiArr = beonji.toString().split('-');
+						beonjiArrLen = beonjiArr.length;
+						
+						if(beonjiArrLen == 1) {
+							param.beonjiF = $.trim(beonjiArr[0]);
+							param.beonjiS = '0';
+						}
+						else {
+							param.beonjiF = $.trim(beonjiArr[0]);
+							param.beonjiS = $.trim(beonjiArr[1]);
+						}
+					}
+				}
+				else {
+					param.detail = arr[k];
+				}
+			}
+			
+			hotplace.getPlainTextFromJson('mulgeon/search', JSON.stringify(param), function(data) {
+				var output = $('#dvMulgeonResult');
+				var dataForm = {
+					'addresses': data,
+					'rdoId': 'test'
+				}
+				
+				var result = (_dom.getTemplate('addressResult2'))(dataForm);
+				output.html(result);
+				if(data.length > 1) {
+					$('#dvMulgeonContainer').show();
+				}
+				else {
+					$('#dvMulgeonContainer').hide();
+					
+					if(data.length == 1) {
+						console.log(data);
+						$('#btnMulgeonMap').trigger('click', {
+							address: data[0][1],
+							lng: data[0][3],
+							lat: data[0][2],
+						});
+					}
+					
+				}
+				
+			}, true, '#dvMulgeon');
+		}
+		else {
+			console.log('b');
+		}
+	});
+	
+	$(document).on('click', '#btnMulgeonMap', function(e, arg) {
+		
+		var $sel = $('input:radio[name="' + /*addrObj.rdoId*/'test' + '"]:checked');
+		var lng = arg ? arg.lng : $sel.data('lng');
+		var lat = arg ? arg.lat : $sel.data('lat');
+		var address = arg ? arg.address : $sel.data('address');
+		
+		$('#btnNews').trigger('click');
+		
+		hotplace.maps.destroyMarkerType(hotplace.maps.MarkerTypes.MULGEON_SEARCH);
+		hotplace.maps.destroyMarkerWindow(hotplace.maps.MarkerTypes.MULGEON_SEARCH);
+		
+		hotplace.maps.panToBounds(lat, lng, function() {
+			hotplace.maps.getMarker(hotplace.maps.MarkerTypes.MULGEON_SEARCH, {location:[lng, lat]}, {
+				'click' : function(map, newMarker, newInfoWindow) {
+					 if(newInfoWindow.getMap()) {
+						 newInfoWindow.close();
+				     }
+					 else {
+						 newInfoWindow.open(map, newMarker);
+				     }
+				}
+			}, {
+				hasInfoWindow: true,
+				infoWinFormName: 'pinpointForm',
+				radius: 0,
+				datas: {
+					params : $.extend({address:address}, {defaultValue:hotplace.calc.profit.defaultValue}, {
+						jimok: '전',
+						valPerPyeung:21000000,
+						area: 132,
+						gongsi: 4040000,
+						limitChange:'Y'
+					})
+				}
+			});
+		});
 	});
 	
 	/*****************************************************************************************************/
@@ -594,17 +721,24 @@ $(document).ready(function() {
 	
 	hotplace.dom.addButtonInMap([{
 		id:'btnNews',
-		glyphicon: 'list-alt',
-		attr: 'data-switch="off" title="뉴스"',
+		//glyphicon: 'list-alt',
+		glyphicon: 'erase',
+		//attr: 'data-switch="off" title="뉴스"',
+		attr: 'data-switch="off" title="토지이용규제 해소물건"',
 		clazz: 'mBtnTooltip',
 		callback: function(e) {
-			_btnCallback($(this), e, 'dvNews', true, function() {
+			/*_btnCallback($(this), e, 'dvNews', true, function() {
 				setTimeout(function repeat() {
 					_tick();
 					_startInternal = setTimeout(repeat, 3000);
 				}, 3000);
 			},function() {
 				clearTimeout(_startInternal);
+			});*/
+			$('#searchTitle').text('토지이용규제 해소');
+			_btnCallback($(this), e, 'dvMulgeon', true, null, function() {
+				$('#dvMulgeonResult').html('');
+				$('#dvMulgeonContainer').hide();
 			});
 		}
 	},{
@@ -631,7 +765,7 @@ $(document).ready(function() {
 		}
 	},{
 		id:'btnSalesView',
-		glyphicon:'check',
+		glyphicon:'pushpin',
 		attr: 'data-switch="off" title="물건보기"',
 		disabled: true,
 		clazz: 'mBtnTooltip',

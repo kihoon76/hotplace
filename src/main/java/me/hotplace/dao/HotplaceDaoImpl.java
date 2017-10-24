@@ -60,4 +60,9 @@ public class HotplaceDaoImpl implements HotplaceDao {
 		return msSqlSession.selectList("mappers.mssql.sampleMapper.selectGyeongmaeTest", param);
 	}
 
+	@Override
+	public List<String> selectListMulgeonAddress(Address address) {
+		return msSqlSession.selectList(namespace + ".selectMulgeonAddress", address);
+	}
+
 }

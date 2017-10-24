@@ -612,7 +612,8 @@
 	var _markerTypes = {
 		RADIUS_SEARCH: 'RADIUS_SEARCH',
 		GYEONGMAE: 'GYEONGMAE', 
-		GONGMAE: 'GONGMAE'
+		GONGMAE: 'GONGMAE',
+		MULGEON_SEARCH: 'MULGEON_SEARCH'
 	};
 	
 	/** 
@@ -646,7 +647,8 @@
 	var _markers = {
 		RADIUS_SEARCH : { m: [], c: [], url: '' },
 		GYEONGMAE : { m: [], url: 'gyeongmaemarker', icon:'gyeongmae.gif' },
-		GONGMAE : { m: [], url: 'gongmaemarker', icon: 'gongmae.png' }
+		GONGMAE : { m: [], url: 'gongmaemarker', icon: 'gongmae.png' },
+		MULGEON_SEARCH: { m: []}
 	};
 	
 	/** 
@@ -660,7 +662,8 @@
 	var _infoWindowsForMarker = {
 		RADIUS_SEARCH : [],
 		GYEONGMAE : [],
-		GONGMAE : []
+		GONGMAE : [],
+		MULGEON_SEARCH: []
 	};
 	
 	

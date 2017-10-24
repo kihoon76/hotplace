@@ -1,0 +1,19 @@
+<table class="table">
+	<tbody>
+		{{#each addresses as |addr|}}
+		<tr>
+			<td>
+			{{addr.[1]}}
+			</td>
+			<td>
+				<div class="radio">
+					<input type="radio" name="{{../rdoId}}" id="{{../rdoId}}{{@index}}" data-lat="{{addr.[2]}}" data-lng="{{addr.[3]}}"  data-address="{{addr.[1]}}"/>
+					<label for="{{../rdoId}}{{@index}}" class="radio-td">
+                                            선택
+        			</label>
+				</div>
+			</td>
+		</tr>
+		{{/each}}
+	</tbody>
+</table>

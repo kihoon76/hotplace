@@ -5,11 +5,12 @@ import org.apache.ibatis.type.Alias;
 @Alias("Address")
 public class Address {
 
-	private String type;	//R:도로명 주소, N:지번주소
-	private String si;		//시도코드
-	private String gugun;	//시군구 코드 
-	private String region;	//읍명동 코드
-	private String san;     //산 (2) 일반(1)
+	private String pnu;				//PNU 코드
+	private String type;			//R:도로명 주소, N:지번주소
+	private String si;				//시도코드
+	private String gugun;			//시군구 코드 
+	private String region;			//읍명동 코드
+	private String san;     		//산 (2) 일반(1)
 	private String detail;
 	private String beonjiF;
 	private String beonjiS;
@@ -63,6 +64,12 @@ public class Address {
 		this.region = region;
 	}
 	
+	public String getPnu() {
+		return pnu;
+	}
+	public void setPnu(String pnu) {
+		this.pnu = pnu;
+	}
 	@Override
 	public String toString() {
 		

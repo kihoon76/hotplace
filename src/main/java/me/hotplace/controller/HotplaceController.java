@@ -87,7 +87,7 @@ public class HotplaceController {
 	public String getMulgeonAddress(@RequestBody Address address) {
 		
 		System.out.println(address);
-		return hotplaceService.getMulgeonAddressList(address);
+		return hotplaceService.getMulgeonAddressList(address); 
 	}
 	
 	@GetMapping("locationbounds")

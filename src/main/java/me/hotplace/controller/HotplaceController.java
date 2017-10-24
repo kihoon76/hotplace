@@ -114,7 +114,7 @@ public class HotplaceController {
 		//String s = "{\"success\":true, \"datas\":" + data + "}";
 		String s = String.format(DataUtil.getAjaxFormats(), true, "", data);
 		
-		return s;
+		return s; 
 	}
 	
 	@GetMapping("gyeongmaemarker")

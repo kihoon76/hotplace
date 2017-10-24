@@ -721,6 +721,19 @@ $(document).ready(function() {
 	});
 	
 	hotplace.dom.addButtonInMap([{
+		id:'btnLayerView',
+		glyphicon: 'plus',
+		attr: 'data-switch="on" title="투자유망 지역보기"',
+		clazz: 'button-on mBtnTooltip',
+		callback: function(e) {
+			//hotplace.dom.captureToCanvas();
+			_btnCallback($(this), e, null, false, function() {
+				hotplace.maps.cellToggle();
+			}, function() {
+				hotplace.maps.cellToggle();
+			});
+		}
+	},{
 		id:'btnNews',
 		//glyphicon: 'list-alt',
 		glyphicon: 'erase',
@@ -784,19 +797,6 @@ $(document).ready(function() {
 			var onOff = $(this).data('switch');
 			hotplace.maps.showJijeokLayer(onOff, $(this));
 			$(this).toggleClass('button-on')
-		}
-	}, {
-		id:'btnLayerView',
-		glyphicon: 'plus',
-		attr: 'data-switch="on" title="heatmap보기"',
-		clazz: 'button-on mBtnTooltip',
-		callback: function(e) {
-			//hotplace.dom.captureToCanvas();
-			_btnCallback($(this), e, null, false, function() {
-				hotplace.maps.cellToggle();
-			}, function() {
-				hotplace.maps.cellToggle();
-			});
 		}
 	}]);
 	

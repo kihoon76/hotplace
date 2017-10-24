@@ -678,7 +678,8 @@ $(document).ready(function() {
 			_prevLevel = level;
 			
 			hotplace.maps.destroyMarkers();
-			hotplace.maps.destroyMarkerWindow(hotplace.maps.MarkerTypes.RADIUS_SEARCH);
+			//hotplace.maps.destroyMarkerWindow(hotplace.maps.MarkerTypes.RADIUS_SEARCH);
+			hotplace.maps.destroyAllMarkerWindow();
 			hotplace.database.initLevel(level);
 		},
 		'dragend' : function(map, bnds) {

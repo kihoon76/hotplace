@@ -1207,6 +1207,17 @@
 	
 	/** 
 	 * @memberof hotplace.maps 
+	 * @function destroyAllMarkerWindow 
+	 * @desc  모든 마커타입의 infoWindow 삭제
+	 */
+	maps.destroyAllMarkerWindow = function() {
+		for(var k in _infoWindowsForMarker) {
+			maps.destroyMarkerWindow(k);
+		}
+	}
+	
+	/** 
+	 * @memberof hotplace.maps 
 	 * @function setLevel 
 	 * @param {number} level 줌레벨
 	 * @desc  줌레벨 설정

@@ -80,7 +80,7 @@ public class HotplaceService {
 
 	public String getGongmaeMarker(Map<String, String> param) {
 		List<String> list = hotplaceDao.selectGongmaeMarker(param);
-		return DataUtil.makeLatLngGongmaeMarker(list, "|");
+		return DataUtil.makeLatLngGongmaeMarker(list, "|$");
 	}
 
 	public String getMulgeonAddressList(Address address) {

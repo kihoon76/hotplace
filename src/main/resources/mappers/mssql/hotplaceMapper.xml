@@ -253,7 +253,18 @@
 		 where 경매_목록_고유번호 = #{goyubeonho}
 	</select>
 	
-	<select id="selectGongmaeMarker" resultType="string" parameterType="hashmap" />
+	<select id="selectGongmaeMarker" resultType="string" parameterType="hashmap">
+		 select concat(PNU, '|$', 고유번호, '|$', 물건코드, '|$', 경도, '|$', 위도) 
+		 from (
+		 		select a.PNU, a.고유번호, a.물건코드, b.극서 + (b.극동 - b.극서)/2 as 경도,c.극남 + (c.극북 - c.극남)/2 as 위도
+		   		  from [온비드].[dbo].[토지매각원장] a with (nolock, index(IX_토지매각원장))
+		 		 inner join 좌표계.dbo.가로축13 b with (nolock) on (b.PNU=a.PNU)
+		 		 inner join 좌표계.dbo.세로축13 c with (nolock) on (c.PNU=a.PNU)
+		 ) t
+		 where t.위도 between convert(float, #{swy}) and convert(float, #{ney})
+		   and t.경도 between convert(float, #{swx}) and convert(float, #{nex})
+		 order by t.경도 asc
+	</select>
 
 </mapper>
 <!-- 

@@ -9,11 +9,20 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
 
-	<!-- MSsql -->
+	<!-- MSsqlWeb -->
 	<bean id="mssqlDataSource" 
 		  class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="#{dsCfg['mssql.datasource.driverClassName']}" />
 		<property name="url" value="#{dsCfg['mssql.datasource.url']}" />
+		<property name="username" value="#{dsCfg['mssql.datasource.username']}" />
+		<property name="password" value="#{dsCfg['mssql.datasource.password']}" />
+	</bean>
+	
+	<!-- MSsqlAgent -->
+	<bean id="mssqlDataSourceAgent" 
+		  class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="#{dsCfg['mssql.datasource.driverClassName']}" />
+		<property name="url" value="#{dsCfg['mssql.datasource.url2']}" />
 		<property name="username" value="#{dsCfg['mssql.datasource.username']}" />
 		<property name="password" value="#{dsCfg['mssql.datasource.password']}" />
 	</bean>
@@ -27,9 +36,16 @@
 		<property name="password" value="#{dsCfg['mysql.datasource.password']}" />
 	</bean> -->
 	
-	<!-- MyBatisMssql -->
+	<!-- MyBatisMssqlWeb -->
 	<bean id="msSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="mssqlDataSource" />
+		<property name="configLocation" value="classpath:/mybatisMSsql-config.xml" />
+		<property name="mapperLocations" value="classpath:/mappers/mssql/*Mapper.xml" />
+	</bean>
+	
+	<!-- MyBatisMssqlAgent -->
+	<bean id="msSqlSessionFactoryAgent" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="mssqlDataSourceAgent" />
 		<property name="configLocation" value="classpath:/mybatisMSsql-config.xml" />
 		<property name="mapperLocations" value="classpath:/mappers/mssql/*Mapper.xml" />
 	</bean>
@@ -46,9 +62,14 @@
 		<constructor-arg name="sqlSessionFactory" ref="mySqlSessionFactory" />
 	</bean> -->
 	
-	<!-- MyBatis MSsqlSession -->
+	<!-- MyBatis MSsqlSessionWeb -->
 	<bean id="msSqlSession" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg name="sqlSessionFactory" ref="msSqlSessionFactory" />
+	</bean>
+	
+	<!-- MyBatis MSsqlSessionAgent -->
+	<bean id="msSqlSessionAgent" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg name="sqlSessionFactory" ref="msSqlSessionFactoryAgent" />
 	</bean>
 	
 	<!-- Transaction -->

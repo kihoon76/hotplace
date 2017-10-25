@@ -19,6 +19,9 @@ public class HotplaceDaoImpl implements HotplaceDao {
 	@Resource(name = "msSqlSession")
 	SqlSession msSqlSession;
 	
+	@Resource(name = "msSqlSessionAgent")
+	SqlSession msSqlSessionAgent;
+	
 	@Override
 	public List<String> selectListGuGun(String si) {
 		
@@ -57,7 +60,7 @@ public class HotplaceDaoImpl implements HotplaceDao {
 
 	@Override
 	public List<String> selectGongmaeMarker(Map<String, String> param) {
-		return msSqlSession.selectList("mappers.mssql.sampleMapper.selectGyeongmaeTest", param);
+		return msSqlSessionAgent.selectList(namespace + ".selectGongmaeMarker", param);
 	}
 
 	@Override

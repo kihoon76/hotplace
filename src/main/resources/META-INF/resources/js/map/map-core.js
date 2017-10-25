@@ -1763,7 +1763,7 @@
 (function(dom, $) {
 	
 	var _loadEl;
-	var _loadTxt = '로딩 중입니다';
+	var _loadTxt = '';//'로딩 중입니다';
 	var _loadEndCount = 0;
 	
 	/**
@@ -1830,7 +1830,7 @@
 		
 		var fontSize = '';
 		var maxSize = '';
-		var loadTxt = msg || '로딩 중입니다';
+		var loadTxt = msg || '';//'로딩 중입니다';
 		var textPos = '';
 		
 		switch (num) {

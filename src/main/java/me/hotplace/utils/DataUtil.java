@@ -122,12 +122,12 @@ public class DataUtil {
 				// TODO Auto-generated method stub
 				for(String token : list) {
 					String[] s = StringUtils.splitByWholeSeparator(token, deli);
-					sb.append("{\"info\":{}");
+					sb.append("{\"info\":{\"pnu\":\"" + s[0] + "\", \"unu\":\"" + s[1] + "\", \"mnu\":\"" + s[2] + "\"}");
 					sb.append(",");
 					sb.append("\"location\":[");
-					sb.append(s[0]);
+					sb.append(s[3]);
 					sb.append(",");
-					sb.append(s[1]);
+					sb.append(s[4]);
 					sb.append("]},");
 				}
 			}

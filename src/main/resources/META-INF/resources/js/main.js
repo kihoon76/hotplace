@@ -519,7 +519,8 @@ $(document).ready(function() {
 		.done(function() {
 			hotplace.maps.setMarkers(obj);
 			hotplace.maps.showMarkers();
-		})
+			$('#btnSalesView').trigger('click');
+		});
 	});
 	
 	//검색변경
@@ -726,8 +727,6 @@ $(document).ready(function() {
 		attr: 'data-switch="on" title="투자유망 지역보기"',
 		clazz: 'button-on mBtnTooltip',
 		callback: function(e) {
-			//hotplace.dom.captureToCanvas();
-			console.log($('#btnLayerView').get(0));
 			_btnCallback($(this), e, null, false, function() {
 				hotplace.maps.cellToggle();
 			}, function() {
@@ -786,7 +785,11 @@ $(document).ready(function() {
 		clazz: 'mBtnTooltip',
 		callback: function(e) {
 			_btnCallback($(this), e, 'dvSalesView', true, null, function() {
+				var s = hotplace.maps.isActiveMarker(hotplace.maps.MarkerTypes.GYEONGMAE);
 				$('#salesGyeongmae').prop('checked', hotplace.maps.isActiveMarker(hotplace.maps.MarkerTypes.GYEONGMAE));
+				$('#salesGongmae').prop('checked', hotplace.maps.isActiveMarker(hotplace.maps.MarkerTypes.GONGMAE));
+				//$('#dvMulgeonResult').html('');
+				//$('#dvMulgeonContainer').hide();
 			});
 		}
 	},{

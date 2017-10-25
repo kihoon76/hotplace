@@ -1166,6 +1166,7 @@
 	 * @private 
 	 * @function _initLayers 
 	 * @param {number} level 줌레벨
+	 * @param {boolean} isFixBound locationBound 고정여부 (기본값 false0
 	 * @desc  hotplace.maps.showCellLayer가 호출될 때 동작함
 	 */
 	function _initLayers(level) {
@@ -1636,7 +1637,10 @@
 				//_showCellsLayer();
 			}
 			else {
-				_initLayers(_currentLevel);
+				//_initLayers(_currentLevel);
+				_setLocationBounds();
+				hotplace.dom.closeInfoWindowForCell();
+				hotplace.database.initLevel(_currentLevel);
 				
 				var adjustLevel = (_currentLevel >=3 && _currentLevel <=5) ? _currentLevel + 1 : _currentLevel;
 				hotplace.getPlainText('locationbounds', {
@@ -1649,6 +1653,7 @@
 				}, function(json) {
 					try {
 						db.setLevelData(_currentLevel, _getActiveCellType(), json.datas);
+						_removeAllCells();
 						_showCellLayer();
 						if(callback) callback();
 					}

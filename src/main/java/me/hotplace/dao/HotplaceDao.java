@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import me.hotplace.domain.Address;
+import me.hotplace.domain.Gongmae;
 import me.hotplace.domain.Gyeongmae;
 
 public interface HotplaceDao {
@@ -25,4 +26,6 @@ public interface HotplaceDao {
 	public List<String> selectGongmaeMarker(Map<String, String> param);
 
 	public List<String> selectListMulgeonAddress(Address address);
+
+	public Gongmae selectGongmaeThumb(String unu);
 }

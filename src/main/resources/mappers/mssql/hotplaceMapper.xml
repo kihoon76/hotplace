@@ -266,6 +266,23 @@
 		 order by t.경도 asc
 	</select>
 
+	<resultMap id="RM_selectGongmaeThumb" type="Gongmae">
+		<result column="고유번호" property="goyubeonho" javaType="string" />
+		<result column="물건코드" property="mulgeonCode" javaType="string" />
+		<result column="PNU" property="pnu" javaType="string" />
+		<result column="물건주소지" property="mulgeonAddress" javaType="string" />
+		<result column="용도" property="yongdo" javaType="string" />
+		<result column="지목" property="jimok" javaType="string" />
+		<result column="면적구분" property="areaGubun" javaType="string" />
+		<result column="물건상태" property="mulgeonStatus" javaType="string"/>
+		<result column="유찰횟수" property="yuchal" javaType="string" />
+	</resultMap>
+	
+	<select id="selectGongmaeThumb" parameterType="string" resultMap="RM_selectGongmaeThumb">
+		select PNU, 고유번호, 물건코드, 물건주소지, 용도, 지목, 면적구분, 물건상태, 유찰횟수
+		  from [온비드].[dbo].[토지매각원장]
+		 where [고유번호] = #{goyubeonho}
+	</select>
 </mapper>
 <!-- 
 		select 

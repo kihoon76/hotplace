@@ -11,6 +11,7 @@ import org.springframework.util.Base64Utils;
 
 import me.hotplace.dao.HotplaceDao;
 import me.hotplace.domain.Address;
+import me.hotplace.domain.Gongmae;
 import me.hotplace.domain.Gyeongmae;
 import me.hotplace.domain.GyeongmaeImage;
 import me.hotplace.utils.DataUtil;
@@ -86,5 +87,11 @@ public class HotplaceService {
 	public String getMulgeonAddressList(Address address) {
 		List<String> list = hotplaceDao.selectListMulgeonAddress(address);
 		return DataUtil.makeAddress(list);
+	}
+
+	public Gongmae getGongmaeThumb(String unu) {
+		Gongmae g = hotplaceDao.selectGongmaeThumb(unu);
+		
+		return g;
 	}
 }

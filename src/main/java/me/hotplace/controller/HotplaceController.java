@@ -23,6 +23,7 @@ import com.google.gson.JsonObject;
 import com.mysql.jdbc.StringUtils;
 
 import me.hotplace.domain.Address;
+import me.hotplace.domain.Gongmae;
 import me.hotplace.domain.Gyeongmae;
 import me.hotplace.domain.HpSearch;
 import me.hotplace.reporter.PdfItext;
@@ -208,5 +209,12 @@ public class HotplaceController {
 		Gyeongmae g = hotplaceService.getGyeongmaeDetail(goyubeonho, deunglogbeonho);
 		
 		return g;
+	}
+	
+	@GetMapping("gongmae/thumb")
+	@ResponseBody
+	public Gongmae getGongmaeThumb(@RequestParam("unu") String unu) {
+		
+		return hotplaceService.getGongmaeThumb(unu);
 	}
 }

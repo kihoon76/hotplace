@@ -8,18 +8,6 @@ import org.apache.ibatis.type.Alias;
 public class Gyeongmae {
 
 	private String goyubeonho;									//고유번호
-	public List<GyeongmaeMaegagmulgeon> getMaegagmulgeons() {
-		return maegagmulgeons;
-	}
-	public void setMaegagmulgeons(List<GyeongmaeMaegagmulgeon> maegagmulgeons) {
-		this.maegagmulgeons = maegagmulgeons;
-	}
-	public List<GyeongaeJinhaengmulgeon> getJinhaengmulgeons() {
-		return jinhaengmulgeons;
-	}
-	public void setJinhaengmulgeons(List<GyeongaeJinhaengmulgeon> jinhaengmulgeons) {
-		this.jinhaengmulgeons = jinhaengmulgeons;
-	}
 	private String pnu;											//PNU 코드
 	private String sageonbeonho;								//사건번호
 	private String damdang;										//담당
@@ -177,4 +165,16 @@ public class Gyeongmae {
 		this.bigo = bigo;
 	}
 	
+	public List<GyeongmaeMaegagmulgeon> getMaegagmulgeons() {
+		return maegagmulgeons;
+	}
+	public void setMaegagmulgeons(List<GyeongmaeMaegagmulgeon> maegagmulgeons) {
+		this.maegagmulgeons = maegagmulgeons;
+	}
+	public List<GyeongaeJinhaengmulgeon> getJinhaengmulgeons() {
+		return jinhaengmulgeons;
+	}
+	public void setJinhaengmulgeons(List<GyeongaeJinhaengmulgeon> jinhaengmulgeons) {
+		this.jinhaengmulgeons = jinhaengmulgeons;
+	}
 }

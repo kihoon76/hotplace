@@ -518,7 +518,16 @@ $(document).ready(function() {
 		.promise()
 		.done(function() {
 			hotplace.maps.setMarkers(obj);
+			
+			//선택해지된 마커를 지운다.
+			for(var m in obj) {
+				if(obj[m] == 0) {
+					hotplace.maps.destroyMarkerType(m);
+				}
+			}
+			
 			hotplace.maps.showMarkers();
+			
 			$('#btnSalesView').trigger('click');
 		});
 	});

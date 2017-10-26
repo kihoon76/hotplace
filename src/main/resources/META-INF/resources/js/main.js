@@ -767,16 +767,28 @@ $(document).ready(function() {
 	},{
 		id:'btnAddrSearch',
 		glyphicon: 'search',
-		attr: 'data-switch="off" title="주소,HP,반경,매물검색"',
+		//attr: 'data-switch="off" title="주소,HP,반경,매물검색"',
+		attr: 'data-switch="off" title="보상투자물건 검색"',
 		clazz: 'mBtnTooltip',
 		callback: function(e) {
-			_btnCallback($(this), e, 'dvAddrSearch', true);
+			//_btnCallback($(this), e, 'dvAddrSearch', true);
+			/*$('#searchTitle').text('보상투자물건');
+			_btnCallback($(this), e, 'dvMulgeon', true, null, function() {
+				$('#dvMulgeonResult').html('');
+				$('#dvMulgeonContainer').hide();
+			});*/
 		}
 	},{
 		id:'btnUser',
 		glyphicon: 'user',
-		//attr: 'data-switch="off"',
-		callback: function() {
+		attr: 'data-switch="off" title="개발예정지역 검색"',
+		clazz: 'mBtnTooltip',
+		callback: function(e) {
+			/*$('#searchTitle').text('개발예정지역');
+			_btnCallback($(this), e, 'dvMulgeon', true, null, function() {
+				$('#dvMulgeonResult').html('');
+				$('#dvMulgeonContainer').hide();
+			});*/
 		}
 	},{
 		id:'btnInfo',
@@ -785,6 +797,7 @@ $(document).ready(function() {
 		callback: function(e) {
 			hotplace.test.searchRadius();
 			//_btnCallback($(this), e, 'dvInfo');
+			
 		}
 	},{
 		id:'btnSalesView',

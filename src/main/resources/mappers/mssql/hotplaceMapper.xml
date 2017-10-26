@@ -106,14 +106,14 @@
 	
 	<select id="selectGyeongmaeMarker" resultType="string" parameterType="hashmap">
 		select concat(a.PNU, '|$', a.고유번호, '|$', a.등록번호, '|$', a.경도, '|$', a.위도)
-		  from [데이터수집].dbo.경매_목록 a with (nolock, index(IX_경매_목록))
-		 inner join 좌표계.dbo.가로축13 b with (nolock) on (b.PNU=a.PNU)
-		 inner join 좌표계.dbo.세로축13 c with (nolock) on (c.PNU=a.PNU)
-		 inner join (select 등록번호, 위도, 경도  from  [데이터수집].dbo.경매_목록 tb1 group by 등록번호, 위도, 경도 having 위도 is not null and 경도 is not null) d on a.등록번호 = d.등록번호 and a.위도 = d.위도 and a.경도 = d.경도
-		 where a.위도 between convert(float, #{swy}) and convert(float, #{ney})
-		   and a.경도 between convert(float, #{swx}) and convert(float, #{nex})
-		   and a.용도 != '자동차'
-		 order by a.경도 asc
+          from [데이터수집].dbo.경매_목록 a with (nolock, index(IX_경매_목록))
+       	 inner join 좌표계.dbo.가로축13 b with (nolock) on (b.PNU=a.PNU)
+       	 inner join 좌표계.dbo.세로축13 c with (nolock) on (c.PNU=a.PNU)
+         inner join (select 등록번호, 위도, 경도  from  [데이터수집].dbo.경매_목록 tb1 where 매각기일 is null or 매각기일 > getdate() group by 등록번호, 위도, 경도 having 위도 is not null and 경도 is not null) d on a.등록번호 = d.등록번호 and a.위도 = d.위도 and a.경도 = d.경도
+         where a.위도 between convert(float, #{swy}) and convert(float, #{ney})
+           and a.경도 between convert(float, #{swx}) and convert(float, #{nex})
+           and a.용도 != '자동차'
+         order by a.경도 asc
 	</select>
 	
 	<resultMap id="RM_selectGyeongmaeThumb"  type="Gyeongmae">
@@ -254,16 +254,17 @@
 	</select>
 	
 	<select id="selectGongmaeMarker" resultType="string" parameterType="hashmap">
-		 select concat(PNU, '|$', 고유번호, '|$', 물건코드, '|$', 경도, '|$', 위도) 
-		 from (
-		 		select a.PNU, a.고유번호, a.물건코드, b.극서 + (b.극동 - b.극서)/2 as 경도,c.극남 + (c.극북 - c.극남)/2 as 위도
-		   		  from [온비드].[dbo].[토지매각원장] a with (nolock, index(IX_토지매각원장))
-		 		 inner join 좌표계.dbo.가로축13 b with (nolock) on (b.PNU=a.PNU)
-		 		 inner join 좌표계.dbo.세로축13 c with (nolock) on (c.PNU=a.PNU)
-		 ) t
-		 where t.위도 between convert(float, #{swy}) and convert(float, #{ney})
-		   and t.경도 between convert(float, #{swx}) and convert(float, #{nex})
-		 order by t.경도 asc
+		select concat(PNU, '|$', 고유번호, '|$', 물건코드, '|$', 경도, '|$', 위도) 
+       	  from (
+             	select a.PNU, a.고유번호, a.물건코드, b.극서 + (b.극동 - b.극서)/2 as 경도,c.극남 + (c.극북 - c.극남)/2 as 위도
+                  from [온비드].[dbo].[토지매각원장] a with (nolock, index(IX_토지매각원장))
+              	 inner join 좌표계.dbo.가로축13 b with (nolock) on (b.PNU=a.PNU)
+              	 inner join 좌표계.dbo.세로축13 c with (nolock) on (c.PNU=a.PNU)
+           		 where a.입찰종료일시 >= getdate()
+       ) t
+       where t.위도 between convert(float, #{swy}) and convert(float, #{ney})
+         and t.경도 between convert(float, #{swx}) and convert(float, #{nex})
+       order by t.경도 asc
 	</select>
 
 	<resultMap id="RM_selectGongmaeThumb" type="Gongmae">

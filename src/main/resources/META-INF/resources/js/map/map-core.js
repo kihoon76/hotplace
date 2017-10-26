@@ -1880,7 +1880,7 @@
 		_loadEl.waitMe({
 			effect: effect,
 			text: loadTxt,
-			bg: 'rgba(255,255,255,0.4)',
+			bg: 'rgba(255,255,255,0.4)',//'rgba(255,255,255,0.4)',
 			color: '#000',
 			maxSize: maxSize,
 			source: 'img.svg',
@@ -2133,7 +2133,7 @@
 		else {
 			loadEl = $('body');
 		}
-		_runWaitMe(loadEl, 1, _loadEffects.timer, msg);
+		_runWaitMe(loadEl, 1, _loadEffects.ios, msg);
 	};
 	
 	dom.showMaskTransaction = function(count, loadEl, msg) {
@@ -4892,6 +4892,8 @@
 				sYangdose: $('#stepYangdose2').val(),
 				wYangdose: $('#WYangdose').val(),
 				rYangdose: $('#ratioYangdose').text(),
+				
+				
 			};
 			
 			send('pdf', cfg);

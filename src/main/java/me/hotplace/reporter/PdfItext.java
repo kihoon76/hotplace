@@ -205,6 +205,8 @@ public class PdfItext {
 			doc.select("span#sYangdose").first().text(jo.get("sYangdose").getAsString());
 			doc.select("span#wYangdose").first().text(jo.get("wYangdose").getAsString() + "원");
 			doc.select("span#rYangdose").first().text(jo.get("rYangdose").getAsString() + "%");
+			
+			
 			r = doc.toString();
 		} 
 		catch (IOException e) {

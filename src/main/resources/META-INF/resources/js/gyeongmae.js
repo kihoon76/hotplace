@@ -211,7 +211,7 @@
 					html += '<div class="row">';
 				}
 				
-				html += '<div class="col-sm-3"><a href="#x"  data-toggle="modal" class="thumbnail" onclick="hotplace.gyeongmae.imageClick(this);"><img src="' + images[i].image + '" class="img-responsive" style="width:250px; height:250px;"></a></div>';
+				html += '<div class="col-sm-3"><a href="#x"  data-toggle="modal" class="thumbnail" onclick="hotplace.gyeongmae.imageClick(this);"><img src="' + images[i].image + '" class="img-responsive" style="width:250px; height:250px;" data-gubun="' + images[i].gubun + '"></a></div>';
 				
 				if(i%4 == 3) {
 					html += '</div></div>';
@@ -258,7 +258,7 @@
 		$gDimageCarousels.html(html);
 	}
 	
-	function _bindDetailClickHandler() {
+	function _bindDetailClickHandler(win) {
 		
 		//경매 물건상세보기 handler
 		$('#btnGyeongmaeDetail').on('click', function() {
@@ -269,7 +269,9 @@
 			}
 			
 			hotplace.dom.insertFormInmodal('gyeongmaeDetailForm');
-			hotplace.dom.openModal('');
+			hotplace.dom.openModal('', 'fullsize', function() {
+				win.close();
+			});
 			
 			hotplace.ajax({
 				url: 'gyeongmae/detail',
@@ -345,10 +347,13 @@
 	 * {@link http://api.jqueryui.com/dialog/#method-open jquery-ui-dialog}
 	 */
 	gyeongmae.imageClick = function(me) {
-		var img = $(me).children().prop('src');
+		var $img = $(me).children();
+		var img = $img.prop('src');
+		var gubun = $img.data('gubun');
+		
 		$('#enlargeImageModalSource').prop('src', img);
 		$('#enlargeImageModal').modal('show');
-		
+		$('#enlargeImageModalTitle').text(gubun);
 		return false;
 	}
 	
@@ -375,6 +380,10 @@
 		_bindDetailClickHandler(win);
 		_getThumb(data);
 	}
+	
+	$(document).on('click', '#btnGyeongmaeImageClose', function() {
+		$('#enlargeImageModal').modal('hide');
+	});
 }(
 	hotplace.gyeongmae = hotplace.gyeongmae || {},
 	jQuery

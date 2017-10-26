@@ -1158,7 +1158,7 @@
 		var startIdx = db.getStartXIdx(markerType/*_markerTypes.GYEONGMAE*/, _marginBounds.swx, currentLevel);
 		
 		_createMarkers(currentLevel, startIdx, markerType/*_markerTypes.GYEONGMAE*/, {
-			click : function(map, marker, win) {
+			mouseover : function(map, marker, win) {
 				_createMarkerClick(map, marker, win, markerType);
 			}
 		}, {
@@ -1589,27 +1589,13 @@
 		var db = hotplace.database;
 		var _currentLevel = _getCurrentLevel();
 		
-		/*if(db.hasData(_currentLevel, _markerTypes.GYEONGMAE)) {
-			var startIdx = db.getStartXIdx(_markerTypes.GYEONGMAE, _marginBounds.swx, _currentLevel);
-			_createMarkers(_currentLevel, startIdx, _markerTypes.GYEONGMAE, {
-				click : function(map, marker, win) {
-					_createMarkerClick(map, marker, win);
-				}
-			}, {
-				hasInfoWindow: true,
-				isAjaxContent: true,
-				radius:0,
-				icon: 'blink.gif',
-			});
-		}*/
-		
 		var activeMarkers = maps.getActiveMarkers();
 		var activeMarkerLen = activeMarkers.length;
 		for(var a=0; a<activeMarkerLen; a++) {
 			if(db.hasData(_currentLevel, _markerTypes[activeMarkers[a]])) {
 				var startIdx = db.getStartXIdx(_markerTypes[activeMarkers[a]], _marginBounds.swx, _currentLevel);
 				_createMarkers(_currentLevel, startIdx, _markerTypes[activeMarkers[a]], {
-					click : function(map, marker, win) {
+					mouseover : function(map, marker, win) {
 						_createMarkerClick(map, marker, win);
 					}
 				}, {

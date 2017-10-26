@@ -11,6 +11,7 @@ import org.springframework.util.Base64Utils;
 
 import me.hotplace.dao.HotplaceDao;
 import me.hotplace.domain.Address;
+import me.hotplace.domain.BosangPyeonib;
 import me.hotplace.domain.Gongmae;
 import me.hotplace.domain.Gyeongmae;
 import me.hotplace.domain.GyeongmaeImage;
@@ -93,5 +94,15 @@ public class HotplaceService {
 		Gongmae g = hotplaceDao.selectGongmaeThumb(unu);
 		
 		return g;
+	}
+
+	public String getBosangPyeonibMarker(Map<String, String> param) {
+		List<String> list = hotplaceDao.selectBosangMarker(param);
+		return DataUtil.makeLatLngBosangPyeonibMarker(list, "|$");
+	}
+
+	public BosangPyeonib getBosangPyeonibThumb(String unu) {
+		BosangPyeonib bp = hotplaceDao.selectBosangPyeonibThumb(unu);
+		return bp;
 	}
 }

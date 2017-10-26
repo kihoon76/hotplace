@@ -458,7 +458,7 @@
 	 * @property {string} GYEONGMAE - 경매
 	 * @property {string} GONGMAE - 공매
 	 */
-	var _markerGroupOnOff = {GYEONGMAE:0, GONGMAE:0};
+	var _markerGroupOnOff = {GYEONGMAE:0, GONGMAE:0, BOSANG:0, PYEONIB:0};
 	
 	/**
 	 * @memerof hotplace.maps
@@ -613,6 +613,8 @@
 		RADIUS_SEARCH: 'RADIUS_SEARCH',
 		GYEONGMAE: 'GYEONGMAE', 
 		GONGMAE: 'GONGMAE',
+		BOSANG: 'BOSANG',
+		PYEONIB: 'PYEONIB',
 		MULGEON_SEARCH: 'MULGEON_SEARCH'
 	};
 	
@@ -648,6 +650,8 @@
 		RADIUS_SEARCH : { m: [], c: [], url: '' },
 		GYEONGMAE : { m: [], url: 'gyeongmaemarker', icon:'gyeongmae.gif',  infoWinFormName: ''},
 		GONGMAE : { m: [], url: 'gongmaemarker', icon: 'gongmae.png' },
+		BOSANG: { m: [], url: 'bosangmarker' },
+		PYEONIB: { m: [], url: 'pyeonibmarker' },
 		MULGEON_SEARCH: { m: []}
 	};
 	
@@ -663,6 +667,8 @@
 		RADIUS_SEARCH : [],
 		GYEONGMAE : [],
 		GONGMAE : [],
+		BOSANG : [],
+		PYEONIB : [],
 		MULGEON_SEARCH: []
 	};
 	
@@ -934,6 +940,12 @@
 		case _markerTypes.GONGMAE :
 			markerData = hotplace.database.getLevelData(level, _markerTypes.GONGMAE);
 			break;
+		case _markerTypes.BOSANG :
+			markerData = hotplace.database.getLevelData(level, _markerTypes.BOSANG);
+			break;
+		case _markerTypes.PYEONIB :
+			markerData = hotplace.database.getLevelData(level, _markerTypes.PYEONIB);
+			break;
 		}
 		
 		_commXY(markerData,
@@ -1141,6 +1153,10 @@
 			break;
 		case 'GONGMAE' :
 			hotplace.gongmae.markerClick(map, marker, win);
+			break;
+		case 'BOSANG' :
+		case 'PYEONIB' :
+			hotplace.bosangpyeonib.markerClick(map, marker, win);
 			break;
 		}
 	}
@@ -1594,6 +1610,9 @@
 		for(var a=0; a<activeMarkerLen; a++) {
 			if(db.hasData(_currentLevel, _markerTypes[activeMarkers[a]])) {
 				var startIdx = db.getStartXIdx(_markerTypes[activeMarkers[a]], _marginBounds.swx, _currentLevel);
+				
+				
+				
 				_createMarkers(_currentLevel, startIdx, _markerTypes[activeMarkers[a]], {
 					mouseover : function(map, marker, win) {
 						_createMarkerClick(map, marker, win);
@@ -4879,9 +4898,111 @@
 				wYangdose: $('#WYangdose').val(),
 				rYangdose: $('#ratioYangdose').text(),
 				
+				wJesegeum: $('#WJesegeum').val(),
+				rJesegeum: $('#ratioJesegeum').text(),
 				
+				tGeonchugGongsa: $('#txtGeonchugGongsa').val(),
+				sGeonchugGongsa: $('#stepGeonchugGongsa').val(),
+				wGeonchugGongsa: $('#WGeonchugGongsa').val(),
+				rGeonchugGongsa: $('#ratioGeonchugGongsa').text(),
+				
+				tTomogGongsa: $('#txtTomogGongsa').val(),
+				sTomogGongsa: $('#stepTomogGongsa').val(),
+				wTomogGongsa: $('#WTomogGongsa').val(),
+				rTomogGongsa: $('#ratioTomogGongsa').text(),
+				
+				tPojangGongsa: $('#txtPojangGongsa').val(),
+				sPojangGongsa: $('#stepPojangGongsa').val(),
+				wPojangGongsa: $('#WPojangGongsa').val(),
+				rPojangGongsa: $('#ratioPojangGongsa').text(),
+				
+				tInibGongsa: $('#txtInibGongsa').val(),
+				sInibGongsa: $('#stepInibGongsa').val(),
+				wInibGongsa: $('#WInibGongsa').val(),
+				rInibGongsa: $('#ratioInibGongsa').text(),
+				
+				wGongsabi: $('#WGongsabi').val(),
+				rGongsabi: $('#ratioGongsabi').text(),
+				
+				tAcceptGaebal: $('#txtAcceptGaebal').val(),
+				sAcceptGaebal: $('#stepAcceptGaebal').val(),
+				wAcceptGaebal: $('#WAcceptGaebal').val(),
+				rAcceptGaebal: $('#ratioAcceptGaebal').text(),
+				
+				tGamri: $('#txtGamri').val(),
+				sGamri: $('#stepGamri').val(),
+				wGamri: $('#WGamri').val(),
+				rGamri: $('#ratioGamri').text(),
+				
+				tCheuglyang: $('#txtCheuglyang').val(),
+				sCheuglyang: $('#stepCheuglyang').val(),
+				wCheuglyang: $('#WCheuglyang').val(),
+				rCheuglyang: $('#ratioCheuglyang').text(),
+				
+				tEvalueGamjeung: $('#txtEvalueGamjeung').val(),
+				sEvalueGamjeung: $('#stepEvalueGamjeung').val(),
+				wEvalueGamjeung: $('#WEvalueGamjeung').val(),
+				rEvalueGamjeung: $('#ratioEvalueGamjeung').text(),
+				
+				tSplitPilji: $('#txtSplitPilji').val(),
+				sSplitPilji: $('#stepSplitPilji').val(),
+				wSplitPilji: $('#WSplitPilji').val(),
+				rSplitPilji: $('#ratioSplitPilji').text(),
+				
+				wInheogabi: $('#WInheogabi').val(),
+				rInheogabi: $('#ratioInheogabi').text(),
+				
+				tDevBudam: $('#txtDevBudam').val(),
+				sDevBudam: $('#stepDevBudam').val(),
+				wDevBudam: $('#WDevBudam').val(),
+				rDevBudam: $('#ratioDevBudam').text(),
+				
+				tAlterSanrim: $('#txtAlterSanrim').val(),
+				sAlterSanrim: $('#stepAlterSanrim').val(),
+				wAlterSanrim: $('#WAlterSanrim').val(),
+				rAlterSanrim: $('#ratioAlterSanrim').text(),
+				
+				wBudamgeum: $('#WBudamgeum').val(),
+				rBudamgeum: $('#ratioBudamgeum').text(),
+				
+				tPurchaseChaegwon: $('#txtPurchaseChaegwon').val(),
+				sPurchaseChaegwon: $('#stepPurchaseChaegwon').val(),
+				wPurchaseChaegwon: $('#WPurchaseChaegwon').val(),
+				rPurchaseChaegwon: $('#ratioPurchaseChaegwon').text(),
+				
+				tSetGeunjeodang: $('#txtSetGeunjeodang').val(),
+				sSetGeunjeodang: $('#stepSetGeunjeodang').val(),
+				wSetGeunjeodang: $('#WSetGeunjeodang').val(),
+				rSetGeunjeodang: $('#ratioSetGeunjeodang').text(),
+				
+				tPreserveDeunggi: $('#txtPreserveDeunggi').val(),
+				sPreserveDeunggi: $('#stepPreserveDeunggi').val(),
+				wPreserveDeunggi: $('#WPreserveDeunggi').val(),
+				rPreserveDeunggi: $('#ratioPreserveDeunggi').text(),
+				
+				tManagement: $('#txtManagement').val(),
+				sManagement: $('#stepManagement').val(),
+				wManagement: $('#WManagement').val(),
+				rManagement: $('#ratioManagement').text(),
+				
+				tSellSusulyo: $('#txtSellSusulyo').val(),
+				sSellSusulyo: $('#stepSellSusulyo').val(),
+				wSellSusulyo: $('#WSellSusulyo').val(),
+				rSellSusulyo: $('#ratioSellSusulyo').text(),
+				
+				tPreparation: $('#txtPreparation').val(),
+				sPreparation: $('#stepPreparation').val(),
+				wPreparation: $('#WPreparation').val(),
+				rPreparation: $('#ratioPreparation').text(),
+				
+				wSaeobgyeongbi: $('#WSaeobgyeongbi').val(),
+				rSaeobgyeongbi: $('#ratioSaeobgyeongbi').text(),
+				
+				wJichool: $('#WJichool').val(),
+				rJichool: '100',
 			};
 			
+			console.log(cfg);
 			send('pdf', cfg);
 		}
 	}

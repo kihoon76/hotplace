@@ -23,6 +23,7 @@ import com.google.gson.JsonObject;
 import com.mysql.jdbc.StringUtils;
 
 import me.hotplace.domain.Address;
+import me.hotplace.domain.BosangPyeonib;
 import me.hotplace.domain.Gongmae;
 import me.hotplace.domain.Gyeongmae;
 import me.hotplace.domain.HpSearch;
@@ -150,6 +151,40 @@ public class HotplaceController {
 		return hotplaceService.getGongmaeMarker(param);
 	}
 	
+	@GetMapping("bosangmarker")
+	@ResponseBody
+	public String getBosangmarker(@RequestParam(name="nex") String nex,
+								  @RequestParam(name="swx") String swx,
+								  @RequestParam(name="swy") String swy,
+								  @RequestParam(name="ney") String ney) throws Exception  {
+		
+		Map<String, String> param = new HashMap<String, String>();
+		param.put("nex", nex);
+		param.put("swx", swx);
+		param.put("swy", swy);
+		param.put("ney", ney);
+		param.put("gubun", "보상");
+		
+		return hotplaceService.getBosangPyeonibMarker(param);
+	}
+	
+	@GetMapping("pyeonibmarker")
+	@ResponseBody
+	public String getPyeonibmarker(@RequestParam(name="nex") String nex,
+								  @RequestParam(name="swx") String swx,
+								  @RequestParam(name="swy") String swy,
+								  @RequestParam(name="ney") String ney) throws Exception  {
+		
+		Map<String, String> param = new HashMap<String, String>();
+		param.put("nex", nex);
+		param.put("swx", swx);
+		param.put("swy", swy);
+		param.put("ney", ney);
+		param.put("gubun", "편입");
+		
+		return hotplaceService.getBosangPyeonibMarker(param);
+	}
+	
 	@PostMapping("hpgrade/search")
 	@ResponseBody
 	public HpSearch getHpgradeSearch(@RequestBody HpSearch hpSearch) throws InterruptedException {
@@ -216,5 +251,12 @@ public class HotplaceController {
 	public Gongmae getGongmaeThumb(@RequestParam("unu") String unu) {
 		
 		return hotplaceService.getGongmaeThumb(unu);
+	}
+	
+	@GetMapping("bosangpyeonib/thumb")
+	@ResponseBody
+	public BosangPyeonib getBosangPyeonibThumb(@RequestParam("unu") String unu) {
+		
+		return hotplaceService.getBosangPyeonibThumb(unu);
 	}
 }

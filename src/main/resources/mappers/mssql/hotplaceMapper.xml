@@ -253,6 +253,7 @@
 		 where 경매_목록_고유번호 = #{goyubeonho}
 	</select>
 	
+	<!-- 공매 -->
 	<select id="selectGongmaeMarker" resultType="string" parameterType="hashmap">
 		select concat(PNU, '|$', 고유번호, '|$', 물건코드, '|$', 경도, '|$', 위도) 
        	  from (
@@ -283,6 +284,33 @@
 		select PNU, 고유번호, 물건코드, 물건주소지, 용도, 지목, 면적구분, 물건상태, 유찰횟수
 		  from [온비드].[dbo].[토지매각원장]
 		 where [고유번호] = #{goyubeonho}
+	</select>
+	
+	<!-- 보상편입물건 -->
+	<select id="selectBosangPyeonibMarker" resultType="string" parameterType="hashmap">
+       	select concat(PNU, '|$', 고유번호, '|$', 경도, '|$', 위도) 
+          from [수작업].[dbo].[보상물건]
+         where 편입보상구분 = #{gubun}
+           and 위도 between convert(float, #{swy}) and convert(float, #{ney})
+   		   and 경도 between convert(float, #{swx}) and convert(float, #{nex})
+   		 order by 경도 asc
+	</select>
+	
+	<resultMap id="RM_selectBosangPyeonibThumb" type="BosangPyeonib">
+		<result column="고유번호" property="goyubeonho" javaType="string" />
+		<result column="물건소재지" property="mulgeonsojaeji" javaType="string" />
+		<result column="PNU" property="pnu" javaType="string" />
+		<result column="공고기관" property="gonggogigwan" javaType="string" />
+		<result column="사업명" property="saeobname" javaType="string" />
+		<result column="공고일" property="gonggoil" javaType="string" />
+		<result column="공고번호" property="gonggobeonho" javaType="string" />
+		<result column="사업시행사" property="saeobsihaengsa" javaType="string"/>
+	</resultMap>
+	
+	<select id="selectBosangPyeonibThumb" parameterType="string" resultMap="RM_selectBosangPyeonibThumb">
+		select 고유번호, 물건소재지, PNU, 공고기관, 사업명, 공고일, 공고번호, 사업시행사
+		  from [수작업].[dbo].[보상물건]
+		 where 고유번호 = ${unu}
 	</select>
 </mapper>
 <!-- 

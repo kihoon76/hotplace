@@ -9,6 +9,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import me.hotplace.domain.Address;
+import me.hotplace.domain.BosangPyeonib;
 import me.hotplace.domain.Gongmae;
 import me.hotplace.domain.Gyeongmae;
 
@@ -73,6 +74,17 @@ public class HotplaceDaoImpl implements HotplaceDao {
 	public Gongmae selectGongmaeThumb(String unu) {
 		// TODO Auto-generated method stub
 		return msSqlSessionAgent.selectOne(namespace + ".selectGongmaeThumb", unu);
+	}
+
+	@Override
+	public List<String> selectBosangMarker(Map<String, String> param) {
+		return msSqlSession.selectList(namespace + ".selectBosangPyeonibMarker", param);
+	}
+
+	@Override
+	public BosangPyeonib selectBosangPyeonibThumb(String unu) {
+		// TODO Auto-generated method stub
+		return msSqlSession.selectOne(namespace + ".selectBosangPyeonibThumb", unu);
 	}
 
 }

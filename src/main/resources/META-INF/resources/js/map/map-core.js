@@ -657,8 +657,8 @@
 	 */
 	var _markers = {
 		RADIUS_SEARCH : { m: [], c: [], url: '' },
-		GYEONGMAE : { m: [], url: 'gyeongmaemarker', icon:'gyeongmae.gif', trigger: 'mouseover' },
-		GONGMAE : { m: [], url: 'gongmaemarker', icon: 'gongmae.png', trigger: 'mouseover' },
+		GYEONGMAE : { m: [], url: 'gyeongmaemarker', icon:'gyeongmae.gif'/*, trigger: 'mouseover'*/ },
+		GONGMAE : { m: [], url: 'gongmaemarker', icon: 'gongmae.png'/*, trigger: 'mouseover'*/ },
 		BOSANG: { m: [], url: 'bosangmarker' },
 		PYEONIB: { m: [], url: 'pyeonibmarker' },
 		MULGEON_SEARCH: { m: []}
@@ -1494,7 +1494,7 @@
 	 * @desc 해당지점에 마커를 그리고 옵션값에 따라 해당지점을 중심으로 원을 그림 
 	 */
 	maps.getMarker = function(markerType, data, listeners, options) {
-		var newMarker, newInfoWindow;
+		var newMarker, newInfoWindow = null;
 		
 		newMarker = new _vender.Marker({
 		    position: new _vender.LatLng(data.location[1], data.location[0]),

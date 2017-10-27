@@ -12,7 +12,8 @@ public class BosangPyeonib {
 	private String gonggoil;					//공고일
 	private String saeobname;					//사업명
 	private String gonggobeonho;				//공고번호
-	private String saeobsihaengsa;				//사업시행사
+	private String saeobsihaengja;				//사업시행자
+	private String siseolkind;					//시설종류
 	
 	public String getPnu() {
 		return pnu;
@@ -56,10 +57,16 @@ public class BosangPyeonib {
 	public void setGonggobeonho(String gonggobeonho) {
 		this.gonggobeonho = gonggobeonho;
 	}
-	public String getSaeobsihaengsa() {
-		return saeobsihaengsa;
+	public String getSaeobsihaengja() {
+		return saeobsihaengja;
 	}
-	public void setSaeobsihaengsa(String saeobsihaengsa) {
-		this.saeobsihaengsa = saeobsihaengsa;
+	public void setSaeobsihaengja(String saeobsihaengja) {
+		this.saeobsihaengja = saeobsihaengja;
+	}
+	public String getSiseolkind() {
+		return siseolkind;
+	}
+	public void setSiseolkind(String siseolkind) {
+		this.siseolkind = siseolkind;
 	}
 }

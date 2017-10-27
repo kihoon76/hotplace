@@ -491,3 +491,8 @@ input[type=radio]:focus + label::before {
   text-align: left;
   vertical-align: middle;
 }
+
+/*보상편입 infoWindow*/
+#dvBosangPyeonib {
+	font-size: .8em;
+}

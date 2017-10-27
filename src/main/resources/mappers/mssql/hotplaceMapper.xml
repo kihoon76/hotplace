@@ -304,13 +304,14 @@
 		<result column="사업명" property="saeobname" javaType="string" />
 		<result column="공고일" property="gonggoil" javaType="string" />
 		<result column="공고번호" property="gonggobeonho" javaType="string" />
-		<result column="사업시행사" property="saeobsihaengsa" javaType="string"/>
+		<result column="사업시행자" property="saeobsihaengja" javaType="string"/>
+		<result column="시설종류" property="siseolkind" javaType="string" />
 	</resultMap>
 	
 	<select id="selectBosangPyeonibThumb" parameterType="string" resultMap="RM_selectBosangPyeonibThumb">
-		select 고유번호, 물건소재지, PNU, 공고기관, 사업명, 공고일, 공고번호, 사업시행사
+		select 고유번호, 물건소재지, PNU, 공고기관, 사업명, 공고일, 공고번호, 사업시행자, 시설종류
 		  from [수작업].[dbo].[보상물건]
-		 where 고유번호 = ${unu}
+		 where 고유번호 = #{unu}
 	</select>
 </mapper>
 <!-- 

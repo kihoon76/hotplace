@@ -457,6 +457,8 @@
 	 * @type {object} 
 	 * @property {string} GYEONGMAE - 경매
 	 * @property {string} GONGMAE - 공매
+	 * @property {string} BOSANG - 보상
+	 * @property {string} PYEONIB - 공매
 	 */
 	var _markerGroupOnOff = {GYEONGMAE:0, GONGMAE:0, BOSANG:0, PYEONIB:0};
 	
@@ -624,6 +626,10 @@
 	 * @typedef {object} hotplace.maps.MarkerTypes 
 	 * @property {string} RADIUS_SEARCH - 반경검색 후 지도상에 보이는 마커(1개)
 	 * @property {string} GYEONGMAE - 경매물건 마커들
+	 * @property {string} GONGMAE - 공매물건 마커들
+	 * @property {string} BOSANG - 보상물건 마커들
+	 * @property {string} PYEONIB - 편입물건 마커들
+	 * @property {string} MULGEON_SEARCH - 물건검색후 마커
 	 */
 	maps.MarkerTypes = _markerTypes;
 	
@@ -645,11 +651,14 @@
 	 * @param {Array}  RADIUS_SEARCH.c 반경검색 circle
 	 * @param {object} GYEONGMAE 경매
 	 * @param {Array}  GYEONGMAE.m 경매물건 마커들
+	 * @param {Array}  GYEONGMAE.url 경매마커 좌표 url
+	 * @param {Array}  GYEONGMAE.icon 경매마커 아이콘
+	 * @param {Array}  GYEONGMAE.trigger 해당마커의 윈도우를 나타나게할 이벤트명 (default: click)
 	 */
 	var _markers = {
 		RADIUS_SEARCH : { m: [], c: [], url: '' },
-		GYEONGMAE : { m: [], url: 'gyeongmaemarker', icon:'gyeongmae.gif',  infoWinFormName: ''},
-		GONGMAE : { m: [], url: 'gongmaemarker', icon: 'gongmae.png' },
+		GYEONGMAE : { m: [], url: 'gyeongmaemarker', icon:'gyeongmae.gif', trigger: 'mouseover' },
+		GONGMAE : { m: [], url: 'gongmaemarker', icon: 'gongmae.png', trigger: 'mouseover' },
 		BOSANG: { m: [], url: 'bosangmarker' },
 		PYEONIB: { m: [], url: 'pyeonibmarker' },
 		MULGEON_SEARCH: { m: []}
@@ -1146,7 +1155,7 @@
 		_createCells(currentLevel, startIdx);
 	}
 	
-	function _createMarkerClick(map, marker, win, markerType) {
+	function _createMarkerTrigger(map, marker, win, markerType) {
 		switch(markerType) {
 		case 'GYEONGMAE' :
 			hotplace.gyeongmae.markerClick(map, marker, win);
@@ -1155,8 +1164,10 @@
 			hotplace.gongmae.markerClick(map, marker, win);
 			break;
 		case 'BOSANG' :
+			hotplace.bosangpyeonib.markerClick(map, marker, win, '보상');
+			break;
 		case 'PYEONIB' :
-			hotplace.bosangpyeonib.markerClick(map, marker, win);
+			hotplace.bosangpyeonib.markerClick(map, marker, win, '편입');
 			break;
 		}
 	}
@@ -1172,12 +1183,20 @@
 		
 		if(!db.hasData(currentLevel, markerType/*_markerTypes.GYEONGMAE*/)) return;
 		var startIdx = db.getStartXIdx(markerType/*_markerTypes.GYEONGMAE*/, _marginBounds.swx, currentLevel);
+		var listeners = {};
 		
-		_createMarkers(currentLevel, startIdx, markerType/*_markerTypes.GYEONGMAE*/, {
-			mouseover : function(map, marker, win) {
-				_createMarkerClick(map, marker, win, markerType);
+		if(_markers[markerType].trigger == undefined) {
+			listeners['click'] = function(map, marker, win) {
+				_createMarkerTrigger(map, marker, win, markerType);
 			}
-		}, {
+		}
+		else {
+			listeners[_markers[markerType].trigger] = function(map, marker, win) {
+				_createMarkerTrigger(map, marker, win, markerType);
+			}
+		}
+		
+		_createMarkers(currentLevel, startIdx, markerType/*_markerTypes.GYEONGMAE*/, listeners, {
 			hasInfoWindow: true,
 			isAjaxContent: true,
 			radius:0,
@@ -1611,13 +1630,16 @@
 			if(db.hasData(_currentLevel, _markerTypes[activeMarkers[a]])) {
 				var startIdx = db.getStartXIdx(_markerTypes[activeMarkers[a]], _marginBounds.swx, _currentLevel);
 				
+				var listeners = {};
 				
+				if(_markers[activeMarkers[a]].trigger == undefined) {
+					listeners['click'] = function(map, marker, win) { _createMarkerTrigger(map, marker, win);	}
+				}
+				else {
+					listeners[_markers[activeMarkers[a]].trigger] = function(map, marker, win) { _createMarkerTrigger(map, marker, win);	}
+				}
 				
-				_createMarkers(_currentLevel, startIdx, _markerTypes[activeMarkers[a]], {
-					mouseover : function(map, marker, win) {
-						_createMarkerClick(map, marker, win);
-					}
-				}, {
+				_createMarkers(_currentLevel, startIdx, _markerTypes[activeMarkers[a]], listeners, {
 					hasInfoWindow: true,
 					isAjaxContent: true,
 					radius:0,

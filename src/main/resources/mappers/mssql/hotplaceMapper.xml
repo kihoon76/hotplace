@@ -39,6 +39,8 @@
 		  	<if test='detail != null'>
 		  	and [읍면동명] like #{detail} + '%'
 		  	</if>
+		  	and 위도 is not null
+		  	and 경도 is not null
 		  </where>
 	</select> 
 	

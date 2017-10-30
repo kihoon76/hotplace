@@ -263,7 +263,7 @@
                   from [온비드].[dbo].[토지매각원장] a with (nolock, index(IX_토지매각원장))
               	 inner join 좌표계.dbo.가로축13 b with (nolock) on (b.PNU=a.PNU)
               	 inner join 좌표계.dbo.세로축13 c with (nolock) on (c.PNU=a.PNU)
-           		 where a.입찰시작일시 >= getdate()
+           		 where a.입찰시작일시 >= convert(varchar(19), getdate(), 121)
        ) t
        where t.위도 between convert(float, #{swy}) and convert(float, #{ney})
          and t.경도 between convert(float, #{swx}) and convert(float, #{nex})

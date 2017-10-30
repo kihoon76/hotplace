@@ -460,7 +460,7 @@
 	 * @property {string} BOSANG - 보상
 	 * @property {string} PYEONIB - 공매
 	 */
-	var _markerGroupOnOff = {GYEONGMAE:0, GONGMAE:0, BOSANG:0, PYEONIB:0};
+	var _markerGroupOnOff = {GYEONGMAE:0, GONGMAE:0, BOSANG:0, PYEONIB:0, SILGEOLAE:0};
 	
 	/**
 	 * @memerof hotplace.maps
@@ -617,6 +617,7 @@
 		GONGMAE: 'GONGMAE',
 		BOSANG: 'BOSANG',
 		PYEONIB: 'PYEONIB',
+		SILGEOLAE: 'SILGEOLAE',
 		MULGEON_SEARCH: 'MULGEON_SEARCH'
 	};
 	
@@ -657,10 +658,11 @@
 	 */
 	var _markers = {
 		RADIUS_SEARCH : { m: [], c: [], url: '' },
-		GYEONGMAE : { m: [], url: 'gyeongmaemarker', icon:'gyeongmae.gif'/*, trigger: 'mouseover'*/ },
+		GYEONGMAE : { m: [], url: 'gyeongmaemarker', icon:'gyeongmae.png'/*, trigger: 'mouseover'*/ },
 		GONGMAE : { m: [], url: 'gongmaemarker', icon: 'gongmae.png'/*, trigger: 'mouseover'*/ },
-		BOSANG: { m: [], url: 'bosangmarker' },
-		PYEONIB: { m: [], url: 'pyeonibmarker' },
+		BOSANG: { m: [], url: 'bosangmarker', icon: 'bosang.png' },
+		PYEONIB: { m: [], url: 'pyeonibmarker', icon: 'pyeonib.png' },
+		SILGEOLAE: { m: [], url: 'silgeolaemarker', icon: 'silgeolae.png'},
 		MULGEON_SEARCH: { m: []}
 	};
 	
@@ -678,6 +680,7 @@
 		GONGMAE : [],
 		BOSANG : [],
 		PYEONIB : [],
+		SILGEOLAE : [],
 		MULGEON_SEARCH: []
 	};
 	
@@ -955,6 +958,10 @@
 		case _markerTypes.PYEONIB :
 			markerData = hotplace.database.getLevelData(level, _markerTypes.PYEONIB);
 			break;
+		case _markerTypes.SILGEOLAE :
+			markerData = hotplace.database.getLevelData(level, _markerTypes.SILGEOLAE);
+			break;
+			
 		}
 		
 		_commXY(markerData,
@@ -1042,7 +1049,7 @@
 	
 	function _destroyMarkers(isRadiusExcept) {
 		for(var type in _markers) {
-			if(type == 'RADIUS_SEARCH' && isRadiusExcept) continue;
+			if((type == 'RADIUS_SEARCH' || type == 'MULGEON_SEARCH') && isRadiusExcept) continue;
 			_destroyMarkerType(type);
 		}
 	}

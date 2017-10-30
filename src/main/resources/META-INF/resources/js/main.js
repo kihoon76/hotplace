@@ -123,7 +123,7 @@ $(document).ready(function() {
 		if(sw == 'off') {
 			if(isUseDiv) {
 				var padding = 5;
-				var top  = $('#btnLayerView').get(0).offsetTop;//e.currentTarget.offsetTop;
+				var top  = $('#btnNews').get(0).offsetTop;//e.currentTarget.offsetTop;
 				var left = e.currentTarget.offsetLeft + e.currentTarget.offsetWidth + padding;
 				
 				hotplace.dom.openLayer(targetId, {top:top, left:left});
@@ -541,6 +541,7 @@ $(document).ready(function() {
 	});
 	
 	$('#btnMulgeon').on('click', function(e, arg) {
+		
 		if(arg == undefined) {
 			arg = $.trim($('#txtMulgeon').val());
 		}
@@ -621,6 +622,10 @@ $(document).ready(function() {
 	
 	$(document).on('click', '#btnMulgeonMap', function(e, arg) {
 		
+		//이미 열려있는 물건검색 마커  윈도우 삭제
+		hotplace.maps.destroyMarkerType(hotplace.maps.MarkerTypes.MULGEON_SEARCH);
+		hotplace.maps.destroyMarkerWindow(hotplace.maps.MarkerTypes.MULGEON_SEARCH);
+		
 		var $sel = $('input:radio[name="' + /*addrObj.rdoId*/'test' + '"]:checked');
 		var lng = arg ? arg.lng : $sel.data('lng');
 		var lat = arg ? arg.lat : $sel.data('lat');
@@ -687,7 +692,7 @@ $(document).ready(function() {
 			////hotplace.test.initMarker(level);
 			_prevLevel = level;
 			
-			hotplace.maps.destroyMarkers();
+			hotplace.maps.destroyMarkers(true);
 			//hotplace.maps.destroyMarkerWindow(hotplace.maps.MarkerTypes.RADIUS_SEARCH);
 			hotplace.maps.destroyAllMarkerWindow();
 			hotplace.database.initLevel(level);
@@ -731,21 +736,9 @@ $(document).ready(function() {
 	});
 	
 	hotplace.dom.addButtonInMap([{
-		id:'btnLayerView',
-		glyphicon: 'plus',
-		attr: 'data-switch="on" title="투자유망 지역보기"',
-		clazz: 'button-on mBtnTooltip',
-		callback: function(e) {
-			_btnCallback($(this), e, null, false, function() {
-				hotplace.maps.cellToggle();
-			}, function() {
-				hotplace.maps.cellToggle();
-			});
-		}
-	},{
 		id:'btnNews',
 		//glyphicon: 'list-alt',
-		glyphicon: 'erase',
+		glyphicon: 'search',
 		//attr: 'data-switch="off" title="뉴스"',
 		attr: 'data-switch="off" title="토지이용규제 해소물건"',
 		clazz: 'mBtnTooltip',
@@ -766,7 +759,7 @@ $(document).ready(function() {
 		}
 	},{
 		id:'btnAddrSearch',
-		glyphicon: 'search',
+		glyphicon: 'erase',
 		//attr: 'data-switch="off" title="주소,HP,반경,매물검색"',
 		attr: 'data-switch="off" title="보상투자물건 검색"',
 		clazz: 'mBtnTooltip',
@@ -823,6 +816,18 @@ $(document).ready(function() {
 			var onOff = $(this).data('switch');
 			hotplace.maps.showJijeokLayer(onOff, $(this));
 			$(this).toggleClass('button-on')
+		}
+	}, {
+		id:'btnLayerView',
+		glyphicon: 'plus',
+		attr: 'data-switch="on" title="투자유망 지역보기"',
+		clazz: 'button-on mBtnTooltip',
+		callback: function(e) {
+			_btnCallback($(this), e, null, false, function() {
+				hotplace.maps.cellToggle();
+			}, function() {
+				hotplace.maps.cellToggle();
+			});
 		}
 	}]);
 	

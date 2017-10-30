@@ -261,7 +261,7 @@
                   from [온비드].[dbo].[토지매각원장] a with (nolock, index(IX_토지매각원장))
               	 inner join 좌표계.dbo.가로축13 b with (nolock) on (b.PNU=a.PNU)
               	 inner join 좌표계.dbo.세로축13 c with (nolock) on (c.PNU=a.PNU)
-           		 where a.입찰종료일시 >= getdate()
+           		 where a.입찰시작일시 >= getdate()
        ) t
        where t.위도 between convert(float, #{swy}) and convert(float, #{ney})
          and t.경도 between convert(float, #{swx}) and convert(float, #{nex})
@@ -313,6 +313,44 @@
 		  from [수작업].[dbo].[보상물건]
 		 where 고유번호 = #{unu}
 	</select>
+	
+	<!-- 실거래가 -->
+	<!-- <select id="selectSilgeolaeMarker" resultType="string" parameterType="hashmap">
+		select concat(PNU, '|$', 경도, '|$', 위도)
+		  from
+		select concat(PNU, '|$', 경도, '|$', 위도) 
+          from [데이터수집].[dbo].[실거래가]
+         where 위도 between convert(float, #{swy}) and convert(float, #{ney})
+   		   and 경도 between convert(float, #{swx}) and convert(float, #{nex})
+   		   and 경도 is not null
+   		   and 위도 is not null
+   		 order by 경도 asc
+	</select>-->
+	
+	<select id="selectSilgeolaeMarker" statementType="CALLABLE" parameterType="hashmap" resultType="string">
+		{call [데이터수집].[dbo].[SEL_실거래가_범위]( 
+			#{swx, mode=IN, jdbcType=DECIMAL, javaType=string},
+			#{nex, mode=IN, jdbcType=DECIMAL, javaType=string},
+			#{swy, mode=IN, jdbcType=DECIMAL, javaType=string},
+			#{nex, mode=IN, jdbcType=DECIMAL, javaType=string}
+		)}
+	</select>
+	
+	<resultMap id="RM_selectSilgeolaeThumb" type="Silgeolae">
+		<result column="PNU" property="pnu" javaType="string" />
+		<result column="계약년월" property="gyeyagnyeonwol" javaType="string" />
+		<result column="계약일" property="gyeyagil" javaType="string" />
+		<result column="계약면적" property="gyeyagarea" javaType="string" />
+		<result column="거래금액" property="geolaegeumaeg" javaType="string" />
+		<result column="용도" property="yongdo" javaType="string" />
+		<result column="지목" property="jimok" javaType="string" />
+	</resultMap>
+	
+	<select id="selectSilgeolaeThumb" parameterType="string" resultMap="RM_selectSilgeolaeThumb">
+		select PNU, 계약년월, 계약일, 계약면적, 거래금액, 용도, 지목
+		  from [데이터수집].[dbo].[실거래가]
+		 where PNU = #{pnu}
+	</select>
 </mapper>
 <!-- 
 		select 
@@ -327,11 +365,23 @@
    a.극남 >= 35.9 and 
    a.극북 <= 36.0
    OPTION (TABLE HINT(a, INDEX(IX_좌표계13_하위_1)), TABLE HINT(b, INDEX(PK_공시지가)))
+   
+   
+   
+   		select concat(PNU, '|$', 경도, '|$', 위도) 
+          from [데이터수집].[dbo].[실거래가]
+         where 위도 between convert(float, #{swy}) and convert(float, #{ney})
+   		   and 경도 between convert(float, #{swx}) and convert(float, #{nex})
+   		   and 경도 is not null
+   		   and 위도 is not null
+   		 order by 경도 asc
 
 
 
-
-
+#{swx, mode=IN, jdbcType=DECIMAL, javaType=string},
+			#{nex, mode=IN, jdbcType=DECIMAL, javaType=string},
+			#{swy, mode=IN, jdbcType=DECIMAL, javaType=string},
+			#{nex, mode=IN, jdbcType=DECIMAL, javaType=string}
 
 
 

@@ -15,6 +15,7 @@ import me.hotplace.domain.BosangPyeonib;
 import me.hotplace.domain.Gongmae;
 import me.hotplace.domain.Gyeongmae;
 import me.hotplace.domain.GyeongmaeImage;
+import me.hotplace.domain.Silgeolae;
 import me.hotplace.utils.DataUtil;
 
 @Service("hotplaceService")
@@ -104,5 +105,15 @@ public class HotplaceService {
 	public BosangPyeonib getBosangPyeonibThumb(String unu) {
 		BosangPyeonib bp = hotplaceDao.selectBosangPyeonibThumb(unu);
 		return bp;
+	}
+
+	public String getSilgeolaeMarker(Map<String, String> param) {
+		List<String> list = hotplaceDao.selectSilgeolaeMarker(param);
+		return DataUtil.makeLatLngSilgeolaeMarker(list, "|$");
+	}
+
+	public Silgeolae getSilgeolaeThumb(String pnu) {
+		Silgeolae sil = hotplaceDao.selectSilgeolaeThumb(pnu);
+		return sil;
 	}
 }

@@ -658,6 +658,11 @@ $(document).ready(function() {
 						gongsi: 4040000,
 						limitChange:'Y'
 					})
+				},
+				icon: hotplace.maps.getMarkerIcon(hotplace.maps.MarkerTypes.MULGEON_SEARCH),
+				size: {
+					x: 40,
+					y: 33
 				}
 			});
 		});
@@ -723,6 +728,11 @@ $(document).ready(function() {
 			console.log(latlng)
 			hotplace.maps.getClickedCell(latlng);
 		},
+		'panning' : function() {
+			console.log('panning');
+			//
+			hotplace.maps.destroyMarkerWindow(hotplace.maps.MarkerTypes.MULGEON_SEARCH);
+		}
 		/*'tilesloaded': function(e) {
 			console.log('tilesloaded');
 		},
@@ -788,7 +798,7 @@ $(document).ready(function() {
 		glyphicon: 'info-sign',
 		attr: 'data-switch="off"',
 		callback: function(e) {
-			hotplace.test.searchRadius();
+			//hotplace.test.searchRadius();
 			//_btnCallback($(this), e, 'dvInfo');
 			
 		}

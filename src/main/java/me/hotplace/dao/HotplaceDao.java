@@ -7,6 +7,7 @@ import me.hotplace.domain.Address;
 import me.hotplace.domain.BosangPyeonib;
 import me.hotplace.domain.Gongmae;
 import me.hotplace.domain.Gyeongmae;
+import me.hotplace.domain.Silgeolae;
 
 public interface HotplaceDao {
 
@@ -33,4 +34,8 @@ public interface HotplaceDao {
 	public List<String> selectBosangMarker(Map<String, String> param);
 
 	public BosangPyeonib selectBosangPyeonibThumb(String unu);
+
+	public List<String> selectSilgeolaeMarker(Map<String, String> param);
+
+	public Silgeolae selectSilgeolaeThumb(String pnu);
 }

@@ -12,6 +12,7 @@ import me.hotplace.domain.Address;
 import me.hotplace.domain.BosangPyeonib;
 import me.hotplace.domain.Gongmae;
 import me.hotplace.domain.Gyeongmae;
+import me.hotplace.domain.Silgeolae;
 
 @Repository("hotplaceDao")
 public class HotplaceDaoImpl implements HotplaceDao {
@@ -85,6 +86,16 @@ public class HotplaceDaoImpl implements HotplaceDao {
 	public BosangPyeonib selectBosangPyeonibThumb(String unu) {
 		// TODO Auto-generated method stub
 		return msSqlSession.selectOne(namespace + ".selectBosangPyeonibThumb", unu);
+	}
+
+	@Override
+	public List<String> selectSilgeolaeMarker(Map<String, String> param) {
+		return msSqlSessionAgent.selectList(namespace + ".selectSilgeolaeMarker", param);
+	}
+
+	@Override
+	public Silgeolae selectSilgeolaeThumb(String pnu) {
+		return msSqlSessionAgent.selectOne(namespace + ".selectSilgeolaeThumb", pnu);
 	}
 
 }

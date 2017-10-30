@@ -14,6 +14,7 @@
 <script type="text/javascript" src="/resources/js/gyeongmae.js"></script>
 <script type="text/javascript" src="/resources/js/gongmae.js"></script>
 <script type="text/javascript" src="/resources/js/bosangpyeonib.js"></script>
+<script type="text/javascript" src="/resources/js/silgeolae.js"></script>
 <script type="text/javascript" src="/resources/js/sujibunseog.js"></script>
 
 <!-- FastClick -->

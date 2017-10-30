@@ -399,7 +399,7 @@
 	 * @private 
 	 * @desc 지원하는 hotplace map 이벤트 목록
 	 */
-	var _events = ['zoom_changed', 'bounds_changed', 'dragend', 'zoom_start', 'click', 'tilesloaded', 'idle'];
+	var _events = ['zoom_changed', 'bounds_changed', 'dragend', 'zoom_start', 'click', 'tilesloaded', 'idle', 'panning'];
 	
 	/**
 	 * @private
@@ -459,6 +459,7 @@
 	 * @property {string} GONGMAE - 공매
 	 * @property {string} BOSANG - 보상
 	 * @property {string} PYEONIB - 공매
+	 * @property {string} SILGEOLAE - 실거래가
 	 */
 	var _markerGroupOnOff = {GYEONGMAE:0, GONGMAE:0, BOSANG:0, PYEONIB:0, SILGEOLAE:0};
 	
@@ -662,9 +663,22 @@
 		GONGMAE : { m: [], url: 'gongmaemarker', icon: 'gongmae.png'/*, trigger: 'mouseover'*/ },
 		BOSANG: { m: [], url: 'bosangmarker', icon: 'bosang.png' },
 		PYEONIB: { m: [], url: 'pyeonibmarker', icon: 'pyeonib.png' },
-		SILGEOLAE: { m: [], url: 'silgeolaemarker', icon: 'silgeolae.png'},
-		MULGEON_SEARCH: { m: []}
+		SILGEOLAE: { m: [], url: 'silgeolaemarker', icon: 'silgeolae.png'} ,
+		MULGEON_SEARCH: { m: [], icon: 'search.png' }
 	};
+	
+	
+	
+	/** 
+	 * @memberof hotplace.maps 
+	 * @function getMarkerIcon 
+	 * @param {hotplace.maps.MarkerTypes} markerType
+	 * @desc 마커의 icon 파일이름
+	 * @return {string}
+	 */
+	maps.getMarkerIcon = function(markerType) {
+		return _markers[markerType].icon;
+	}
 	
 	/** 
 	 * @private 
@@ -1129,6 +1143,9 @@
 		case 'idle' :
 			returnObj = {};
 			break;
+		case 'panning' :
+			returnObj = {};
+			break;
 		}
 		
 		return returnObj;
@@ -1175,6 +1192,9 @@
 			break;
 		case 'PYEONIB' :
 			hotplace.bosangpyeonib.markerClick(map, marker, win, '편입');
+			break;
+		case 'SILGEOLAE' :
+			hotplace.silgeolae.markerClick(map, marker, win);
 			break;
 		}
 	}
@@ -1511,12 +1531,18 @@
 		newMarker._data = data;
 		
 		if(options.icon) {
+			var x = 22, y = 33;
+			if(options.size) {
+				x = options.size.x;
+				y = options.size.y;
+			}
+			
 			newMarker.setOptions('icon', {
 		        content: '<img src="'+ hotplace.getContextUrl() +'resources/img/marker/' + options.icon + '" alt="" ' +
                 		 'style="margin: 0px; padding: 0px; border: 0px solid transparent; display: block; max-width: none; max-height: none; ' +
-                		 '-webkit-user-select: none; position: absolute; width: 22px; height: 33px; left: 0px; top: 0px;">',
-                size: new _vender.Size(22, 33),
-                anchor: new _vender.Point(11, 33)
+                		 '-webkit-user-select: none; position: absolute; width: ' + x + 'px; height: ' + y + 'px; left: 0px; top: 0px;">',
+                size: new _vender.Size(x, y),
+                anchor: new _vender.Point(x/2, y)
 			});
 		}
 		
@@ -1640,10 +1666,18 @@
 				var listeners = {};
 				
 				if(_markers[activeMarkers[a]].trigger == undefined) {
-					listeners['click'] = function(map, marker, win) { _createMarkerTrigger(map, marker, win);	}
+					listeners['click'] = (function(mType) {
+						return function(map, marker, win) {
+							_createMarkerTrigger(map, marker, win, mType);
+						}
+					}(_markerTypes[activeMarkers[a]]));
 				}
 				else {
-					listeners[_markers[activeMarkers[a]].trigger] = function(map, marker, win) { _createMarkerTrigger(map, marker, win);	}
+					listeners[_markers[activeMarkers[a]].trigger] = (function(mType) {
+						return function(map, marker, win) {
+							_createMarkerTrigger(map, marker, win, mType);
+						}
+					}(_markerTypes[activeMarkers[a]]));
 				}
 				
 				_createMarkers(_currentLevel, startIdx, _markerTypes[activeMarkers[a]], listeners, {

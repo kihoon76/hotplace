@@ -27,6 +27,7 @@ import me.hotplace.domain.BosangPyeonib;
 import me.hotplace.domain.Gongmae;
 import me.hotplace.domain.Gyeongmae;
 import me.hotplace.domain.HpSearch;
+import me.hotplace.domain.Silgeolae;
 import me.hotplace.reporter.PdfItext;
 import me.hotplace.service.HotplaceService;
 import me.hotplace.types.MapTypes;
@@ -101,12 +102,8 @@ public class HotplaceController {
 									@RequestParam(name="ney") String ney,
 									@RequestParam(name="year") String year) throws Exception  {
 		
-		Map<String, String> param = new HashMap<String, String>();
+		Map<String, String> param = getBoundsParam(nex, swx, swy, ney);
 		param.put("level", level);
-		param.put("nex", nex);
-		param.put("swx", swx);
-		param.put("swy", swy);
-		param.put("ney", ney);
 		param.put("year", year);
 		
 		String data = hotplaceService.getLocationBounds(param);
@@ -126,11 +123,7 @@ public class HotplaceController {
 								  @RequestParam(name="swy") String swy,
 								  @RequestParam(name="ney") String ney) throws Exception  {
 		
-		Map<String, String> param = new HashMap<String, String>();
-		param.put("nex", nex);
-		param.put("swx", swx);
-		param.put("swy", swy);
-		param.put("ney", ney);
+		Map<String, String> param = getBoundsParam(nex, swx, swy, ney);
 		
 		return hotplaceService.getGyeongmaeMarker(param);
 	}
@@ -142,11 +135,7 @@ public class HotplaceController {
 								   @RequestParam(name="swy") String swy,
 								   @RequestParam(name="ney") String ney) throws Exception  {
 		
-		Map<String, String> param = new HashMap<String, String>();
-		param.put("nex", nex);
-		param.put("swx", swx);
-		param.put("swy", swy);
-		param.put("ney", ney);
+		Map<String, String> param = getBoundsParam(nex, swx, swy, ney);
 		
 		return hotplaceService.getGongmaeMarker(param);
 	}
@@ -158,11 +147,7 @@ public class HotplaceController {
 								  @RequestParam(name="swy") String swy,
 								  @RequestParam(name="ney") String ney) throws Exception  {
 		
-		Map<String, String> param = new HashMap<String, String>();
-		param.put("nex", nex);
-		param.put("swx", swx);
-		param.put("swy", swy);
-		param.put("ney", ney);
+		Map<String, String> param = getBoundsParam(nex, swx, swy, ney);
 		param.put("gubun", "보상");
 		
 		return hotplaceService.getBosangPyeonibMarker(param);
@@ -175,14 +160,29 @@ public class HotplaceController {
 								  @RequestParam(name="swy") String swy,
 								  @RequestParam(name="ney") String ney) throws Exception  {
 		
-		Map<String, String> param = new HashMap<String, String>();
-		param.put("nex", nex);
-		param.put("swx", swx);
-		param.put("swy", swy);
-		param.put("ney", ney);
+		Map<String, String> param = getBoundsParam(nex, swx, swy, ney);
 		param.put("gubun", "편입");
 		
 		return hotplaceService.getBosangPyeonibMarker(param);
+	}
+	
+	@GetMapping(value="silgeolaemarker",  produces="text/plain; charset=utf8")
+	@ResponseBody
+	public String getSilgeolaemarker(@RequestParam(name="nex") String nex,
+								     @RequestParam(name="swx") String swx,
+								     @RequestParam(name="swy") String swy,
+								     @RequestParam(name="ney") String ney) throws Exception  {
+		
+		Map<String, String> param = getBoundsParam(nex, swx, swy, ney);
+		
+		return hotplaceService.getSilgeolaeMarker(param);
+	}
+	
+	@GetMapping("silgeolae/thumb")
+	@ResponseBody
+	public Silgeolae getSilgeolaeThumb(@RequestParam("pnu") String pnu) {
+		
+		return hotplaceService.getSilgeolaeThumb(pnu);
 	}
 	
 	@PostMapping("hpgrade/search")
@@ -234,12 +234,8 @@ public class HotplaceController {
 	@GetMapping("gyeongmae/detail")
 	@ResponseBody
 	public Gyeongmae getGyeongmaeDetail(@RequestParam("goyubeonho") String goyubeonho,
-									 @RequestParam("deunglogbeonho") String deunglogbeonho,
-									 @RequestParam("pnu") String pnu) {
-		
-		System.err.println("goyubeonho ==> " + goyubeonho);
-		System.err.println("deunglogbeonho ==> " + deunglogbeonho);
-		System.err.println("pnu ==> " + pnu);
+									    @RequestParam("deunglogbeonho") String deunglogbeonho,
+									    @RequestParam("pnu") String pnu) {
 		
 		Gyeongmae g = hotplaceService.getGyeongmaeDetail(goyubeonho, deunglogbeonho);
 		
@@ -258,5 +254,15 @@ public class HotplaceController {
 	public BosangPyeonib getBosangPyeonibThumb(@RequestParam("unu") String unu) {
 		
 		return hotplaceService.getBosangPyeonibThumb(unu);
+	}
+	
+	private Map<String, String> getBoundsParam(String nex, String swx, String swy, String ney) {
+		Map<String, String> param = new HashMap<String, String>();
+		param.put("nex", nex);
+		param.put("swx", swx);
+		param.put("swy", swy);
+		param.put("ney", ney);
+		
+		return param;
 	}
 }

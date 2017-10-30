@@ -3,6 +3,8 @@
  */
 (function(bosangpyeonib, $) {
 	
+	
+	
 	function _getThumb(data) {
 		hotplace.ajax({
 			url: 'bosangpyeonib/thumb',

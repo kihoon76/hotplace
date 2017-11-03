@@ -178,7 +178,13 @@ public class DataUtil {
 				// TODO Auto-generated method stub
 				for(String token : list) {
 					String[] s = StringUtils.splitByWholeSeparator(token, deli);
-					sb.append("{\"info\":{\"pnu\":\"" + s[0] + "\", \"unu\":\"" + s[1] + "\"}");
+					sb.append("{\"info\":{\"pnu\":\"" + s[0] + "\",");
+					sb.append( "\"unu\":\"" + s[1] + "\",");
+					sb.append( "\"radius\":\"" + s[4] + "\",");
+					sb.append( "\"xg\":\"" + s[5] + "\",");
+					sb.append( "\"xgo\":\"" + s[6] + "\",");
+					sb.append( "\"xgc\":\"" + s[7] + "\",");
+					sb.append( "\"gunu\":\"" + s[8] + "\"}");
 					sb.append(",");
 					sb.append("\"location\":[");
 					sb.append(s[2]);

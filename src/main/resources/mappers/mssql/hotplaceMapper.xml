@@ -25,7 +25,7 @@
 	      order by name
 	</select>
 	
-	<select id="selectMulgeonAddress" resultType="string" parameterType="Address">
+	<!-- <select id="selectMulgeonAddress" resultType="string" parameterType="Address">
 		select concat('"',[PNU], '","', [시도명], ' ', [시군구명], ' ', [읍면동명], ' ', [리명], case when [필지구분코드] = '1' then '' else '산' end, case when [부번숫자] <![CDATA[<>]]> '0' then [본번숫자] + '-' + [부번숫자] else [본번숫자] end, '",',  [위도], ',', [경도])  
 		  from [지번주소].[dbo].[전국지번통합]
 		  <where>
@@ -42,6 +42,15 @@
 		  	and 위도 is not null
 		  	and 경도 is not null
 		  </where>
+	</select> -->
+	
+	<select id="selectMulgeonAddress" statementType="CALLABLE" parameterType="Address" resultType="string">
+		{ call  [지번주소].[dbo].[SEL_지번주소](
+			#{detail, mode=IN, jdbcType=NVARCHAR, javaType=string},
+			#{san, mode=IN, jdbcType=NVARCHAR, javaType=string},
+			#{beonjiF, mode=IN, jdbcType=SMALLINT, javaType=string},
+			#{beonjiS, mode=IN, jdbcType=SMALLINT, javaType=string}
+		)}
 	</select> 
 	
 	<select id="selectAddress" resultType="string" parameterType="Address">
@@ -289,13 +298,25 @@
 	</select>
 	
 	<!-- 보상편입물건 -->
-	<select id="selectBosangPyeonibMarker" resultType="string" parameterType="hashmap">
+	<!-- <select id="selectBosangPyeonibMarker" resultType="string" parameterType="hashmap">
        	select concat(PNU, '|$', 고유번호, '|$', 경도, '|$', 위도) 
           from [수작업].[dbo].[보상물건]
          where 편입보상구분 = #{gubun}
            and 위도 between convert(float, #{swy}) and convert(float, #{ney})
    		   and 경도 between convert(float, #{swx}) and convert(float, #{nex})
    		 order by 경도 asc
+	</select> -->
+	
+	<select id="selectBosangPyeonibMarker" statementType="CALLABLE" parameterType="hashmap" resultType="string">
+   		 { call [수작업].[dbo].[SEL_보상물건_맵2](
+   		 	#{swx, mode=IN, jdbcType=DECIMAL, javaType=string},
+   		 	#{nex, mode=IN, jdbcType=DECIMAL, javaType=string},
+   		 	#{swy, mode=IN, jdbcType=DECIMAL, javaType=string},
+			#{ney, mode=IN, jdbcType=DECIMAL, javaType=string},
+			#{level, mode=IN, jdbcType=	TINYINT, javaType=string},
+			#{gubun, mode=IN, jdbcType=	NVARCHAR, javaType=string}
+   		 	
+   		 )}
 	</select>
 	
 	<resultMap id="RM_selectBosangPyeonibThumb" type="BosangPyeonib">
@@ -334,7 +355,7 @@
 			#{swx, mode=IN, jdbcType=DECIMAL, javaType=string},
 			#{nex, mode=IN, jdbcType=DECIMAL, javaType=string},
 			#{swy, mode=IN, jdbcType=DECIMAL, javaType=string},
-			#{nex, mode=IN, jdbcType=DECIMAL, javaType=string}
+			#{ney, mode=IN, jdbcType=DECIMAL, javaType=string}
 		)}
 	</select>
 	

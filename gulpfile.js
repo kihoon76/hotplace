@@ -1,22 +1,23 @@
-var gulp = require('gulp');
-var uglify = require('gulp-uglify');
-var cssmin = require('gulp-cssmin');
-var imgmin = require('gulp-imagemin');
-var rename = require('gulp-rename');
-var livereload = require('gulp-livereload');
-var stripDebug = require('gulp-strip-debug');
-var del = require('del');
-var gutil = require('gulp-util');
-var sass = require('gulp-sass');
+var gulp = require('gulp'),
+ 	uglify = require('gulp-uglify'),
+	cssmin = require('gulp-cssmin'),
+    imgmin = require('gulp-imagemin'),
+	rename = require('gulp-rename'),
+	livereload = require('gulp-livereload'),
+	stripDebug = require('gulp-strip-debug'),
+	del = require('del'),
+	gutil = require('gulp-util'),
+	sass = require('gulp-sass'),
+	stripDebug = require('gulp-strip-debug');
 
 var resourceDir   = 'src/main/resources/META-INF/resources';
 var exVendorsDir  = '!' + resourceDir + '/vendors/**';
 
-gulp.task('sass', function() {
+/*gulp.task('sass', function() {
 	return gulp.src([resourceDir + '/sass/*.scss'])
 		   .pipe(sass.sync().on('error', sass.logError))
 		   .pipe(gulp.dest(resourceDir + '/css'));
-});
+});*/
 
 gulp.task('js_min', function() {
 	return gulp.src([resourceDir + '/**/*.js', exVendorsDir])

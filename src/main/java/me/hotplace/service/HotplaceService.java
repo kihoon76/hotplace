@@ -99,7 +99,7 @@ public class HotplaceService {
 
 	public String getBosangPyeonibMarker(Map<String, String> param) {
 		List<String> list = hotplaceDao.selectBosangMarker(param);
-		return DataUtil.makeLatLngBosangPyeonibMarker(list, "|$");
+		return DataUtil.makeLatLngBosangPyeonibMarker(list, "|");
 	}
 
 	public BosangPyeonib getBosangPyeonibThumb(String unu) {

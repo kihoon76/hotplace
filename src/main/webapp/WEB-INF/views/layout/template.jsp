@@ -57,7 +57,7 @@
       		<li><a href="">도시재생 사업(사상스마트시티) 실시계획인가, 부산시, 201707.10</a></li>
 		</ul>
 	</div>
-	<div id="dvMulgeon" class="layer-popup" style="width:600px;"></div>
+	<div id="dvMulgeon"    class="layer-popup" style="width:600px;"></div>
 	<div id="dvAddrSearch" class="layer-popup" style="width:600px; height:810px"></div>
 	<div id="dvInfo"       class="layer-popup" style="width:600px; height:800px"></div>
 	<div id="dvSalesView"  class="layer-popup" style="width:250px; height:355px"></div>
@@ -99,7 +99,18 @@
 <script type="text/javascript" src="/resources/js/plugins/loading/waitMe.min.js"></script>
 <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=SgnlyXnzstmDsYDhele7&submodules=visualization"></script>
 
-<script type="text/javascript" src="/resources/js/map/map-core.js"></script>
+<!-- <script type="text/javascript" src="/resources/js/map/map-core.js"></script> -->
+<script type="text/javascript" src="/resources/js/map/hotplace.js"></script>
+<script type="text/javascript" src="/resources/js/map/hotplace.maps.js"></script>
+<script type="text/javascript" src="/resources/js/map/hotplace.report.js"></script>
+<script type="text/javascript" src="/resources/js/map/hotplace.validation.js"></script>
+<script type="text/javascript" src="/resources/js/map/hotplace.calc.js"></script>
+<script type="text/javascript" src="/resources/js/map/hotplace.chart.js"></script>
+<script type="text/javascript" src="/resources/js/map/hotplace.database.js"></script>
+<script type="text/javascript" src="/resources/js/map/hotplace.dom.js"></script>
+<script type="text/javascript" src="/resources/js/map/hotplace.test.js"></script>
+
+<script type="text/javascript" src="/resources/js/map/naver/MarkerClustering.js"></script>
 <sitemesh:write property="page.script" />
 <%--<c:choose>
 <c:when test="${mType eq 'heatmap'}">

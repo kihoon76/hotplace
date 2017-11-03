@@ -145,10 +145,12 @@ public class HotplaceController {
 	public String getBosangmarker(@RequestParam(name="nex") String nex,
 								  @RequestParam(name="swx") String swx,
 								  @RequestParam(name="swy") String swy,
-								  @RequestParam(name="ney") String ney) throws Exception  {
+								  @RequestParam(name="ney") String ney,
+								  @RequestParam(name="level") String level) throws Exception  {
 		
 		Map<String, String> param = getBoundsParam(nex, swx, swy, ney);
 		param.put("gubun", "보상");
+		param.put("level", level);
 		
 		return hotplaceService.getBosangPyeonibMarker(param);
 	}
@@ -158,10 +160,12 @@ public class HotplaceController {
 	public String getPyeonibmarker(@RequestParam(name="nex") String nex,
 								  @RequestParam(name="swx") String swx,
 								  @RequestParam(name="swy") String swy,
-								  @RequestParam(name="ney") String ney) throws Exception  {
+								  @RequestParam(name="ney") String ney,
+								  @RequestParam(name="level") String level) throws Exception  {
 		
 		Map<String, String> param = getBoundsParam(nex, swx, swy, ney);
 		param.put("gubun", "편입");
+		param.put("level", level);
 		
 		return hotplaceService.getBosangPyeonibMarker(param);
 	}

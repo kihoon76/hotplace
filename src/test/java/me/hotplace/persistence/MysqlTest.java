@@ -15,9 +15,9 @@ public class MysqlTest {
 	@Test
 	public void test01_connectionTest() throws ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.jdbc.Driver");
-		Connection conn = DriverManager.getConnection("jdbc:mysql://aws.mysql:3306/innodb?useSSL=false&amp;serverTimeZone=UTC",
-													  "hoon",
-													  "new1234!");
+		Connection conn = DriverManager.getConnection("jdbc:mysql://192.168.0.4:3306/25cell?useSSL=false&amp;serverTimeZone=UTC",
+													  "hotplace",
+													  "dongrim6790!");
 		
 		assertThat(conn, is(notNullValue()));
 		

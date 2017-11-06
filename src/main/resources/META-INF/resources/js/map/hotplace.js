@@ -253,6 +253,7 @@
 				
 				try {
 					params.success(data, textStatus, jqXHR);
+					
 				} 
 				finally {
 					var activeMask = (params.activeMask == undefined) ? true : params.activeMask; 
@@ -264,6 +265,7 @@
 							dom.hideMask();
 						}
 					} 
+					
 				}
 			},
 			error: function(jqXHR, textStatus, e) {
@@ -283,6 +285,9 @@
 						dom.hideMask();
 					}
 				} 
+			},
+			complete: function(jqXHR, textStatus) {
+				if(params.complete) params.complete(jqXHR);
 			},
 			timeout: params.timeout || 300000
 		});
@@ -308,11 +313,25 @@
 			isMaskTran: isMaskTran,
 			success: function(data, textStatus, jqXHR) {
 				var jo = $.parseJSON(data);
+				
+				if(!jo.success) {
+					jqXHR.errCode = jo.errCode;
+				}
+				else {
+					cbSucc(jo);
+				}
 				//console.log('data count : ' + jo.datas.length);
-				cbSucc(jo);
+				
 			},
 			error:function() {
 				
+			},
+			complete: function(jqXHR) {
+				switch(jqXHR.errCode) {
+				case '100' :
+					hotplace.dom.showAuthMsg();
+					break;
+				}
 			}
 		});
 		

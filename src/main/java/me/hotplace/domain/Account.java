@@ -10,12 +10,19 @@ public class Account {
 	private String id;
 	private String userName;
 	private String password;
+	private String phone;
 	private String email;
 	
 	private List<Authority> authorities;
 	
 	public List<Authority> getAuthorities() {
 		return authorities;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 	public void setAuthorities(List<Authority> authorities) {
 		this.authorities = authorities;

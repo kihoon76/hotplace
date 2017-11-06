@@ -401,11 +401,4 @@
 
 
 
-#{swx, mode=IN, jdbcType=DECIMAL, javaType=string},
-			#{nex, mode=IN, jdbcType=DECIMAL, javaType=string},
-			#{swy, mode=IN, jdbcType=DECIMAL, javaType=string},
-			#{nex, mode=IN, jdbcType=DECIMAL, javaType=string}
-
-
-
  -->

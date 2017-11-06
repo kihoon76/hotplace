@@ -28,13 +28,13 @@
 	</bean>
 	
 	<!-- Mysql -->
-<!-- 	<bean id="mysqlDataSource"
+ 	<bean id="mysqlDataSource"
 		  class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="#{dsCfg['mysql.datasource.driverClassName']}" />
 		<property name="url" value="#{dsCfg['mysql.datasource.url']}" />
 		<property name="username" value="#{dsCfg['mysql.datasource.username']}" />
 		<property name="password" value="#{dsCfg['mysql.datasource.password']}" />
-	</bean> -->
+	</bean>
 	
 	<!-- MyBatisMssqlWeb -->
 	<bean id="msSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -51,16 +51,16 @@
 	</bean>
 	
 	<!-- MyBatisMysql -->
-<!-- 	<bean id="mySqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+ 	<bean id="mySqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="mysqlDataSource" />
 		<property name="configLocation" value="classpath:/mybatisMysql-config.xml" />
 		<property name="mapperLocations" value="classpath:/mappers/mysql/*Mapper.xml" />
-	</bean> -->
+	</bean>
 	
 	<!-- MyBatis MySqlSession  -->
-<!-- 	<bean id="mySqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+ 	<bean id="mySqlSession" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg name="sqlSessionFactory" ref="mySqlSessionFactory" />
-	</bean> -->
+	</bean> 
 	
 	<!-- MyBatis MSsqlSessionWeb -->
 	<bean id="msSqlSession" class="org.mybatis.spring.SqlSessionTemplate">

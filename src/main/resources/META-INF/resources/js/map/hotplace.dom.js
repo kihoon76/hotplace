@@ -56,7 +56,12 @@
 	 */
 	var _showCellYear = 2017;
 	
-	
+	/**
+	 * @private
+	 * @type {function}
+	 * @desc 모달창이 닫힌후 실행되는 함수 
+	 */
+	var _modalCloseAfterFn = function() {};
 	/**
 	 * @private
 	 * @function _runWaitMe
@@ -153,8 +158,9 @@
 	 *       생성후 전역변수 _infoWindowForCell에 저장
 	 */
 	function _bindModalCloseEvent(closeFn) {
-		$('#containerModal').on('hidden.bs.modal', closeFn || function () {});
+		_modalCloseAfterFn = closeFn;
 	}
+	
 	
 	var _layer = {};
 	
@@ -313,8 +319,8 @@
 		
 		if(!modalSize) modalSize = 'fullsize';
 		
-		$('#containerModal > .modal-dialog').removeClass('modal-fullsize modal-bigsize');
-		$('#containerModal > .modal-content').removeClass('modal-fullsize modal-bigsize'); 
+		$('#containerModal > .modal-dialog').removeClass('modal-fullsize modal-bigsize modal-center');
+		$('#containerModal > .modal-content').removeClass('modal-fullsize modal-bigsize modal-center'); 
 		
 		$('#containerModal > .modal-dialog').addClass('modal-' + modalSize);
 		$('#containerModal > .modal-content').addClass('modal-' + modalSize);
@@ -322,6 +328,18 @@
 		
 		$('#containerModal').modal('show');
 		_bindModalCloseEvent(closeFn);
+	}
+	
+	dom.openCenterModal = function(title, size, closeFn) {
+		$('#spCenterModalTitle').text(title);
+		
+		if(size) {
+			var $modal = $('#centerModal .modal-content');
+			$modal.css({'width':size.width, 'height': size.height});
+		}
+		
+		$('#centerModal').modal('show');
+		_bindModalCloseEvent(closeFn || function() {});
 	}
 	
 	/**
@@ -752,6 +770,23 @@
 		document.body.appendChild(script);
 	}
 	
+	dom.showAuthMsg = function() {
+		var tForm = dom.getTemplate('authmsgForm');
+		$('#dvCenterModalContent').html(tForm());
+		
+		dom.openCenterModal('', {width: '50%', height:'30%'});
+	}
+	
+	dom.showLoginForm = function(fn) {
+		var tForm = dom.getTemplate('loginForm');
+		$('#dvCenterModalContent').html(tForm());
+		
+		dom.openCenterModal('', {width: '500px', height:'350px'}, fn);
+	}
+	
+	$(document).on('hidden.bs.modal', '#containerModal,#centerModal', function() {
+		_modalCloseAfterFn();
+	})
 }(
 	hotplace.dom = hotplace.dom || {},
 	jQuery

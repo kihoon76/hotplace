@@ -53,7 +53,7 @@ public class HotplaceController {
 	@GetMapping("signin")
 	public String signinForm(HttpServletRequest request) {
 		
-		return "signin";
+		return "authresult";
 	}
 	
 	@GetMapping(value="address/condition", produces="application/text; charset=utf8")
@@ -119,9 +119,10 @@ public class HotplaceController {
 	@GetMapping("gyeongmaemarker")
 	@ResponseBody
 	public String getGyeongmaeMarker(@RequestParam(name="nex") String nex,
-								  @RequestParam(name="swx") String swx,
-								  @RequestParam(name="swy") String swy,
-								  @RequestParam(name="ney") String ney) throws Exception  {
+								  	 @RequestParam(name="swx") String swx,
+								  	 @RequestParam(name="swy") String swy,
+								  	 @RequestParam(name="ney") String ney,
+								  	 @RequestParam(name="level") String level) throws Exception  {
 		
 		Map<String, String> param = getBoundsParam(nex, swx, swy, ney);
 		
@@ -259,6 +260,7 @@ public class HotplaceController {
 		
 		return hotplaceService.getBosangPyeonibThumb(unu);
 	}
+	
 	
 	private Map<String, String> getBoundsParam(String nex, String swx, String swy, String ney) {
 		Map<String, String> param = new HashMap<String, String>();

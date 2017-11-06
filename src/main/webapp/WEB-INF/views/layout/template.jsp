@@ -82,6 +82,22 @@
 	</div>
 </div>
 
+<div class="modal fade" id="centerModal" tabindex="-1" role="dialog" aria-labelledby="centerModalLabel" style="z-index:1050;">
+	<div class="vertical-alignment-helper">
+	<div class="modal-dialog vertical-alignment-center" role="document">
+    <div class="modal-content ">
+    	<div class="modal-header">
+    		<span id="spCenterModalTitle"></span>
+        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      	</div>
+      	<div class="modal-body" id="dvCenterModalContent">
+        Modal 내용
+      	</div>
+    </div>
+	</div>
+	</div>
+</div>
+
 <div id="dimScreen"></div>
 <sitemesh:write property="body" />
 <script type="text/javascript" src="/resources/handlebars/4.0.5/handlebars.min.js"></script>

@@ -138,6 +138,12 @@ $(document).ready(function() {
 		$this.toggleClass('button-on');
 	}
 	
+	function _btnOnlyToggle($this) {
+		var sw = $this.data('switch');
+		$this.data('switch', ((sw == 'on') ? 'off' : 'on'));
+		$this.toggleClass('button-on');
+	}
+	
 	function _tick() {
 		$('#newsTicker li:first').slideUp(function() {
 			$(this).appendTo($('#newsTicker')).slideDown();
@@ -837,6 +843,25 @@ $(document).ready(function() {
 				hotplace.maps.cellToggle();
 			}, function() {
 				hotplace.maps.cellToggle();
+			});
+		}
+	},{
+		id:'btnUserLogin',
+		glyphicon: 'user',
+		attr: 'data-switch="off" title="로그인"',
+		clazz: 'mBtnTooltip',
+		callback: function(e) {
+			var $this = $(this);
+			/*_btnCallback($this, e, null, false, function() {
+				hotplace.dom.showLoginForm(function() {
+					_btnOnlyToggle($this);
+				});
+				//console.log('a');
+			});*/
+			_btnCallback($this, e, null, false, function() {
+				hotplace.dom.showLoginForm(function() {
+					_btnOnlyToggle($this);
+				});
 			});
 		}
 	}]);

@@ -10,10 +10,14 @@
 		
 		hotplace.ajax({
 			url: 'login',
-			method: 'GET',
+			method: 'POST',
 			dataType: 'text',
+			data: $('#loginFm').serialize(),
 			success: function(data, textStatus, jqXHR) {
-				
+				console.log(data)
+			},
+			error: function(data, textStatus, jqXHR) {
+				console.log(data)
 			}
 		});
 	});

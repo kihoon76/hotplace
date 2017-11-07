@@ -62,6 +62,26 @@
 	 * @desc 모달창이 닫힌후 실행되는 함수 
 	 */
 	var _modalCloseAfterFn = function() {};
+	
+	/**
+	 * @private
+	 * @type {function}
+	 * @desc 메인화면 버튼메뉴 id값 설정 
+	 */
+	var _menuBtnIdCfg = function() {
+		return {
+			'USER_LOGIN' : 'btnUserLogin',
+			'HEAT_MAP': 'btnLayerView'
+		};
+	};
+	
+	/**
+	 * @memberof hotplace.dom
+	 * @function getMenuBtn
+	 * @returns {object} 
+	 * @desc 메인화면 메뉴버튼 아이디값
+	 */
+	dom.getMenuBtn = _menuBtnIdCfg;
 	/**
 	 * @private
 	 * @function _runWaitMe
@@ -770,11 +790,11 @@
 		document.body.appendChild(script);
 	}
 	
-	dom.showAuthMsg = function() {
+	dom.showAuthMsg = function(fn) {
 		var tForm = dom.getTemplate('authmsgForm');
 		$('#dvCenterModalContent').html(tForm());
 		
-		dom.openCenterModal('', {width: '50%', height:'30%'});
+		dom.openCenterModal('', {width: '50%', height:'30%'}, fn);
 	}
 	
 	dom.showLoginForm = function(fn) {
@@ -782,6 +802,19 @@
 		$('#dvCenterModalContent').html(tForm());
 		
 		dom.openCenterModal('', {width: '500px', height:'350px'}, fn);
+	}
+	
+	dom.toggleOnlyMenuButton = function(btnId) {
+		var $btn = $('#' + btnId);
+		var sw = $btn.data('switch');
+		$btn.data('switch', ((sw == 'on') ? 'off' : 'on'));
+		$btn.toggleClass('button-on');
+	}
+	
+	dom.offMenuButton = function(btnId) {
+		var $btn = $('#' + btnId);
+		$btn.data('switch', 'off');
+		$btn.removeClass('button-on');
 	}
 	
 	$(document).on('hidden.bs.modal', '#containerModal,#centerModal', function() {

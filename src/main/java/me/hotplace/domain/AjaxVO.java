@@ -6,6 +6,7 @@ import java.util.List;
 public class AjaxVO<T> {
 
 	private boolean success;
+	private String errCode;
 	private String errMsg;
 	private List<T> datas;
 	
@@ -16,6 +17,10 @@ public class AjaxVO<T> {
 	public boolean isSuccess() {
 		return success;
 	}
+	public void setErrCode(String errCode) {
+		this.errCode = errCode;
+	}
+
 	public void setSuccess(boolean success) {
 		this.success = success;
 	}

@@ -860,7 +860,7 @@ $(document).ready(function() {
 			});*/
 			_btnCallback($this, e, null, false, function() {
 				hotplace.dom.showLoginForm(function() {
-					_btnOnlyToggle($this);
+					hotplace.dom.toggleOnlyMenuButton(hotplace.dom.getMenuBtn().USER_LOGIN);
 				});
 			});
 		}

@@ -27,17 +27,18 @@ public class SigninSuccessHandler extends SavedRequestAwareAuthenticationSuccess
 		
 		String accept = request.getHeader("accept");
 		
-		if(StringUtils.indexOf(accept, "json") > -1) {
-			response.setContentType("application/json");
-			response.setContentType("utf-8");
+		if(true/*StringUtils.indexOf(accept, "json") > -1*/) {
+			//response.setContentType("application/json");
+			//response.setContentType("utf-8");
 		
+			response.setContentType("text/plain");
 			//Cookie 처리
-			String idSave = request.getParameter("idsave");
+			//String idSave = request.getParameter("idsave");
 			String id = request.getParameter("id");
 			
-			Cookie cookie = new Cookie("id", id);
+			/*Cookie cookie = new Cookie("id", id);
 			cookie.setMaxAge((idSave != null) ? 1000 : 0);
-			response.addCookie(cookie);
+			response.addCookie(cookie);*/
 			
 			AjaxVO data = new AjaxVO();
 			data.setSuccess(true);

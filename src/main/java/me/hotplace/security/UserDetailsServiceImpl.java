@@ -30,7 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 		//회원정보 dao에서 데이터 읽어옴
 		Account user = null;
 		try {
-			//user = userService.getUserAfterLogin(makeUserVO(username));
+			user = userService.getUserInfo(username);
 		}
 		catch(Exception e) {
 			throw new UsernameNotFoundException("접속자 정보 DB에서  문제가 발생했습니다. ");

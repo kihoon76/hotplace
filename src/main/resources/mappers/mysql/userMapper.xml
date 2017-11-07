@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.mysql.userMapper">
+
+	<resultMap id="RM_selectUser" type="Account">
+		<result column="id" property="id" javaType="string"/>
+		<result column="userName" property="userName" javaType="string" />
+		<result column="pw" property="password" javaType="string"/>
+		<result column="phone" property="phone" javaType="string"/>
+		<result column="email" property="email" javaType="string"/>
+	 	<collection property="authorities" column="id" javaType="java.util.ArrayList"
+	 				ofType="Authority" select="selectAuthorities" />
+	</resultMap>
+	
+	<select id="selectUser" parameterType="string" resultMap="RM_selectUser">
+		select id, userName, pw, phone, email
+		  from Account
+		 where id = #{id}
+	</select>
+	
+	<select id="selectAuthorities" parameterType="string" resultType="Authority">
+		select b.authName
+		  from Account_Authorities a
+		 inner join Authority b
+		    on a.authority_id = b.id
+		 where a.account_id = #{id}  
+	</select>
+</mapper>

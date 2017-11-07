@@ -23,6 +23,7 @@ import com.google.gson.JsonObject;
 import com.mysql.jdbc.StringUtils;
 
 import me.hotplace.domain.Address;
+import me.hotplace.domain.AjaxVO;
 import me.hotplace.domain.BosangPyeonib;
 import me.hotplace.domain.Gongmae;
 import me.hotplace.domain.Gyeongmae;
@@ -53,6 +54,8 @@ public class HotplaceController {
 	@GetMapping("signin")
 	public String signinForm(HttpServletRequest request) {
 		
+		AjaxVO ajax = new AjaxVO();
+		request.setAttribute("result", ajax);
 		return "authresult";
 	}
 	
@@ -260,7 +263,6 @@ public class HotplaceController {
 		
 		return hotplaceService.getBosangPyeonibThumb(unu);
 	}
-	
 	
 	private Map<String, String> getBoundsParam(String nex, String swx, String swy, String ney) {
 		Map<String, String> param = new HashMap<String, String>();

@@ -1507,7 +1507,11 @@
 					}
 				}, 
 				true,
-				isMaskTran);
+				isMaskTran,
+				function() {
+					hotplace.dom.offMenuButton(hotplace.dom.getMenuBtn().HEAT_MAP);
+					hotplace.maps.cellToggle();
+				});
 			}
 		}
 	}

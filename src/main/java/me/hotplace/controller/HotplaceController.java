@@ -51,19 +51,23 @@ public class HotplaceController {
 		return "main";
 	}
 	
-	@GetMapping("signin")
-	public String signinForm(HttpServletRequest request) {
+	@GetMapping("signin/{errCode}")
+	public String signinForm(@PathVariable(name="errCode", required=false) String errCode, HttpServletRequest request) {
 		
 		AjaxVO ajax = new AjaxVO();
+		ajax.setSuccess(false);
+		ajax.setErrCode(errCode);
 		request.setAttribute("result", ajax);
+		
 		return "authresult";
 	}
 	
 	@GetMapping(value="address/condition", produces="application/text; charset=utf8")
 	@ResponseBody
-	public String getAddressSearchCondition(@RequestParam(name="type", required=true) String type,
-							 @RequestParam(name="si", required=true) String si,
-							 @RequestParam(name="gugun", required=false) String gugun) {
+	public String getAddressSearchCondition(
+			@RequestParam(name="type", required=true) String type,
+			@RequestParam(name="si", required=true) String si,
+			@RequestParam(name="gugun", required=false) String gugun) {
 			
 		if("".equals(gugun)) {
 			return hotplaceService.getGuGunList(si);

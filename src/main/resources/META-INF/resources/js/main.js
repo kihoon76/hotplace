@@ -864,6 +864,23 @@ $(document).ready(function() {
 				});
 			});
 		}
+	},{
+		id:'btnUserLogout',
+		glyphicon: 'user',
+		attr: 'data-switch="off" title="로그아웃"',
+		clazz: 'mBtnTooltip',
+		callback: function(e) {
+			var $this = $(this);
+			/*_btnCallback($this, e, null, false, function() {
+				hotplace.dom.showLoginForm(function() {
+					_btnOnlyToggle($this);
+				});
+				//console.log('a');
+			});*/
+			_btnCallback($this, e, null, false, function() {
+				hotplace.dom.logout();
+			});
+		}
 	}]);
 	
 	hotplace.validation.numberOnly('.numberOnly');

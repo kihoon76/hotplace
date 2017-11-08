@@ -27,7 +27,7 @@ public class SigninFailureHandler extends SimpleUrlAuthenticationFailureHandler{
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {
 		
-		response.setContentType("application/json");
+		response.setContentType("text/plain");
 		response.setCharacterEncoding("utf-8");
 		
 		AjaxVO<Map> ajax = new AjaxVO<Map>();
@@ -36,16 +36,20 @@ public class SigninFailureHandler extends SimpleUrlAuthenticationFailureHandler{
 		Map<String, String> data = new HashMap<String, String>();
 		//사용자정보 없음
 		if(exception.getClass().isAssignableFrom(UsernameNotFoundException.class)) {
-			data.put("type", "ID");
+			//data.put("type", "ID");
+			ajax.setErrCode("101");
 		}
 		else if(exception.getClass().isAssignableFrom(BadCredentialsException.class)) {
-			data.put("type", "PW");
+			//data.put("type", "PW");
+			ajax.setErrCode("102");
 		}
 		else if(exception.getClass().isAssignableFrom(NotAuthorizedByAdmin.class)) {
-			data.put("type", "AUTH");
+			//data.put("type", "AUTH");
+			ajax.setErrCode("103");
 		}
 		else {
-			data.put("type", "ETC");
+			//data.put("type", "ETC");
+			ajax.setErrCode("104");
 		}
 		
 		ajax.addObject(data);

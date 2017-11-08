@@ -332,6 +332,12 @@
 				case '100' :
 					hotplace.dom.showAuthMsg(completeFn);
 					break;
+				case '202' :
+					hotplace.dom.showAuthMsg(function() {
+						window.location.reload();
+					},'중복 로그인');
+					
+					break;
 				}
 			}
 		});

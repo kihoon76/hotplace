@@ -790,9 +790,11 @@
 		document.body.appendChild(script);
 	}
 	
-	dom.showAuthMsg = function(fn) {
+	dom.showAuthMsg = function(fn, msg) {
 		var tForm = dom.getTemplate('authmsgForm');
 		$('#dvCenterModalContent').html(tForm());
+		
+		$('#authMsg').html(msg || '로그인후 이용하세요');
 		
 		dom.openCenterModal('', {width: '50%', height:'30%'}, fn);
 	}
@@ -815,6 +817,20 @@
 		var $btn = $('#' + btnId);
 		$btn.data('switch', 'off');
 		$btn.removeClass('button-on');
+	}
+	
+	dom.logout = function() {
+		hotplace.ajax({
+			url: 'logout',
+			method: 'POST',
+			dataType: 'text',
+			success: function(data, textStatus, jqXHR) {
+				console.log(data);
+			},
+			error: function() {
+				
+			}
+		});
 	}
 	
 	$(document).on('hidden.bs.modal', '#containerModal,#centerModal', function() {

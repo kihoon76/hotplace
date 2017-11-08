@@ -20,13 +20,13 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 	@Autowired
 	UserService userService;
 	
-	//@Autowired
-	//private HttpServletRequest request;
+	@Autowired
+	private HttpServletRequest request;
 	
 	@Override
 	public UserDetailsImpl loadUserByUsername(String username) throws UsernameNotFoundException {
 		logger.info("username ==> " + username);
-		
+		System.err.println(request.getRequestURL().toString());
 		//회원정보 dao에서 데이터 읽어옴
 		Account user = null;
 		try {

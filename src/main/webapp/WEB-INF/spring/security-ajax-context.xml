@@ -8,16 +8,15 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 
 	<sec:http auto-config="true" use-expressions="true">
-		<sec:intercept-url pattern="/gyeongmaemarker" access="hasRole('ROLE_JOINED')"/>
+		<!-- <sec:intercept-url pattern="/gyeongmaemarker" access="hasRole('ROLE_JOINED')"/>
 		<sec:intercept-url pattern="/loginstate" access="hasRole('ROLE_JOINED')"/>
-		<sec:intercept-url pattern="/locationbounds" access="hasRole('ROLE_JOINED')"/>
-		<sec:intercept-url pattern="/test" access="permitAll"/>
+		<sec:intercept-url pattern="/locationbounds" access="hasRole('ROLE_JOINED')"/> -->
 		<sec:intercept-url pattern="/resources/**" access="permitAll" />
 		<sec:intercept-url pattern="/main" access="permitAll" />
 		<sec:intercept-url pattern="/signin/**" access="permitAll"/>
 		<sec:intercept-url pattern="/login" access="permitAll"/>
 		<sec:intercept-url pattern="/logout" access="permitAll"/>
-		<sec:intercept-url pattern="/**" access="permitAll"/>
+		<sec:intercept-url pattern="/**" access="hasRole('ROLE_JOINED')"/>
 		<!-- <sec:intercept-url pattern="/**" access="permitAll"/> -->
 		<!-- <sec:intercept-url pattern="/resources/**" access="permitAll"/>
 		<sec:intercept-url pattern="/signin" access="permitAll"/>

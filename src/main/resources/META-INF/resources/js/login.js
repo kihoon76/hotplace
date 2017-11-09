@@ -2,7 +2,9 @@
  * @namespace hotplace.login
  */
 (function(login, $) {
-	var _btnId = '#btnLogin';
+	var _btnId = '#btnLogin',
+		_btnLogoutYes = '#btnLogoutYes',
+		_btnLogoutNo = '#btnLogoutNo';
 	
 	function _changeLoginMenu($btn) {
 		var rmClass = $btn.hasClass('glyphicon-log-in') ? 'glyphicon-log-in' : 'glyphicon-log-out';
@@ -49,6 +51,19 @@
 				console.log(data)
 			}
 		});
+	});
+	
+	$(document).on('click', _btnLogoutYes, function() {
+		hotplace.dom.logout(function() {
+			/*var $menuBtn = $('#' + hotplace.dom.getMenuBtn().USER_LOGIN);
+			_changeLoginMenu($menuBtn);
+			hotplace.dom.closeModal();*/
+			window.location.reload();
+		});
+	});
+	
+	$(document).on('click', _btnLogoutNo, function() {
+		hotplace.dom.closeModal();
 	});
 }(
 		hotplace.login = hotplace.login || {},

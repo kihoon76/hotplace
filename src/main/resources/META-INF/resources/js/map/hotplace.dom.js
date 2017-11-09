@@ -842,13 +842,17 @@
 		$btn.removeClass('button-on');
 	}
 	
-	dom.logout = function() {
+	dom.logout = function(fn) {
 		hotplace.ajax({
 			url: 'logout',
 			method: 'POST',
 			dataType: 'text',
 			success: function(data, textStatus, jqXHR) {
 				console.log(data);
+				var jo = $.parseJSON(data);
+				if(jo.success) {
+					if(fn) fn();
+				}
 			},
 			error: function() {
 				

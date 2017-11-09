@@ -55,7 +55,13 @@ public class HotplaceController {
 	public String signinForm(@PathVariable(name="errCode", required=false) String errCode, HttpServletRequest request) {
 		
 		AjaxVO ajax = new AjaxVO();
-		ajax.setSuccess(false);
+		if("200".equals(errCode)) {
+			ajax.setSuccess(true);
+		}
+		else {
+			ajax.setSuccess(false);
+		}
+		
 		ajax.setErrCode(errCode);
 		request.setAttribute("result", ajax);
 		

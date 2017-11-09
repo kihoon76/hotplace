@@ -1548,7 +1548,7 @@
 							 level: currentLevel
 						}, function(json) {
 							try {
-								hotplace.database.setLevelData(currentLevel, _markerTypes[activeMarkers[x]], json);
+								hotplace.database.setLevelData(currentLevel, _markerTypes[activeMarkers[x]], json.datas);
 								_showMarkers(_markerTypes[activeMarkers[x]]);
 								if(callback) callback();
 								console.log(json);

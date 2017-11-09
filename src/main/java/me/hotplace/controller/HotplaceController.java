@@ -119,14 +119,7 @@ public class HotplaceController {
 		param.put("level", level);
 		param.put("year", year);
 		
-		String data = hotplaceService.getLocationBounds(param);
-		/*AjaxVO ajaxVO = new AjaxVO();
-		ajaxVO.addObject(data);
-		ajaxVO.setSuccess(true);*/
-		//String s = "{\"success\":true, \"datas\":" + data + "}";
-		String s = String.format(DataUtil.getAjaxFormats(), true, "", data);
-		
-		return s; 
+		return makeReturn(hotplaceService.getLocationBounds(param), true);
 	}
 	
 	@GetMapping("gyeongmaemarker")
@@ -139,7 +132,7 @@ public class HotplaceController {
 		
 		Map<String, String> param = getBoundsParam(nex, swx, swy, ney);
 		
-		return hotplaceService.getGyeongmaeMarker(param);
+		return makeReturn(hotplaceService.getGyeongmaeMarker(param), true);
 	}
 	
 	@GetMapping("gongmaemarker")
@@ -151,7 +144,7 @@ public class HotplaceController {
 		
 		Map<String, String> param = getBoundsParam(nex, swx, swy, ney);
 		
-		return hotplaceService.getGongmaeMarker(param);
+		return makeReturn(hotplaceService.getGongmaeMarker(param), true);
 	}
 	
 	@GetMapping("bosangmarker")
@@ -166,22 +159,26 @@ public class HotplaceController {
 		param.put("gubun", "보상");
 		param.put("level", level);
 		
-		return hotplaceService.getBosangPyeonibMarker(param);
+		return makeReturn(hotplaceService.getBosangPyeonibMarker(param), true);
 	}
 	
 	@GetMapping("pyeonibmarker")
 	@ResponseBody
 	public String getPyeonibmarker(@RequestParam(name="nex") String nex,
-								  @RequestParam(name="swx") String swx,
-								  @RequestParam(name="swy") String swy,
-								  @RequestParam(name="ney") String ney,
-								  @RequestParam(name="level") String level) throws Exception  {
+								   @RequestParam(name="swx") String swx,
+								   @RequestParam(name="swy") String swy,
+								   @RequestParam(name="ney") String ney,
+								   @RequestParam(name="level") String level) throws Exception  {
 		
 		Map<String, String> param = getBoundsParam(nex, swx, swy, ney);
 		param.put("gubun", "편입");
 		param.put("level", level);
 		
-		return hotplaceService.getBosangPyeonibMarker(param);
+		return makeReturn(hotplaceService.getBosangPyeonibMarker(param), true);
+	}
+	
+	private String makeReturn(String data, boolean result) {
+		return String.format(DataUtil.getAjaxFormats(), result, "", data);
 	}
 	
 	@GetMapping(value="silgeolaemarker",  produces="text/plain; charset=utf8")
@@ -193,7 +190,7 @@ public class HotplaceController {
 		
 		Map<String, String> param = getBoundsParam(nex, swx, swy, ney);
 		
-		return hotplaceService.getSilgeolaeMarker(param);
+		return makeReturn(hotplaceService.getSilgeolaeMarker(param), true);
 	}
 	
 	@GetMapping("silgeolae/thumb")

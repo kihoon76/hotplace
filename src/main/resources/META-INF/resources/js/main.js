@@ -847,19 +847,15 @@ $(document).ready(function() {
 		}
 	},{
 		id:'btnUserLogin',
-		glyphicon: 'user',
-		attr: 'data-switch="off" title="로그인"',
+		glyphicon: 'log-in',
+		attr: 'data-switch="off" data-gubun="IN" title="로그인"',
 		clazz: 'mBtnTooltip',
 		callback: function(e) {
 			var $this = $(this);
-			/*_btnCallback($this, e, null, false, function() {
-				hotplace.dom.showLoginForm(function() {
-					_btnOnlyToggle($this);
-				});
-				//console.log('a');
-			});*/
 			_btnCallback($this, e, null, false, function() {
-				hotplace.dom.showLoginForm(function() {
+				var gubun = $this.data('gubun');
+				
+				hotplace.dom.showLoginForm(gubun, function() {
 					hotplace.dom.toggleOnlyMenuButton(hotplace.dom.getMenuBtn().USER_LOGIN);
 				});
 			});

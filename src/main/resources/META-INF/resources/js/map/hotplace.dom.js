@@ -75,6 +75,8 @@
 		};
 	};
 	
+	var _layer = {};
+	
 	/**
 	 * @memberof hotplace.dom
 	 * @function getMenuBtn
@@ -174,16 +176,23 @@
 	 * @private
 	 * @function _bindModalCloseEvent
 	 * @param {function} closeFn close event handler
-	 * @desc modal창이 닫힐때 handler 등록
-	 *       생성후 전역변수 _infoWindowForCell에 저장
+	 * @desc modal창이 닫힐때 실행될 함수를 저장
 	 */
 	function _bindModalCloseEvent(closeFn) {
 		_modalCloseAfterFn = closeFn;
 	}
 	
 	
-	var _layer = {};
 	
+	/**
+	 * @memberof hotplace.dom
+	 * @function getCurrentFnAfterModalClose
+	 * @returns {function}
+	 * @desc modal창이 닫힐때 실행될 함수를 반환
+	 */
+	dom.getCurrentFnAfterModalClose = function() {
+		return _modalCloseAfterFn;
+	}
 	
 	/**
 	 * @memberof hotplace.dom
@@ -378,6 +387,7 @@
 	 * @memberof hotplace.dom
 	 * @function showMask
 	 * @param {string} loadEl loadmask element selector  
+	 * @param {string} msg 마스크 로딩시 보여질 메시지
 	 * @desc waitMe mask show
 	 */
 	dom.showMask = function(loadEl, msg) {
@@ -390,11 +400,24 @@
 		_runWaitMe(loadEl, 1, _loadEffects.ios, msg);
 	};
 	
+	/**
+	 * @memberof hotplace.dom
+	 * @function showMaskTransaction
+	 * @param {number} count 하나의 마스크로 처리할 ajax 처리갯수  
+	 * @param {string} loadEl loadmask element selector
+	 * @param {string} msg 마스크 로딩시 보여질 메시지  
+	 * @desc waitMe mask show
+	 */
 	dom.showMaskTransaction = function(count, loadEl, msg) {
 		_loadEndCount = count || 0;
 		dom.showMask(loadEl, msg);
 	}
 	
+	/**
+	 * @memberof hotplace.dom
+	 * @function hideMaskTransaction
+	 * @desc waitMe mask hide
+	 */
 	dom.hideMaskTransaction = function() {
 		--_loadEndCount;
 		if(_loadEndCount == 0) {
@@ -799,8 +822,8 @@
 		dom.openCenterModal('', {width: '50%', height:'30%'}, fn);
 	}
 	
-	dom.showLoginForm = function(fn) {
-		var tForm = dom.getTemplate('loginForm');
+	dom.showLoginForm = function(gubun, fn) {
+		var tForm = (gubun == 'IN') ? dom.getTemplate('loginForm') : dom.getTemplate('logoutForm');
 		$('#dvCenterModalContent').html(tForm());
 		
 		dom.openCenterModal('', {width: '500px', height:'350px'}, fn);
@@ -831,6 +854,11 @@
 				
 			}
 		});
+	}
+	
+	dom.closeModal = function() {
+		$('#containerModal').modal('hide');
+		$('#centerModal').modal('hide');
 	}
 	
 	$(document).on('hidden.bs.modal', '#containerModal,#centerModal', function() {

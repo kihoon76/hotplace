@@ -116,7 +116,7 @@
 	</select>
 	
 	<select id="selectGyeongmaeMarker" resultType="string" parameterType="hashmap">
-		select concat(a.PNU, '|$', a.고유번호, '|$', a.등록번호, '|$', a.경도, '|$', a.위도)
+		<!-- select concat(a.PNU, '|$', a.고유번호, '|$', a.등록번호, '|$', a.경도, '|$', a.위도)
           from [데이터수집].dbo.경매_목록 a with (nolock, index(IX_경매_목록))
        	 inner join 좌표계.dbo.가로축13 b with (nolock) on (b.PNU=a.PNU)
        	 inner join 좌표계.dbo.세로축13 c with (nolock) on (c.PNU=a.PNU)
@@ -124,7 +124,13 @@
          where a.위도 between convert(float, #{swy}) and convert(float, #{ney})
            and a.경도 between convert(float, #{swx}) and convert(float, #{nex})
            and a.용도 != '자동차'
-         order by a.경도 asc
+         order by a.경도 asc -->
+         { call [데이터수집].[dbo].[SEL_경매_목록] (
+         	#{swx, mode=IN, jdbcType=FLOAT, javaType=string},
+   		 	#{nex, mode=IN, jdbcType=FLOAT, javaType=string},
+   		 	#{swy, mode=IN, jdbcType=FLOAT, javaType=string},
+			#{ney, mode=IN, jdbcType=FLOAT, javaType=string},
+         )}
 	</select>
 	
 	<resultMap id="RM_selectGyeongmaeThumb"  type="Gyeongmae">

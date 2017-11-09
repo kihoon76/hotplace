@@ -126,10 +126,10 @@
            and a.용도 != '자동차'
          order by a.경도 asc -->
          { call [데이터수집].[dbo].[SEL_경매_목록] (
-         	#{swx, mode=IN, jdbcType=FLOAT, javaType=string},
-   		 	#{nex, mode=IN, jdbcType=FLOAT, javaType=string},
    		 	#{swy, mode=IN, jdbcType=FLOAT, javaType=string},
-			#{ney, mode=IN, jdbcType=FLOAT, javaType=string}
+			#{ney, mode=IN, jdbcType=FLOAT, javaType=string},
+			#{swx, mode=IN, jdbcType=FLOAT, javaType=string},
+   		 	#{nex, mode=IN, jdbcType=FLOAT, javaType=string}
          )}
 	</select>
 	

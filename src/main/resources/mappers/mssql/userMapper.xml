@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.mssql.userMapper">
+
+	<resultMap id="RM_selectUser" type="Account">
+		<result column="아이디" property="id" javaType="string"/>
+		<result column="이름" property="userName" javaType="string" />
+		<result column="비번" property="password" javaType="string"/>
+		<result column="연락처" property="phone" javaType="string"/>
+		<result column="이메일" property="email" javaType="string"/>
+	 	<collection property="authorities" column="아이디" javaType="java.util.ArrayList"
+	 				ofType="Authority" select="selectAuthorities" />
+	</resultMap>
+	
+	<select id="selectUser" parameterType="string" resultMap="RM_selectUser">
+		select 아이디, 이름, 비번, 연락처, 이메일
+		  from [웹].[dbo].[계정]
+		 where 아이디 = #{id}
+	</select>
+	
+	<select id="selectAuthorities" parameterType="string" resultType="Authority">
+		select b.[권한이름]
+		  from [웹].[dbo].[계정_권한] a
+		 inner join [웹].[dbo].[권한] b
+		    on a.[권한번호] = b.[권한번호]
+		 where a.[계정_아이디] = #{id}  
+	</select>
+	
+</mapper>

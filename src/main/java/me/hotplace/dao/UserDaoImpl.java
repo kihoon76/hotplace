@@ -10,14 +10,18 @@ import me.hotplace.domain.Account;
 @Repository("userDao")
 public class UserDaoImpl implements UserDao {
 
-	private final static String namespace = "mappers.mysql.userMapper";
+	//private final static String namespace = "mappers.mysql.userMapper";
+	private final static String namespace = "mappers.mssql.userMapper";
 	
-	@Resource(name = "mySqlSession")
-	SqlSession mySqlSession;
+	//@Resource(name = "mySqlSession")
+	//SqlSession mySqlSession;
+	
+	@Resource(name = "msSqlSession")
+	SqlSession msSqlSession;
 	
 	@Override
 	public Account getAccount(String id) {
-		return mySqlSession.selectOne(namespace + ".selectUser", id);
+		return msSqlSession.selectOne(namespace + ".selectUser", id);
 	}
 
 }

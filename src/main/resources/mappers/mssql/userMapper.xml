@@ -19,7 +19,7 @@
 	</select>
 	
 	<select id="selectAuthorities" parameterType="string" resultType="Authority">
-		select b.[권한이름]
+		select b.[권한이름] as authName
 		  from [웹].[dbo].[계정_권한] a
 		 inner join [웹].[dbo].[권한] b
 		    on a.[권한번호] = b.[권한번호]

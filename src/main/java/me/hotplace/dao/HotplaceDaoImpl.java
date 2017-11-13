@@ -25,6 +25,9 @@ public class HotplaceDaoImpl implements HotplaceDao {
 	@Resource(name = "msSqlSessionAgent")
 	SqlSession msSqlSessionAgent;
 	
+	@Resource(name = "msSqlSessionAgent2")
+	SqlSession msSqlSessionAgent2;
+	
 	@Override
 	public List<String> selectListGuGun(String si) {
 		
@@ -73,7 +76,6 @@ public class HotplaceDaoImpl implements HotplaceDao {
 
 	@Override
 	public Gongmae selectGongmaeThumb(String unu) {
-		// TODO Auto-generated method stub
 		return msSqlSessionAgent.selectOne(namespace + ".selectGongmaeThumb", unu);
 	}
 
@@ -84,7 +86,6 @@ public class HotplaceDaoImpl implements HotplaceDao {
 
 	@Override
 	public BosangPyeonib selectBosangPyeonibThumb(String unu) {
-		// TODO Auto-generated method stub
 		return msSqlSession.selectOne(namespace + ".selectBosangPyeonibThumb", unu);
 	}
 
@@ -96,6 +97,12 @@ public class HotplaceDaoImpl implements HotplaceDao {
 	@Override
 	public Silgeolae selectSilgeolaeThumb(String pnu) {
 		return msSqlSessionAgent.selectOne(namespace + ".selectSilgeolaeThumb", pnu);
+	}
+
+	@Override
+	public List<String> selectAcceptBuildingMarker(Map<String, String> param) {
+		
+		return msSqlSessionAgent2.selectList(namespace + ".selectAcceptBuildingMarker", param);
 	}
 
 }

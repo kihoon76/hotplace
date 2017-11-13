@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.padual.com/java/logback.xsd">
+	<!-- console로 log 남기기 -->
+	<!-- <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>
+				 ▶ %-5level %d{HH:mm:ss.SSS} [%thread] %logger[%method:%line] - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+	-->
+	<!-- file로 log 남기기 -->
+ 	<appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>/usr/local/tomcat/logs/25cellRollingFile.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>/usr/local/tomcat/logs/25cellRollingFile.%d{yyyy-MM-dd-HH}.log</fileNamePattern>
+
+			<!-- 30시간 지난건 지우겠다 --> 
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>
+				 ▷ %-5level %d{HH:mm:ss} %logger[%method:%line] - %msg%n
+			</pattern>
+		</encoder>
+	</appender> 
+	
+	<logger name="me.hotplace" level="debug">
+		<appender-ref ref="file"/>
+	</logger>
+	<logger name="org.springframework" level="debug" />
+	
+	<!-- MyBatis mapper.xml 로그 -->
+	<logger name="mappers" level="debug" />
+	
+	<root level="debug">
+		<appender-ref ref="file"/>
+	</root>
+</configuration>

@@ -116,4 +116,9 @@ public class HotplaceService {
 		Silgeolae sil = hotplaceDao.selectSilgeolaeThumb(pnu);
 		return sil;
 	}
+
+	public String getAcceptBuildingMarker(Map<String, String> param) {
+		List<String> list = hotplaceDao.selectAcceptBuildingMarker(param);
+		return DataUtil.makeLatLngSilgeolaeMarker(list, "|$");
+	}
 }

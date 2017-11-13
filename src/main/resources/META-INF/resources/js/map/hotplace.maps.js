@@ -91,7 +91,7 @@
 	 * @property {string} PYEONIB - 공매
 	 * @property {string} SILGEOLAE - 실거래가
 	 */
-	var _markerGroupOnOff = {GYEONGMAE:0, GONGMAE:0, BOSANG:0, PYEONIB:0, SILGEOLAE:0};
+	var _markerGroupOnOff = { GYEONGMAE:0, GONGMAE:0, BOSANG:0, PYEONIB:0, SILGEOLAE:0, ACCEPT_BUILDING:0 };
 	
 	/** 
 	 * @private 
@@ -260,6 +260,7 @@
 		BOSANG: 'BOSANG',
 		PYEONIB: 'PYEONIB',
 		SILGEOLAE: 'SILGEOLAE',
+		ACCEPT_BUILDING: 'ACCEPT_BUILDING',
 		MULGEON_SEARCH: 'MULGEON_SEARCH'
 	};
 	
@@ -272,6 +273,7 @@
 	 * @property {string} GONGMAE - 공매물건 마커들
 	 * @property {string} BOSANG - 보상물건 마커들
 	 * @property {string} PYEONIB - 편입물건 마커들
+	 * @property {string} ACCEPT_BUILDING - 건축허가 마커들
 	 * @property {string} MULGEON_SEARCH - 물건검색후 마커
 	 */
 	maps.MarkerTypes = _markerTypes;
@@ -304,7 +306,8 @@
 		GONGMAE : { m: [], url: 'gongmaemarker', icon: 'gongmae.png'/*, trigger: 'mouseover'*/ },
 		BOSANG: { m: [], url: 'bosangmarker', icon: 'bosang.png' },
 		PYEONIB: { m: [], url: 'pyeonibmarker', icon: 'pyeonib.png', clusterIcon:'pyeonibC.png', clustering: true },
-		SILGEOLAE: { m: [], url: 'silgeolaemarker', icon: 'silgeolae.png'} ,
+		SILGEOLAE: { m: [], url: 'silgeolaemarker', icon: 'silgeolae.png' },
+		ACCEPT_BUILDING: { m: [], url: 'acceptbuildingmarker', icon: 'acceptbuilding.png' },
 		MULGEON_SEARCH: { m: [], icon: 'search.png' }
 	};
 	
@@ -336,6 +339,7 @@
 		BOSANG : [],
 		PYEONIB : [],
 		SILGEOLAE : [],
+		ACCEPT_BUILDING : [],
 		MULGEON_SEARCH: []
 	};
 	
@@ -660,6 +664,9 @@
 			break;
 		case _markerTypes.SILGEOLAE :
 			markerData = hotplace.database.getLevelData(level, _markerTypes.SILGEOLAE);
+			break;
+		case _markerTypes.ACCEPT_BUILDING :
+			markerData = hotplace.database.getLevelData(level, _markerTypes.ACCEPT_BUILDING);
 			break;
 			
 		}

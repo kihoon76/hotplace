@@ -38,4 +38,6 @@ public interface HotplaceDao {
 	public List<String> selectSilgeolaeMarker(Map<String, String> param);
 
 	public Silgeolae selectSilgeolaeThumb(String pnu);
+
+	public List<String> selectAcceptBuildingMarker(Map<String, String> param);
 }

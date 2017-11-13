@@ -53,6 +53,7 @@
 		});
 	});
 	
+	//로그아웃 YES버튼
 	$(document).on('click', _btnLogoutYes, function() {
 		hotplace.dom.logout(function() {
 			/*var $menuBtn = $('#' + hotplace.dom.getMenuBtn().USER_LOGIN);
@@ -62,8 +63,16 @@
 		});
 	});
 	
+	//로그아웃 NO 버튼
 	$(document).on('click', _btnLogoutNo, function() {
 		hotplace.dom.closeModal();
+	});
+	
+	$(document).on('keydown', '#pw', function(e) {
+		if (e.which == 13) {
+			var txt = e.target.value;
+			$(_btnId).trigger('click'); 
+	    }
 	});
 }(
 		hotplace.login = hotplace.login || {},

@@ -380,6 +380,16 @@
 		  from [데이터수집].[dbo].[실거래가]
 		 where PNU = #{pnu}
 	</select>
+	
+	<!-- 건축허가 -->
+	<select id="selectAcceptBuildingMarker" statementType="CALLABLE" parameterType="hashmap" resultType="string">
+		{call [수작업입력].[dbo].[SEL_건축허가정보]( 
+			#{swy, mode=IN, jdbcType=DECIMAL, javaType=string},
+			#{ney, mode=IN, jdbcType=DECIMAL, javaType=string},
+			#{swx, mode=IN, jdbcType=DECIMAL, javaType=string},
+			#{nex, mode=IN, jdbcType=DECIMAL, javaType=string}
+		)}
+	</select>
 </mapper>
 <!-- 
 		select 

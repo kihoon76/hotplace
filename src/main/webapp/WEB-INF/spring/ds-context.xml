@@ -9,7 +9,7 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
 
-	<!-- MSsqlWeb -->
+	<!-- MSsqlWeb 192.168.0.43 -->
 	<bean id="mssqlDataSource" 
 		  class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="#{dsCfg['mssql.datasource.driverClassName']}" />
@@ -18,11 +18,20 @@
 		<property name="password" value="#{dsCfg['mssql.datasource.password']}" />
 	</bean>
 	
-	<!-- MSsqlAgent -->
+	<!-- MSsqlAgent 192.168.0.2 -->
 	<bean id="mssqlDataSourceAgent" 
 		  class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="#{dsCfg['mssql.datasource.driverClassName']}" />
 		<property name="url" value="#{dsCfg['mssql.datasource.url2']}" />
+		<property name="username" value="#{dsCfg['mssql.datasource.username']}" />
+		<property name="password" value="#{dsCfg['mssql.datasource.password']}" />
+	</bean>
+	
+	<!-- MSsqlAgent2 192.168.0.42 -->
+	<bean id="mssqlDataSourceAgent2" 
+		  class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="#{dsCfg['mssql.datasource.driverClassName']}" />
+		<property name="url" value="#{dsCfg['mssql.datasource.url3']}" />
 		<property name="username" value="#{dsCfg['mssql.datasource.username']}" />
 		<property name="password" value="#{dsCfg['mssql.datasource.password']}" />
 	</bean>
@@ -50,6 +59,13 @@
 		<property name="mapperLocations" value="classpath:/mappers/mssql/*Mapper.xml" />
 	</bean>
 	
+	<!-- MyBatisMssqlAgent2 -->
+	<bean id="msSqlSessionFactoryAgent2" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="mssqlDataSourceAgent2" />
+		<property name="configLocation" value="classpath:/mybatisMSsql-config.xml" />
+		<property name="mapperLocations" value="classpath:/mappers/mssql/*Mapper.xml" />
+	</bean>
+	
 	<!-- MyBatisMysql -->
  	<bean id="mySqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="mysqlDataSource" />
@@ -70,6 +86,11 @@
 	<!-- MyBatis MSsqlSessionAgent -->
 	<bean id="msSqlSessionAgent" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg name="sqlSessionFactory" ref="msSqlSessionFactoryAgent" />
+	</bean>
+	
+	<!-- MyBatis MSsqlSessionAgent2 -->
+	<bean id="msSqlSessionAgent2" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg name="sqlSessionFactory" ref="msSqlSessionFactoryAgent2" />
 	</bean>
 	
 	<!-- Transaction -->

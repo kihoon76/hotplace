@@ -667,8 +667,8 @@ $(document).ready(function() {
 				},
 				icon: hotplace.maps.getMarkerIcon(hotplace.maps.MarkerTypes.MULGEON_SEARCH),
 				size: {
-					x: 40,
-					y: 33
+					x: 26,
+					y: 36
 				}
 			});
 		});

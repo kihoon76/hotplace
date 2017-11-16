@@ -19,6 +19,7 @@
 	var _venderEvent = null;
 	var _markerClustering = null;
 	
+	
 	/** 
 	 * @private
 	 * @desc hotplace.naps.init 함수가 호출되었는지 여부
@@ -304,10 +305,10 @@
 		RADIUS_SEARCH : { m: [], c: [], url: '' },
 		GYEONGMAE : { m: [], url: 'gyeongmaemarker', icon:'gyeongmae.png'/*, trigger: 'mouseover'*/ },
 		GONGMAE : { m: [], url: 'gongmaemarker', icon: 'gongmae.png'/*, trigger: 'mouseover'*/ },
-		BOSANG: { m: [], url: 'bosangmarker', icon: 'bosang.png' },
+		BOSANG: { m: [], url: 'bosangmarker', icon: 'bosang.png', clusterIcon:'bosangC.png', clustering: true },
 		PYEONIB: { m: [], url: 'pyeonibmarker', icon: 'pyeonib.png', clusterIcon:'pyeonibC.png', clustering: true },
 		SILGEOLAE: { m: [], url: 'silgeolaemarker', icon: 'silgeolae.png' },
-		ACCEPT_BUILDING: { m: [], url: 'acceptbuildingmarker', icon: 'acceptbuilding.png' },
+		ACCEPT_BUILDING: { m: [], url: 'acceptbuildingmarker', icon: 'acceptbuilding.png', level:13 },
 		MULGEON_SEARCH: { m: [], icon: 'search.png' }
 	};
 	
@@ -933,6 +934,9 @@
 		case 'SILGEOLAE' :
 			hotplace.silgeolae.markerClick(map, marker, win);
 			break;
+		case 'ACCEPT_BUILDING' :
+			hotplace.acceptbuilding.markerClick(map, marker, win);
+			break;
 		}
 	}
 	
@@ -1287,7 +1291,7 @@
 			}
 			
 			//클러스트링된 마커구별
-			if(options.isClustering && data.info.xgc > 1) {
+			if(options.isClustering && data.info.xgc > hotplace.config.markerGrpCount) {
 				content = '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url('+ hotplace.getContextUrl() +'resources/img/marker/' + options.clusterIcon + ');background-size:contain;">' + data.info.xgc + '</div>';
 			}
 			else {
@@ -1516,7 +1520,7 @@
 				true,
 				isMaskTran,
 				function() {
-					hotplace.dom.offMenuButton(hotplace.dom.getMenuBtn().HEAT_MAP);
+					hotplace.dom.offMenuButton(hotplace.dom.getMenuBtn().CELL/*.HEAT_MAP*/);
 					hotplace.maps.cellToggle();
 				});
 			}

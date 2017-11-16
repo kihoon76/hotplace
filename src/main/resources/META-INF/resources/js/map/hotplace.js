@@ -69,7 +69,8 @@
     	mapDefaultY: 36.0207091,
     	addrSearchPanLevel: 10,
     	yangdoseStepPercent: 5,
-    	gyeongmaeDetailImgInterval: 2000
+    	gyeongmaeDetailImgInterval: 2000,
+    	markerGrpCount: 20
     }
     
     Handlebars.registerHelper('json', function(context) {

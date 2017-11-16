@@ -384,11 +384,24 @@
 	<!-- 건축허가 -->
 	<select id="selectAcceptBuildingMarker" statementType="CALLABLE" parameterType="hashmap" resultType="string">
 		{call [수작업입력].[dbo].[SEL_건축허가정보]( 
-			#{swy, mode=IN, jdbcType=DECIMAL, javaType=string},
-			#{ney, mode=IN, jdbcType=DECIMAL, javaType=string},
 			#{swx, mode=IN, jdbcType=DECIMAL, javaType=string},
-			#{nex, mode=IN, jdbcType=DECIMAL, javaType=string}
+			#{nex, mode=IN, jdbcType=DECIMAL, javaType=string},
+			#{swy, mode=IN, jdbcType=DECIMAL, javaType=string},
+			#{ney, mode=IN, jdbcType=DECIMAL, javaType=string}
 		)}
+	</select>
+	
+	<resultMap id="RM_selectAcceptbuildingThumb" type="AcceptBuilding">
+		<result column="고유번호" property="goyubeonho" javaType="string"/>
+		<result column="허가구분" property="acceptgubun" javaType="string"/>
+		<result column="대지위치" property="daejiwichi" javaType="string"/>
+		<result column="허가신고일" property="acceptsingoil" javaType="string"/>
+	</resultMap>
+	
+	<select id="selectAcceptbuildingThumb" parameterType="string" resultMap="RM_selectAcceptbuildingThumb">
+		select 고유번호, 허가구분, 대지위치, 허가신고일
+		  from [수작업입력].[dbo].[건축허가정보]
+		 where 고유번호 = #{unu}
 	</select>
 </mapper>
 <!-- 

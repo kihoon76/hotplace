@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 
 import me.hotplace.dao.HotplaceDao;
+import me.hotplace.domain.AcceptBuilding;
 import me.hotplace.domain.Address;
 import me.hotplace.domain.BosangPyeonib;
 import me.hotplace.domain.Gongmae;
@@ -119,6 +120,11 @@ public class HotplaceService {
 
 	public String getAcceptBuildingMarker(Map<String, String> param) {
 		List<String> list = hotplaceDao.selectAcceptBuildingMarker(param);
-		return DataUtil.makeLatLngSilgeolaeMarker(list, "|$");
+		return DataUtil.makeLatLngAcceptBuildingMarker(list, "|$");
+	}
+
+	public AcceptBuilding getAcceptbuildingThumb(String unu) {
+		AcceptBuilding ab = hotplaceDao.selectAcceptbuildingThumb(unu);
+		return ab;
 	}
 }

@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import me.hotplace.domain.AcceptBuilding;
 import me.hotplace.domain.Address;
 import me.hotplace.domain.BosangPyeonib;
 import me.hotplace.domain.Gongmae;
@@ -103,6 +104,11 @@ public class HotplaceDaoImpl implements HotplaceDao {
 	public List<String> selectAcceptBuildingMarker(Map<String, String> param) {
 		
 		return msSqlSessionAgent2.selectList(namespace + ".selectAcceptBuildingMarker", param);
+	}
+
+	@Override
+	public AcceptBuilding selectAcceptbuildingThumb(String unu) {
+		return msSqlSessionAgent2.selectOne(namespace + ".selectAcceptbuildingThumb", unu);
 	}
 
 }

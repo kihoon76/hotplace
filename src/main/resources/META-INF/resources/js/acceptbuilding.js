@@ -20,6 +20,9 @@
 			data: {unu: data.info.unu},
 			loadEl: '#dvAcceptbuilding',
 			success: function(data, textStatus, jqXHR) {
+				$('#aDaejiwichi').text(data.daejiwichi);
+				$('#aAcceptgubun').text(data.acceptgubun);
+				$('#aAcceptsingoil').text(data.acceptsingoil);
 			},
 			error:function() {
 				

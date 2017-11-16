@@ -36,6 +36,8 @@
 	 */
 	var _btnMapDiv = $('#mapButtons');
 	
+	var _lisMapUl = $('#menu > ul');
+	
 	/**
 	 * @private
 	 * @type {object}
@@ -71,7 +73,8 @@
 	var _menuBtnIdCfg = function() {
 		return {
 			'USER_LOGIN' : 'btnUserLogin',
-			'HEAT_MAP': 'btnLayerView'
+			'HEAT_MAP': 'btnLayerView',
+			'CELL': 'li_menu_cell'
 		};
 	};
 	
@@ -546,6 +549,85 @@
 		}
 	}
 	
+	dom.addMenuInMap = function(params) {
+		
+		var template = function(hasList, disabled){
+			var tmp = '';
+			if(hasList) {
+				tmp = '<li id="li_{0}" data-switch="off"><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{1}.png" alt="{2}"/><p class="desc"><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{3}_title.png" alt="{4}"/></p><p class="over"><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{5}_on.png" alt="{6}"/></p><div><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{7}_list.png" alt="{8}" style="display:none;position:absolute;left:{9}px;top:{10}px;"/></div></li>';
+			}
+			else {
+				tmp = '<li id="li_{0}" data-switch="off"><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{1}.png" alt="{2}"/><p class="desc"><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{3}_title.png" alt="{4}"/></p><p class="over"><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{5}_on.png" alt="{6}"/></p></li>';
+			}
+			
+			return tmp;
+		}
+		
+		if(params) {
+			var len = params.length;
+			var lis = '';
+			
+			for(var i=0; i<len; i++) {
+				lis += template(params[i].hasList, params[i].disabled)
+					  .format(
+							  params[i].menu,
+							  params[i].menu,
+							  params[i].title,
+							  params[i].menu,
+							  params[i].title,
+							  params[i].menu,
+							  params[i].title,
+							  params[i].menu,
+							  params[i].title,
+							  params[i].left,
+							  params[i].top);
+			}
+			
+			if(lis) {
+				_lisMapUl.html(lis);
+				
+				//event handler
+				for(var i=0; i<len; i++) {
+					(function(ii) {
+						$('#li_' + params[ii].menu).on('click', function() {
+							var $p = $(this).find('p.over');
+							var $img = $(this).find('p.desc img');
+							var $list = $(this).find('div > img');
+							var sw = $(this).data('switch');
+							$(this).data('switch', ((sw == 'on') ? 'off' : 'on'));
+							
+							if(sw == 'off') {
+								if($list.get(0)) $list.show();
+								$p.css('opacity', '1');
+								$img.css('opacity', '0');
+								
+								if(params[ii].callbackAll) {
+									params[ii].callbackAll();
+								}
+								else if(params[ii].callbackOn) {
+									params[ii].callbackOn();
+								}
+							}
+							else {
+								if($list.get(0)) $list.hide();
+								$p.css('opacity', '0');
+								$img.css('opacity', '1');
+								
+								if(params[ii].callbackAll) {
+									params[ii].callbackAll();
+								}
+								else if(params[ii].callbackOff) {
+									params[ii].callbackOff();
+								}
+								
+							}
+						})
+					}(i));
+				}
+			}
+		}
+	}
+	
 	dom.captureToCanvas = function() {
 	    var nodesToRecover = [];
 	    var nodesToRemove = [];
@@ -836,12 +918,24 @@
 		$btn.toggleClass('button-on');
 	}
 	
-	dom.offMenuButton = function(btnId) {
-		var $btn = $('#' + btnId);
+	dom.offMenuButton = function(/*btnId*/liId) {
+		/*var $btn = $('#' + btnId);
 		$btn.data('switch', 'off');
-		$btn.removeClass('button-on');
+		$btn.removeClass('button-on');*/
+		var $li = $('#' + liId);
+		
+		var $p = $li.find('p.over');
+		var $img = $li.find('p.desc img');
+		var $list = $li.find('div > img');
+		if($list.get(0)) $list.hide();
+		$p.css('opacity', '0');
+		$img.css('opacity', '1');
+		
+		
+		$li.data('switch', 'off');
 	}
 	
+		
 	dom.logout = function(fn) {
 		hotplace.ajax({
 			url: 'logout',
@@ -867,7 +961,8 @@
 	
 	$(document).on('hidden.bs.modal', '#containerModal,#centerModal', function() {
 		_modalCloseAfterFn();
-	})
+	});
+	
 }(
 	hotplace.dom = hotplace.dom || {},
 	jQuery

@@ -22,6 +22,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mysql.jdbc.StringUtils;
 
+import me.hotplace.domain.AcceptBuilding;
 import me.hotplace.domain.Address;
 import me.hotplace.domain.AjaxVO;
 import me.hotplace.domain.BosangPyeonib;
@@ -209,6 +210,13 @@ public class HotplaceController {
 	public Silgeolae getSilgeolaeThumb(@RequestParam("pnu") String pnu) {
 		
 		return hotplaceService.getSilgeolaeThumb(pnu);
+	}
+	
+	@GetMapping("acceptbuilding/thumb")
+	@ResponseBody
+	public AcceptBuilding getAcceptbuildingThumb(@RequestParam("unu") String unu) {
+		
+		return hotplaceService.getAcceptbuildingThumb(unu);
 	}
 	
 	@PostMapping("hpgrade/search")

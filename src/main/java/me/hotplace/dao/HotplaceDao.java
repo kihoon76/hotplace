@@ -3,6 +3,7 @@ package me.hotplace.dao;
 import java.util.List;
 import java.util.Map;
 
+import me.hotplace.domain.AcceptBuilding;
 import me.hotplace.domain.Address;
 import me.hotplace.domain.BosangPyeonib;
 import me.hotplace.domain.Gongmae;
@@ -40,4 +41,6 @@ public interface HotplaceDao {
 	public Silgeolae selectSilgeolaeThumb(String pnu);
 
 	public List<String> selectAcceptBuildingMarker(Map<String, String> param);
+
+	public AcceptBuilding selectAcceptbuildingThumb(String unu);
 }

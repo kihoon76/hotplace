@@ -533,7 +533,7 @@ input[type=radio]:focus + label::before {
  메인 페이지 버튼
 **********************************************************/
 #menu li{list-style-type:none;}
-#menu{position:relative; left:20px; top:0; z-index:1; margin-top:50px; width:50px;}
+#menu{position:relative; left:-20px; top:0; z-index:1; margin-top:50px; width:50px;}
 #menu ul li{cursor:pointer; margin-bottom:15px; width:50px; height:50px; position:relative;}
 #menu li .desc{position:absolute; left:0; top:0; opacity:0; transition:all 0.3s;}
 #menu li .over{position:absolute; left:0; top:0; opacity:0; transition:all 0.3s;}
@@ -560,7 +560,7 @@ input[type=radio]:focus + label::before {
 #dvMulgeonResult {
 	overflow-y: auto;
   	height: 200px;
-  	width: 563px;
+  	width: 520px;
   	overflow-x: hidden;
 }
 

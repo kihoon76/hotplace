@@ -618,6 +618,8 @@ $(document).ready(function() {
 				}
 				else {
 					$('#dvMulgeonContainer').hide();
+					$list.removeClass('list-expand');
+					$list.addClass('list');
 					
 					if(data.length == 1) {
 						console.log(data);
@@ -626,6 +628,8 @@ $(document).ready(function() {
 							lng: data[0][3],
 							lat: data[0][2],
 						});
+						
+						
 					}
 					
 				}

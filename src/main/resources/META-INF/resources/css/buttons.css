@@ -46,6 +46,14 @@
 	opacity:.7;
 }
 
+ .jijeok-on {
+ 	background-color:rgb(42, 124, 221);
+ 	color:#fff;
+ 	border:1px solid #333;
+ 	transition:all .5s;
+ 	opacity:1;
+ }
+
 
 .mulgeon-txt {
 	position:absolute;
@@ -61,8 +69,8 @@
 	border:none;
 }
 
-/*.mulgeon-txt input[type="text"] { border: none }*/
-/*.mulgeon-txt input:focus { outline: none; }*/
+.mulgeon-txt input[type="text"] { border: none }
+.mulgeon-txt input:focus { outline: none; }
 
 .mulgeon-txt #btnMulgeon {
 	position:absolute;

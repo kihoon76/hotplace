@@ -1606,6 +1606,7 @@
 			}
 			
 			$btn.data('switch', 'off');
+			$btn.removeClass('jijeok-on');
 		}
 		else if(onOff == 'off') {
 			if(_venderStr == 'naver') {
@@ -1616,6 +1617,7 @@
 			}
 			
 			$btn.data('switch', 'on');
+			$btn.addClass('jijeok-on');
 		}
 	}
 }(

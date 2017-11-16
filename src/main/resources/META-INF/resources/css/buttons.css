@@ -47,6 +47,38 @@
 }
 
 
+.mulgeon-txt {
+	position:absolute;
+	left:65px;
+	top:3px;
+	padding:0;
+	height:42px;
+}
 
+.mulgeon-txt .search-txt {
+	height: 38px;
+	width: 450px;
+	border:none;
+}
 
+/*.mulgeon-txt input[type="text"] { border: none }*/
+/*.mulgeon-txt input:focus { outline: none; }*/
+
+.mulgeon-txt #btnMulgeon {
+	position:absolute;
+	top:6px;
+	left:480px;
+	width: 32px;
+	height: 32px;
+	background-image: url(../img/search_icon.png); 
+	border:0;
+}
+
+#dvMulgeonContainer {
+	position:absolute;
+	left:65px;
+	top:50px;
+	padding:0;
+	display:none;
+}
 

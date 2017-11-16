@@ -47,7 +47,7 @@ $(document).ready(function() {
 	 * */
 	_searchFormLoad();
 	_salesViewFormLoad(); 
-	_mulgeonFormLoad();
+	//_mulgeonFormLoad();
 	
 	function _enableMapButton(level, targetBtnId) {
 		var target = $('#' + targetBtnId);
@@ -113,7 +113,8 @@ $(document).ready(function() {
 	
 	function _mulgeonFormLoad() {
 		var tForm = hotplace.dom.getTemplate('mulgeonForm');
-		$('#dvMulgeon').append(tForm());
+		//$('#dvMulgeon').append(tForm());
+		$('#menu-search-list').append(tForm());
 	}
 	
 	function _btnCallback($this, e, targetId, isUseDiv, onFn, offFn) {
@@ -546,8 +547,16 @@ $(document).ready(function() {
 	    }
 	});
 	
-	$('#btnMulgeon').on('click', function(e, arg) {
-		
+	//동작안함 event bubbling 
+	/*$(document).on('click', '#txtMulgeon', function(e) {
+		if (!e) var e = window.event
+	    e.cancelBubble = true;
+	    if (e.stopPropagation) e.stopPropagation();
+		//e.preventDefault();
+	});*/
+	
+	$(document).on('click', '#btnMulgeon', function(e, arg) {
+		var $list = $('#menu-search-list');
 		if(arg == undefined) {
 			arg = $.trim($('#txtMulgeon').val());
 		}
@@ -603,6 +612,8 @@ $(document).ready(function() {
 				var result = (_dom.getTemplate('addressResult2'))(dataForm);
 				output.html(result);
 				if(data.length > 1) {
+					$list.removeClass('list');
+					$list.addClass('list-expand');
 					$('#dvMulgeonContainer').show();
 				}
 				else {
@@ -755,7 +766,8 @@ $(document).ready(function() {
 	
 	hotplace.dom.addMenuInMap([{
 		menu: 'menu_search',
-		listcss: 'menu-search-list',
+		listDv: 'menu-search-list',
+		clazz: 'list',
 		callbackAll: function() {
 			
 		}
@@ -771,7 +783,7 @@ $(document).ready(function() {
 		}
 	}, {
 		menu: 'menu_mulgeon',
-		listcss: 'menu-mulgeon-list',
+		listDv: 'menu-mulgeon-list',
 		callbackAll: function() {
 			
 		}
@@ -793,6 +805,8 @@ $(document).ready(function() {
 			});
 		}
 	}]);
+	
+	_mulgeonFormLoad();
 	
 	/*hotplace.dom.addButtonInMap([{
 		id:'btnNews',

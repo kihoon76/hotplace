@@ -130,14 +130,5 @@
 
 <script type="text/javascript" src="/resources/js/map/naver/MarkerClustering.js"></script>
 <sitemesh:write property="page.script" />
-<%--<c:choose>
-<c:when test="${mType eq 'heatmap'}">
-<script type="text/javascript" src="/resources/js/map/map-heatmap.js"></script>
-</c:when>
-<c:when test="${mType eq 'dotmap'}">
-<script type="text/javascript" src="/resources/js/map/map-dotmap.js"></script>
-</c:when>
-<c:otherwise></c:otherwise>
-</c:choose>--%>
 </body>
 </html>

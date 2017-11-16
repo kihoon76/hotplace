@@ -550,12 +550,12 @@
 	}
 	
 	dom.addMenuInMap = function(params) {
-		var template = function(listcss, disabled, titleOff){
+		var template = function(listDv, disabled, titleOff){
 			var tmp  = '<li id="li_{0}" data-switch="off" {1} ><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{2}.png" />';
 				tmp += (titleOff) ? '{3}' : '<p class="desc"><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{3}_title.png" /></p>';
 				tmp += '<p class="over"><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{4}_on.png" /></p>';
 				//tmp += (hasList) ? '<div><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{5}_list.png" style="display:none;position:absolute;left:{6}px;top:{7}px;"/></div></li>' : '{5}{6}{7}</li>';
-				tmp += (listcss) ? '<div id="{5}"></div></li>' : '{5}</li>';
+				tmp += (listDv) ? '<div id="{5}" class="{6}"></div></li>' : '{5}{6}</li>';
 			
 			return tmp;
 		}
@@ -565,14 +565,15 @@
 			var lis = '';
 			
 			for(var i=0; i<len; i++) {
-				lis += template(params[i].listcss, params[i].disabled, params[i].titleOff)
+				lis += template(params[i].listDv, params[i].disabled, params[i].titleOff)
 					  .format(
 							  params[i].menu,
 							  params[i].datas || '',
 							  params[i].menu,
 							  params[i].titleOff ? '' : params[i].menu,
 							  params[i].menu,
-							  params[i].listcss ? params[i].listcss : '');
+							  params[i].listDv ? params[i].listDv : '',
+							  params[i].clazz ? params[i].clazz : '');
 			}
 			
 			if(lis) {
@@ -581,10 +582,15 @@
 				//event handler
 				for(var i=0; i<len; i++) {
 					(function(ii) {
-						$('#li_' + params[ii].menu).on('click', function() {
+						$('#li_' + params[ii].menu).on('click', function(e) {
+							var targetId = e.target.id;
+							
+							//이벤트 버블링 막기
+							if(targetId == 'txtMulgeon' || targetId == 'btnMulgeon') return;
+							
 							var $p = $(this).find('p.over');
 							var $img = $(this).find('p.desc img');
-							var $list = $(this).find('div');
+							var $list = $(this).children('div');
 							var sw = $(this).data('switch');
 							$(this).data('switch', ((sw == 'on') ? 'off' : 'on'));
 							

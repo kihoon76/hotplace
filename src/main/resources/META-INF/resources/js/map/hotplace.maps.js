@@ -1189,14 +1189,19 @@
 			        mapTypes: registry,
 			        mapTypeControl: true,
 			        mapTypeControlOptions: {
-			        	style: _vender.MapTypeControlStyle.DROPDOWN
+			        	//style: _vender.MapTypeControlStyle.DROPDOWN
+			        	style: _vender.MapTypeControlStyle.BUTTON,
+			        	position: _vender.Position.TOP_RIGHT
 			        },
 			        minZoom: mapOptions.minZoom || 3,
 			        //maxZoom: mapOptions.maxZoom || 13
 				});
 				
+				//_venderMap.mapTypes.set(naver.maps.MapTypeId.NORMAL, naver.maps.NaverMapTypeOption.getNormalMap());
+				//_venderMap.mapTypes.set(naver.maps.MapTypeId.TERRAIN, naver.maps.NaverMapTypeOption. getTerrainMap());
+				//_venderMap.mapTypes.set(naver.maps.MapTypeId.HYBRID, naver.maps.NaverMapTypeOption.getHybridMap());
+				
 				_venderMap.mapTypes.set(naver.maps.MapTypeId.NORMAL, naver.maps.NaverMapTypeOption.getNormalMap());
-				_venderMap.mapTypes.set(naver.maps.MapTypeId.TERRAIN, naver.maps.NaverMapTypeOption. getTerrainMap());
 				_venderMap.mapTypes.set(naver.maps.MapTypeId.HYBRID, naver.maps.NaverMapTypeOption.getHybridMap());
 				
 				break;

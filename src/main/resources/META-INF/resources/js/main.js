@@ -751,7 +751,50 @@ $(document).ready(function() {
 		hotplace.dom.showAutoYearRangeDiv();
 	});
 	
-	hotplace.dom.addButtonInMap([{
+	
+	
+	hotplace.dom.addMenuInMap([{
+		menu: 'menu_search',
+		listcss: 'menu-search-list',
+		callbackAll: function() {
+			
+		}
+	}, {
+		menu: 'menu_search_bosang',
+		callbackAll: function() {
+			
+		}
+	}, {
+		menu: 'menu_search_expectdev',
+		callbackAll: function() {
+			
+		}
+	}, {
+		menu: 'menu_mulgeon',
+		listcss: 'menu-mulgeon-list',
+		callbackAll: function() {
+			
+		}
+	}, {
+		menu: 'menu_cell',
+		callbackAll: function() {
+			hotplace.maps.cellToggle();
+		}
+	}, {
+		menu: 'menu_login',
+		datas: 'data-gubun="IN"',
+		titleOff: true,
+		callbackOn: function($this) {
+			var gubun = $this.data('gubun');
+			
+			hotplace.dom.showLoginForm(gubun, function() {
+				//hotplace.dom.toggleOnlyMenuButton(hotplace.dom.getMenuBtn().USER_LOGIN);
+				hotplace.dom.offMenuButton('li_menu_login');
+			});
+		}
+	}]);
+	
+	/*hotplace.dom.addButtonInMap([{
 		id:'btnNews',
 		//glyphicon: 'list-alt',
 		glyphicon: 'search',
@@ -759,14 +802,14 @@ $(document).ready(function() {
 		attr: 'data-switch="off" title="토지이용규제 해소물건"',
 		clazz: 'mBtnTooltip',
 		callback: function(e) {
-			/*_btnCallback($(this), e, 'dvNews', true, function() {
-				setTimeout(function repeat() {
-					_tick();
-					_startInternal = setTimeout(repeat, 3000);
-				}, 3000);
-			},function() {
-				clearTimeout(_startInternal);
-			});*/
+//			_btnCallback($(this), e, 'dvNews', true, function() {
+//				setTimeout(function repeat() {
+//					_tick();
+//					_startInternal = setTimeout(repeat, 3000);
+//				}, 3000);
+//			},function() {
+//				clearTimeout(_startInternal);
+//			});
 			$('#searchTitle').text('토지이용규제 해소');
 			_btnCallback($(this), e, 'dvMulgeon', true, null, function() {
 				$('#dvMulgeonResult').html('');
@@ -781,11 +824,11 @@ $(document).ready(function() {
 		clazz: 'mBtnTooltip',
 		callback: function(e) {
 			//_btnCallback($(this), e, 'dvAddrSearch', true);
-			/*$('#searchTitle').text('보상투자물건');
-			_btnCallback($(this), e, 'dvMulgeon', true, null, function() {
-				$('#dvMulgeonResult').html('');
-				$('#dvMulgeonContainer').hide();
-			});*/
+//			$('#searchTitle').text('보상투자물건');
+//			_btnCallback($(this), e, 'dvMulgeon', true, null, function() {
+//				$('#dvMulgeonResult').html('');
+//				$('#dvMulgeonContainer').hide();
+//			});
 		}
 	},{
 		id:'btnUser',
@@ -793,11 +836,11 @@ $(document).ready(function() {
 		attr: 'data-switch="off" title="개발예정지역 검색"',
 		clazz: 'mBtnTooltip',
 		callback: function(e) {
-			/*$('#searchTitle').text('개발예정지역');
-			_btnCallback($(this), e, 'dvMulgeon', true, null, function() {
-				$('#dvMulgeonResult').html('');
-				$('#dvMulgeonContainer').hide();
-			});*/
+//			$('#searchTitle').text('개발예정지역');
+//			_btnCallback($(this), e, 'dvMulgeon', true, null, function() {
+//				$('#dvMulgeonResult').html('');
+//				$('#dvMulgeonContainer').hide();
+//			});
 		}
 	},{
 		id:'btnInfo',
@@ -860,7 +903,13 @@ $(document).ready(function() {
 				});
 			});
 		}
-	}]);
+	}]);*/
+	
+	$('#btnJijeok').on('click', function() {
+		var onOff = $(this).data('switch');
+		hotplace.maps.showJijeokLayer(onOff, $(this));
+	});
+	
 	
 	hotplace.validation.numberOnly('.numberOnly');
 	hotplace.validation.numberNdot('.numberNdot');

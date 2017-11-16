@@ -6,27 +6,43 @@
 		_btnLogoutYes = '#btnLogoutYes',
 		_btnLogoutNo = '#btnLogoutNo';
 	
-	function _changeLoginMenu($btn) {
-		var rmClass = $btn.hasClass('glyphicon-log-in') ? 'glyphicon-log-in' : 'glyphicon-log-out';
-		var addClass = '',	title = '', gubun = '';
+//	function _changeLoginMenu($btn) {
+//		var rmClass = $btn.hasClass('glyphicon-log-in') ? 'glyphicon-log-in' : 'glyphicon-log-out';
+//		var addClass = '',	title = '', gubun = '';
+//		
+//		if(rmClass == 'glyphicon-log-in') {
+//			gubun = 'OUT'
+//			addClass = 'glyphicon-log-out';
+//			title = '로그아웃';
+//		}
+//		else {
+//			gubun = 'IN';
+//			addClass = 'glyphicon-log-in';
+//			title = '로그인';
+//		}
+//		
+//		$btn.data('gubun', gubun);
+//		$btn.removeClass(rmClass);
+//		$btn.addClass(addClass);
+//		$btn.tooltipster('content', title);
+//	}
+	
+	function _changeLoginMenu($menu) {
 		
-		if(rmClass == 'glyphicon-log-in') {
-			gubun = 'OUT'
-			addClass = 'glyphicon-log-out';
-			title = '로그아웃';
+		var sw = $menu.data('gubun');
+		if(sw == 'IN') {
+			gubun = 'OUT';
+			$menu.find('img').prop('src', hotplace.getContextUrl() + 'resources/img/menu/menu_logout.png');
+			$menu.find('p.over img').prop('src', hotplace.getContextUrl() + 'resources/img/menu/menu_logout_on.png');
 		}
 		else {
 			gubun = 'IN';
-			addClass = 'glyphicon-log-in';
-			title = '로그인';
+			$menu.find('img').prop('src', hotplace.getContextUrl() + 'resources/img/menu/menu_login.png');
+			$menu.find('p.over img').prop('src', hotplace.getContextUrl() + 'resources/img/menu/menu_login_on.png');
 		}
 		
-		$btn.data('gubun', gubun);
-		$btn.removeClass(rmClass);
-		$btn.addClass(addClass);
-		$btn.tooltipster('content', title);
+		$menu.data('gubun', gubun);
 	}
-	
 	
 	$(document).on('click', _btnId, function() {
 		var id = $('#id').val(),

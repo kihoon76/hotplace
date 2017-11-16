@@ -49,6 +49,7 @@
 <body data-mtype="<c:out value='${mType}' />" data-url="${fn:substring(url, 0, fn:length(url) - fn:length(uri))}${req.contextPath}/">
 <div id="map" data-vender="naver">
 	<div class="map-buttons" id="mapButtons"></div>
+	<div id="menu"><ul></ul></div>
 	<div id="dvNews" class="layer-popup" style="width:600px; height:50px">
 		<ul id="newsTicker" class="ticker">
 			<li><a href="">도시재생 사업(사상스마트시티) 실시계획인가, 부산시, 201707.10</a></li>
@@ -65,6 +66,7 @@
         <input type="checkbox" id="btnAutoYear" data-toggle="toggle" data-on="<i class='fa fa-play'></i>" data-off="<i class='fa fa-pause'></i>">
 	</div>
 	<div id="dvYearRange"  class="layer-year-range"></div>
+	<button id="btnJijeok" class="jijeok" data-switch="off">지적도</button>
 </div>
 
 <!-- modal -->

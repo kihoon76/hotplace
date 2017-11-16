@@ -72,7 +72,7 @@
 	 */
 	var _menuBtnIdCfg = function() {
 		return {
-			'USER_LOGIN' : 'btnUserLogin',
+			'USER_LOGIN' : /*'btnUserLogin'*/'li_menu_login',
 			'HEAT_MAP': 'btnLayerView',
 			'CELL': 'li_menu_cell'
 		};
@@ -550,15 +550,12 @@
 	}
 	
 	dom.addMenuInMap = function(params) {
-		
-		var template = function(hasList, disabled){
-			var tmp = '';
-			if(hasList) {
-				tmp = '<li id="li_{0}" data-switch="off"><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{1}.png" alt="{2}"/><p class="desc"><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{3}_title.png" alt="{4}"/></p><p class="over"><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{5}_on.png" alt="{6}"/></p><div><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{7}_list.png" alt="{8}" style="display:none;position:absolute;left:{9}px;top:{10}px;"/></div></li>';
-			}
-			else {
-				tmp = '<li id="li_{0}" data-switch="off"><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{1}.png" alt="{2}"/><p class="desc"><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{3}_title.png" alt="{4}"/></p><p class="over"><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{5}_on.png" alt="{6}"/></p></li>';
-			}
+		var template = function(listcss, disabled, titleOff){
+			var tmp  = '<li id="li_{0}" data-switch="off" {1} ><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{2}.png" />';
+				tmp += (titleOff) ? '{3}' : '<p class="desc"><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{3}_title.png" /></p>';
+				tmp += '<p class="over"><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{4}_on.png" /></p>';
+				//tmp += (hasList) ? '<div><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{5}_list.png" style="display:none;position:absolute;left:{6}px;top:{7}px;"/></div></li>' : '{5}{6}{7}</li>';
+				tmp += (listcss) ? '<div id="{5}"></div></li>' : '{5}</li>';
 			
 			return tmp;
 		}
@@ -568,19 +565,14 @@
 			var lis = '';
 			
 			for(var i=0; i<len; i++) {
-				lis += template(params[i].hasList, params[i].disabled)
+				lis += template(params[i].listcss, params[i].disabled, params[i].titleOff)
 					  .format(
 							  params[i].menu,
+							  params[i].datas || '',
 							  params[i].menu,
-							  params[i].title,
+							  params[i].titleOff ? '' : params[i].menu,
 							  params[i].menu,
-							  params[i].title,
-							  params[i].menu,
-							  params[i].title,
-							  params[i].menu,
-							  params[i].title,
-							  params[i].left,
-							  params[i].top);
+							  params[i].listcss ? params[i].listcss : '');
 			}
 			
 			if(lis) {
@@ -592,7 +584,7 @@
 						$('#li_' + params[ii].menu).on('click', function() {
 							var $p = $(this).find('p.over');
 							var $img = $(this).find('p.desc img');
-							var $list = $(this).find('div > img');
+							var $list = $(this).find('div');
 							var sw = $(this).data('switch');
 							$(this).data('switch', ((sw == 'on') ? 'off' : 'on'));
 							
@@ -602,10 +594,10 @@
 								$img.css('opacity', '0');
 								
 								if(params[ii].callbackAll) {
-									params[ii].callbackAll();
+									params[ii].callbackAll($(this));
 								}
 								else if(params[ii].callbackOn) {
-									params[ii].callbackOn();
+									params[ii].callbackOn($(this));
 								}
 							}
 							else {
@@ -614,10 +606,10 @@
 								$img.css('opacity', '1');
 								
 								if(params[ii].callbackAll) {
-									params[ii].callbackAll();
+									params[ii].callbackAll($(this));
 								}
 								else if(params[ii].callbackOff) {
-									params[ii].callbackOff();
+									params[ii].callbackOff($(this));
 								}
 								
 							}

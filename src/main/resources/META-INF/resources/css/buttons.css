@@ -34,6 +34,18 @@
   	cursor: default;
 }
 
+.jijeok {
+	height:30px;
+	position:absolute; 
+	top:10px; right:128px;
+	z-index:1000; 
+	padding:5px; 
+	background-color:#fff; 
+	color:#333; 
+	border:1px solid #333;
+	opacity:.7;
+}
+
 
 
 

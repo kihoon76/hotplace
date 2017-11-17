@@ -558,7 +558,7 @@ input[type=radio]:focus + label::before {
 }
 
 #menu-cell-list {
-	position:absolute; left:0; top:-260px; width:304px; height:310px;
+	position:absolute; left:0; top:-260px; width:304px; height:310px; z-index:1;
 	background-image:url('../img/menu/menu_cell_list.png'); background-size:100%;
 	display:none;
 }

@@ -549,14 +549,6 @@ $(document).ready(function() {
 	    }
 	});
 	
-	//동작안함 event bubbling 
-	/*$(document).on('click', '#txtMulgeon', function(e) {
-		if (!e) var e = window.event
-	    e.cancelBubble = true;
-	    if (e.stopPropagation) e.stopPropagation();
-		//e.preventDefault();
-	});*/
-	
 	$(document).on('click', '#btnMulgeon', function(e, arg) {
 		var $list = $('#menu-search-list');
 		if(arg == undefined) {
@@ -608,7 +600,7 @@ $(document).ready(function() {
 				var output = $('#dvMulgeonResult');
 				var dataForm = {
 					'addresses': data,
-					'rdoId': 'test'
+					'rdoId': 'addr'
 				}
 				
 				var result = (_dom.getTemplate('addressResult2'))(dataForm);
@@ -649,7 +641,7 @@ $(document).ready(function() {
 		hotplace.maps.destroyMarkerType(hotplace.maps.MarkerTypes.MULGEON_SEARCH);
 		hotplace.maps.destroyMarkerWindow(hotplace.maps.MarkerTypes.MULGEON_SEARCH);
 		
-		var $sel = $('input:radio[name="' + /*addrObj.rdoId*/'test' + '"]:checked');
+		var $sel = $('input:radio[name="' + /*addrObj.rdoId*/'addr' + '"]:checked');
 		var lng = arg ? arg.lng : $sel.data('lng');
 		var lat = arg ? arg.lat : $sel.data('lat');
 		var address = arg ? arg.address : $sel.data('address');

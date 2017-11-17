@@ -549,6 +549,19 @@
 		}
 	}
 	
+	var _isPreventBubbling = function(e) {
+		var target = e.target;
+		var id = target.id;
+		if(target.tagName === 'LABEL') return true;
+		
+		console.log(id);
+		return  id == 'txtMulgeon' ||
+		        id == 'btnMulgeon' ||
+		        id == 'menu-mulgeon-list' ||
+		        id.startsWith('addr') || 
+		        id.startsWith('sales');
+	}
+	
 	dom.addMenuInMap = function(params) {
 		var template = function(listDv, disabled, titleOff){
 			var tmp  = '<li id="li_{0}" data-switch="off" {1} ><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{2}.png" />';
@@ -583,11 +596,9 @@
 				for(var i=0; i<len; i++) {
 					(function(ii) {
 						$('#li_' + params[ii].menu).on('click', function(e) {
-							var targetId = e.target.id;
-							console.log(targetId)
-							console.log(e.target)
-							//이벤트 버블링 막기
-							if(targetId == 'txtMulgeon' || targetId == 'btnMulgeon' || targetId.startsWith('sales')) return;
+							
+							if(_isPreventBubbling(e)) return;
+							
 							
 							var $p = $(this).find('p.over');
 							var $img = $(this).find('p.desc img');

@@ -1574,8 +1574,9 @@
 				true,
 				isMaskTran,
 				function() {
-					hotplace.dom.offMenuButton(hotplace.dom.getMenuBtn().CELL/*.HEAT_MAP*/);
-					hotplace.maps.cellToggle();
+					//hotplace.dom.offMenuButton(hotplace.dom.getMenuBtn().CELL/*.HEAT_MAP*/);
+					//hotplace.maps.cellToggle();
+					hotplace.dom.offMenuListButton('menu-cell-list');
 				});
 			}
 		}

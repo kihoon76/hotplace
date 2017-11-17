@@ -946,6 +946,10 @@
 		$li.data('switch', 'off');
 	}
 	
+	dom.offMenuListButton = function(listId) {
+		$('#' + listId).trigger('click');
+	}
+	
 		
 	dom.logout = function(fn) {
 		hotplace.ajax({

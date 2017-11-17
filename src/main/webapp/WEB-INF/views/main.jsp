@@ -16,6 +16,7 @@
 <script type="text/javascript" src="/resources/js/bosangpyeonib.js"></script>
 <script type="text/javascript" src="/resources/js/silgeolae.js"></script>
 <script type="text/javascript" src="/resources/js/sujibunseog.js"></script>
+<script type="text/javascript" src="/resources/js/acceptbuilding.js"></script>
 <script type="text/javascript" src="/resources/js/login.js"></script>
 
 <!-- FastClick -->

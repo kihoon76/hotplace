@@ -584,9 +584,10 @@
 					(function(ii) {
 						$('#li_' + params[ii].menu).on('click', function(e) {
 							var targetId = e.target.id;
-							
+							console.log(targetId)
+							console.log(e.target)
 							//이벤트 버블링 막기
-							if(targetId == 'txtMulgeon' || targetId == 'btnMulgeon') return;
+							if(targetId == 'txtMulgeon' || targetId == 'btnMulgeon' || targetId.startsWith('sales')) return;
 							
 							var $p = $(this).find('p.over');
 							var $img = $(this).find('p.desc img');

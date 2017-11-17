@@ -46,7 +46,7 @@ $(document).ready(function() {
 	 * load 하는 부분은 가장 먼저 나와함
 	 * */
 	_searchFormLoad();
-	_salesViewFormLoad(); 
+	//_salesViewFormLoad(); 
 	//_mulgeonFormLoad();
 	
 	function _enableMapButton(level, targetBtnId) {
@@ -108,7 +108,8 @@ $(document).ready(function() {
 	
 	function _salesViewFormLoad() {
 		var tForm = hotplace.dom.getTemplate('salesViewForm');
-		$('#dvSalesView').append(tForm());
+		//$('#dvSalesView').append(tForm());
+		$('#menu-mulgeon-list').append(tForm());
 	}
 	
 	function _mulgeonFormLoad() {
@@ -516,7 +517,8 @@ $(document).ready(function() {
 	});
 	
 	//물건보기 체크 이벤트
-	$('#btnSearchSalesView').on('click', function(e) {
+	//$('#btnSearchSalesView').on('click', function(e) {
+	$(document).on('click', '#btnSearchSalesView', function(e) {
 		var obj = {}
 		$('#dvSalesView input[type="checkbox"]:not(:disabled)').each(function() {
 			var type = $(this).data('value');
@@ -811,6 +813,7 @@ $(document).ready(function() {
 	}]);
 	
 	_mulgeonFormLoad();
+	_salesViewFormLoad();
 	
 	/*hotplace.dom.addButtonInMap([{
 		id:'btnNews',

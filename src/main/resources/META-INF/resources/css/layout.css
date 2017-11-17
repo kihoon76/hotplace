@@ -557,6 +557,12 @@ input[type=radio]:focus + label::before {
 	display:none;
 }
 
+#menu-cell-list {
+	position:absolute; left:0; top:-260px; width:304px; height:310px;
+	background-image:url('../img/menu/menu_cell_list.png'); background-size:100%;
+	display:none;
+}
+
 #dvMulgeonResult {
 	overflow-y: auto;
   	height: 200px;

@@ -118,6 +118,12 @@ $(document).ready(function() {
 		$('#menu-search-list').append(tForm());
 	}
 	
+	function _heatmapFormLoad() {
+		var tForm = hotplace.dom.getTemplate('heatmapForm');
+		//$('#dvMulgeon').append(tForm());
+		$('#menu-cell-list').append(tForm());
+	}
+	
 	function _btnCallback($this, e, targetId, isUseDiv, onFn, offFn) {
 		var sw = $this.data('switch');
 		$this.data('switch', ((sw == 'on') ? 'off' : 'on'));
@@ -646,7 +652,7 @@ $(document).ready(function() {
 		var lat = arg ? arg.lat : $sel.data('lat');
 		var address = arg ? arg.address : $sel.data('address');
 		
-		$('#btnNews').trigger('click');
+		//$('#btnNews').trigger('click');
 		
 		hotplace.maps.destroyMarkerType(hotplace.maps.MarkerTypes.MULGEON_SEARCH);
 		hotplace.maps.destroyMarkerWindow(hotplace.maps.MarkerTypes.MULGEON_SEARCH);
@@ -681,6 +687,13 @@ $(document).ready(function() {
 				}
 			});
 		});
+	});
+	
+	//heatmap 선택 라디오
+	$(document).on('change', 'input[name=rdoHeatmap]', function(e) {
+		var cellType = $(this).data('value');
+		hotplace.maps.setActiveCell(cellType);
+		hotplace.maps.cellStart();
 	});
 	
 	/*****************************************************************************************************/
@@ -787,8 +800,9 @@ $(document).ready(function() {
 		}
 	}, {
 		menu: 'menu_cell',
+		listDv: 'menu-cell-list',
 		callbackAll: function() {
-			hotplace.maps.cellToggle();
+			//hotplace.maps.cellToggle();
 		}
 	}, {
 		menu: 'menu_login',
@@ -806,6 +820,7 @@ $(document).ready(function() {
 	
 	_mulgeonFormLoad();
 	_salesViewFormLoad();
+	_heatmapFormLoad();
 	
 	/*hotplace.dom.addButtonInMap([{
 		id:'btnNews',

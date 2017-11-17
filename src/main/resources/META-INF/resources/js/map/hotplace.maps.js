@@ -71,7 +71,7 @@
 	 */
 	var _locationBounds = {'swy' : 0, 'swx' : 0, 'ney' : 0,	'nex' : 0};	  
 	
-	var _cellTypes = {DEFAULT:'HP', GONGSI:'GONGSI'};
+	var _cellTypes = {DEFAULT:'HP', GONGSI:'GONGSI', GONGSI_GR: 'GONGSI_GR'};
 	
 	/** 
 	 * @private 
@@ -79,8 +79,9 @@
 	 * @type {object} 
 	 * @property {string} DEFAULT - HP지수
 	 * @property {string} GONGSI  - 공시지가
+	 * @property {string} GONGSI_GR  - 공시지가 증가율
 	 */
-	var _cellLayerOnOff = {DEFAULT:0, GONGSI:1};
+	var _cellLayerOnOff = {DEFAULT:0, GONGSI:0, GONGSI_GR:0};
 	
 	/** 
 	 * @private 
@@ -151,6 +152,26 @@
 		}
 	}
 	
+	maps.setActiveCell = function(cellType) {
+		
+		if(cellType == 'OFF') {
+			for(var t in _cellLayerOnOff) {
+				_cellLayerOnOff[t] = 0;
+			}
+			
+			return;
+		}
+		
+		for(var t in _cellLayerOnOff) {
+			if(t == cellType) {
+				_cellLayerOnOff[t] = 1;
+			}
+			else {
+				_cellLayerOnOff[t] = 0;
+			}
+		}
+	}
+	
 	/**
 	 * @memerof hotplace.maps
 	 * @function changeCell
@@ -176,7 +197,7 @@
 	 * @function cellToggle
 	 * @desc cell toggle
 	 */
-	maps.cellToggle = function() {
+	/*maps.cellToggle = function() {
 		
 		hotplace.dom.addBodyAllMask();
 		
@@ -198,6 +219,28 @@
 			hotplace.dom.removeBodyAllMask();
 		}, 100);
 		
+	}*/
+	
+	maps.cellStart = function() {
+		
+		hotplace.dom.addBodyAllMask();
+		
+		//masking 동작을 위해 delay를 준다.
+		setTimeout(function() {
+			if(_isOffCell()) {
+				_removeAllCells();
+				hotplace.dom.enableYearRangeDiv(false);
+				hotplace.database.initLevel(_getCurrentLevel(), _getActiveCellType());
+			}
+			else {
+				_restoreAllCells();
+				maps.showCellLayer();
+				hotplace.dom.enableYearRangeDiv(true);
+			}
+			
+			hotplace.dom.removeBodyAllMask();
+		}, 100);
+		
 	}
 	
 	/** 
@@ -209,7 +252,7 @@
 	var _getActiveCellType = function() {
 		
 		for(var t in _cellTypes) {
-			if(_cellLayerOnOff[t] == 1 || _cellLayerOnOff[t] == -1/*toggle*/) {
+			if(_cellLayerOnOff[t] == 1/* || _cellLayerOnOff[t] == -1/*toggle*/) {
 				return _cellTypes[t];
 			}
 		}
@@ -218,14 +261,16 @@
 	var _isOffCell = function(isWrite) {
 		for(var t in _cellLayerOnOff) {
 			if(_cellLayerOnOff[t] == 1) {
-				if(isWrite) _cellLayerOnOff[t] = -1;
+				//if(isWrite) _cellLayerOnOff[t] = -1;
 				return false;
 			}
-			else if(_cellLayerOnOff[t] == -1) {
-				if(isWrite) _cellLayerOnOff[t] = 1;
+			/*else if(_cellLayerOnOff[t] == 0) {
+				//if(isWrite) _cellLayerOnOff[t] = 1;
 				return true;
-			}
+			}*/
 		}
+		
+		return true;
 	}
 	
 	
@@ -730,6 +775,9 @@
 		
 	    switch(currCellType) {
 		case _cellTypes.GONGSI :
+			colorFn = _getColorByGongsiWeight;
+			break;
+		case _cellTypes.GONGSI_GR :
 			colorFn = _getColorByGongsiWeight;
 			break;
 		default :
@@ -1510,7 +1558,8 @@
 					 nex : _locationBounds.nex,
 					 swy : _locationBounds.swy,
 					 ney : _locationBounds.ney,
-					 year: hotplace.dom.getShowCellYear() + '01'
+					 year: hotplace.dom.getShowCellYear() + '01',
+					 type: _getActiveCellType()
 				}, function(json) {
 					try {
 						db.setLevelData(_currentLevel, _getActiveCellType(), json.datas);

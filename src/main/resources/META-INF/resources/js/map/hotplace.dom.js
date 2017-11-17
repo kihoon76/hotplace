@@ -559,7 +559,8 @@
 		        id == 'btnMulgeon' ||
 		        id == 'menu-mulgeon-list' ||
 		        id.startsWith('addr') || 
-		        id.startsWith('sales');
+		        id.startsWith('sales') || 
+		        id.startsWith('heatmap');
 	}
 	
 	dom.addMenuInMap = function(params) {

@@ -114,12 +114,15 @@ public class HotplaceController {
 									@RequestParam(name="swx") String swx,
 									@RequestParam(name="swy") String swy,
 									@RequestParam(name="ney") String ney,
-									@RequestParam(name="year") String year) throws Exception  {
+									@RequestParam(name="year") String year,
+									@RequestParam(name="type") String type) throws Exception  {
 		
 		Map<String, String> param = getBoundsParam(nex, swx, swy, ney);
 		param.put("level", level);
 		param.put("year", year);
+		param.put("type", type);
 		
+		System.err.println(type);
 		return makeReturn(hotplaceService.getLocationBounds(param), true);
 	}
 	

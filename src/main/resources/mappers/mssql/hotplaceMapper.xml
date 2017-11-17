@@ -78,7 +78,7 @@
 			    ) tb1
 	</select>
 	
-	<select id="selectLocationBounds" resultType="string" parameterType="hashmap">
+	<select id="selectLocationBounds" statementType="CALLABLE" resultType="string" parameterType="hashmap">
 		<!-- 
 		select concat(극서 , '|', 극남,  '|', 극동, '|', 극북, '|', '[{"type":0, "value":50, "colorV":', case when PNU존재여부='Y' then round(rand(convert(varbinary, newid()))*100, 2) else 0 end, '}]')
           from [좌표계].[dbo].[좌표계]
@@ -89,8 +89,8 @@
            and 극북  between convert(float, #{swy}) and convert(float, #{ney})
          order by 극서 asc
         -->
-          
-        with tmp as
+        <if test="type == 'GONGSI'">
+         <!-- with tmp as
 		(
 		   select 
 		      a.극서, a.극남, a.극동, a.극북, b.공시지가
@@ -111,11 +111,31 @@
 						  from tmp a
 						) a
 				) a
-		 order by a.극서 asc
+		 order by a.극서 asc-->
+		 { call [Ranking].[dbo].[SEL_공시지가] (
+        	#{level, mode=IN, jdbcType=TINYINT, javaType=string},
+   		 	#{swx, mode=IN, jdbcType=DECIMAL, javaType=string},
+			#{nex, mode=IN, jdbcType=DECIMAL, javaType=string},
+			#{swy, mode=IN, jdbcType=DECIMAL, javaType=string},
+   		 	#{ney, mode=IN, jdbcType=DECIMAL, javaType=string},
+   		 	#{year, mode=IN, jdbcType=NVARCHAR, javaType=string}
+         )}
+        </if>
+        <if test="type == 'GONGSI_GR'">
+        { call [Ranking].[dbo].[SEL_공시지가_증감률] (
+        	#{level, mode=IN, jdbcType=TINYINT, javaType=string},
+   		 	#{swx, mode=IN, jdbcType=DECIMAL, javaType=string},
+			#{nex, mode=IN, jdbcType=DECIMAL, javaType=string},
+			#{swy, mode=IN, jdbcType=DECIMAL, javaType=string},
+   		 	#{ney, mode=IN, jdbcType=DECIMAL, javaType=string},
+   		 	#{year, mode=IN, jdbcType=NVARCHAR, javaType=string}
+         )}
+        </if> 
+       
          
 	</select>
 	
-	<select id="selectGyeongmaeMarker" resultType="string" parameterType="hashmap">
+	<select id="selectGyeongmaeMarker" statementType="CALLABLE" resultType="string" parameterType="hashmap">
 		<!-- select concat(a.PNU, '|$', a.고유번호, '|$', a.등록번호, '|$', a.경도, '|$', a.위도)
           from [데이터수집].dbo.경매_목록 a with (nolock, index(IX_경매_목록))
        	 inner join 좌표계.dbo.가로축13 b with (nolock) on (b.PNU=a.PNU)

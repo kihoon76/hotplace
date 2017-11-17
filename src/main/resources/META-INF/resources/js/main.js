@@ -694,6 +694,7 @@ $(document).ready(function() {
 		var cellType = $(this).data('value');
 		hotplace.maps.setActiveCell(cellType);
 		hotplace.maps.cellStart();
+		hotplace.dom.offMenuListButton('menu-cell-list');
 	});
 	
 	/*****************************************************************************************************/

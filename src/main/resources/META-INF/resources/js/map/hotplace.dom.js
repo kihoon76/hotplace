@@ -38,6 +38,8 @@
 	
 	var _lisMapUl = $('#menu > ul');
 	
+	var _rightMenu = $('#rightMenu');
+	
 	/**
 	 * @private
 	 * @type {object}
@@ -560,6 +562,77 @@
 		        id.startsWith('sales') || 
 		        id.startsWith('heatmap');
 	}
+	
+	dom.addRightMenuInMap = function(params) {
+		var template = function(){
+			var tmp  = '<p id="{0}" {1} >';
+				tmp += '<img src="' + hotplace.getContextUrl() + 'resources/img/menu/{2}.png" />';
+				tmp += '</p>';
+			
+			return tmp;
+		}
+		
+		if(params) {
+			var len = params.length;
+			var rMenus = '';
+			
+			for(var i=0; i<len; i++) {
+				rMenus += template()
+					  	 .format(
+							  params[i].menu, params[i].datas || '',  params[i].menu
+					  	 );
+			}
+			
+			if(rMenus) {
+				_rightMenu.html(rMenus);
+				
+				for(var i=0; i<len; i++) {
+					(function(ii) {
+						$('#' + params[ii].menu).on('click', function() {
+							var toggle = $(this).data('toggle');
+							var $img = $(this).children('img');
+							
+							if(toggle == 'off') {
+								$img.prop('src', $img.prop('src').replace('.png', '_on.png'));
+								$(this).data('toggle', 'on');
+								
+								if(params[ii].callbackAll) {
+									params[ii].callbackAll($(this));
+								} 
+								else if(params[ii].callbackOn) {
+									params[ii].callbackOn($(this));
+								} 
+							}
+							else {
+								$img.prop('src', $img.prop('src').replace('_on.png', '.png'));
+								$(this).data('toggle', 'off');
+								if(params[ii].callbackAll) {
+									params[ii].callbackAll($(this));
+								} 
+								else if(params[ii].callbackOff) {
+									params[ii].callbackOff($(this));
+								}
+							}
+							
+						})
+					})(i);
+				}
+			}
+		}
+	}
+	
+	dom.checkSession = function(cb) {
+		hotplace.ajax({
+			url: 'checkSession',
+			method: 'GET',
+			dataType: 'text', 
+			success: function(data, textStatus, jqXHR) {
+				var jo = $.parseJSON(data);
+				cb(jo.success);
+			}
+		});
+	}
+	
 	
 	dom.addMenuInMap = function(params) {
 		var template = function(listDv, disabled, titleOff){

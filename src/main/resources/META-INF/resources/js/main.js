@@ -668,7 +668,6 @@ $(document).ready(function() {
 	});
 	
 	$(document).on('click', '#btnMulgeonMap', function(e, arg) {
-		
 		//이미 열려있는 물건검색 마커  윈도우 삭제
 		hotplace.maps.destroyMarkerType(hotplace.maps.MarkerTypes.MULGEON_SEARCH);
 		hotplace.maps.destroyMarkerWindow(hotplace.maps.MarkerTypes.MULGEON_SEARCH);
@@ -678,6 +677,7 @@ $(document).ready(function() {
 		var lat = arg ? arg.lat : $sel.data('lat');
 		var address = arg ? arg.address : $sel.data('address');
 		
+		if(lng == undefined || lat == undefined) return;
 		//$('#btnNews').trigger('click');
 		
 		hotplace.maps.destroyMarkerType(hotplace.maps.MarkerTypes.MULGEON_SEARCH);
@@ -842,9 +842,8 @@ $(document).ready(function() {
 		callbackAll: function() {
 			//hotplace.maps.cellToggle();
 		}
-	}, {
+	}/*, {
 		menu: 'menu_login',
-		datas: 'data-gubun="IN"',
 		titleOff: true,
 		callbackOn: function($this) {
 			var gubun = $this.data('gubun');
@@ -852,6 +851,22 @@ $(document).ready(function() {
 			hotplace.dom.showLoginForm(gubun, function() {
 				//hotplace.dom.toggleOnlyMenuButton(hotplace.dom.getMenuBtn().USER_LOGIN);
 				hotplace.dom.offMenuButton('li_menu_login');
+			});
+		}
+	}*/]);
+	
+	hotplace.dom.addRightMenuInMap([{
+		menu: 'rmenu_user',
+		datas: 'data-toggle="off"',
+		callbackOn: function($this) {
+			
+			/*hotplace.dom.showLoginForm('', function() {
+				$this.trigger('click');
+			});*/
+			hotplace.dom.checkSession(function(hasSession) {
+				hotplace.dom.showLoginForm((hasSession) ? 'OUT' : 'IN', function() {
+					$this.trigger('click');
+				});
 			});
 		}
 	}]);

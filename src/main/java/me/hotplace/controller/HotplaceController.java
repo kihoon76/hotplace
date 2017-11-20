@@ -69,6 +69,17 @@ public class HotplaceController {
 		return "authresult";
 	}
 	
+	@GetMapping("checkSession")
+	public String checkSession(HttpServletRequest request) {
+		
+		AjaxVO ajax = new AjaxVO();
+		ajax.setSuccess(true);
+		ajax.setErrCode("");
+		request.setAttribute("result", ajax);
+		
+		return "authresult";
+	}
+	
 	@GetMapping(value="address/condition", produces="application/text; charset=utf8")
 	@ResponseBody
 	public String getAddressSearchCondition(

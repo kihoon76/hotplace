@@ -51,6 +51,7 @@
 <div id="map" data-vender="naver">
 	<div class="map-buttons" id="mapButtons"></div>
 	<div id="menu"><ul></ul></div>
+	<div id="rightMenu"></div>
 	<div id="dvNews" class="layer-popup" style="width:600px; height:50px">
 		<ul id="newsTicker" class="ticker">
 			<li><a href="">도시재생 사업(사상스마트시티) 실시계획인가, 부산시, 201707.10</a></li>

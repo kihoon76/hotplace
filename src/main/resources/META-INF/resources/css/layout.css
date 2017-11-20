@@ -571,3 +571,13 @@ input[type=radio]:focus + label::before {
   	overflow-x: hidden;
 }
 
+
+/*
+주소검색 결과 
+*/
+#dvMulgeonResult table tr td:first-child { position:relative; top:10px;}
+
+/*
+오른쪽 메뉴
+*/
+#rightMenu p { position:absolute; right:20px; top:60px; z-index:3; cursor:pointer; }

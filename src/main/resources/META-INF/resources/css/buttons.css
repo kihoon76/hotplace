@@ -94,3 +94,17 @@
 	cursor: pointer;
 }
 
+.map-move { position:absolute; top:205px;left:500px; }
+
+#btnMulgeonMap {
+	background-image: url(../img/btn_mapmove.png);
+	width: 80px;
+    height: 33px;
+    position: relative;
+    left: -60px;
+    top: 3px;
+    padding: 0;
+	border: none;
+	
+}
+

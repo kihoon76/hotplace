@@ -1553,13 +1553,13 @@
 				
 				var adjustLevel = (_currentLevel >=3 && _currentLevel <=5) ? _currentLevel + 1 : _currentLevel;
 				hotplace.getPlainText('locationbounds', {
-					level: adjustLevel/*_currentLevel*/,
-					 swx : _locationBounds.swx,
-					 nex : _locationBounds.nex,
-					 swy : _locationBounds.swy,
-					 ney : _locationBounds.ney,
-					 year: hotplace.dom.getShowCellYear() + '01',
-					 type: _getActiveCellType()
+					 level: adjustLevel/*_currentLevel*/,
+					 swx  : _locationBounds.swx,
+					 nex  : _locationBounds.nex,
+					 swy  : _locationBounds.swy,
+					 ney  : _locationBounds.ney,
+					 year : hotplace.dom.getShowCellYear() + '01',
+					 type : _getActiveCellType()
 				}, function(json) {
 					try {
 						db.setLevelData(_currentLevel, _getActiveCellType(), json.datas);
@@ -1576,6 +1576,9 @@
 				function() {
 					//hotplace.dom.offMenuButton(hotplace.dom.getMenuBtn().CELL/*.HEAT_MAP*/);
 					//hotplace.maps.cellToggle();
+					
+					//heatmap 보기 선택을 끄기로 재설정한다.
+					$('input[name=rdoHeatmap]').trigger('change', true);
 					hotplace.dom.offMenuListButton('menu-cell-list');
 				});
 			}

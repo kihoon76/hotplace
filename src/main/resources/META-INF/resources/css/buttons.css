@@ -90,3 +90,7 @@
 	display:none;
 }
 
+.menu-disabled {
+	cursor: pointer;
+}
+

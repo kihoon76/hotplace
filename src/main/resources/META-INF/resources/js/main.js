@@ -40,7 +40,8 @@ $(document).ready(function() {
 	
 	var _sliderGrpInit = {};
 	var _startInternal;
-	var _buttonsThreshold = {};	//button 특정레벨에서 비활성화
+	/*var _buttonsThreshold = {};	//button 특정레벨에서 비활성화*/
+	var _menusThreshold = {};   //menu 특정레벨에서 비활성화
 	/*
 	 * jquery handler 작성하기 전 로드가 먼저 되어야 함
 	 * load 하는 부분은 가장 먼저 나와함
@@ -49,7 +50,7 @@ $(document).ready(function() {
 	//_salesViewFormLoad(); 
 	//_mulgeonFormLoad();
 	
-	function _enableMapButton(level, targetBtnId) {
+	/*function _enableMapButton(level, targetBtnId) {
 		var target = $('#' + targetBtnId);
 		
 		if(level >= hotplace.config.salesViewLevel) {
@@ -68,6 +69,31 @@ $(document).ready(function() {
 				
 				target.toggleClass('button-disabled');
 				_buttonsThreshold[targetBtnId] = false;
+			}
+		}
+	}*/
+	
+	function _enableMenu(level, targetMenu) {
+		var target = $('#' + targetMenu);
+		
+		if(level >= hotplace.config.salesViewLevel) {
+			if(_menusThreshold[targetMenu]) return;
+			target.removeClass('disabled');
+			target.addClass('enabled');
+			
+			var child = target.children('img');
+			child.prop('src', child.prop('src').replace('_disabled.png', '.png'));
+			
+			_menusThreshold[targetMenu] = true;
+		}
+		else {
+			if(_menusThreshold[targetMenu]) {
+				target.removeClass('enabled');
+				target.addClass('disabled');
+				
+				var child = target.children('img');
+				child.prop('src', child.prop('src').replace('.png', '_disabled.png'));
+				_menusThreshold[targetMenu] = false;
 			}
 		}
 	}
@@ -690,11 +716,19 @@ $(document).ready(function() {
 	});
 	
 	//heatmap 선택 라디오
-	$(document).on('change', 'input[name=rdoHeatmap]', function(e) {
-		var cellType = $(this).data('value');
-		hotplace.maps.setActiveCell(cellType);
-		hotplace.maps.cellStart();
-		//hotplace.dom.offMenuListButton('menu-cell-list');
+	$(document).on('change', 'input[name=rdoHeatmap]', function(e, isTrigger) {
+		var cellType = 'OFF';
+		
+		if(isTrigger) {
+			$('#heatmapOff').prop('checked', true);
+			hotplace.maps.setActiveCell(cellType);
+		}
+		else {
+			cellType = $(this).data('value');
+			hotplace.maps.setActiveCell(cellType);
+			hotplace.maps.cellStart();
+		}
+		
 	});
 	
 	/*****************************************************************************************************/
@@ -719,7 +753,8 @@ $(document).ready(function() {
 				hotplace.maps.showMarkers();
 				hotplace.maps.showCellLayer();
 				hotplace.dom.removeBodyAllMask();
-				_enableMapButton(level, 'btnSalesView');
+				//_enableMapButton(level, 'btnSalesView');
+				_enableMenu(level, 'li_menu_mulgeon');
 			},500);
 		},
 		'zoom_start' : function(map, level) {
@@ -780,6 +815,7 @@ $(document).ready(function() {
 		menu: 'menu_search',
 		listDv: 'menu-search-list',
 		clazz: 'list',
+		sw: 'on',
 		callbackAll: function() {
 			
 		}
@@ -796,6 +832,7 @@ $(document).ready(function() {
 	}, {
 		menu: 'menu_mulgeon',
 		listDv: 'menu-mulgeon-list',
+		disabled:true,
 		callbackAll: function() {
 			
 		}

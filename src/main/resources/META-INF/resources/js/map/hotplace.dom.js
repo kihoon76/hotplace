@@ -554,10 +554,8 @@
 		var id = target.id;
 		if(target.tagName === 'LABEL') return true;
 		
-		console.log(id);
 		return  id == 'txtMulgeon' ||
 		        id == 'btnMulgeon' ||
-		        id == 'menu-mulgeon-list' ||
 		        id.startsWith('addr') || 
 		        id.startsWith('sales') || 
 		        id.startsWith('heatmap');
@@ -565,11 +563,11 @@
 	
 	dom.addMenuInMap = function(params) {
 		var template = function(listDv, disabled, titleOff){
-			var tmp  = '<li id="li_{0}" data-switch="off" {1} ><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{2}.png" />';
-				tmp += (titleOff) ? '{3}' : '<p class="desc"><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{3}_title.png" /></p>';
-				tmp += '<p class="over"><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{4}_on.png" /></p>';
-				//tmp += (hasList) ? '<div><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{5}_list.png" style="display:none;position:absolute;left:{6}px;top:{7}px;"/></div></li>' : '{5}{6}{7}</li>';
-				tmp += (listDv) ? '<div id="{5}" class="{6}"></div></li>' : '{5}{6}</li>';
+			var tmp  = '<li id="li_{0}" data-switch="{1}" {2} class="' + (disabled ? 'disabled' : 'enabled') + '">';
+				tmp += (disabled) ? '<img src="' + hotplace.getContextUrl() + 'resources/img/menu/{3}_disabled.png" class="menu-disabled"/>' : '<img src="' + hotplace.getContextUrl() + 'resources/img/menu/{3}.png" />';
+				tmp += (titleOff) ? '{4}' : '<p class="desc"><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{4}_title.png" class="menu-title"/></p>';
+				tmp += '<p class="over"><img src="' + hotplace.getContextUrl() + 'resources/img/menu/{5}_on.png" /></p>';
+				tmp += (listDv) ? '<div id="{6}" class="{7}"></div></li>' : '{6}{7}</li>';
 			
 			return tmp;
 		}
@@ -582,6 +580,7 @@
 				lis += template(params[i].listDv, params[i].disabled, params[i].titleOff)
 					  .format(
 							  params[i].menu,
+							  params[i].sw ? params[i].sw : 'off',
 							  params[i].datas || '',
 							  params[i].menu,
 							  params[i].titleOff ? '' : params[i].menu,
@@ -597,7 +596,8 @@
 				for(var i=0; i<len; i++) {
 					(function(ii) {
 						$('#li_' + params[ii].menu).on('click', function(e) {
-							
+							console.log(e.target);
+							if($(this).hasClass('disabled')) return;
 							if(_isPreventBubbling(e)) return;
 							
 							

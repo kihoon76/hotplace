@@ -183,19 +183,9 @@ html, body, #map {
 #dvYearRange.ui-widget-content {
 	background: #166C05;
 }*/
-/*#dvYearRange {
-  z-index: 1; }
-
-#dvAutoYearRange {
-  z-index: 1; }
-
-#dvYearRange .ui-rangeSlider-label {
-  background-image: url(../vendors/jQRangeSlider-5.7.2/css/icons-classic/labelB.png);
-  bottom: -33px;
-  background-position: top center;
-  padding: 8px 6px 2px; }*/
   
 #dvYearRange { z-index: 1; }
+#dvAutoYearRange { z-index: 1; }
 #dvYearRange .ui-rangeSlider-label {
        background-image: url(../img/jqRS_labelB.png);
 	   background-size:100%;

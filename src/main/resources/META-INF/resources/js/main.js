@@ -807,6 +807,7 @@ $(document).ready(function() {
 		hotplace.maps.showCellLayer();
 		hotplace.dom.showYearRangeDiv();
 		hotplace.dom.showAutoYearRangeDiv();
+		hotplace.dom.enableYearRangeDiv(false);
 	});
 	
 	

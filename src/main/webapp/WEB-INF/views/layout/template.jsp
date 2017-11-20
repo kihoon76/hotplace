@@ -40,6 +40,7 @@
     
     <link rel="stylesheet" href="/resources/css/buttons.css" />
     <link rel="stylesheet" href="/resources/css/layout.css" />
+    <link rel="stylesheet" href="/resources/css/user.css" />
     
     <!-- loading -->
     <link rel="stylesheet" href="/resources/js/plugins/loading/waitMe.min.css" />

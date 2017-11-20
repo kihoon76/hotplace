@@ -10,8 +10,8 @@
 <head>
 	<meta charset="UTF-8">
     <title><sitemesh:write property="title" /></title>
-    <link rel="icon" href="${fn:substring(url, 0, fn:length(url) - fn:length(uri))}${req.contextPath}/resources/img/favicon.ico" type="image/x-icon" />
-    <link rel="shortcut icon" type="image/x-icon" ref="${fn:substring(url, 0, fn:length(url) - fn:length(uri))}${req.contextPath}/resources/img/favicon.ico" />
+    <link rel="icon" href="${fn:substring(url, 0, fn:length(url) - fn:length(uri))}${req.contextPath}/resources/img/favicon.png" type="image/png" />
+   
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/resources/bootstrap/3.3.7-1/css/bootstrap.min.css" />
     

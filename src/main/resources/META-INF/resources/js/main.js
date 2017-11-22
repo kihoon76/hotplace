@@ -135,7 +135,7 @@ $(document).ready(function() {
 	function _salesViewFormLoad() {
 		var tForm = hotplace.dom.getTemplate('salesViewForm');
 		//$('#dvSalesView').append(tForm());
-		$('#menu-mulgeon-list').append(tForm());
+		$('#menu-mulgeon-list').append(tForm({url: hotplace.getContextUrl()}));
 	}
 	
 	function _mulgeonFormLoad() {

@@ -1651,8 +1651,13 @@
 				
 			}
 		}
-		else {
-			
+		else if(!maps.isActiveSalesView()) {
+			//활성화 레벨이 아닌데 열려있는 경우 
+			var $list = $('#menu-mulgeon-list');
+			if($list.is(':visible')) {
+				$list.hide();
+				$list.parent().trigger('click');
+			}
 		}
 	}
 	

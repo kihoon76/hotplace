@@ -111,3 +111,16 @@
 #btnBosangViewList { display:none; }
 #btnBosangViewList.on { display:inline; }
 
+/*물건보기 범례*/
+.legend { width:20px;height:26px; }
+.btn-search {
+	width: 32px;
+	height: 32px;
+	background-image: url(../img/search_icon.png); 
+	border:0;
+}
+
+.btn-search.mulgeon {
+	position: relative;
+	top: -5px;
+}

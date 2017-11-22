@@ -551,7 +551,7 @@
 		}
 	}
 	
-	var _isPreventBubbling = function(e) {
+	var _doPreventBubbling = function(e) {
 		var target = e.target;
 		var id = target.id;
 		if(target.tagName === 'LABEL') return true;
@@ -560,7 +560,8 @@
 		        id == 'btnMulgeon' ||
 		        id.startsWith('addr') || 
 		        id.startsWith('sales') || 
-		        id.startsWith('heatmap');
+		        id.startsWith('heatmap') ||
+		        $(target).hasClass('legend');
 	}
 	
 	dom.addRightMenuInMap = function(params) {
@@ -671,7 +672,7 @@
 						$('#li_' + params[ii].menu).on('click', function(e) {
 							console.log(e.target);
 							if($(this).hasClass('disabled')) return;
-							if(_isPreventBubbling(e)) return;
+							if(_doPreventBubbling(e)) return;
 							
 							
 							var $p = $(this).find('p.over');

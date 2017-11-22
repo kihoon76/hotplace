@@ -1048,6 +1048,25 @@
 		$('#centerModal').modal('hide');
 	}
 	
+	dom.hideMenuList = function(targetId) {
+		var $list = $('#' + targetId);
+		
+		if($list.is(':visible')) {
+			$list.hide();
+			$list.parent().trigger('click');
+		}
+	};
+	
+	dom.uncheckAll = function(dv) {
+		//view 변경
+		$('#' + dv + ' .checkbox input[type=checkbox]').each(function() {
+			$(this).prop('checked', false);
+		});
+		
+		//상태변경
+		hotplace.maps.setAllOffMarkers();
+	};
+	
 	$(document).on('hidden.bs.modal', '#containerModal,#centerModal', function() {
 		_modalCloseAfterFn();
 	});

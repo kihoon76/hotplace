@@ -123,6 +123,19 @@
 		return types;
 	}
 	
+	
+	/**
+	 * @memerof hotplace.maps
+	 * @function setAllOffMarkers
+	 * @desc marker type 전부를 off함
+	 *       로그인을 안한 상태에서 체크한 모든 마커를 언체크한다.
+	 */
+	maps.setAllOffMarkers = function() {
+		for(var t in _markerGroupOnOff) {
+			_markerGroupOnOff[t] = 0;
+		}
+	}
+	
 	/**
 	 * @memerof hotplace.maps
 	 * @function isActiveMarker
@@ -1642,7 +1655,11 @@
 							}
 						},
 						true,
-						isMaskTran);
+						isMaskTran,
+						function() {
+							//$('#dvSalesView')
+							hotplace.dom.uncheckAll('dvSalesView');
+						});
 					}(k));
 					
 					
@@ -1653,11 +1670,7 @@
 		}
 		else if(!maps.isActiveSalesView()) {
 			//활성화 레벨이 아닌데 열려있는 경우 
-			var $list = $('#menu-mulgeon-list');
-			if($list.is(':visible')) {
-				$list.hide();
-				$list.parent().trigger('click');
-			}
+			hotplace.dom.hideMenuList('menu-mulgeon-list');
 		}
 	}
 	

@@ -350,7 +350,7 @@
 		RADIUS_SEARCH : { m: [], c: [], url: '' },
 		GYEONGMAE : { m: [], url: 'gyeongmaemarker', icon:'gyeongmae.png'/*, trigger: 'mouseover'*/ },
 		GONGMAE : { m: [], url: 'gongmaemarker', icon: 'gongmae.png'/*, trigger: 'mouseover'*/ },
-		BOSANG: { m: [], url: 'bosangmarker', icon: 'bosang.png', clusterIcon:'bosangC.png', clustering: true },
+		BOSANG: { m: [], url: 'bosangmarker', icon: 'bosang.png', clusterIcon:'bosangC.png', clustering: true, stopLevel: 11},
 		PYEONIB: { m: [], url: 'pyeonibmarker', icon: 'pyeonib.png', clusterIcon:'pyeonibC.png', clustering: true },
 		SILGEOLAE: { m: [], url: 'silgeolaemarker', icon: 'silgeolae.png' },
 		ACCEPT_BUILDING: { m: [], url: 'acceptbuildingmarker', icon: 'acceptbuilding.png', level:13 },
@@ -622,12 +622,14 @@
 			grpCluster = {},
 		    curGrp = 'x',
 		    y = null,
-		    info = null;
+		    info = null,
+		    stopGroupping = false;
 		
 		for(var i = startIdx; i < len; i++) {
 			info = data[i].info;
 			
-			if(options && options.isClustering) {
+			
+			if(options && options.isClustering && !options.stopGroupping) {
 				if(_createdMarkerGroup[options.markerType][curGrp]) continue;	//대표마커가 설정된 그룹은 통과
 				
 				if(curGrp != info.xg) {
@@ -647,7 +649,7 @@
 			if(y >= boundmY && y <= boundMY) {
 				
 				//그룹핑
-				if(options && options.isClustering) {
+				if(options && options.isClustering && !options.stopGroupping) {
 					if(!_createdMarkerGroup[options.markerType][curGrp] && !grpCluster[curGrp]) {
 						grpCluster[curGrp] = data[i];
 						//_createdMarkerGroup[curGrp] = true;
@@ -670,7 +672,7 @@
 			}
 		}
 		
-		if(options && options.isClustering) {
+		if(options && options.isClustering && !options.stopGroupping) {
 			if(!_createdMarkerGroup[options.markerType][curGrp] && grpCluster[curGrp]) {
 				callback(grpCluster[curGrp]);
 				_createdMarkerGroup[options.markerType][curGrp] = true;
@@ -680,7 +682,13 @@
 		console.log("drawedCnt ==> " + drawedCnt);
 	}
 	
-	
+	function _isStopGrouping(curLevel, stopLevel) {
+		if(stopLevel == undefined || stopLevel >= curLevel) {
+			return false;
+		}
+		
+		return true;
+	}
 	/** 
 	 * @private
 	 * @function _createMarkers 
@@ -693,7 +701,8 @@
 	 */
 	function _createMarkers(level, startIdx, markerType, listeners, options) {
 		
-		var markerData;
+		var markerData, 
+		    stopGroupping = _isStopGrouping(level, options.stopLevel);
 		
 		switch(markerType) {
 		case _markerTypes.GYEONGMAE :
@@ -720,11 +729,12 @@
 		_commXY(markerData,
 				startIdx,
 				function(data) {
-					maps.getMarker(markerType, data, listeners, options);
+					maps.getMarker(markerType, data, listeners, options, stopGroupping);
 				},
 				{
 					isClustering: options.isClustering,
-					markerType: markerType
+					markerType: markerType,
+					stopGroupping: stopGroupping 
 				}
 		);
 		
@@ -1018,7 +1028,9 @@
 			radius:0,
 			icon: _markers[markerType].icon/*'blink.gif'*/,
 			clusterIcon: _markers[markerType].clusterIcon,
-			isClustering: _markers[markerType].clustering 
+			isClustering: _markers[markerType].clustering,
+			stopLevel: _markers[markerType].stopLevel,
+			curLevel: currentLevel
 		});
 	}
 	
@@ -1324,9 +1336,10 @@
 	 * @param {number}  options.size.y 아이콘 이미지 height px 
 	 * @param {object}  options.datas 데이터옵션 
 	 * @param {object}  options.datas.params 파라미터 정보
+	 * @param {boolean} stopGroupping - 그룹핑을 중지할지 여부
 	 * @desc 해당지점에 마커를 그리고 옵션값에 따라 해당지점을 중심으로 원을 그림 
 	 */
-	maps.getMarker = function(markerType, data, listeners, options) {
+	maps.getMarker = function(markerType, data, listeners, options, stopGroupping) {
 		var newMarker, newInfoWindow = null, content = '';
 		
 		newMarker = new _vender.Marker({
@@ -1344,7 +1357,7 @@
 			}
 			
 			//클러스트링된 마커구별
-			if(options.isClustering && data.info.xgc > hotplace.config.markerGrpCount) {
+			if(options.isClustering && !stopGroupping && data.info.xgc >= hotplace.config.markerGrpCount) {
 				content = '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url('+ hotplace.getContextUrl() +'resources/img/marker/' + options.clusterIcon + ');background-size:contain;">' + data.info.xgc + '</div>';
 			}
 			else {
@@ -1500,7 +1513,8 @@
 					radius:0,
 					icon: _markers[activeMarkers[a]].icon,
 					clusterIcon: _markers[activeMarkers[a]].clusterIcon,
-					isClustering: _markers[activeMarkers[a]].clustering
+					isClustering: _markers[activeMarkers[a]].clustering,
+					stopLevel: _markers[activeMarkers[a]].stopLevel
 				});
 			}
 		}
@@ -1596,7 +1610,7 @@
 		var currentLevel = _getCurrentLevel(),
 		    activeMarkers = maps.getActiveMarkers(),
 		    activeMarkerCnt = activeMarkers.length,
-		    url = '';
+		    url = '', stopGrouping = 'Y';
 		
 		//active level 비교
 		if(maps.isActiveSalesView() && activeMarkerCnt > 0) {
@@ -1607,14 +1621,15 @@
 				
 				for(var k=0; k<activeMarkerCnt; k++) {
 					url = _markers[activeMarkers[k]].url;
-					
 					(function(x) {
+						stopGrouping = _isStopGrouping(currentLevel, _markers[activeMarkers[x]].stopLevel);
 						hotplace.getPlainText(url, {
 							 swx : _locationBounds.swx,
 							 nex : _locationBounds.nex,
 							 swy : _locationBounds.swy,
 							 ney : _locationBounds.ney,
-							 level: currentLevel
+							 level: currentLevel,
+							 stopGrouping: (stopGrouping) ? 'Y' : 'N'
 						}, function(json) {
 							try {
 								hotplace.database.setLevelData(currentLevel, _markerTypes[activeMarkers[x]], json.datas);

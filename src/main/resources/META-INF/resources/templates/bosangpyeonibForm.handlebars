@@ -1,42 +1,49 @@
 <div id="dvBosangPyeonib" class="container body" style="width:300px;height:350px; ">
 	<div style="padding-top:10px">
-		{{kind}} <button type="button" id="btnBosangPyeonibClose" class="glyphicon glyphicon-remove close" aria-label="Close"></button>
+		{{kind}} <span><button id="btnBosangViewList">리스트보기</button></span><button type="button" id="btnBosangPyeonibClose" class="glyphicon glyphicon-remove close" aria-label="Close"></button>
 	</div>
 
-	<table class="table table-bordered" id="tbBosang" style="margin-top:10px;">
-	<colgroup>
-		<col style="width:25%">
-    	<col style="width:65%">
-	</colgroup>
-	<tbody>
-		<tr>
-			<td>물건<br/>소재지</td>
-			<td><span id="bpMulgeonsojaeji"></span></td>
-		</tr>
-		<tr>
-			<td>공고기관</td>
-			<td><span id="bpGonggogigwan"></span></td>
-		</tr>
-		<tr>
-			<td>공고일</td>
-			<td><span id="bpGonggoil"></span></td>
-		</tr>
-		<tr>
-			<td>사업명</td>
-			<td><span id="bpSaeobname"></span></td>
-		</tr>
-		<tr>
-			<td>공고번호</td>
-			<td><span id="bpGonggobeonho"></span></td>
-		</tr>
-		<tr>
-			<td>시설종류</td>
-			<td><span id="bpSiseolkind"></span></td>
-		</tr>
-		<tr>
-			<td>사업<br/>시행자</td>
-			<td><span id="bpSaeobsihaengja"></span></td>
-		</tr>
-	</tbody>
-	</table>
+	<div id="dvBosangPyeonibThumb">
+		<table class="table table-bordered" style="margin-top:10px;">
+			<colgroup>
+				<col style="width:25%">
+    			<col style="width:65%">
+			</colgroup>
+			<tbody>
+				<tr>
+					<td>물건<br/>소재지</td>
+					<td><span id="bpMulgeonsojaeji"></span></td>
+				</tr>
+				<tr>
+					<td>공고기관</td>
+					<td><span id="bpGonggogigwan"></span></td>
+				</tr>
+				<tr>
+					<td>공고일</td>
+					<td><span id="bpGonggoil"></span></td>
+				</tr>
+				<tr>
+					<td>사업명</td>
+					<td><span id="bpSaeobname"></span></td>
+				</tr>
+				<tr>
+					<td>공고번호</td>
+					<td><span id="bpGonggobeonho"></span></td>
+				</tr>
+				<tr>
+					<td>시설종류</td>
+					<td><span id="bpSiseolkind"></span></td>
+				</tr>
+				<tr>
+					<td>사업<br/>시행자</td>
+					<td><span id="bpSaeobsihaengja"></span></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div id="dvBosangPyeonibList">
+		<table class="table table-bordered table-hover" id="tbBosangList" style="margin-top:10px;">
+			<tbody></tbody>
+		</table>
+	</div>
 </div>

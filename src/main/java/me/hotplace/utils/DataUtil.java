@@ -197,6 +197,29 @@ public class DataUtil {
 		
 		return m.build(list, deli);
 	}
+	
+	public static String makeLatLngBosangPyeonibMarkerNoGroup(List<String> list, String deli) {
+		Make m = new Make() {
+			
+			@Override
+			void run(List<String> list, StringBuilder sb, String deli) {
+				// TODO Auto-generated method stub
+				for(String token : list) {
+					String[] s = StringUtils.splitByWholeSeparator(token, deli);
+					sb.append("{\"info\":{\"pnu\":\"" + s[0] + "\",");
+					sb.append( "\"unu\":\"" + s[1] + "\"}");
+					sb.append(",");
+					sb.append("\"location\":[");
+					sb.append(s[2]);
+					sb.append(",");
+					sb.append(s[3]);
+					sb.append("]},");
+				}
+			}
+		};
+		
+		return m.build(list, deli);
+	}
 
 	public static String makeLatLngSilgeolaeMarker(List<String> list, String deli) {
 		Make m = new Make() {
@@ -246,6 +269,22 @@ public class DataUtil {
 					sb.append(",");
 					sb.append(s[3]);
 					sb.append("]},");
+				}
+			}
+		};
+		
+		return m.build(list, deli);
+	}
+
+	public static String makeLatLngBosangPyeonibGroupList(List<String> list, String deli) {
+		Make m = new Make() {
+			
+			@Override
+			void run(List<String> list, StringBuilder sb, String deli) {
+				// TODO Auto-generated method stub
+				for(String token : list) {
+					String[] s = StringUtils.splitByWholeSeparator(token, deli);
+					sb.append("{\"unu\":\"" + s[0] + "\",\"addr\":\"" + s[1] + "\"},");
 				}
 			}
 		};

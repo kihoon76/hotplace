@@ -1,5 +1,6 @@
 package me.hotplace.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -109,6 +110,12 @@ public class HotplaceDaoImpl implements HotplaceDao {
 	@Override
 	public AcceptBuilding selectAcceptbuildingThumb(String unu) {
 		return msSqlSessionAgent2.selectOne(namespace + ".selectAcceptbuildingThumb", unu);
+	}
+
+	@Override
+	public List<String> selectBosangPyeonibGroupList(HashMap gunus) {
+		
+		return msSqlSession.selectList(namespace + ".selectBosangPyeonibGroupList", gunus);
 	}
 
 }

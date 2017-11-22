@@ -108,3 +108,6 @@
 	
 }
 
+#btnBosangViewList { display:none; }
+#btnBosangViewList.on { display:inline; }
+

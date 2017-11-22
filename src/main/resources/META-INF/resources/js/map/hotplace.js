@@ -70,7 +70,7 @@
     	addrSearchPanLevel: 10,
     	yangdoseStepPercent: 5,
     	gyeongmaeDetailImgInterval: 2000,
-    	markerGrpCount: 20
+    	markerGrpCount: 2
     }
     
     Handlebars.registerHelper('json', function(context) {

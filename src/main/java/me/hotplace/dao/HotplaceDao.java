@@ -1,5 +1,6 @@
 package me.hotplace.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,4 +44,6 @@ public interface HotplaceDao {
 	public List<String> selectAcceptBuildingMarker(Map<String, String> param);
 
 	public AcceptBuilding selectAcceptbuildingThumb(String unu);
+
+	public List<String> selectBosangPyeonibGroupList(HashMap m);
 }

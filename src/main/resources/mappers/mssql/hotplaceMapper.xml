@@ -334,6 +334,7 @@
 	</select> -->
 	
 	<select id="selectBosangPyeonibMarker" statementType="CALLABLE" parameterType="hashmap" resultType="string">
+		<if test='stopGrouping == "N"'>
    		 { call [수작업].[dbo].[SEL_보상물건_맵2](
    		 	#{swx, mode=IN, jdbcType=DECIMAL, javaType=string},
    		 	#{nex, mode=IN, jdbcType=DECIMAL, javaType=string},
@@ -342,7 +343,19 @@
 			#{level, mode=IN, jdbcType=	TINYINT, javaType=string},
 			#{gubun, mode=IN, jdbcType=	NVARCHAR, javaType=string}
    		 	
-   		 )}
+   		 ) }
+   		 </if>
+   		 <if test='stopGrouping == "Y"'>
+   		 { call [수작업].[dbo].[SEL_보상물건_맵_noGroup](
+   		 	#{swx, mode=IN, jdbcType=DECIMAL, javaType=string},
+   		 	#{nex, mode=IN, jdbcType=DECIMAL, javaType=string},
+   		 	#{swy, mode=IN, jdbcType=DECIMAL, javaType=string},
+			#{ney, mode=IN, jdbcType=DECIMAL, javaType=string},
+			#{level, mode=IN, jdbcType=	TINYINT, javaType=string},
+			#{gubun, mode=IN, jdbcType=	NVARCHAR, javaType=string}
+   		 	
+   		 ) }
+   		 </if>
 	</select>
 	
 	<resultMap id="RM_selectBosangPyeonibThumb" type="BosangPyeonib">
@@ -361,6 +374,16 @@
 		select 고유번호, 물건소재지, PNU, 공고기관, 사업명, 공고일, 공고번호, 사업시행자, 시설종류
 		  from [수작업].[dbo].[보상물건]
 		 where 고유번호 = #{unu}
+	</select>
+	
+	<select id="selectBosangPyeonibGroupList" parameterType="hashmap" resultType="string">
+		select concat(고유번호, '`', 물건소재지)
+		  from [수작업].[dbo].[보상물건]
+		 where 고유번호 IN 
+		 <foreach collection="gunus" item="item" index="index" separator="," open="(" close=")">
+		 	#{item}
+		 </foreach>
+	     order by 물건소재지
 	</select>
 	
 	<!-- 실거래가 -->

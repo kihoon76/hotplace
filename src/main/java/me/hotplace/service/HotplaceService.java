@@ -100,6 +100,10 @@ public class HotplaceService {
 
 	public String getBosangPyeonibMarker(Map<String, String> param) {
 		List<String> list = hotplaceDao.selectBosangMarker(param);
+		if("Y".equals(param.get("stopGrouping"))) {
+			return DataUtil.makeLatLngBosangPyeonibMarkerNoGroup(list, "|");
+		}
+		
 		return DataUtil.makeLatLngBosangPyeonibMarker(list, "|");
 	}
 
@@ -126,5 +130,14 @@ public class HotplaceService {
 	public AcceptBuilding getAcceptbuildingThumb(String unu) {
 		AcceptBuilding ab = hotplaceDao.selectAcceptbuildingThumb(unu);
 		return ab;
+	}
+
+	public String getBosangPyeonibGroupList(String gunu) {
+		String[] gunus = gunu.split(",");
+		HashMap m = new HashMap();
+		m.put("gunus", gunus);
+		
+		List<String> list = hotplaceDao.selectBosangPyeonibGroupList(m);
+		return DataUtil.makeLatLngBosangPyeonibGroupList(list, "`");
 	}
 }

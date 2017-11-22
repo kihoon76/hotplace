@@ -114,7 +114,7 @@ public class HotplaceController {
 	@ResponseBody
 	public String getMulgeonAddress(@RequestBody Address address) {
 		
-		System.out.println(address);
+		//System.out.println(address);
 		return hotplaceService.getMulgeonAddressList(address); 
 	}
 	
@@ -128,12 +128,11 @@ public class HotplaceController {
 									@RequestParam(name="year") String year,
 									@RequestParam(name="type") String type) throws Exception  {
 		
-		Map<String, String> param = getBoundsParam(nex, swx, swy, ney);
+		Map<String, String> param = getBoundsParam(nex, swx, swy, ney, "");
 		param.put("level", level);
 		param.put("year", year);
 		param.put("type", type);
 		
-		System.err.println(type);
 		return makeReturn(hotplaceService.getLocationBounds(param), true);
 	}
 	
@@ -143,9 +142,10 @@ public class HotplaceController {
 								  	 @RequestParam(name="swx") String swx,
 								  	 @RequestParam(name="swy") String swy,
 								  	 @RequestParam(name="ney") String ney,
-								  	 @RequestParam(name="level") String level) throws Exception  {
+								  	 @RequestParam(name="level") String level,
+								  	 @RequestParam(name="stopGrouping") String stopGrouping) throws Exception  {
 		
-		Map<String, String> param = getBoundsParam(nex, swx, swy, ney);
+		Map<String, String> param = getBoundsParam(nex, swx, swy, ney, stopGrouping);
 		
 		return makeReturn(hotplaceService.getGyeongmaeMarker(param), true);
 	}
@@ -155,9 +155,10 @@ public class HotplaceController {
 	public String getGongmaemarker(@RequestParam(name="nex") String nex,
 								   @RequestParam(name="swx") String swx,
 								   @RequestParam(name="swy") String swy,
-								   @RequestParam(name="ney") String ney) throws Exception  {
+								   @RequestParam(name="ney") String ney,
+								   @RequestParam(name="stopGrouping") String stopGrouping) throws Exception  {
 		
-		Map<String, String> param = getBoundsParam(nex, swx, swy, ney);
+		Map<String, String> param = getBoundsParam(nex, swx, swy, ney, stopGrouping);
 		
 		return makeReturn(hotplaceService.getGongmaeMarker(param), true);
 	}
@@ -168,9 +169,10 @@ public class HotplaceController {
 								  @RequestParam(name="swx") String swx,
 								  @RequestParam(name="swy") String swy,
 								  @RequestParam(name="ney") String ney,
-								  @RequestParam(name="level") String level) throws Exception  {
+								  @RequestParam(name="level") String level,
+								  @RequestParam(name="stopGrouping") String stopGrouping) throws Exception  {
 		
-		Map<String, String> param = getBoundsParam(nex, swx, swy, ney);
+		Map<String, String> param = getBoundsParam(nex, swx, swy, ney, stopGrouping);
 		param.put("gubun", "보상");
 		param.put("level", level);
 		
@@ -183,9 +185,10 @@ public class HotplaceController {
 								   @RequestParam(name="swx") String swx,
 								   @RequestParam(name="swy") String swy,
 								   @RequestParam(name="ney") String ney,
-								   @RequestParam(name="level") String level) throws Exception  {
+								   @RequestParam(name="level") String level,
+								   @RequestParam(name="stopGrouping") String stopGrouping) throws Exception  {
 		
-		Map<String, String> param = getBoundsParam(nex, swx, swy, ney);
+		Map<String, String> param = getBoundsParam(nex, swx, swy, ney, stopGrouping);
 		param.put("gubun", "편입");
 		param.put("level", level);
 		
@@ -197,9 +200,10 @@ public class HotplaceController {
 	public String getSilgeolaemarker(@RequestParam(name="nex") String nex,
 								     @RequestParam(name="swx") String swx,
 								     @RequestParam(name="swy") String swy,
-								     @RequestParam(name="ney") String ney) throws Exception  {
+								     @RequestParam(name="ney") String ney,
+								     @RequestParam(name="stopGrouping") String stopGrouping) throws Exception  {
 		
-		Map<String, String> param = getBoundsParam(nex, swx, swy, ney);
+		Map<String, String> param = getBoundsParam(nex, swx, swy, ney, stopGrouping);
 		
 		return makeReturn(hotplaceService.getSilgeolaeMarker(param), true);
 	}
@@ -211,9 +215,10 @@ public class HotplaceController {
 			@RequestParam(name="swx") String swx,
 			@RequestParam(name="swy") String swy,
 			@RequestParam(name="ney") String ney,
-			@RequestParam(name="level") String level) throws Exception  {
+			@RequestParam(name="level") String level,
+			@RequestParam(name="stopGrouping") String stopGrouping) throws Exception  {
 		
-		Map<String, String> param = getBoundsParam(nex, swx, swy, ney);
+		Map<String, String> param = getBoundsParam(nex, swx, swy, ney, stopGrouping);
 				
 		return makeReturn(hotplaceService.getAcceptBuildingMarker(param), true);
 	}
@@ -304,13 +309,19 @@ public class HotplaceController {
 		return hotplaceService.getBosangPyeonibThumb(unu);
 	}
 	
-	private Map<String, String> getBoundsParam(String nex, String swx, String swy, String ney) {
+	@PostMapping(value="bosangpyeonib/group", produces="application/text; charset=utf8")
+	@ResponseBody
+	public String getBosangPyeonibGroupList(@RequestParam("gunu") String gunu) {
+		return makeReturn(hotplaceService.getBosangPyeonibGroupList(gunu), true);
+	}
+	
+	private Map<String, String> getBoundsParam(String nex, String swx, String swy, String ney, String stopGrouping) {
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("nex", nex);
 		param.put("swx", swx);
 		param.put("swy", swy);
 		param.put("ney", ney);
-		
+		param.put("stopGrouping", stopGrouping);
 		return param;
 	}
 	

@@ -1067,6 +1067,25 @@
 		hotplace.maps.setAllOffMarkers();
 	};
 	
+	dom.hideMinimaps = function() {
+		_toggleMinimap('off');
+	}
+	
+	dom.showMinimaps = function() {
+		_toggleMinimap('on');
+	}
+	
+	function _toggleMinimap(sw) {
+		$('.minimap').each(function() {
+			if(sw == 'on') {
+				$(this).show();
+			}
+			else {
+				$(this).hide();
+			}
+		});
+	}
+	
 	$(document).on('hidden.bs.modal', '#containerModal,#centerModal', function() {
 		_modalCloseAfterFn();
 	});

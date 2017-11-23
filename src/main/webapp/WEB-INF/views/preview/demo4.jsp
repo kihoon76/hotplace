@@ -8,10 +8,9 @@
 	<title>25cell.com</title>
 </head>
 <body>
-	<img src="/resources/img/demo/demo_menu1.jpg" usemap="#demo_menu1"/>
-	<map name="demo_menu1">
+	<img src="/resources/img/demo/demo_menu1_2.jpg" usemap="#demo_menu1_2"/>
+	<map name="demo_menu1_2">
 		<area shape="rect" coords="36 88 83 142" target="_self" href="${fn:substring(url, 0, fn:length(url) - fn:length(uri))}${req.contextPath}/preview/demo/1" />
-		<!-- 검색버튼 -->
-		<area shape="rect" coords="596 102 623 127" target="_self" href="${fn:substring(url, 0, fn:length(url) - fn:length(uri))}${req.contextPath}/preview/demo/3" />
+		<area shape="rect" coords="33 230 84 283" target="_self" href="${fn:substring(url, 0, fn:length(url) - fn:length(uri))}${req.contextPath}/preview/demo/1" />
 	</map>
 </body>

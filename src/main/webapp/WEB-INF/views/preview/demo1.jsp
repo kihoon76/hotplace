@@ -8,8 +8,9 @@
 	<title>25cell.com</title>
 </head>
 <body>
-	<img src="/resources/img/demo/demo1.jpg"  usemap="#demo1"/>
-	<map name="demo1">
-		<area shape="rect" coords="33 230 84 283" target="_self" href="${fn:substring(url, 0, fn:length(url) - fn:length(uri))}${req.contextPath}/preview/demo/2" />
+	<img src="/resources/img/demo/demo_main.jpg"  usemap="#demo_main"/>
+	<map name="demo_main">
+		<area shape="rect" coords="36 88 83 142" target="_self" href="${fn:substring(url, 0, fn:length(url) - fn:length(uri))}${req.contextPath}/preview/demo/2" />
+		<area shape="rect" coords="33 230 84 283" target="_self" href="${fn:substring(url, 0, fn:length(url) - fn:length(uri))}${req.contextPath}/preview/demo/5" />
 	</map>
 </body>

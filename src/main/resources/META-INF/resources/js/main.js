@@ -756,6 +756,13 @@ $(document).ready(function() {
 				//_enableMapButton(level, 'btnSalesView');
 				_enableMenu(level, 'li_menu_mulgeon');
 			},500);
+			
+			if(_currLevel == 3) {
+				hotplace.dom.showMinimaps();
+			}
+			else {
+				hotplace.dom.hideMinimaps();
+			}
 		},
 		'zoom_start' : function(map, level) {
 			////hotplace.test.initMarker(level);

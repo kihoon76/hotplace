@@ -575,7 +575,7 @@ input[type=radio]:focus + label::before {
 /**/
 .logout-msg { padding:60px 60px 60px 100px; font-size:1.5em; }
 .logout-btns { position:relative;left:117px; }
-.logout-btns button { width:100px;}
+.logout-btns button { width:100px; }
 
 /*
 보상,편입 그룹핑
@@ -589,3 +589,5 @@ input[type=radio]:focus + label::before {
 }
 
 #dvBosangPyeonibList table { cursor: pointer; }
+
+.minimap { width: 200px; height: 200px; border:3px solid red;}

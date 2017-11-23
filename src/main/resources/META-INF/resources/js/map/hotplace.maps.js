@@ -530,6 +530,8 @@
 		return color;
 	}
 	
+	maps.getColorWeight = _getColorByGongsiWeight;
+	
 	/** 
 	 * @private 
 	 * @function _drawRectangle 
@@ -1276,6 +1278,7 @@
 				
 				_venderMap.mapTypes.set(naver.maps.MapTypeId.NORMAL, naver.maps.NaverMapTypeOption.getNormalMap());
 				_venderMap.mapTypes.set(naver.maps.MapTypeId.HYBRID, naver.maps.NaverMapTypeOption.getHybridMap());
+				
 				
 				break;
 			case 'daum' :

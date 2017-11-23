@@ -50,6 +50,9 @@
 
 <body data-mtype="<c:out value='${mType}' />" data-url="${fn:substring(url, 0, fn:length(url) - fn:length(uri))}${req.contextPath}/">
 <div id="map" data-vender="naver">
+	<div id="minimap1" class="minimap" style="top:150px; right:-110px;" data-year="201701"></div>
+	<div id="minimap2" class="minimap" style="top:400px; right:-310px;" data-year="201601"></div>
+	<div id="minimap3" class="minimap" style="top:650px; right:-510px;" data-year="201501"></div>
 	<div class="map-buttons" id="mapButtons"></div>
 	<div id="menu"><ul></ul></div>
 	<div id="rightMenu"></div>
@@ -125,6 +128,7 @@
 <!-- <script type="text/javascript" src="/resources/js/map/map-core.js"></script> -->
 <script type="text/javascript" src="/resources/js/map/hotplace.js"></script>
 <script type="text/javascript" src="/resources/js/map/hotplace.maps.js"></script>
+<script type="text/javascript" src="/resources/js/map/hotplace.minimaps.js"></script>
 <script type="text/javascript" src="/resources/js/map/hotplace.report.js"></script>
 <script type="text/javascript" src="/resources/js/map/hotplace.validation.js"></script>
 <script type="text/javascript" src="/resources/js/map/hotplace.calc.js"></script>

@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,7 +33,7 @@ import me.hotplace.service.SampleService;
 import me.hotplace.utils.DataUtil;
 
 @Controller
-@RequestMapping("/sample")
+@RequestMapping("/preview")
 public class SampleController {
 
 	//@Value("#{settings['samplepath']}")
@@ -86,5 +87,12 @@ public class SampleController {
         br.close();
         System.err.println(ausgabe);
         return ausgabe;
+	}
+	
+	@GetMapping("demo/{num}")
+	public String demo(@PathVariable("num") String num) throws Exception  {
+		
+		
+		return "preview/demo" + num;
 	}
 }

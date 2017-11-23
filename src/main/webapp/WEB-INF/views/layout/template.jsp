@@ -65,10 +65,12 @@
 	<div id="dvAddrSearch" class="layer-popup" style="width:600px; height:810px"></div>
 	<div id="dvInfo"       class="layer-popup" style="width:600px; height:800px"></div>
 	<div id="dvSalesView"  class="layer-popup" style="width:250px; height:355px"></div>
-	<div id="dvAutoYearRange" class="layer-year-range-auto">
-        <input type="checkbox" id="btnAutoYear" data-toggle="toggle" data-on="<i class='fa fa-play'></i>" data-off="<i class='fa fa-pause'></i>">
+	<div>
+		<div id="dvAutoYearRange" class="layer-year-range-auto">
+	        <input type="checkbox" id="btnAutoYear" data-toggle="toggle" data-on="<i class='fa fa-play'></i>" data-off="<i class='fa fa-pause'></i>">
+		</div>
+		<div id="dvYearRange"  class="layer-year-range"></div>
 	</div>
-	<div id="dvYearRange"  class="layer-year-range"></div>
 	<button id="btnJijeok" class="jijeok" data-switch="off">지적도</button>
 </div>
 

@@ -2,8 +2,8 @@
 	<div style="padding-top:10px">
 		<button type="button" id="btnSilgeoraeClose" class="glyphicon glyphicon-remove close" aria-label="Close"></button>
 	</div>
-
-	<table class="table table-bordered" id="tbSilgeorae" style="margin-top:10px;">
+	
+	<table class="table table-bordered" id="tbSilgeoraeThumb">
 	<colgroup>
 		<col style="width:25%">
     	<col style="width:65%">
@@ -11,7 +11,7 @@
 	<tbody>
 		<tr>
 			<td colspan="2" style="text-align:right">
-				<button id="btnSilgeoraeDetail" class="btn-xs btn-info">상세조회</button>
+				<button id="btnSilgeoraePano" class="btn-xs btn-info">위치보기</button> <button class="btn-xs btn-info silgeolae-detail">상세조회</button>
 			</td>
 		</tr>
 		<tr>
@@ -39,5 +39,20 @@
 			<td><span id="silGeolaegeumaeg"></span></td>
 		</tr>
 	</tbody>
+	
+	<table class="table table-bordered" id="tbSilgeoraePano">
+		<tbody>
+		<tr>
+			<td style="text-align:right">
+				<button id="btnSilgeoraeThumb" class="btn-xs btn-info">돌아가기</button> <button class="btn-xs btn-info silgeolae-detail">상세조회</button>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<div id="dvSilgeoraePano" style="width:100%; height:220px;"></div>
+			</td>
+		</tr>
+		</tbody>
+	</table>
 	</table>
 </div>

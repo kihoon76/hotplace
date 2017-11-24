@@ -33,10 +33,34 @@
 			win.close();
 		});
 		
-		//_bindDetailClickHandler(win);
-		console.log('------')
+		_bindDetailClickHandler();
+		_bindGeoClickHandler(data.location[1], data.location[0]);
+		_bindThumbClickHandler();
 		console.log(data)
 		_getThumb(data);
+	}
+	
+	function _bindDetailClickHandler() {
+		//경매 물건상세보기 handler
+		
+		$('#dvSilgeorae .silgeolae-detail').on('click', function() {
+			
+		});
+	}
+	
+	function _bindThumbClickHandler() {
+		$('#btnSilgeoraeThumb').on('click', function() {
+			$('#tbSilgeoraeThumb').show();
+			$('#tbSilgeoraePano').hide();
+		});
+	}
+	
+	function _bindGeoClickHandler(x, y) {
+		$('#btnSilgeoraePano').on('click', function() {
+			$('#tbSilgeoraeThumb').hide();
+			$('#tbSilgeoraePano').show();
+			hotplace.panomaps.createPanomaps('dvSilgeoraePano', x, y, true);
+		});
 	}
 }(
 	hotplace.silgeolae = hotplace.silgeolae || {},

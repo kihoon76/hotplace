@@ -51,13 +51,13 @@
 <body data-mtype="<c:out value='${mType}' />" data-url="${fn:substring(url, 0, fn:length(url) - fn:length(uri))}${req.contextPath}/">
 <div id="map" data-vender="naver">
 	<div id="minimap1" class="minimap" style="top:150px; right:-110px;" data-year="201701">
-		<label class="minimap-label">2017년</label>
+		<label id="minimap1Lbl" class="minimap-label"></label>
 	</div>
 	<div id="minimap2" class="minimap" style="top:400px; right:-310px;" data-year="201601">
-		<label class="minimap-label">2016년</label>
+		<label id="minimap2Lbl" class="minimap-label"></label>
 	</div>
 	<div id="minimap3" class="minimap" style="top:650px; right:-510px;" data-year="201501">
-		<label class="minimap-label">2015년</label>
+		<label id="minimap3Lbl" class="minimap-label"></label>
 	</div>
 	<div class="map-buttons" id="mapButtons"></div>
 	<div id="menu"><ul></ul></div>
@@ -74,11 +74,12 @@
 	<div id="dvAddrSearch" class="layer-popup" style="width:600px; height:810px"></div>
 	<div id="dvInfo"       class="layer-popup" style="width:600px; height:800px"></div>
 	<div id="dvSalesView"  class="layer-popup" style="width:250px; height:355px"></div>
-	<div>
+	<div id="dvTimeview">
 		<div id="dvAutoYearRange" class="layer-year-range-auto">
 	        <input type="checkbox" id="btnAutoYear" data-toggle="toggle" data-on="<i class='fa fa-play'></i>" data-off="<i class='fa fa-pause'></i>">
 		</div>
 		<div id="dvYearRange"  class="layer-year-range"></div>
+		<button class="btn-timeview" data-switch="off">타임뷰</button>
 	</div>
 	<button id="btnJijeok" class="jijeok" data-switch="off">지적도</button>
 </div>
@@ -144,7 +145,12 @@
 <script type="text/javascript" src="/resources/js/map/hotplace.dom.js"></script>
 <script type="text/javascript" src="/resources/js/map/hotplace.test.js"></script>
 
-<script type="text/javascript" src="/resources/js/map/naver/MarkerClustering.js"></script>
+<script type="text/javascript">
+	window.onload = function() {
+		$('#btnJijeok').show();
+		$('#dvTimeview').show();
+	}
+</script>
 <sitemesh:write property="page.script" />
 </body>
 </html>

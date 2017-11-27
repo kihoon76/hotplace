@@ -5,6 +5,7 @@
 	var mmaps = [];
 	
 	function _createMinimap(map, cnt) {
+		
 		for(var i=0; i<cnt; i++) {
 			var id = 'minimap' + (i + 1), $id = $('#' + id);
 			var year = $id.data('year');
@@ -19,7 +20,10 @@
 			    logoControl: false
 			});
 			
+			$id.show();
 			$id.css('border', '1px solid #CCC');
+			$('#' + id + 'Lbl').text(year.toString().substring(0,4) + '년');
+			
 			mmaps.push(minimap);
 		}
 	}

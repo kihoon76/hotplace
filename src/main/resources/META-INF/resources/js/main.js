@@ -812,13 +812,15 @@ $(document).ready(function() {
 		}*/
 	}, function(map) {
 		hotplace.maps.showCellLayer();
+		hotplace.dom.initTimeline();
 		hotplace.dom.showYearRangeDiv();
 		hotplace.dom.showAutoYearRangeDiv();
 		hotplace.dom.enableYearRangeDiv(false);
 		hotplace.minimaps.init(map, 3);
+		
 	});
 	
-	
+
 	
 	hotplace.dom.addMenuInMap([{
 		menu: 'menu_search',

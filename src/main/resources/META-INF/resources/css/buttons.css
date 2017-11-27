@@ -52,6 +52,7 @@
 	color:#333; 
 	border:1px solid #333;
 	opacity:.7;
+	display:none;
 }
 
  .jijeok-on {
@@ -131,4 +132,20 @@
 .btn-search.mulgeon {
 	position: relative;
 	top: -5px;
+}
+
+.btn-timeview { position:absolute; right:-1px; top:-1px; height:30px; background-color:#fff; border:1px solid #333; }
+#dvTimeview {
+	position:absolute;
+	right:200px; top:10px; 
+	z-index:4;
+	width:60px;
+	height:30px; 
+	padding:5px; 
+	background-color:#fff; 
+	color:#333; 
+	border:1px solid #333;
+	border-radius:5px;
+	/*transition:all .7s;*/
+	display:none;
 }

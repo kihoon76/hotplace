@@ -1067,12 +1067,45 @@
 		hotplace.maps.setAllOffMarkers();
 	};
 	
+	dom.uncheckMarkerType = function() {
+		
+	}
+	
 	dom.hideMinimaps = function() {
 		_toggleMinimap('off');
 	}
 	
 	dom.showMinimaps = function() {
 		_toggleMinimap('on');
+	}
+	
+	dom.initTimeline = function() {
+		$('.btn-timeview').click(function(){
+			var $this = $(this);
+			
+			var sw = $this.data('switch');
+			
+			if(sw == 'off'){
+				$this.css('backgroundColor','rgb(42, 124, 221)')
+				     .css('color','#fff');
+				$('#dvTimeview').css('width','360px');
+				$this.data('switch', 'on');
+				
+				$('#dvYearRange').show();
+				//$('#dvYearRange').toggle('slide');
+				$('#dvAutoYearRange').show();
+			}
+			else{
+				$this.css('backgroundColor','#fff')
+					 .css('color','#333');
+				$('#dvTimeview').css('width','60px');
+				$this.data('switch', 'off');
+				$('#dvYearRange').hide();
+				$('#dvAutoYearRange').hide();
+			}
+		});
+		
+		$('.btn-timeview').trigger('click');
 	}
 	
 	function _toggleMinimap(sw) {

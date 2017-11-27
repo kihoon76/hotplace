@@ -352,14 +352,18 @@
 	 * @private 
 	 * @desc 지도위에 그려진 마커그룹
 	 * @type  {object} 
-	 * @param {object} RADIUS_SEARCH 반경검색 마커그룹
-	 * @param {Array}  RADIUS_SEARCH.m 반경검색 marker
-	 * @param {Array}  RADIUS_SEARCH.c 반경검색 circle
-	 * @param {object} GYEONGMAE 경매
-	 * @param {Array}  GYEONGMAE.m 경매물건 마커들
-	 * @param {Array}  GYEONGMAE.url 경매마커 좌표 url
-	 * @param {Array}  GYEONGMAE.icon 경매마커 아이콘
-	 * @param {Array}  GYEONGMAE.trigger 해당마커의 윈도우를 나타나게할 이벤트명 (default: click)
+	 * @param {object}  RADIUS_SEARCH 반경검색 마커그룹
+	 * @param {Array}   RADIUS_SEARCH.m 반경검색 marker
+	 * @param {Array}   RADIUS_SEARCH.c 반경검색 circle
+	 * @param {object}  GYEONGMAE 경매
+	 * @param {Array}   GYEONGMAE.m 경매물건 마커들
+	 * @param {string}  GYEONGMAE.url 경매마커 좌표 url
+	 * @param {string}  GYEONGMAE.icon 경매마커 아이콘
+	 * @param {string}  GYEONGMAE.trigger 경매마커의 윈도우를 나타나게할 이벤트명 (default: click)
+	 * @param {number}  GYEONGMAE.level 경매마커를 선택할수 있는 최소 레벨
+	 * @param {boolean} GYEONGMAE.clustering 경매마커의 클러스터링 적용여부
+	 * @param {string}  GYEONGMAE.clusterIcon 경매마커의 클러스터링 적용되었을 때 이미지 명
+	 * @param {number}  GYEONGMAE.stopLevel 경매마커의 클러스터링 적용을 중지할 level
 	 */
 	var _markers = {
 		RADIUS_SEARCH : { m: [], c: [], url: '' },
@@ -882,7 +886,6 @@
 			var lenCircle = (arrCircle) ? arrCircle.length : 0;
 			
 			for(var m=0; m<len; m++) {
-				//arr[m].setMap(null);
 				arr[m].setMap(null);
 			}
 			

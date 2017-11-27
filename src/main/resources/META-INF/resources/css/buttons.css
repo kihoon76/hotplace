@@ -122,6 +122,7 @@
 
 /*물건보기 범례*/
 .legend { width:20px;height:26px; }
+.level { width:51px; }
 .btn-search {
 	width: 32px;
 	height: 32px;

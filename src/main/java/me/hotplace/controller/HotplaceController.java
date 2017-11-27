@@ -315,6 +315,13 @@ public class HotplaceController {
 		return makeReturn(hotplaceService.getBosangPyeonibGroupList(gunu), true);
 	}
 	
+	@GetMapping("celldetail")
+	@ResponseBody
+	public AjaxVO getCellDetail() throws InterruptedException {
+		Thread.sleep(2000);
+		return new AjaxVO();
+	}
+	
 	private Map<String, String> getBoundsParam(String nex, String swx, String swy, String ney, String stopGrouping) {
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("nex", nex);

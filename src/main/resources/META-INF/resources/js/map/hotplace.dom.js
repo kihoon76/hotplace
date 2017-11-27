@@ -1069,6 +1069,15 @@
 	
 	dom.uncheckMarkerType = function() {
 		
+		$('#dvSalesView input[type="checkbox"]').each(function() {
+			var type = $(this).data('value');
+			obj[type] = $(this).prop('checked') ? 1 : 0;
+		})
+		.promise()
+		.done(function() {
+			
+		});
+		maps.setMarkers({});
 	}
 	
 	dom.hideMinimaps = function() {

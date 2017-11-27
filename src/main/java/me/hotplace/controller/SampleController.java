@@ -54,13 +54,6 @@ public class SampleController {
 		return s;
 	}
 	
-	@GetMapping("celldetail")
-	@ResponseBody
-	public AjaxVO getCellDetail() throws InterruptedException {
-		Thread.sleep(2000);
-		return new AjaxVO();
-	}
-	
 	@GetMapping(value="naver", produces="application/text; charset=utf8")
 	@ResponseBody
 	public String proxy(@RequestParam("key") String key, 

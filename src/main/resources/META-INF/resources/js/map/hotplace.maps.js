@@ -596,7 +596,7 @@
 				});
 				         
 				hotplace.ajax({
-					url: 'sample/celldetail',
+					url: 'celldetail',
 					method: 'GET',
 					//async: false,
 					dataType: 'json',
@@ -1274,6 +1274,7 @@
 			        	position: _vender.Position.TOP_RIGHT
 			        },
 			        minZoom: mapOptions.minZoom || 3,
+			        logoControl: false
 			        //maxZoom: mapOptions.maxZoom || 13
 				});
 				
@@ -1620,6 +1621,37 @@
 		}
 	}
 	
+	function _markerLevelLimit() {
+		if(maps.isActiveSalesView()) {
+			$('#dvSalesView input[type="checkbox"]').each(function() {
+				var $this = $(this);
+				var type = $this.data('value');
+				var minLevel = null;
+				var checked = $this.prop('checked');
+				var currentLevel = _getCurrentLevel();
+				var prevState = $this.data('prev');
+				
+				if(type) {
+					minLevel = _markers[type].level;
+					if(minLevel) {
+						if(currentLevel >= minLevel) {
+							$this.prop('disabled', false);
+						}
+						else {
+							$this.prop('disabled', true);
+							if(checked) {
+								$this.prop('checked', false);
+								_markerGroupOnOff[type] = 0;
+								
+							}
+						}
+					}
+				} 
+			})
+		}
+	}
+	
+	
 	/**
 	 * @memberof hotplace.maps 
 	 * @function showMarkers
@@ -1628,6 +1660,7 @@
 	 * @desc marker type의 marker를 보여준다  
 	 */
 	maps.showMarkers = function(callback, isMaskTran) {
+		_markerLevelLimit();
 		var currentLevel = _getCurrentLevel(),
 		    activeMarkers = maps.getActiveMarkers(),
 		    activeMarkerCnt = activeMarkers.length,

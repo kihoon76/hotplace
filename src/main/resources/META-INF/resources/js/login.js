@@ -61,6 +61,8 @@
 					
 					_changeLoginMenu($menuBtn);
 					hotplace.dom.closeModal();
+					
+					hotplace.minimaps.bindData(hotplace.maps.getMap(), 3);
 				}
 			},
 			error: function(data, textStatus, jqXHR) {

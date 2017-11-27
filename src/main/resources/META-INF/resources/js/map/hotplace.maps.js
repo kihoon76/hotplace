@@ -123,7 +123,9 @@
 		return types;
 	}
 	
-	
+	maps.getMap = function() {
+		return _venderMap;
+	}
 	/**
 	 * @memerof hotplace.maps
 	 * @function setAllOffMarkers

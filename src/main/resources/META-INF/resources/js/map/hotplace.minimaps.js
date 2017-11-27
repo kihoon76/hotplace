@@ -4,12 +4,7 @@
 (function(minimaps, $) {
 	var mmaps = [];
 	
-	function _createDom() {
-		//$('#map').html('<div id="minimap" style="width:200px;height:200px;"></div>');
-	}
-	
-	minimaps.init = function(map, cnt) {
-		
+	function _createMinimap(map, cnt) {
 		for(var i=0; i<cnt; i++) {
 			var id = 'minimap' + (i + 1), $id = $('#' + id);
 			var year = $id.data('year');
@@ -24,16 +19,37 @@
 			    logoControl: false
 			});
 			
-			/*naver.maps.Event.addListener(minimap, 'bounds_changed', function(bounds) {
-				console.log(bounds);
-			});*/
-			_getData(map.getBounds(), minimap, 'GONGSI', year);
-			
+			$id.css('border', '1px solid #CCC');
 			mmaps.push(minimap);
 		}
+	}
+	
+	minimaps.init = function(map, cnt) {
+		
+		_createMinimap(map, cnt);
+		
+		hotplace.ajax({
+			url: 'checkSession',
+			method: 'GET',
+			dataType: 'text', 
+			success: function(data, textStatus, jqXHR) {
+				var jo = $.parseJSON(data);
+				if(jo.success) {
+					minimaps.bindData(map, cnt);
+				}
+			}
+		});
 	};
 	
-	function _getData(bounds, map, type, year) {
+	minimaps.bindData = function(map, cnt) {
+		for(var i=0; i<cnt; i++) {
+			var id = 'minimap' + (i + 1), $id = $('#' + id);
+			var year = $id.data('year');
+			_getData(map.getBounds(), mmaps[i], 'GONGSI', year, id);
+		}
+	}
+	
+	function _getData(bounds, map, type, year, id) {
 		hotplace.getPlainText('locationbounds', {
 			 level: 3,
 			 swx  : bounds._min.x,

@@ -895,7 +895,7 @@
 			}, 100);
 		});
 		
-		el.show();
+		//el.show();
 	}
 	
 	/**
@@ -923,7 +923,7 @@
 			}
 		});
 		
-		el.show();
+		//el.show();
 	}
 	
 	/**
@@ -1067,19 +1067,6 @@
 		hotplace.maps.setAllOffMarkers();
 	};
 	
-	dom.uncheckMarkerType = function() {
-		
-		$('#dvSalesView input[type="checkbox"]').each(function() {
-			var type = $(this).data('value');
-			obj[type] = $(this).prop('checked') ? 1 : 0;
-		})
-		.promise()
-		.done(function() {
-			
-		});
-		maps.setMarkers({});
-	}
-	
 	dom.hideMinimaps = function() {
 		_toggleMinimap('off');
 	}
@@ -1095,14 +1082,15 @@
 			var sw = $this.data('switch');
 			
 			if(sw == 'off'){
+				
 				$this.css('backgroundColor','rgb(42, 124, 221)')
 				     .css('color','#fff');
 				$('#dvTimeview').css('width','360px');
 				$this.data('switch', 'on');
 				
 				$('#dvYearRange').show();
-				//$('#dvYearRange').toggle('slide');
 				$('#dvAutoYearRange').show();
+				$('#dvYearRange').rangeSlider('resize');
 			}
 			else{
 				$this.css('backgroundColor','#fff')
@@ -1113,8 +1101,6 @@
 				$('#dvAutoYearRange').hide();
 			}
 		});
-		
-		$('.btn-timeview').trigger('click');
 	}
 	
 	function _toggleMinimap(sw) {

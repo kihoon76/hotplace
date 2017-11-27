@@ -1637,14 +1637,23 @@
 					if(minLevel) {
 						if(currentLevel >= minLevel) {
 							$this.prop('disabled', false);
+							
+							/*if(!checked && prevState == 'on') {
+								$this.prop('checked', true);
+								_markerGroupOnOff[type] = 1;
+							}*/
 						}
 						else {
 							$this.prop('disabled', true);
-							if(checked) {
+							/*if(checked) {
 								$this.prop('checked', false);
+								$this.data('prev', 'on');
 								_markerGroupOnOff[type] = 0;
 								
 							}
+							else {
+								$this.data('prev', 'off');
+							}*/
 						}
 					}
 				} 

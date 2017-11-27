@@ -1274,7 +1274,8 @@
 			        	position: _vender.Position.TOP_RIGHT
 			        },
 			        minZoom: mapOptions.minZoom || 3,
-			        logoControl: false
+			        logoControl: false,
+			        disableDoubleClickZoom: true
 			        //maxZoom: mapOptions.maxZoom || 13
 				});
 				

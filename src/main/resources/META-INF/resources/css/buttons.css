@@ -51,7 +51,7 @@
 	background-color:#fff; 
 	color:#333; 
 	border:1px solid #333;
-	opacity:.7;
+	/*opacity:.7;*/
 	display:none;
 }
 
@@ -59,7 +59,7 @@
  	background-color:rgb(42, 124, 221);
  	color:#fff;
  	border:1px solid #333;
- 	transition:all .5s;
+ 	/*transition:all .5s;*/
  	opacity:1;
  }
 
@@ -138,7 +138,7 @@
 .btn-timeview { position:absolute; right:-1px; top:-1px; height:30px; background-color:#fff; border:1px solid #333; }
 #dvTimeview {
 	position:absolute;
-	right:200px; top:10px; 
+	right:180px; top:10px; 
 	z-index:4;
 	width:60px;
 	height:30px; 
@@ -149,4 +149,5 @@
 	border-radius:5px;
 	/*transition:all .7s;*/
 	display:none;
+	font-family: Helvetica, AppleSDGothicNeo-Light, nanumgothic, NanumGothic, 나눔고딕, Dotum, 돋움, sans-serif;
 }

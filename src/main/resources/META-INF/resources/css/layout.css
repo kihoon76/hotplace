@@ -593,8 +593,12 @@ input[type=radio]:focus + label::before {
 .minimap { width: 200px; height: 200px; display:none;}
 
 /*
-실거래 infowindow
+실거래, 건축허가 infowindow
 */
-#tbSilgeoraeThumb { margin-top:10px; } 
-#tbSilgeoraePano { margin-top:10px; display:none;}
+#tbSilgeoraeThumb,#tbAcceptbuildingThumb,#tbGongmaeThumb { margin-top:10px; } 
+#tbSilgeoraePano,#tbAcceptbuildingPano,#tbGongmaePano { margin-top:10px; display:none;}
+
+.pano-info { width:100%; height:50px; }
+
+
 

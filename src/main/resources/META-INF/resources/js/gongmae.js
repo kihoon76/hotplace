@@ -25,6 +25,30 @@
 		});
 	}
 	
+	function _bindDetailClickHandler() {
+		
+		$('#dvGongmae .gongmae-detail').on('click', function() {
+			
+		});
+	}
+	
+	function _bindThumbClickHandler() {
+		$('#btnGongmaeThumb').on('click', function() {
+			$('#tbGongmaeThumb').show();
+			$('#tbGongmaePano').hide();
+		});
+	}
+	
+	function _bindGeoClickHandler(x, y) {
+		$('#btnGongmaePano').on('click', function() {
+			$('#tbGongmaeThumb').hide();
+			$('#tbGongmaePano').show();
+			hotplace.panomaps.createPanomaps('dvGongmaePano', x, y, true, function(location, msg) {
+				$('#dvGongmaePanoInfo').html(msg);
+			});
+		});
+	}
+	
 	/** 
 	 * @memberof hotplace.gyeongmae 
 	 * @function markerClick 
@@ -45,7 +69,9 @@
 			win.close();
 		});
 		
-		//_bindDetailClickHandler(win);
+		_bindDetailClickHandler(win);
+		_bindGeoClickHandler(data.location[1], data.location[0]);
+		_bindThumbClickHandler();
 		_getThumb(data);
 	}
 }(

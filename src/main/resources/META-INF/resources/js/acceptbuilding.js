@@ -3,15 +3,6 @@
  */
 (function(acceptbuilding, $) {
 	
-	
-	function _bindDetailClickHandler(win) {
-		
-		//경매 물건상세보기 handler
-		$('#btnAcceptbuildingDetail').on('click', function() {
-			
-		});
-	}
-	
 	function _getThumb(data) {
 		hotplace.ajax({
 			url: 'acceptbuilding/thumb',
@@ -27,6 +18,30 @@
 			error:function() {
 				
 			}
+		});
+	}
+	
+	function _bindDetailClickHandler() {
+		
+		$('#dvAcceptbuilding .acceptbuilding-detail').on('click', function() {
+			
+		});
+	}
+	
+	function _bindThumbClickHandler() {
+		$('#btnAcceptbuildingThumb').on('click', function() {
+			$('#tbAcceptbuildingThumb').show();
+			$('#tbAcceptbuildingPano').hide();
+		});
+	}
+	
+	function _bindGeoClickHandler(x, y) {
+		$('#btnAcceptbuildingPano').on('click', function() {
+			$('#tbAcceptbuildingThumb').hide();
+			$('#tbAcceptbuildingPano').show();
+			hotplace.panomaps.createPanomaps('dvAcceptbuildingPano', x, y, true, function(location, msg) {
+				$('#dvAcceptbuildingPanoInfo').html(msg);
+			});
 		});
 	}
 	
@@ -51,6 +66,8 @@
 		});
 		
 		_bindDetailClickHandler(win);
+		_bindGeoClickHandler(data.location[1], data.location[0]);
+		_bindThumbClickHandler();
 		_getThumb(data);
 	}
 }(

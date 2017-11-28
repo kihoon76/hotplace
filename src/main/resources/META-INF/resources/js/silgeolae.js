@@ -36,7 +36,6 @@
 		_bindDetailClickHandler();
 		_bindGeoClickHandler(data.location[1], data.location[0]);
 		_bindThumbClickHandler();
-		console.log(data)
 		_getThumb(data);
 	}
 	
@@ -59,7 +58,9 @@
 		$('#btnSilgeoraePano').on('click', function() {
 			$('#tbSilgeoraeThumb').hide();
 			$('#tbSilgeoraePano').show();
-			hotplace.panomaps.createPanomaps('dvSilgeoraePano', x, y, true);
+			hotplace.panomaps.createPanomaps('dvSilgeoraePano', x, y, true, function(location, msg) {
+				$('#dvSilgeoraePanoInfo').html(msg);
+			});
 		});
 	}
 }(

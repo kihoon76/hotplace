@@ -3,7 +3,7 @@
 		<button type="button" id="btnGongmaeClose" class="glyphicon glyphicon-remove close" aria-label="Close"></button>
 	</div>
 
-	<table class="table table-bordered" id="tbGongmae" style="margin-top:10px;">
+	<table class="table table-bordered" id="tbGongmaeThumb" style="margin-top:10px;">
 	<colgroup>
 		<col style="width:25%">
     	<col style="width:65%">
@@ -11,7 +11,7 @@
 	<tbody>
 		<tr>
 			<td colspan="2" style="text-align:right">
-				<button id="btnGongmaeDetail" class="btn-xs btn-info">물건상세조회</button>
+				<button id="btnGongmaePano" class="btn-xs btn-info">위치보기</button> <button class="btn-xs btn-info gongmae-detail">물건상세조회</button>
 			</td>
 		</tr>
 		<tr>
@@ -37,6 +37,22 @@
 		<tr>
 			<td>유찰횟수</td>
 			<td><span id="gongYuchal"></span></td>
+		</tr>
+	</tbody>
+	</table>
+	
+	<table class="table table-bordered" id="tbGongmaePano">
+	<tbody>
+		<tr>
+			<td colspan="2" style="text-align:right">
+				<button id="btnGongmaeThumb" class="btn-xs btn-info">정보보기</button> <button class="btn-xs btn-info gongmae-detail">물건상세조회</button>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<div id="dvGongmaePano" style="width:100%; height:300px;"></div>
+			<div id="dvGongmaePanoInfo" class="pano-info"></div>
+			</td>
 		</tr>
 	</tbody>
 	</table>

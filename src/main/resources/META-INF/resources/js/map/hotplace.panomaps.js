@@ -5,7 +5,7 @@
 	var pano = null;
 	var marker = null;
 	
-	panomaps.createPanomaps = function(container, x, y, hasMarker) {
+	panomaps.createPanomaps = function(container, x, y, hasMarker, callback) {
 		if(hasMarker) {
 			marker = new naver.maps.Marker({
 			    position: new naver.maps.LatLng(x, y)
@@ -38,8 +38,16 @@
 	 	            pano.setPov(lookAtPov);
 	 	        }
 	        }
+	        
+	        if(callback) {
+	        	var location = pano.getLocation();
+	        	var msg = '<div>[출처: naver]</div><div>사진촬영일은  ' + location.photodate.substring(0,10) + ' 입니다.</div>';
+	        	callback(location, msg);
+	        }
 	    });
 	}
+	
+	
 }(
 	hotplace.panomaps = hotplace.panomaps || {},
 	jQuery

@@ -206,7 +206,10 @@ html, body, #map {
   overflow: hidden;
   margin: 0;
   padding: 0;
-  list-style: none; }
+  list-style: none;
+  position:relative;
+  top: 10px;
+  left: 120px; }
 
 .ticker li {
   height: 35px;
@@ -523,7 +526,7 @@ input[type=radio]:focus + label::before {
  메인 페이지 버튼
 **********************************************************/
 #menu li { list-style-type:none; }
-#menu { position:relative; left:-20px; top:-35px; z-index:1; margin-top:50px; width:50px; }
+#menu { position:relative; left:-20px; top:25px; z-index:1; margin-top:50px; width:50px; }
 #menu ul li { cursor:pointer; margin-bottom:15px; width:50px; height:50px; position:relative; }
 #menu ul li.disabled { cursor:default; }
 #menu li .desc { position:absolute; left:0; top:0; opacity:0; transition:all 0.3s; }
@@ -533,7 +536,7 @@ input[type=radio]:focus + label::before {
 #menu-search-list.list {
 	position:absolute; left:0; top:0; z-index:1; width:595px; height:50px;
 	background-image:url('../img/menu/menu_search_textbar.png'); background-size:100%;
-	display:block;
+	display:none;
 }
 
 #menu-search-list.list-expand {
@@ -550,7 +553,8 @@ input[type=radio]:focus + label::before {
 
 #menu-cell-list {
 	position:absolute; left:0; top:-260px; width:304px; height:310px; z-index:1;
-	background-image:url('../img/menu/menu_cell_list.png'); background-size:100%;
+	background-image:url('../img/menu/menu_cell_list.png');
+	background-size:100%;
 	display:none;
 }
 
@@ -561,6 +565,7 @@ input[type=radio]:focus + label::before {
   	overflow-x: hidden;
 }
 
+#dvNoticeTicker { position:absolute; left:20px; top:15px; z-index:1; background-image:url('../img/notice_ticker.png'); width: 583px; height: 48px; display:none;}
 
 /*
 주소검색 결과 
@@ -600,5 +605,17 @@ input[type=radio]:focus + label::before {
 
 .pano-info { width:100%; height:50px; }
 
+/*
+공지사항 테이블
+*/
 
+#dvNoticeSearchItem { overflow:hidden; padding:20px 0; width:90%; margin:0 auto; }
+#dvNoticeSearchItem select { float:left; width:80px; height:30px; margin-right:10px; }
+#dvNoticeSearchItem input { float:left; width:300px; height:29px;  margin-right:10px; }
+#dvNoticeSearchItem button { width:70px; height:29px; border:none; background-color:#0e328a; color:#eee; float:left; }
+
+#dvNoticeTb table { width:90%; margin:0 auto; text-align:center; border-top:2px solid #333; border-collapse:collapse; }
+#dvNoticeTb table tr { height:54px; }
+#dvNoticeTb table th { height:60px; border-bottom:1px solid #ccc; background-color:#eee; text-align:center; } 
+#dvNoticeTb td { border-bottom:1px solid #ccc; }
 

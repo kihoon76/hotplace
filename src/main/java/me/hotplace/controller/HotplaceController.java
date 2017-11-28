@@ -2,6 +2,7 @@ package me.hotplace.controller;
 
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -29,6 +30,7 @@ import me.hotplace.domain.BosangPyeonib;
 import me.hotplace.domain.Gongmae;
 import me.hotplace.domain.Gyeongmae;
 import me.hotplace.domain.HpSearch;
+import me.hotplace.domain.Notice;
 import me.hotplace.domain.Silgeolae;
 import me.hotplace.reporter.PdfItext;
 import me.hotplace.service.HotplaceService;
@@ -48,7 +50,10 @@ public class HotplaceController {
 	@GetMapping("main")
 	public String layout(@RequestParam(name="mType", required=false) String mType, HttpServletRequest request) {
 		MapTypes mapType = StringUtils.isNullOrEmpty(mType) ? MapTypes.HEAT_MAP : MapTypes.getMapTypes(mType);
+		List<Notice> notices = hotplaceService.getNoticeList();
+		
 		request.setAttribute("mType", mapType.getType());
+		request.setAttribute("notices", notices);
 		return "main";
 	}
 	

@@ -39,39 +39,20 @@ $(document).ready(function() {
 	}
 	
 	var _sliderGrpInit = {};
-	var _startInternal;
-	/*var _buttonsThreshold = {};	//button 특정레벨에서 비활성화*/
 	var _menusThreshold = {};   //menu 특정레벨에서 비활성화
 	/*
 	 * jquery handler 작성하기 전 로드가 먼저 되어야 함
 	 * load 하는 부분은 가장 먼저 나와함
 	 * */
 	_searchFormLoad();
-	//_salesViewFormLoad(); 
-	//_mulgeonFormLoad();
 	
-	/*function _enableMapButton(level, targetBtnId) {
-		var target = $('#' + targetBtnId);
-		
-		if(level >= hotplace.config.salesViewLevel) {
-			if(_buttonsThreshold[targetBtnId]) return;
-			target.removeAttr('disabled');
-			target.toggleClass('button-disabled');
-			_buttonsThreshold[targetBtnId] = true;
-		}
-		else {
-			if(_buttonsThreshold[targetBtnId]) {
-				target.prop('disabled', true);
-				
-				if(target.hasClass('button-on')) {
-					target.trigger('click');
-				}
-				
-				target.toggleClass('button-disabled');
-				_buttonsThreshold[targetBtnId] = false;
-			}
-		}
-	}*/
+	(function _startTicker() {
+		var _startInternal;
+		setTimeout(function repeat() {
+			_tick();
+			_startInternal = setTimeout(repeat, 3000);
+		}, 3000);
+	}());
 	
 	function _enableMenu(level, targetMenu) {
 		var target = $('#' + targetMenu);
@@ -150,7 +131,7 @@ $(document).ready(function() {
 		$('#menu-cell-list').append(tForm());
 	}
 	
-	function _btnCallback($this, e, targetId, isUseDiv, onFn, offFn) {
+	/*function _btnCallback($this, e, targetId, isUseDiv, onFn, offFn) {
 		var sw = $this.data('switch');
 		$this.data('switch', ((sw == 'on') ? 'off' : 'on'));
 		
@@ -170,13 +151,13 @@ $(document).ready(function() {
 		}
 		
 		$this.toggleClass('button-on');
-	}
+	}*/
 	
-	function _btnOnlyToggle($this) {
+	/*function _btnOnlyToggle($this) {
 		var sw = $this.data('switch');
 		$this.data('switch', ((sw == 'on') ? 'off' : 'on'));
 		$this.toggleClass('button-on');
-	}
+	}*/
 	
 	function _tick() {
 		$('#newsTicker li:first').slideUp(function() {
@@ -731,6 +712,11 @@ $(document).ready(function() {
 		
 	});
 	
+	//공지사항
+	$('#btnNotice').on('click', function() {
+		hotplace.dom.showNotice();
+	});
+	
 	/*****************************************************************************************************/
 	
 	var _prevLevel = 3;
@@ -826,7 +812,6 @@ $(document).ready(function() {
 		menu: 'menu_search',
 		listDv: 'menu-search-list',
 		clazz: 'list',
-		sw: 'on',
 		callbackAll: function() {
 			
 		}

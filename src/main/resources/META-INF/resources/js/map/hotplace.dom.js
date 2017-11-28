@@ -989,6 +989,12 @@
 		dom.openCenterModal('', {width: '50%', height:'30%'}, fn);
 	}
 	
+	dom.showNotice = function() {
+		var tForm = dom.getTemplate('noticeForm');
+		$('#dvCenterModalContent').html(tForm());
+		dom.openCenterModal('공지사항', {width: '80%', height:'70%'});
+	}
+	
 	dom.showLoginForm = function(gubun, fn) {
 		var tForm = (gubun == 'IN') ? dom.getTemplate('loginForm') : dom.getTemplate('logoutForm');
 		$('#dvCenterModalContent').html(tForm());

@@ -59,17 +59,17 @@
 	<div id="minimap3" class="minimap" style="top:650px; right:-510px;" data-year="201501">
 		<label id="minimap3Lbl" class="minimap-label"></label>
 	</div>
+	<div id="dvNoticeTicker">
+		<ul id="newsTicker" class="ticker">
+      		<c:forEach var="notice" items="${notices}">
+      		<li>${notice.title}</li>
+      		</c:forEach>
+		</ul>
+		<button id="btnNotice"></button>
+	</div>
 	<div class="map-buttons" id="mapButtons"></div>
 	<div id="menu"><ul></ul></div>
 	<div id="rightMenu"></div>
-	<div id="dvNews" class="layer-popup" style="width:600px; height:50px">
-		<ul id="newsTicker" class="ticker">
-			<li><a href="">도시재생 사업(사상스마트시티) 실시계획인가, 부산시, 201707.10</a></li>
-      		<li><a href="">도시재생 사업(사상스마트시티) 실시계획인가, 부산시, 201707.10</a></li>
-      		<li><a href="">도시재생 사업(사상스마트시티) 실시계획인가, 부산시, 201707.10</a></li>
-      		<li><a href="">도시재생 사업(사상스마트시티) 실시계획인가, 부산시, 201707.10</a></li>
-		</ul>
-	</div>
 	<div id="dvMulgeon"    class="layer-popup" style="width:600px;"></div>
 	<div id="dvAddrSearch" class="layer-popup" style="width:600px; height:810px"></div>
 	<div id="dvInfo"       class="layer-popup" style="width:600px; height:800px"></div>
@@ -149,6 +149,7 @@
 	window.onload = function() {
 		$('#btnJijeok').show();
 		$('#dvTimeview').show();
+		$('#dvNoticeTicker').show();
 	}
 </script>
 <sitemesh:write property="page.script" />

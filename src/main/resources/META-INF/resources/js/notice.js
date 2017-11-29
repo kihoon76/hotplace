@@ -61,7 +61,7 @@
 		if(cnt > 0) {
 			table = '<table>';
 			for(var i=0; i<cnt; i++) {
-				table += '<tr><td>' + list[i].num + '</td><td>' + list[i].title + '</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>'; 
+				table += '<tr data-index="' + list[i].num + '"><td>' + list[i].num + '</td><td>' + list[i].title + '</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>'; 
 			}
 			table += '</table>';
 		}
@@ -81,8 +81,13 @@
 	}
 	
 	function _makeContentTr($tr) {
-		var tr = '<tr class="content"><td colspan="5">fghfghfghfghfgh<br>fghfghfghfghfgh</td></tr>';
-		$(tr).insertAfter($tr);
+		hotplace.getPlainText('notice/page/content/' + $tr.data('index'), null, function(jo) {
+			console.log(jo.datas);
+			var content = jo.datas.content;
+			var tr = '<tr class="content"><td colspan="5">' + content + '</td></tr>';
+			$(tr).insertAfter($tr);
+			
+		},true, false, null, '#dvCenterModalContent');
 	}
 	
 	notice.showPage = function(pgNum) {

@@ -23,4 +23,11 @@ public class NoticeController {
 		
 		return noticeService.getPage(pageNum);
 	} 
+	
+	@GetMapping(value="page/content/{writeNum}", produces="application/text; charset=utf8")
+	@ResponseBody
+	public String getNoticeContent(@PathVariable(name="writeNum") int writeNum) {
+		
+		return noticeService.getNoticeContent(writeNum);
+	}
 }

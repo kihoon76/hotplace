@@ -11,4 +11,6 @@ public interface NoticeDao {
 
 	NoticePage selectPage(String pageNum);
 
+	String selectNoticeContent(int writeNum);
+
 }

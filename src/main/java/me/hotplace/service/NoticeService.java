@@ -50,5 +50,8 @@ public class NoticeService {
 		return list;
 	}
 
-	
+	public String getNoticeContent(int writeNum) {
+		String content =  noticeDao.selectNoticeContent(writeNum);
+		return DataUtil.makeReturn("{\"content\":\"" + content + "\"}", true);
+	}
 }

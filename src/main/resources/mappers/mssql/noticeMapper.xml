@@ -39,4 +39,10 @@
 		  ) tb1
 		 where rownum between (#{pageNum} - 1) * 10 + 1 and (#{pageNum} - 1) * 10 + 10
 	</select>
+	
+	<select id="selectNoticeContent" parameterType="int" resultType="string">
+		select 내용
+		  from [웹].[dbo].[공지사항]
+		 where 글번호 = #{writeNum}
+	</select>
 </mapper>

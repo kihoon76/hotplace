@@ -29,4 +29,9 @@ public class NoticeDaoImpl implements NoticeDao {
 		return msSqlSession.selectOne(namespace + ".selectNoticePage", Integer.parseInt(pageNum));
 	}
 
+	@Override
+	public String selectNoticeContent(int writeNum) {
+		return msSqlSession.selectOne(namespace + ".selectNoticeContent", writeNum);
+	}
+
 }

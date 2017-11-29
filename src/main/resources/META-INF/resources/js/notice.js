@@ -69,9 +69,40 @@
 		$container.html(table);
 	}
 	
+	function _removeSelected() {
+		$('#dvNoticeTb tr').each(function() {
+			if($(this).hasClass('content')) {
+				$(this).remove();
+			}
+			else {
+				$(this).removeClass('selected');
+			}
+		});
+	}
+	
+	function _makeContentTr($tr) {
+		var tr = '<tr class="content"><td colspan="5">fghfghfghfghfgh<br>fghfghfghfghfgh</td></tr>';
+		$(tr).insertAfter($tr);
+	}
+	
 	notice.showPage = function(pgNum) {
 		_getNoticeList(pgNum || 1);
 	}
+	
+	$(document).on('click', '#dvNoticeTb tr', function() {
+		if($(this).hasClass('content')) return;
+		var opened = $(this).hasClass('opened');
+		if(opened) {
+			$(this).next().remove();
+			$(this).removeClass('opened')
+		}
+		else {
+			_removeSelected();
+			$(this).addClass('selected opened');
+			_makeContentTr($(this));
+		}
+	
+	});
 }(
 	hotplace.notice = hotplace.notice || {},
 	jQuery

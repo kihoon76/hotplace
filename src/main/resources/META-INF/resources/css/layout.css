@@ -624,3 +624,7 @@ input[type=radio]:focus + label::before {
 /* pagination */
 #dvNoticePagination { position:relative; top: -15px; left: 100px; }
 #dvTotalNotice { position:relative; top: -30px; left: -60px; }
+
+#dvNoticeTb tr:hover:not(.content) { cursor: Pointer; background-color: red; }
+#dvNoticeTb tr.selected { background-color: yellow; }
+#dvNoticeTb tr.content { height:500px; }

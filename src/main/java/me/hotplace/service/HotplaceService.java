@@ -141,9 +141,4 @@ public class HotplaceService {
 		List<String> list = hotplaceDao.selectBosangPyeonibGroupList(m);
 		return DataUtil.makeLatLngBosangPyeonibGroupList(list, "`");
 	}
-
-	public List<Notice> getNoticeList() {
-		List<Notice> list = hotplaceDao.selectNoticeList();
-		return list;
-	}
 }

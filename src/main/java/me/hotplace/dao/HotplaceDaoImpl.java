@@ -118,11 +118,4 @@ public class HotplaceDaoImpl implements HotplaceDao {
 		
 		return msSqlSession.selectList(namespace + ".selectBosangPyeonibGroupList", gunus);
 	}
-
-	@Override
-	public List<Notice> selectNoticeList() {
-		
-		return msSqlSession.selectList(namespace + ".selectNoticeList");
-	}
-
 }

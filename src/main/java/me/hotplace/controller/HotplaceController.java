@@ -34,6 +34,7 @@ import me.hotplace.domain.Notice;
 import me.hotplace.domain.Silgeolae;
 import me.hotplace.reporter.PdfItext;
 import me.hotplace.service.HotplaceService;
+import me.hotplace.service.NoticeService;
 import me.hotplace.types.MapTypes;
 import me.hotplace.utils.DataUtil;
 
@@ -44,13 +45,16 @@ public class HotplaceController {
 	@Resource(name = "hotplaceService")
 	HotplaceService hotplaceService;
 	
+	@Resource(name="noticeService")
+	NoticeService noticeService;
+	
 	@Resource(name="pdfItext")
 	PdfItext pdfItext;
 	
 	@GetMapping("main")
 	public String layout(@RequestParam(name="mType", required=false) String mType, HttpServletRequest request) {
 		MapTypes mapType = StringUtils.isNullOrEmpty(mType) ? MapTypes.HEAT_MAP : MapTypes.getMapTypes(mType);
-		List<Notice> notices = hotplaceService.getNoticeList();
+		List<Notice> notices = noticeService.getNoticeList();
 		
 		request.setAttribute("mType", mapType.getType());
 		request.setAttribute("notices", notices);
@@ -138,7 +142,7 @@ public class HotplaceController {
 		param.put("year", year);
 		param.put("type", type);
 		
-		return makeReturn(hotplaceService.getLocationBounds(param), true);
+		return DataUtil.makeReturn(hotplaceService.getLocationBounds(param), true);
 	}
 	
 	@GetMapping("gyeongmaemarker")
@@ -152,7 +156,7 @@ public class HotplaceController {
 		
 		Map<String, String> param = getBoundsParam(nex, swx, swy, ney, stopGrouping);
 		
-		return makeReturn(hotplaceService.getGyeongmaeMarker(param), true);
+		return DataUtil.makeReturn(hotplaceService.getGyeongmaeMarker(param), true);
 	}
 	
 	@GetMapping("gongmaemarker")
@@ -165,7 +169,7 @@ public class HotplaceController {
 		
 		Map<String, String> param = getBoundsParam(nex, swx, swy, ney, stopGrouping);
 		
-		return makeReturn(hotplaceService.getGongmaeMarker(param), true);
+		return DataUtil.makeReturn(hotplaceService.getGongmaeMarker(param), true);
 	}
 	
 	@GetMapping("bosangmarker")
@@ -181,7 +185,7 @@ public class HotplaceController {
 		param.put("gubun", "보상");
 		param.put("level", level);
 		
-		return makeReturn(hotplaceService.getBosangPyeonibMarker(param), true);
+		return DataUtil.makeReturn(hotplaceService.getBosangPyeonibMarker(param), true);
 	}
 	
 	@GetMapping("pyeonibmarker")
@@ -197,7 +201,7 @@ public class HotplaceController {
 		param.put("gubun", "편입");
 		param.put("level", level);
 		
-		return makeReturn(hotplaceService.getBosangPyeonibMarker(param), true);
+		return DataUtil.makeReturn(hotplaceService.getBosangPyeonibMarker(param), true);
 	}
 	
 	@GetMapping(value="silgeolaemarker",  produces="text/plain; charset=utf8")
@@ -210,7 +214,7 @@ public class HotplaceController {
 		
 		Map<String, String> param = getBoundsParam(nex, swx, swy, ney, stopGrouping);
 		
-		return makeReturn(hotplaceService.getSilgeolaeMarker(param), true);
+		return DataUtil.makeReturn(hotplaceService.getSilgeolaeMarker(param), true);
 	}
 	
 	@GetMapping("acceptbuildingmarker")
@@ -225,7 +229,7 @@ public class HotplaceController {
 		
 		Map<String, String> param = getBoundsParam(nex, swx, swy, ney, stopGrouping);
 				
-		return makeReturn(hotplaceService.getAcceptBuildingMarker(param), true);
+		return DataUtil.makeReturn(hotplaceService.getAcceptBuildingMarker(param), true);
 	}
 	
 	
@@ -317,7 +321,7 @@ public class HotplaceController {
 	@PostMapping(value="bosangpyeonib/group", produces="application/text; charset=utf8")
 	@ResponseBody
 	public String getBosangPyeonibGroupList(@RequestParam("gunu") String gunu) {
-		return makeReturn(hotplaceService.getBosangPyeonibGroupList(gunu), true);
+		return DataUtil.makeReturn(hotplaceService.getBosangPyeonibGroupList(gunu), true);
 	}
 	
 	@GetMapping("celldetail")
@@ -335,9 +339,5 @@ public class HotplaceController {
 		param.put("ney", ney);
 		param.put("stopGrouping", stopGrouping);
 		return param;
-	}
-	
-	private String makeReturn(String data, boolean result) {
-		return String.format(DataUtil.getAjaxFormats(), result, "", data);
 	}
 }

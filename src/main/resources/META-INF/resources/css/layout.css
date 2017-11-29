@@ -608,14 +608,19 @@ input[type=radio]:focus + label::before {
 /*
 공지사항 테이블
 */
+#dvNoticeSearchItem {overflow:hidden; padding:20px 0; width:90%; margin:0 auto;}
+#dvNoticeSearchItem select{float:left; width:80px; height:30px; margin-right:10px;}
+#dvNoticeSearchItem input{float:left; width:300px; height:29px;  margin-right:10px;}
+#dvNoticeSearchItem button{width:70px; height:29px; border:none; background-color:#0e328a; color:#eee; float:left;}
 
-#dvNoticeSearchItem { overflow:hidden; padding:20px 0; width:90%; margin:0 auto; }
-#dvNoticeSearchItem select { float:left; width:80px; height:30px; margin-right:10px; }
-#dvNoticeSearchItem input { float:left; width:300px; height:29px;  margin-right:10px; }
-#dvNoticeSearchItem button { width:70px; height:29px; border:none; background-color:#0e328a; color:#eee; float:left; }
+#dvNotice table {width:90%; margin:0 auto; text-align:center; border-top:2px solid #333; border-collapse:collapse;}
+#dvNotice table tr{height:54px; }
+#dvNotice table th{width:20%; height:60px; border-bottom:1px solid #ccc; background-color:#eee; text-align:center;} 
+#dvNotice table td{width:20%; border-bottom:1px solid #ccc;}
 
-#dvNoticeTb table { width:90%; margin:0 auto; text-align:center; border-top:2px solid #333; border-collapse:collapse; }
-#dvNoticeTb table tr { height:54px; }
-#dvNoticeTb table th { height:60px; border-bottom:1px solid #ccc; background-color:#eee; text-align:center; } 
-#dvNoticeTb td { border-bottom:1px solid #ccc; }
+#dvNoticeTb {width:90%; margin:0 auto; text-align:center; display:block; overflow:scroll; max-height:500px;}
+#dvNoticeTb table{width:100%; border:none;}
 
+/* pagination */
+#dvNoticePagination { position:relative; top: -15px; left: 100px; }
+#dvTotalNotice { position:relative; top: -30px; left: -60px; }

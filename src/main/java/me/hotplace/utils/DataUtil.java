@@ -292,4 +292,8 @@ public class DataUtil {
 		return m.build(list, deli);
 	}
 	
+	public static String makeReturn(String data, boolean result) {
+		return String.format(AJAX_FORMATS, result, "", data);
+	}
+	
 }

@@ -992,6 +992,7 @@
 	dom.showNotice = function() {
 		var tForm = dom.getTemplate('noticeForm');
 		$('#dvCenterModalContent').html(tForm());
+		hotplace.notice.showPage();
 		dom.openCenterModal('공지사항', {width: '80%', height:'70%'});
 	}
 	

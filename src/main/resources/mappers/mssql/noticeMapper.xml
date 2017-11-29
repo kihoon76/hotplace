@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.mssql.noticeMapper">
+	
+	<resultMap id="RM_selectNoticeList" type="Notice">
+		<result column="글번호"	property="num" javaType="string"/>
+		<result column="제목"		property="title" javaType="string"/>
+	</resultMap>
+	
+	<select id="selectNoticeList" resultMap="RM_selectNoticeList">
+		select top 5 글번호, 제목
+		  from [웹].[dbo].[공지사항] 
+		 order by 글번호 desc
+	</select>
+	
+	<resultMap id="RM_selectNoticePage" type="NoticePage" >
+		<result column="글수" property="total" javaType="int"/>
+		<result column="페이지수" property="pageSize"/>
+		<result column="페이지_블럭수" property="pageBlock"/>
+		<result column="현재페이지번호" property="currentPageNum" />
+		<collection property="list" column="현재페이지번호" 
+					javaType="java.util.ArrayList"
+					ofType="Notice" 
+					select="selectPage"
+					/>
+	</resultMap>
+	
+	
+	<select id="selectNoticePage" parameterType="int" resultMap="RM_selectNoticePage">
+		select (select count(*) from [웹].[dbo].[공지사항]) 글수, 10 페이지수, 5 페이지_블럭수, #{pgNum} 현재페이지번호
+	</select>
+	
+	
+	<select id="selectPage" parameterType="int" resultMap="RM_selectNoticeList">
+		select 글번호, 제목
+		  from (
+		  	select row_number() over(order by 글번호 desc) rownum, *
+		  	  from [웹].[dbo].[공지사항]
+		  ) tb1
+		 where rownum between #{pageNum} * 5 + 1 and #{pageNum} * 5 + 5
+	</select>
+</mapper>

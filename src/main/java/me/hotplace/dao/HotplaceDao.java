@@ -47,6 +47,4 @@ public interface HotplaceDao {
 	public AcceptBuilding selectAcceptbuildingThumb(String unu);
 
 	public List<String> selectBosangPyeonibGroupList(HashMap m);
-
-	public List<Notice> selectNoticeList();
 }

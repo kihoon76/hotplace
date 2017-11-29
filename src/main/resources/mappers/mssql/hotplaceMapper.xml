@@ -447,16 +447,6 @@
 		 where 고유번호 = #{unu}
 	</select>
 	
-	<resultMap id="RM_selectNoticeList" type="Notice">
-		<result column="글번호"	property="num" javaType="string"/>
-		<result column="제목"		property="title" javaType="string"/>
-	</resultMap>
-	
-	<select id="selectNoticeList" resultMap="RM_selectNoticeList">
-		select top 5 글번호, 제목
-		  from [웹].[dbo].[공지사항] 
-		 order by 글번호 desc
-	</select>
 </mapper>
 <!-- 
 		select 

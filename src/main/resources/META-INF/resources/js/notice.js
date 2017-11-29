@@ -4,6 +4,11 @@
 (function(notice, $) {
 	var pageSize = 10;
 	var pageBlock = 5;
+	var searchCondition = 'title';
+	var searchParam = {
+		type: '',
+		text: ''
+	}
 	
 	function _makePagination(total, pageNum) {
 		
@@ -59,9 +64,9 @@
 		var $container = $('#dvNoticeTb');
 		var table = '';
 		if(cnt > 0) {
-			table = '<table>';
+			table = '<table><colgroup><col style="width:5%"><col style="width:95%"></colgroup>';
 			for(var i=0; i<cnt; i++) {
-				table += '<tr data-index="' + list[i].num + '"><td>' + list[i].num + '</td><td>' + list[i].title + '</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>'; 
+				table += '<tr data-index="' + list[i].num + '"><td>' + list[i].num + '</td><td>' + list[i].title + '</td><!--<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>--></tr>'; 
 			}
 			table += '</table>';
 		}
@@ -107,6 +112,41 @@
 			_makeContentTr($(this));
 		}
 	
+	});
+	
+	//검색 조건
+	$(document).on('change', '#dvNoticeSearchItem select', function() {
+		searchCondition = $(this).val();
+		var $txt = $('#dvNoticeSearchItem input[type=text]');
+		var $btn = $('#dvNoticeSearchItem button');
+		
+		if(searchCondition == 'all') {
+			$txt.val('');
+			$txt.hide();
+			$btn.hide();
+			hotplace.notice.showPage(1);
+		}
+		else {
+			$txt.show();
+			$btn.show();
+		}
+	});
+	
+	$(document).on('click', '#dvNoticeSearchItem button', function(e, txt) {
+		var search = txt || $.trim($('#dvNoticeSearchItem input[type=text]').val());
+		
+		if(search) {
+			console.log('99');
+		}
+	});
+	
+	$(document).on('keydown', '#dvNoticeSearchItem input[type=text]', function(e) {
+		if (e.which == 13) {
+			var txt = $.trim(e.target.value);
+			if(txt) {
+				$('#dvNoticeSearchItem button').trigger('click', txt);
+			}
+	    }
 	});
 }(
 	hotplace.notice = hotplace.notice || {},

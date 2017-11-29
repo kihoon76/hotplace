@@ -132,7 +132,6 @@
 <script type="text/javascript" src="/resources/js/plugins/loading/waitMe.min.js"></script>
 <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=SgnlyXnzstmDsYDhele7&submodules=panorama"></script>
 
-<!-- <script type="text/javascript" src="/resources/js/map/map-core.js"></script> -->
 <script type="text/javascript" src="/resources/js/map/hotplace.js"></script>
 <script type="text/javascript" src="/resources/js/map/hotplace.maps.js"></script>
 <script type="text/javascript" src="/resources/js/map/hotplace.minimaps.js"></script>

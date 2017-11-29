@@ -37,6 +37,6 @@
 		  	select row_number() over(order by 글번호 desc) rownum, *
 		  	  from [웹].[dbo].[공지사항]
 		  ) tb1
-		 where rownum between #{pageNum} * 5 + 1 and #{pageNum} * 5 + 5
+		 where rownum between (#{pageNum} - 1) * 10 + 1 and (#{pageNum} - 1) * 10 + 10
 	</select>
 </mapper>

@@ -8,19 +8,23 @@
 	function _makePagination(total, pageNum) {
 		
 		var pageCnt = Math.ceil(total/pageSize);
-		var pgBlockStart = pageBlock * Math.floor(pageNum/(pageBlock + 1)) + 1;
+		var pgBlockStart = pageBlock * Math.floor((pageNum - 1)/(pageBlock)) + 1;
 		
 		var block = pgBlockStart + pageBlock;
+		var lastGroup = false;
 		
 		var $nav = $('#dvNoticePagination ul');
 		var html = '';
 		
 		if(pgBlockStart > 1) {
-			html += '<li><a href = "#">&laquo;</a></li>';
+			html += '<li><a href = "#" onclick="hotplace.notice.showPage(' + (pageNum - 1) + ')">&laquo;</a></li>';
 		}
 		
 		for(var i=pgBlockStart; i<block; i++) {
-			if(i > pageCnt) break;
+			if(i > pageCnt) {
+				lastGroup = true;
+				break;
+			}
 			
 			if(i == pageNum) {
 				html +=	'<li class = "active"><a href = "#">' + i + '</a></li>';
@@ -30,12 +34,7 @@
 			}
 		}
 		
-   		/*html +=	'<li class = "active"><a href = "#">1</a></li>';
-   		html +=	'<li class = "disabled"><a href = "#">2</a></li>';
-   		html +=	'<li><a href = "#">3</a></li>';
-   		html += '<li><a href = "#">4</a></li>';
-   		html +=	'<li><a href = "#">5</a></li>';*/
-   		html +=	'<li><a href = "#">&raquo;</a></li>';
+   		if(!lastGroup) html +=	'<li><a href = "#" onclick="hotplace.notice.showPage(' + block + ')">&raquo;</a></li>';
    		
    		$nav.html(html);
 	} 

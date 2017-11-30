@@ -298,8 +298,7 @@ public class DataUtil {
 	
 	public static String getMssqlEscape(String str) {
 		if(StringUtils.isEmpty(str)) return str;
-			
-		return str.replaceAll("%", "\\%");
+		return str.replaceAll("%", "\\\\%").replaceAll("_", "\\\\_");
 	}
 	
 }

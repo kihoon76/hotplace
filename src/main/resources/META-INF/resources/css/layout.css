@@ -433,6 +433,8 @@ web-kit scrollbar style hide
 /*
 모달창에서 ie scrollbar style hide
 */
+/*공지사항에서 마스크시 height 100% 넘침*/
+#dvCenterModalContent { height:92%; }
 #containerModal {
   -ms-overflow-style: none;
   overflow: auto; }

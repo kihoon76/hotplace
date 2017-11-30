@@ -2,13 +2,14 @@
  * @namespace hotplace.notice
  */
 (function(notice, $) {
-	var pageSize = 10;
-	var pageBlock = 5;
-	var searchCondition = 'title';
-	var searchParam = {
-		type: '',
-		text: ''
-	}
+	var pageSize = 10,
+		pageBlock = 5,
+		searchCondition = 'all',
+		searchMode = false,
+		searchParam = {
+			type: '',
+			text: ''
+		};
 	
 	function _makePagination(total, pageNum) {
 		
@@ -49,7 +50,13 @@
 	}
 	
 	function _getNoticeList(pageNum) {
-		hotplace.getPlainText('notice/page/' + pageNum, null, function(jo) {
+		var param = null;
+		
+		if(searchMode) {
+			param = searchParam;
+		}
+		
+		hotplace.getPlainText('notice/page/' + pageNum, param, function(jo) {
 			console.log(jo.datas)
 			_makeList(jo.datas);
 			_makePagination(jo.datas.total, pageNum);
@@ -121,6 +128,7 @@
 		var $btn = $('#dvNoticeSearchItem button');
 		
 		if(searchCondition == 'all') {
+			searchMode = false;
 			$txt.val('');
 			$txt.hide();
 			$btn.hide();
@@ -136,7 +144,10 @@
 		var search = txt || $.trim($('#dvNoticeSearchItem input[type=text]').val());
 		
 		if(search) {
-			console.log('99');
+			searchParam.type = searchCondition;
+			searchParam.text = search;
+			searchMode = true;
+			_getNoticeList(1);
 		}
 	});
 	

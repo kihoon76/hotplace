@@ -11,6 +11,9 @@ public class NoticePage {
 	private int pageSize = 10;
 	private int pageBlock = 10;
 	private int currentPageNum;
+	private String searchType;
+	private String searchTxt;
+	
 	private List<Notice> list;
 	
 	public int getTotal() {
@@ -42,5 +45,17 @@ public class NoticePage {
 	}
 	public void setList(List<Notice> list) {
 		this.list = list;
+	}
+	public String getSearchType() {
+		return searchType;
+	}
+	public void setSearchType(String searchType) {
+		this.searchType = searchType;
+	}
+	public String getSearchTxt() {
+		return searchTxt;
+	}
+	public void setSearchTxt(String searchTxt) {
+		this.searchTxt = searchTxt;
 	}
 }

@@ -1,6 +1,7 @@
 package me.hotplace.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -24,9 +25,9 @@ public class NoticeDaoImpl implements NoticeDao {
 	}
 
 	@Override
-	public NoticePage selectPage(String pageNum) {
-		
-		return msSqlSession.selectOne(namespace + ".selectNoticePage", Integer.parseInt(pageNum));
+	public NoticePage selectPage(Map map) {
+		System.err.println(map);
+		return msSqlSession.selectOne(namespace + ".selectNoticePage", map);
 	}
 
 	@Override

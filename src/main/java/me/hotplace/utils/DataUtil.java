@@ -296,4 +296,10 @@ public class DataUtil {
 		return String.format(AJAX_FORMATS, result, "", data);
 	}
 	
+	public static String getMssqlEscape(String str) {
+		if(StringUtils.isEmpty(str)) return str;
+			
+		return str.replaceAll("%", "\\%");
+	}
+	
 }

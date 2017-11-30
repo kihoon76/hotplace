@@ -50,13 +50,13 @@
 
 <body data-mtype="<c:out value='${mType}' />" data-url="${fn:substring(url, 0, fn:length(url) - fn:length(uri))}${req.contextPath}/">
 <div id="map" data-vender="naver">
-	<div id="minimap1" class="minimap" style="top:150px; right:-110px;" data-year="201701">
+	<div id="minimap1" class="minimap" style="top:150px; right:-110px;" data-year="201601">
 		<label id="minimap1Lbl" class="minimap-label"></label>
 	</div>
-	<div id="minimap2" class="minimap" style="top:400px; right:-310px;" data-year="201601">
+	<div id="minimap2" class="minimap" style="top:400px; right:-310px;" data-year="201501">
 		<label id="minimap2Lbl" class="minimap-label"></label>
 	</div>
-	<div id="minimap3" class="minimap" style="top:650px; right:-510px;" data-year="201501">
+	<div id="minimap3" class="minimap" style="top:650px; right:-510px;" data-year="201401">
 		<label id="minimap3Lbl" class="minimap-label"></label>
 	</div>
 	<div id="dvNoticeTicker">

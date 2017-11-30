@@ -2,6 +2,7 @@ package me.hotplace.service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -21,9 +22,9 @@ public class NoticeService {
 	@Resource(name="noticeDao")
 	NoticeDao noticeDao;
 	
-	public String getPage(String pageNum) {
+	public String getPage(Map map) {
 		// TODO Auto-generated method stub
-		NoticePage noticePage = noticeDao.selectPage(pageNum);
+		NoticePage noticePage = noticeDao.selectPage(map);
 		ObjectMapper om = new ObjectMapper();
 		String data = "";
 		boolean result = true;

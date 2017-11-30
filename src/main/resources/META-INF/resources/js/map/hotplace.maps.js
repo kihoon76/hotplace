@@ -1645,15 +1645,15 @@
 						}
 						else {
 							$this.prop('disabled', true);
-							/*if(checked) {
+							if(checked) {
 								$this.prop('checked', false);
-								$this.data('prev', 'on');
+								//$this.data('prev', 'on');
 								_markerGroupOnOff[type] = 0;
 								
 							}
 							else {
 								$this.data('prev', 'off');
-							}*/
+							}
 						}
 					}
 				} 

@@ -28,7 +28,6 @@ public class NoticeController {
 						  @RequestParam(name="type", required=false) String type,
 						  @RequestParam(name="text", required=false) String text) {
 		
-		System.err.println(text);
 		Map map = new HashMap();
 		map.put("pageNum", pageNum);
 		map.put("type", type);

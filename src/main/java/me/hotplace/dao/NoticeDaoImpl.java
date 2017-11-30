@@ -26,7 +26,6 @@ public class NoticeDaoImpl implements NoticeDao {
 
 	@Override
 	public NoticePage selectPage(Map map) {
-		System.err.println(map);
 		return msSqlSession.selectOne(namespace + ".selectNoticePage", map);
 	}
 

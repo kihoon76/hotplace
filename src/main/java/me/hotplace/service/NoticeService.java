@@ -53,6 +53,7 @@ public class NoticeService {
 
 	public String getNoticeContent(int writeNum) {
 		String content =  noticeDao.selectNoticeContent(writeNum);
+		content = content.replaceAll("\n", "").replaceAll("\r", "");
 		return DataUtil.makeReturn("{\"content\":\"" + content + "\"}", true);
 	}
 }

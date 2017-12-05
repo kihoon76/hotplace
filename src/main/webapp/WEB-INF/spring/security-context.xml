@@ -8,22 +8,39 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 
 	<sec:http auto-config="true" use-expressions="true">
-		<sec:intercept-url pattern="/resources/**" access="permitAll"/>
-		<sec:intercept-url pattern="/signin" access="permitAll"/>
-		<sec:intercept-url pattern="/regist" access="permitAll"/>
-		<sec:intercept-url pattern="/**" access="hasRole('ROLE_AUTHORIZED')"/>
-		<sec:form-login login-page="/signin"
+		<sec:intercept-url pattern="/index.jsp" access="permitAll" />
+		<sec:intercept-url pattern="/resources/**" access="permitAll" />
+		<sec:intercept-url pattern="/main" access="permitAll" />
+		<sec:intercept-url pattern="/signin/**" access="permitAll"/>
+		<sec:intercept-url pattern="/login" access="permitAll"/>
+		<sec:intercept-url pattern="/logout" access="permitAll"/>
+		<sec:intercept-url pattern="/preview/**" access="permitAll"/>
+		<sec:intercept-url pattern="/**" access="hasRole('ROLE_JOINED')"/>
+		<sec:form-login login-page="/signin/100"
 						username-parameter="id"
 						password-parameter="pw"
 						login-processing-url="/login" 
-						authentication-failure-url="/signin?error=true"
+						authentication-success-handler-ref="signinSuccessHandler"
+						authentication-failure-handler-ref="signinFailureHandler"
 						default-target-url="/main"
-						always-use-default-target="true"/>
-						
-		<sec:logout invalidate-session="true" logout-success-url="/signin" logout-url="/logout" />
-
+						always-use-default-target="false"/>
 		
+		<sec:logout invalidate-session="true"
+					logout-success-url="/signin/200"
+					logout-url="/logout"
+					delete-cookies="true"/>
 		<sec:csrf disabled="true"/>
+		
+		<!-- 세션 제한 지정 -->
+		<!-- http://niees.tistory.com/17 -->
+		<!-- 
+		만약 두번째 인증을 거부하게 하고 싶은 경우 concurrency-control에​ error-if-maximum-exceeded="true"속성을 지정하면 된다.​
+		 -->
+		<sec:session-management>
+			<!-- <sec:concurrency-control max-sessions="1" error-if-maximum-exceeded="true" expired-url="/signin/202" /> -->
+			<sec:concurrency-control max-sessions="1" expired-url="/signin/202"/>
+		</sec:session-management> 
+		
 	</sec:http> 
 	
 
@@ -41,4 +58,6 @@
 		<sec:authentication-provider ref="customAuthenticationProvider" />
 	</sec:authentication-manager>
 	
+	<!-- http://zgundam.tistory.com/54 -->
+	<bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 </beans>

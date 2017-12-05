@@ -13,7 +13,8 @@
 		<param-value>
 			/WEB-INF/spring/root-context.xml,
 			/WEB-INF/spring/ds-context.xml,
-			/WEB-INF/spring/security-context.xml
+			/WEB-INF/spring/security-context.xml,
+			/WEB-INF/spring/amqp-context.xml
 		</param-value>
 	</context-param>
 	

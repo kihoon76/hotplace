@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.mssql.logMapper">
+
+	<insert id="insertLog" parameterType="LogVO">
+		insert into [웹].[dbo].[접속로그] (아이피주소, 아이디, 유입경로, 요청리소스, 파라미터)
+		values (#{ip}, #{id}, #{referer}, #{url}, #{parameter})
+	</insert>
+	
+</mapper>

@@ -10,13 +10,6 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
 
 	<!-- Root Context: defines shared resources visible to all other web components -->
-	
-	<mvc:interceptors>  
-        <bean  id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-            <property name="paramName" value="lang" />
-        </bean>
-	</mvc:interceptors>
-	
 	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
 	
 	<!-- <bean id="messageSource"

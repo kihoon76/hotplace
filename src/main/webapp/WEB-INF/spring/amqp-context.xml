@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-2.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+
+	<!-- http://blog.naver.com/PostView.nhn?blogId=tmondev&logNo=220419853534&parentCategoryNo=&categoryNo=6&viewDate=&isShowPopularPosts=false&from=postView -->
+	<util:properties id="mqCfg" location="classpath:/config/mq.properties"></util:properties>
+
+	<rabbit:connection-factory
+			id="rabbitConnectionFactory"
+			host="#{mqCfg['host']}"
+			port="#{mqCfg['port']}"
+			username="#{mqCfg['username']}"
+			password="#{mqCfg['password']}" />
+			
+	<rabbit:admin connection-factory="rabbitConnectionFactory"/>
+	
+	<!-- Queue 등록 -->
+	<rabbit:queue name="logQueue"/>
+	
+	<!-- Queue 바인딩 -->
+	<rabbit:direct-exchange name="amq.direct">
+		<rabbit:bindings>
+			<rabbit:binding key="#{mqCfg['key']}" queue="logQueue"></rabbit:binding>
+		</rabbit:bindings>
+	</rabbit:direct-exchange>
+
+	<!-- 메시지를 보내기 위한 template 설정 -->
+	<rabbit:template 
+			id="rabbitTemplate"
+			connection-factory="rabbitConnectionFactory"
+			exchange="amq.direct"
+			routing-key="#{mqCfg['key']}" 
+			retry-template="retryTemplate"/>
+			
+	<!-- 재시도를 위한 template 설정 -->
+	<!-- 
+		만약 예외가 발생한다면 어떻게 될까? 답은 Consumer의 handleMessage가 계속 호출될 것이다.
+		왜냐하면 RabbitMQ는 메시지를 받아간 worker가 죽더라도 그 메시지는 Queue에 계속 남아 다른 worker에게 전달 될 수 있도록
+		acknowledgement를 지원하기 때문이다. 
+		메시지는 worker가 정상적으로 작업을 끝마치면 RabbitMQ로 ack를 날리고,
+		RabbitMQ는 메시지를 Queue에서 삭제하게 되는데 예외가 발생하면 ack를 받지 못해 메시지를 삭제하지 못하고 계속 worker에 전달된다.
+		
+		최초 0.5초 간격으로 최대 20초 간격까지 간격이 2배수로 늘어나면서 재시도를 하게 된다. 만약 retry policy를 적용하지 않고
+		backoff policy만 적용하였을 경우 기본적으로 최대 3회의 SimpleRetryPolicy가 적용
+	 -->	
+	<bean id="retryTemplate"
+		  class="org.springframework.retry.support.RetryTemplate">
+		<property name="backOffPolicy">
+			<!-- 재시도 시간간격 -->
+			<bean class="org.springframework.retry.backoff.ExponentialBackOffPolicy">
+				<property name="initialInterval" value="500" />
+				<property name="multiplier" value="2.0" />
+				<property name="maxInterval" value="20000"></property>
+			</bean>
+		</property> 
+	</bean>
+	
+	<!-- retry interceptor 설정 -->
+    <bean id="retryInterceptor" 
+          class="org.springframework.amqp.rabbit.config.StatelessRetryOperationsInterceptorFactoryBean">
+        <property name="messageRecoverer" ref="recoverer"/>
+        <property name="retryOperations" ref="retryTemplate" />
+    </bean>
+	
+	<!-- 메시지 리스너 설정 -->
+	<rabbit:listener-container 
+			connection-factory="rabbitConnectionFactory"
+			advice-chain="retryInterceptor">
+		 <!-- 큐 myQueue 메시지는 bean id consumer의 method handleMessage가 처리한다 -->
+		 <rabbit:listener queues="logQueue" ref="consumer" method="handleMessage"/>
+	</rabbit:listener-container>
+</beans>

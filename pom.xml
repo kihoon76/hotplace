@@ -34,6 +34,8 @@
 		
 		<itext.pdf-version>5.5.8</itext.pdf-version>
 		<jsoup-version>1.10.2</jsoup-version>
+		
+		<spring.rabbit-version>2.0.0.RELEASE</spring.rabbit-version>
 	</properties>
 	
 	<dependencies>
@@ -308,6 +310,14 @@
 		    <artifactId>jsoup</artifactId>
 		    <version>${jsoup-version}</version>
 		</dependency>
+		
+		<!-- AMQP rabbit -->
+		<dependency>
+		    <groupId>org.springframework.amqp</groupId>
+		    <artifactId>spring-rabbit</artifactId>
+		    <version>${spring.rabbit-version}</version>
+		</dependency>
+		
 	</dependencies>
 	
     <build>

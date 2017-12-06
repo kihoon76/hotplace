@@ -131,6 +131,11 @@ $(document).ready(function() {
 		$('#menu-cell-list').append(tForm());
 	}
 	
+	function _gyeonggongSearchFormLoad() {
+		var tForm = hotplace.dom.getTemplate('gyeonggongSearchForm');
+		$('#menu-search-gyeonggong-list').append(tForm());
+	}
+	
 	/*function _btnCallback($this, e, targetId, isUseDiv, onFn, offFn) {
 		var sw = $this.data('switch');
 		$this.data('switch', ((sw == 'on') ? 'off' : 'on'));
@@ -821,6 +826,12 @@ $(document).ready(function() {
 			
 		}
 	}, {
+		menu: 'menu_search_gyeonggong',
+		listDv: 'menu-search-gyeonggong-list',
+		callbackAll: function() {
+			
+		}
+	}, {
 		menu: 'menu_search_expectdev',
 		callbackAll: function() {
 			
@@ -854,133 +865,13 @@ $(document).ready(function() {
 	hotplace.dom.addRightMenuInMap([{
 		menu: 'rmenu_user',
 		datas: 'data-toggle="off"',
-		callbackOn: function($this) {
-			
-			/*hotplace.dom.showLoginForm('', function() {
-				$this.trigger('click');
-			});*/
-			hotplace.dom.checkSession(function(hasSession) {
-				hotplace.dom.showLoginForm((hasSession) ? 'OUT' : 'IN', function() {
-					$this.trigger('click');
-				});
-			});
-		}
+		callbackOn: hotplace.dom.rightMenuUserCallback
 	}]);
 	
 	_mulgeonFormLoad();
 	_salesViewFormLoad();
 	_heatmapFormLoad();
-	
-	/*hotplace.dom.addButtonInMap([{
-		id:'btnNews',
-		//glyphicon: 'list-alt',
-		glyphicon: 'search',
-		//attr: 'data-switch="off" title="뉴스"',
-		attr: 'data-switch="off" title="토지이용규제 해소물건"',
-		clazz: 'mBtnTooltip',
-		callback: function(e) {
-//			_btnCallback($(this), e, 'dvNews', true, function() {
-//				setTimeout(function repeat() {
-//					_tick();
-//					_startInternal = setTimeout(repeat, 3000);
-//				}, 3000);
-//			},function() {
-//				clearTimeout(_startInternal);
-//			});
-			$('#searchTitle').text('토지이용규제 해소');
-			_btnCallback($(this), e, 'dvMulgeon', true, null, function() {
-				$('#dvMulgeonResult').html('');
-				$('#dvMulgeonContainer').hide();
-			});
-		}
-	},{
-		id:'btnAddrSearch',
-		glyphicon: 'erase',
-		//attr: 'data-switch="off" title="주소,HP,반경,매물검색"',
-		attr: 'data-switch="off" title="보상투자물건 검색"',
-		clazz: 'mBtnTooltip',
-		callback: function(e) {
-			//_btnCallback($(this), e, 'dvAddrSearch', true);
-//			$('#searchTitle').text('보상투자물건');
-//			_btnCallback($(this), e, 'dvMulgeon', true, null, function() {
-//				$('#dvMulgeonResult').html('');
-//				$('#dvMulgeonContainer').hide();
-//			});
-		}
-	},{
-		id:'btnUser',
-		glyphicon: 'user',
-		attr: 'data-switch="off" title="개발예정지역 검색"',
-		clazz: 'mBtnTooltip',
-		callback: function(e) {
-//			$('#searchTitle').text('개발예정지역');
-//			_btnCallback($(this), e, 'dvMulgeon', true, null, function() {
-//				$('#dvMulgeonResult').html('');
-//				$('#dvMulgeonContainer').hide();
-//			});
-		}
-	},{
-		id:'btnInfo',
-		glyphicon: 'info-sign',
-		attr: 'data-switch="off"',
-		callback: function(e) {
-			//hotplace.test.searchRadius();
-			//_btnCallback($(this), e, 'dvInfo');
-			
-		}
-	},{
-		id:'btnSalesView',
-		glyphicon:'pushpin',
-		attr: 'data-switch="off" title="물건보기"',
-		disabled: true,
-		clazz: 'mBtnTooltip',
-		callback: function(e) {
-			_btnCallback($(this), e, 'dvSalesView', true, null, function() {
-				var s = hotplace.maps.isActiveMarker(hotplace.maps.MarkerTypes.GYEONGMAE);
-				$('#salesGyeongmae').prop('checked', hotplace.maps.isActiveMarker(hotplace.maps.MarkerTypes.GYEONGMAE));
-				$('#salesGongmae').prop('checked', hotplace.maps.isActiveMarker(hotplace.maps.MarkerTypes.GONGMAE));
-				//$('#dvMulgeonResult').html('');
-				//$('#dvMulgeonContainer').hide();
-			});
-		}
-	},{
-		id:'btnCadastral',
-		attr: 'data-switch="off" title="지적도 보기"',
-		glyphicon: 'globe',
-		clazz: 'mBtnTooltip',
-		callback: function() {
-			var onOff = $(this).data('switch');
-			hotplace.maps.showJijeokLayer(onOff, $(this));
-			$(this).toggleClass('button-on')
-		}
-	}, {
-		id:'btnLayerView',
-		glyphicon: 'plus',
-		attr: 'data-switch="on" title="투자유망 지역보기"',
-		clazz: 'button-on mBtnTooltip',
-		callback: function(e) {
-			_btnCallback($(this), e, null, false, function() {
-				hotplace.maps.cellToggle();
-			}, function() {
-				hotplace.maps.cellToggle();
-			});
-		}
-	},{
-		id:'btnUserLogin',
-		glyphicon: 'log-in',
-		attr: 'data-switch="off" data-gubun="IN" title="로그인"',
-		clazz: 'mBtnTooltip',
-		callback: function(e) {
-			var $this = $(this);
-			_btnCallback($this, e, null, false, function() {
-				var gubun = $this.data('gubun');
-				
-				hotplace.dom.showLoginForm(gubun, function() {
-					hotplace.dom.toggleOnlyMenuButton(hotplace.dom.getMenuBtn().USER_LOGIN);
-				});
-			});
-		}
-	}]);*/
+	_gyeonggongSearchFormLoad();
 	
 	$('#btnJijeok').on('click', function() {
 		var onOff = $(this).data('switch');

@@ -984,7 +984,7 @@
 		var tForm = dom.getTemplate('authmsgForm');
 		$('#dvCenterModalContent').html(tForm());
 		
-		$('#authMsg').html(msg || '로그인후 이용하세요');
+		$('#authMsg').html(msg || '로그인후 이용하세요 <button class="btn btn-success" id="btnDirectLogin">로그인하기</button>');
 		
 		dom.openCenterModal('', {width: '50%', height:'30%'}, fn);
 	}
@@ -1130,7 +1130,28 @@
 		 $('.btn-pref .btn').removeClass('btn-primary').addClass('btn-default');
 		 $(this).removeClass('btn-default').addClass('btn-primary');
 	});
+	
+	//로그인 메시지에서 로그인 화면으로 전환
+	$(document).on('click', '#btnDirectLogin', function() {
+		//이전에 설정된 동작은 마무리한다.
+		_modalCloseAfterFn();
+		
+		_modalCloseAfterFn = function() {
+			$('#rmenu_user').trigger('click', {
+				callbackOn: dom.rightMenuUserCallback
+			});
+		};
+		
+		dom.closeModal();
+	});
 
+	dom.rightMenuUserCallback = function($this) {
+		dom.checkSession(function(hasSession) {
+			dom.showLoginForm((hasSession) ? 'OUT' : 'IN', function() {
+				$this.trigger('click');
+			});
+		});
+	}
 	
 }(
 	hotplace.dom = hotplace.dom || {},

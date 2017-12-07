@@ -726,22 +726,29 @@ $(document).ready(function() {
 	
 	//경공매 검색
 	(function _searchGyeonggong() {
-		var $tbLandUseLimit = $('#g2sTbLandUseLimit');
-		var root = hotplace.getContextUrl() + 'resources/img/gyeonggong_search';
 		
-		$('#g2sPLandUseLimit').on('click', function() {
-			var sw = $(this).data('switch');
-			if(sw == 'off') {
-				$tbLandUseLimit.show();
-				$(this).children('img').prop('src', root + 'landuselimit_over.png');
-				$(this).data('switch', 'on');
+		var root = hotplace.getContextUrl() + 'resources/img/gyeonggong_search/';
+		
+		function _handler(targetId, imgName) {
+			
+			return function() {
+				var sw = $(this).data('switch');
+				if(sw == 'off') {
+					$('#' + targetId).show();
+					$(this).children('img').prop('src', root + imgName + '_over.png');
+					$(this).data('switch', 'on');
+				}
+				else {
+					$('#' + targetId).hide();
+					$(this).children('img').prop('src', root + imgName + '.png');
+					$(this).data('switch', 'off');
+				}
 			}
-			else {
-				$tbLandUseLimit.hide();
-				$(this).children('img').prop('src', root + 'landuselimit.png');
-				$(this).data('switch', 'off');
-			}
-		});
+		}
+		
+		$(document).on('click', '#pIlbansahang', _handler('tbIlbansahang', 'ilbansahang'));
+		$(document).on('click', '#pLandUseLimit', _handler('tbLandUseLimit', 'landuselimit'));
+		$(document).on('click', '#pHopefulTooja', _handler('tbHopefulTooja', 'hopefultooja'));
 	})();
 	
 	/*****************************************************************************************************/

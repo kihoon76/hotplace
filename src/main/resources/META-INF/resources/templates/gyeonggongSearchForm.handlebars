@@ -1,108 +1,583 @@
 <div id="dvGyeonggongSearch">
 		<ul>
 			<li>
-				<p><img src="{{path}}/ilbansahang.png" alt="일반사항"/></p>
+				<p id="pIlbansahang" data-switch="on"><img src="{{path}}/ilbansahang_over.png" alt="일반사항"/></p>
 				<table id="tbIlbansahang">
-					<tr class="tr1">
+					<tr>
 						<th><img src="{{path}}/jiyeog.png" alt="지역"></th>
-						<td>
-							<input type="checkbox" name="" value="" id=""> <label for="">서울특별시</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">부산광역시</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">대구광역시</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">인천광역시</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">광주광역시</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">대전광역시</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">울산광역시</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">세종특별자치시</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">경기도</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">강원도</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">충청북도</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">충청남도</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">전라북도</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">전라남도</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">경상북도</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">경상남도</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">제주도</label>
+						<td id="tdJiyeog">
+							<div class="check-custom-group">
+							<div class="checkbox checkbox-primary checkbox-inline">
+             					<input id="seoul" class="styled" type="checkbox" value="11">
+             					<label for="seoul">
+                            	서울특별시
+             					</label>
+        					</div>
+        					<div class="checkbox checkbox-primary checkbox-inline">
+             					<input id="busan" class="styled" type="checkbox" value="26">
+             					<label for="busan">
+                            	부산광역시
+             					</label>
+        					</div>
+        					<div class="checkbox checkbox-primary checkbox-inline">
+             					<input id="daegu" class="styled" type="checkbox" value="27">
+             					<label for="daegu">
+                            	대구광역시
+             					</label>
+        					</div>
+        					<div class="checkbox checkbox-primary checkbox-inline">
+             					<input id="incheon" class="styled" type="checkbox" value="28">
+             					<label for="incheon">
+                            	인천광역시
+             					</label>
+        					</div>
+        					<div class="checkbox checkbox-primary checkbox-inline">
+             					<input id="gwangju" class="styled" type="checkbox" value="29">
+             					<label for="gwangju">
+                            	광주광역시
+             					</label>
+        					</div>
+        					</div>
+        					
+        					<div class="check-custom-group">
+        					<div class="checkbox checkbox-primary checkbox-inline">
+             					<input id="daejeon" class="styled" type="checkbox" value="30">
+             					<label for="daejeon">
+                            	대전광역시
+             					</label>
+        					</div>
+        					<div class="checkbox checkbox-primary checkbox-inline">
+             					<input id="ulsan" class="styled" type="checkbox" value="31">
+             					<label for="ulsan">
+                            	울산광역시
+             					</label>
+        					</div>
+        					<div class="checkbox checkbox-primary checkbox-inline">
+             					<input id="sejong" class="styled" type="checkbox" value="36">
+             					<label for="sejong">
+                            	세종특별자치시
+             					</label>
+        					</div>
+        					<div class="checkbox checkbox-primary checkbox-inline">
+             					<input id="gyeonggido" class="styled" type="checkbox" value="41">
+             					<label for="gyeonggido">
+                            	경기도
+             					</label>
+        					</div>
+        					<div class="checkbox checkbox-primary checkbox-inline">
+             					<input id="gangwondo" class="styled" type="checkbox" value="42">
+             					<label for="gangwondo">
+                            	강원도
+             					</label>
+        					</div>
+        					</div>
+							
+							<div class="check-custom-group">
+							<div class="checkbox checkbox-primary checkbox-inline">
+             					<input id="chungcheongdoNorth" class="styled" type="checkbox" value="43">
+             					<label for="chungcheongdoNorth">
+                            	충청북도
+             					</label>
+        					</div>
+        					<div class="checkbox checkbox-primary checkbox-inline">
+             					<input id="chungcheongdoSouth" class="styled" type="checkbox" value="44">
+             					<label for="chungcheongdoSouth">
+                            	충청남도
+             					</label>
+        					</div>
+        					<div class="checkbox checkbox-primary checkbox-inline">
+             					<input id="jeonladoNorth" class="styled" type="checkbox" value="45">
+             					<label for="jeonladoNorth">
+                            	전라북도
+             					</label>
+        					</div>
+        					<div class="checkbox checkbox-primary checkbox-inline">
+             					<input id="jeonladoSouth" class="styled" type="checkbox" value="46">
+             					<label for="jeonladoSouth">
+                            	전라남도
+             					</label>
+        					</div>
+        					<div class="checkbox checkbox-primary checkbox-inline">
+             					<input id="gyeongsangdoNorth" class="styled" type="checkbox" value="47">
+             					<label for="gyeongsangdoNorth">
+                            	경상북도
+             					</label>
+        					</div>
+							</div>
+							
+							<div class="check-custom-group">
+							<div class="checkbox checkbox-primary checkbox-inline">
+             					<input id="gyeongsangdoSouth" class="styled" type="checkbox" value="48">
+             					<label for="gyeongsangdoSouth">
+                            	경상남도
+             					</label>
+        					</div>
+        					<div class="checkbox checkbox-primary checkbox-inline">
+             					<input id="jejudo" class="styled" type="checkbox" value="50">
+             					<label for="jejudo">
+                            	제주특별자치도
+             					</label>
+        					</div>
+							</div>
 						</td>
 					</tr>
-					<tr class="tr2">
+					<tr>
 						<th><img src="{{path}}/mulgeonkind.png" alt="물건종류"></th>
-						<td>
-							<input type="checkbox" name="" value="" id=""> <label for="">주거용</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">업무 및 상업용</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">토지(농지,임야 등)</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">공장/창고</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">기타(종교용지,구거 등)</label>
+						<td id="tdMulgeonkind">
+							<div class="check-custom-group">
+								<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="mulgeonJugeo" class="styled" type="checkbox" value="">
+             						<label for="mulgeonJugeo">
+                            		주거용
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="mulgeonEobmu" class="styled" type="checkbox" value="">
+             						<label for="mulgeonEobmu">
+                            		업무 및 상업용
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="mulgeonToji" class="styled" type="checkbox" value="">
+             						<label for="mulgeonToji">
+                            		토지(농지,임야 등)
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="mulgeonToji" class="styled" type="checkbox" value="">
+             						<label for="mulgeonToji">
+                            		토지(농지,임야 등)
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="mulgeonGongjang" class="styled" type="checkbox" value="">
+             						<label for="mulgeonGongjang">
+                            		공장/창고
+             						</label>
+        						</div>
+        					</div>
+        						
+        					<div class="check-custom-group">
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="mulgeonEtc" class="styled" type="checkbox" value="">
+             						<label for="mulgeonEtc">
+                            		기타(종교용지,구거 등)
+             						</label>
+        						</div>
+        					</div>
 						</td>
 					</tr>
-					<tr class="tr3">
+					<tr>
 						<th><img src="{{path}}/jimok.png" alt="지목"></th>
-						<td>
-							<input type="checkbox" name="" value="" id=""> <label for="">전</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">임야</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">공장</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">도로</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">구거</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">공원</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">사적지</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">답</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">광천지</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">학교</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">철도</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">유지</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">체육용지</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">묘지</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">과수원</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">염전</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">주차장</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">제방</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">양어장</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">유원지</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">잡종지</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">목장</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">대</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">주유소</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">하천</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">수도용지</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">종교용지</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">창고</label>
+						<td id="tdJimok">
+							<div class="check-custom-group">
+								<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokJeon" class="styled" type="checkbox" value="">
+             						<label for="jimokJeon">
+                            		전
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokImya" class="styled" type="checkbox" value="">
+             						<label for="jimokImya">
+                            		임야
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokGongjang" class="styled" type="checkbox" value="">
+             						<label for="jimokGongjang">
+                            		공장
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokDoro" class="styled" type="checkbox" value="">
+             						<label for="jimokDoro">
+                            		도로
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokGugeo" class="styled" type="checkbox" value="">
+             						<label for="jimokGugeo">
+                            		구거
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokPark" class="styled" type="checkbox" value="">
+             						<label for="jimokPark">
+                            		공원
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokSajeogji" class="styled" type="checkbox" value="">
+             						<label for="jimokSajeogji">
+                            		사적지
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokDab" class="styled" type="checkbox" value="">
+             						<label for="jimokDab">
+                            		답
+             						</label>
+        						</div>
+							</div>
+							
+							<div class="check-custom-group">
+								<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokGwangcheonji" class="styled" type="checkbox" value="">
+             						<label for="jimokGwangcheonji">
+                            		광천지
+             						</label>
+        						</div>
+								<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokSchool" class="styled" type="checkbox" value="">
+             						<label for="jimokSchool">
+                            		학교
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokCheoldo" class="styled" type="checkbox" value="">
+             						<label for="jimokCheoldo">
+                            		철도
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokYuji" class="styled" type="checkbox" value="">
+             						<label for="jimokYuji">
+                            		유지
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokCheyugyongji" class="styled" type="checkbox" value="">
+             						<label for="jimokCheyugyongji">
+                            		체육용지
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokCheyugyongji" class="styled" type="checkbox" value="">
+             						<label for="jimokCheyugyongji">
+                            		체육용지
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokMyoji" class="styled" type="checkbox" value="">
+             						<label for="jimokMyoji">
+                            		과수원
+             						</label>
+        						</div>
+        					</div>
+        					
+        					<div class="check-custom-group">
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokYeomjeon" class="styled" type="checkbox" value="">
+             						<label for="jimokYeomjeon">
+                            		염전
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokJuchajang" class="styled" type="checkbox" value="">
+             						<label for="jimokJuchajang">
+                            		주차장
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokJebang" class="styled" type="checkbox" value="">
+             						<label for="jimokJebang">
+                            		제방
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokYangeojang" class="styled" type="checkbox" value="">
+             						<label for="jimokYangeojang">
+                            		양어장
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokYuwonji" class="styled" type="checkbox" value="">
+             						<label for="jimokYuwonji">
+                            		유원지
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokJabjongji" class="styled" type="checkbox" value="">
+             						<label for="jimokJabjongji">
+                            		잡종지
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokMogjang" class="styled" type="checkbox" value="">
+             						<label for="jimokMogjang">
+                            		목장
+             						</label>
+        						</div>
+							</div>
+							<div class="check-custom-group">
+								<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokDae" class="styled" type="checkbox" value="">
+             						<label for="jimokDae">
+                            		대
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokJuyuso" class="styled" type="checkbox" value="">
+             						<label for="jimokJuyuso">
+                            		주유소
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokHacheon" class="styled" type="checkbox" value="">
+             						<label for="jimokHacheon">
+                            		하천
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokSudoyongji" class="styled" type="checkbox" value="">
+             						<label for="jimokSudoyongji">
+                            		수도용지
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokJonggyoyongji" class="styled" type="checkbox" value="">
+             						<label for="jimokJonggyoyongji">
+                            		종교용지
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="jimokChanggo" class="styled" type="checkbox" value="">
+             						<label for="jimokChanggo">
+                            		창고
+             						</label>
+        						</div>
+							</div>
 						</td>
 					</tr>
-					<tr class="tr4">
+					<tr>
 						<th><img src="{{path}}/jibunyeobu.png" alt="지분여부"></th>
-						<td>
-							<input type="checkbox" name="" value="" id=""> <label for="">지분물건 제외</label>
+						<td id="tdJibunyeobu">
+							<div class="check-custom-group">
+							<div class="checkbox checkbox-primary checkbox-inline">
+             					<input id="jibunyeobu" class="styled" type="checkbox" value="">
+             					<label for="jibunyeobu">
+                            	지분물건 제외
+             					</label>
+        					</div>
+        					</div>
 						</td>
 					</tr>
 					<tr class="tr5">
 						<th><img src="{{path}}/gamjeongga.png" alt="감정가"></th>
-						<td>
-							<input type="text" name="" value="" id="" style="width:80px;"> 원 ~ <input type="text" name="" value="" id="" style="width:80px;"> 원
+						<td id="tdGamjeongga">
+							<div class="check-custom-group">
+								<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="gamjeongga1m" class="styled" type="checkbox" value="">
+             						<label for="gamjeongga1m">
+                            		1천만원 미만
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="gamjeongga1To5" class="styled" type="checkbox" value="">
+             						<label for="gamjeongga1To5">
+                            		1천만원~5천만원
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="gamjeongga5To10" class="styled" type="checkbox" value="">
+             						<label for="gamjeongga5To10">
+                            		5천만원~1억
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="gamjeongga10To30" class="styled" type="checkbox" value="">
+             						<label for="gamjeongga10To30">
+                            		1억~3억
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="gamjeongga30To50" class="styled" type="checkbox" value="">
+             						<label for="gamjeongga30To50">
+                            		3억~5억
+             						</label>
+        						</div>
+							</div>
+							<div class="check-custom-group">
+								<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="gamjeongga50To100" class="styled" type="checkbox" value="">
+             						<label for="gamjeongga50To100">
+                            		5억~10억
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="gamjeongga100To200" class="styled" type="checkbox" value="">
+             						<label for="gamjeongga100To200">
+                            		10억~20억
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="gamjeongga200M" class="styled" type="checkbox" value="">
+             						<label for="gamjeongga200M">
+                            		20억원 이상
+             						</label>
+        						</div>
+							</div>
 						</td>
 					</tr>
-					<tr class="tr6">
+					<tr>
 						<th><img src="{{path}}/minibchalga.png" alt="최소입찰가"></th>
-						<td>
-							<input type="text" name="" value="" id="" style="width:80px;"> 원 ~ <input type="text" name="" value="" id="" style="width:80px;"> 원
+						<td id="tdMinIbchalga">
+							<div class="check-custom-group">
+								<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="minibchalga1m" class="styled" type="checkbox" value="">
+             						<label for="minibchalga1m">
+                            		1천만원 미만
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="minibchalga1To5" class="styled" type="checkbox" value="">
+             						<label for="minibchalga1To5">
+                            		1천만원~5천만원
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="minibchalga5To10" class="styled" type="checkbox" value="">
+             						<label for="minibchalga5To10">
+                            		5천만원~1억
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="minibchalga10To30" class="styled" type="checkbox" value="">
+             						<label for="minibchalga10To30">
+                            		1억~3억
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="minibchalga30To50" class="styled" type="checkbox" value="">
+             						<label for="minibchalga30To50">
+                            		3억~5억
+             						</label>
+        						</div>
+							</div>
+							<div class="check-custom-group">
+								<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="minibchalga50To100" class="styled" type="checkbox" value="">
+             						<label for="minibchalga50To100">
+                            		5억~10억
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="minibchalga100To200" class="styled" type="checkbox" value="">
+             						<label for="minibchalga100To200">
+                            		10억~20억
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="minibchalga200M" class="styled" type="checkbox" value="">
+             						<label for="minibchalga200M">
+                            		20억원 이상
+             						</label>
+        						</div>
+							</div>
 						</td>
 					</tr>
-					<tr class="tr7">
+					<tr>
+						<th><img src="{{path}}/gongsistandard.png" alt="공시지가기준가격"></th>
+						<td id="tdGongsiStandard">
+							<div class="check-custom-group">
+								<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="gongsistandard1m" class="styled" type="checkbox" value="">
+             						<label for="gongsistandard1m">
+                            		1천만원 미만
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="gongsistandard1To5" class="styled" type="checkbox" value="">
+             						<label for="gongsistandard1To5">
+                            		1천만원~5천만원
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="gongsistandard5To10" class="styled" type="checkbox" value="">
+             						<label for="gongsistandard5To10">
+                            		5천만원~1억
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="gongsistandard10To30" class="styled" type="checkbox" value="">
+             						<label for="gongsistandard10To30">
+                            		1억~3억
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="gongsistandard30To50" class="styled" type="checkbox" value="">
+             						<label for="gongsistandard30To50">
+                            		3억~5억
+             						</label>
+        						</div>
+							</div>
+							<div class="check-custom-group">
+								<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="gongsistandard50To100" class="styled" type="checkbox" value="">
+             						<label for="gongsistandard50To100">
+                            		5억~10억
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="gongsistandard100To200" class="styled" type="checkbox" value="">
+             						<label for="gongsistandard100To200">
+                            		10억~20억
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="gongsistandard200M" class="styled" type="checkbox" value="">
+             						<label for="gongsistandard200M">
+                            		20억원 이상
+             						</label>
+        						</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
 						<th><img src="{{path}}/minibchalgaR.png" alt="최소입찰가율"></th>
-						<td>
-							<input type="checkbox" name="" value="" id=""> <label for="">100% 이상</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">100~75%</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">75~50%</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">50~25%</label>
-							<input type="checkbox" name="" value="" id=""> <label for="">25% 미만</label>
+						<td id="tdMinIbchalgaR">
+							<div class="check-custom-group">
+								<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="minibchalgaR100M" class="styled" type="checkbox" value="">
+             						<label for="minibchalgaR100M">
+                            		100% 이상
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="minibchalgaR75To100" class="styled" type="checkbox" value="">
+             						<label for="minibchalgaR75To100">
+                            		100~75%
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="minibchalgaR50To75" class="styled" type="checkbox" value="">
+             						<label for="minibchalgaR50To75">
+                            		75~50%
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="minibchalgaR25To50" class="styled" type="checkbox" value="">
+             						<label for="minibchalgaR25To50">
+                            		50~25%
+             						</label>
+        						</div>
+        						<div class="checkbox checkbox-primary checkbox-inline">
+             						<input id="minibchalgaR25m" class="styled" type="checkbox" value="">
+             						<label for="minibchalgaR25m">
+                            		25% 미만
+             						</label>
+        						</div>
+							</div>
 						</td>
 					</tr>
 				</table>
 			</li>	
 			<li>
-				<p id="g2sPLandUseLimit" data-switch="off"><img id="g2sImgLandUseLimit1" src="{{path}}/landuselimit.png" alt="토지이용규제조건"/></p>
-				<table id="g2sTbLandUseLimit">
+				<p id="pLandUseLimit" data-switch="off"><img src="{{path}}/landuselimit.png" alt="토지이용규제조건"/></p>
+				<table id="tbLandUseLimit">
 					<tr>
-						<th><img src="img/02_01.png" alt="용도지역"></th>
+						<th><img src="{{path}}/yongdojiyeog.png" alt="용도지역"></th>
 						<td>
 							<input type="checkbox" name="" value="" id=""> <label for="">주거지역</label>
 							<input type="checkbox" name="" value="" id=""> <label for="">상업지역</label>
@@ -114,7 +589,7 @@
 						</td>
 					</tr>
 					<tr>
-						<th><img src="img/02_02.png" alt="용도지구"></th>
+						<th><img src="{{path}}/yongdojigu.png" alt="용도지구"></th>
 						<td>
 							<input type="checkbox" name="" value="" id=""> <label for="">경관지구</label>
 							<input type="checkbox" name="" value="" id=""> <label for="">미관지구</label>
@@ -131,7 +606,7 @@
 						</td>
 					</tr>
 					<tr>
-						<th><img src="img/02_03.png" alt="용도구역"></th>
+						<th><img src="{{path}}/yongdoguyeog.png" alt="용도구역"></th>
 						<td>
 							<input type="checkbox" name="" value="" id=""> <label for="">시가화조정구역</label>
 							<input type="checkbox" name="" value="" id=""> <label for="">개발제한구역</label>
@@ -142,7 +617,7 @@
 						</td>
 					</tr>
 					<tr>
-						<th><img src="img/02_04.png" alt="기타법률상규제"></th>
+						<th><img src="{{path}}/etclawlimit.png" alt="기타법률상규제"></th>
 						<td>
 							<input type="checkbox" name="" value="" id=""> <label for="">보전산지</label>
 							<input type="checkbox" name="" value="" id=""> <label for="">준보전산지</label>
@@ -165,14 +640,14 @@
 						</td>
 					</tr>
 					<tr>
-						<th><img src="img/02_05.png" alt="기타참고사항"></th>
+						<th><img src="{{path}}/etcchamgosahang.png" alt="기타참고사항"></th>
 						<td>
 							<input type="checkbox" name="" value="" id=""> <label for="">영농여건불리농지</label>
 							<input type="checkbox" name="" value="" id=""> <label for="">토지거래허가구역</label>
 						</td>
 					</tr>
 					<tr>
-						<th><img src="img/02_06.png" alt="도시계획시설"></th>
+						<th><img src="{{path}}/cityplanningfacility.png" alt="도시계획시설"></th>
 						<td>
 							<input type="checkbox" name="" value="" id=""> <label for="">도로</label>
 							<input type="checkbox" name="" value="" id=""> <label for="">철도</label>
@@ -187,7 +662,7 @@
 						</td>
 					</tr>
 					<tr>
-						<th><img src="img/02_07.png" alt="도시계획시설저촉상태"></th>
+						<th><img src="{{path}}/cityplanningfacilityjeochog.png" alt="도시계획시설저촉상태"></th>
 						<td>
 							<input type="checkbox" name="" value="" id=""> <label for="">전필</label>
 							<input type="checkbox" name="" value="" id=""> <label for="">저촉</label>
@@ -195,7 +670,7 @@
 						</td>
 					</tr>
 					<tr>
-						<th><img src="img/02_08.png" alt="보상편입여부"></th>
+						<th><img src="{{path}}/bosangpyeonib.png" alt="보상편입여부"></th>
 						<td>
 							<input type="checkbox" name="" value="" id=""> <label for="">보상</label>
 							<input type="checkbox" name="" value="" id=""> <label for="">편입</label>
@@ -204,27 +679,27 @@
 				</table>
 			</li>	
 			<li>
-				<p><img src="img/03.png" alt="투자유망물건조건"/></p>
+				<p id="pHopefulTooja" data-switch="off"><img src="{{path}}/hopefultooja.png" alt="투자유망물건조건"/></p>
 				<table id="tbHopefulTooja">
 					<tr>
-						<th><img src="img/03_01.png" alt="hp등급"></th>
+						<th><img src="{{path}}/hpgrade.png" alt="hp등급"></th>
 						<td>
 						</td>
 					</tr>
 					<tr>
-						<th><img src="img/03_02.png" alt="경사도"></th>
+						<th><img src="{{path}}/gyeongsado.png" alt="경사도"></th>
 						<td>
 							<input type="checkbox" name="" value="" id=""> <label for="">25도 미만</label>
 							<input type="checkbox" name="" value="" id=""> <label for="">25도 이상</label>
 						</td>
 					</tr>
 					<tr>
-						<th><img src="img/03_03.png" alt="환경평가등급"></th>
+						<th><img src="{{path}}/environmentpyeongga.png" alt="환경평가등급"></th>
 						<td>
 						</td>
 					</tr>
 					<tr>
-						<th><img src="img/03_04.png" alt="토지이용규제해소물건"></th>
+						<th><img src="{{path}}/landlimitunlock.png" alt="토지이용규제해소물건"></th>
 						<td>
 							<input type="checkbox" name="" value="" id=""> <label for="">토지이용규제 해소 필지</label>
 						</td>

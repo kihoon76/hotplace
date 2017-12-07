@@ -529,11 +529,11 @@ input[type=radio]:focus + label::before {
 **********************************************************/
 #menu li { list-style-type:none; }
 #menu { position:relative; left:-20px; top:25px; z-index:1; margin-top:50px; width:50px; }
-#menu ul li { cursor:pointer; margin-bottom:15px; width:50px; height:50px; position:relative; }
-#menu ul li.disabled { cursor:default; }
-#menu li .desc { position:absolute; left:0; top:0; opacity:0; transition:all 0.3s; }
-#menu li .over { position:absolute; left:0; top:0; opacity:0; transition:all 0.3s; }
-#menu li.enabled:hover .desc { opacity:1; }
+#menu > ul > li { cursor:pointer; margin-bottom:15px; width:50px; height:50px; position:relative; }
+#menu > ul > li.disabled { cursor:default; }
+#menu > ul > li .desc { position:absolute; left:0; top:0; opacity:0; transition:all 0.3s; }
+#menu > ul > li .over { position:absolute; left:0; top:0; opacity:0; transition:all 0.3s; }
+#menu > ul > li.enabled:hover .desc { opacity:1; }
 
 #menu-search-list.list {
 	position:absolute; left:0; top:0; z-index:1; width:595px; height:50px;
@@ -634,7 +634,6 @@ input[type=radio]:focus + label::before {
 /*
 	경,공매 검색
 */
-#dvGyeonggongSearch li{list-style:none;}
 #dvGyeonggongSearch	ul{width:950px; height:850px; margin-left:70px; overflow:auto; }
 #dvGyeonggongSearch ul li{margin-top:20px;}
 #dvGyeonggongSearch	ul li p{width:162px; height:48px; cursor:pointer;}
@@ -647,7 +646,7 @@ input[type=radio]:focus + label::before {
 #dvGyeonggongSearch	td{width:85%;}
 #dvGyeonggongSearch	label{padding-right:24px;}
 
-#g2sTbLandUseLimit, #g2sTbHopefulTooja {display:none;}
+#tbLandUseLimit, #tbHopefulTooja {display:none;}
 #menu-search-gyeonggong-list {
 	position:absolute; 
 	left:-30px;
@@ -659,4 +658,16 @@ input[type=radio]:focus + label::before {
 	padding-top:15px;
 	z-index:20;
 	display: none;
+}
+
+#dvGyeonggongSearch .checkbox-inline {
+	margin-top:0;
+}
+.check-custom-group { 
+	padding:0;
+	margin:0;
+	position:relative;
+	top: -20px;
+	text-align: left !important;
+	height: 10px;
 }

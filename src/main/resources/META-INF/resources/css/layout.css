@@ -635,6 +635,19 @@ input[type=radio]:focus + label::before {
 	경,공매 검색
 */
 #dvGyeonggongSearch li{list-style:none;}
+#dvGyeonggongSearch	ul{width:950px; height:850px; margin-left:70px; overflow:auto; }
+#dvGyeonggongSearch ul li{margin-top:20px;}
+#dvGyeonggongSearch	ul li p{width:162px; height:48px; cursor:pointer;}
+#dvGyeonggongSearch div{text-align:center; position:relative; margin-top:24px;}
+#dvGyeonggongSearch	button{position:relative; top:-20px; margin-left:20px; cursor:pointer; background:none; border:none;}
+#dvGyeonggongSearch	table{width:875px; margin:0 auto; font-size:13px; border:1px solid #666; border-collapse:collapse; margin-top:20px;}
+#dvGyeonggongSearch	tr{padding-bottom:30px; }
+#dvGyeonggongSearch	th,td{padding-bottom:20px; border-bottom:1px solid #666; padding:1.5%;}
+#dvGyeonggongSearch	th{width:15%; border-right:1px solid #666; background-color:#eee;}
+#dvGyeonggongSearch	td{width:85%;}
+#dvGyeonggongSearch	label{padding-right:24px;}
+
+#g2sTbLandUseLimit, #g2sTbHopefulTooja {display:none;}
 #menu-search-gyeonggong-list {
 	position:absolute; 
 	left:-30px;

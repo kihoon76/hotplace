@@ -132,8 +132,10 @@ $(document).ready(function() {
 	}
 	
 	function _gyeonggongSearchFormLoad() {
+		var root = hotplace.getContextUrl() + 'resources/img/gyeonggong_search';
 		var tForm = hotplace.dom.getTemplate('gyeonggongSearchForm');
-		$('#menu-search-gyeonggong-list').append(tForm());
+		$('#menu-search-gyeonggong-list').append(tForm({path: root}));
+		
 	}
 	
 	/*function _btnCallback($this, e, targetId, isUseDiv, onFn, offFn) {
@@ -721,6 +723,26 @@ $(document).ready(function() {
 	$('#btnNotice').on('click', function() {
 		hotplace.dom.showNotice();
 	});
+	
+	//경공매 검색
+	(function _searchGyeonggong() {
+		var $tbLandUseLimit = $('#g2sTbLandUseLimit');
+		var root = hotplace.getContextUrl() + 'resources/img/gyeonggong_search';
+		
+		$('#g2sPLandUseLimit').on('click', function() {
+			var sw = $(this).data('switch');
+			if(sw == 'off') {
+				$tbLandUseLimit.show();
+				$(this).children('img').prop('src', root + 'landuselimit_over.png');
+				$(this).data('switch', 'on');
+			}
+			else {
+				$tbLandUseLimit.hide();
+				$(this).children('img').prop('src', root + 'landuselimit.png');
+				$(this).data('switch', 'off');
+			}
+		});
+	})();
 	
 	/*****************************************************************************************************/
 	

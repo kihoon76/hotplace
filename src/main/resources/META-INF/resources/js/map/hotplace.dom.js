@@ -551,17 +551,35 @@
 		}
 	}
 	
+	var _exceptPreventBubblingDivs = ['dvGyeonggongSearch', 'dvAddressSearch', 'dvSalesView', 'dvHeatmap'];
+	
+	function _isExceptPreventBubbingDiv(id) {
+		var len = _exceptPreventBubblingDivs.length;
+		
+		for(var i=0; i<len; i++) {
+			if(id == _exceptPreventBubblingDivs[i]) return true;
+		}
+		
+		return false;
+	}
+	
+	function _checkElementPreventBubbing(target) {
+		var len = _exceptPreventBubblingDivs.length;
+		for(var i=0; i<len; i++) {
+			if($(target).closest($('#' + _exceptPreventBubblingDivs[i])).length > 0) return true;
+		}
+		
+		return false;
+	}
+	
 	var _doPreventBubbling = function(e) {
 		var target = e.target;
 		var id = target.id;
 		if(target.tagName === 'LABEL') return true;
 		
-		return  id == 'txtMulgeon' ||
-		        id == 'btnMulgeon' ||
-		        id.startsWith('addr') || 
-		        id.startsWith('sales') || 
-		        id.startsWith('heatmap') ||
-		        $(target).hasClass('legend');
+		if(_isExceptPreventBubbingDiv(id)) return false;
+		
+		return _checkElementPreventBubbing(target);
 	}
 	
 	dom.addRightMenuInMap = function(params) {

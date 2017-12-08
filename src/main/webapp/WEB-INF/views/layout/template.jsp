@@ -142,6 +142,7 @@
 <script type="text/javascript" src="/resources/js/map/hotplace.chart.js"></script>
 <script type="text/javascript" src="/resources/js/map/hotplace.database.js"></script>
 <script type="text/javascript" src="/resources/js/map/hotplace.dom.js"></script>
+<script type="text/javascript" src="/resources/js/map/hotplace.search.js"></script>
 <script type="text/javascript" src="/resources/js/map/hotplace.test.js"></script>
 
 <script type="text/javascript">

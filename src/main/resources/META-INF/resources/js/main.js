@@ -44,7 +44,7 @@ $(document).ready(function() {
 	 * jquery handler 작성하기 전 로드가 먼저 되어야 함
 	 * load 하는 부분은 가장 먼저 나와함
 	 * */
-	_searchFormLoad();
+	//_searchFormLoad();
 	
 	(function _startTicker() {
 		var _startInternal;
@@ -108,63 +108,11 @@ $(document).ready(function() {
 		_sliderGrpInit[gName] = true;
 	}
 	
-	function _searchFormLoad() {
+	/*function _searchFormLoad() {
 		var tForm = hotplace.dom.getTemplate('searchForm');
 		$('#dvAddrSearch').append(tForm());
-	}
-	
-	function _salesViewFormLoad() {
-		var tForm = hotplace.dom.getTemplate('salesViewForm');
-		//$('#dvSalesView').append(tForm());
-		$('#menu-mulgeon-list').append(tForm({url: hotplace.getContextUrl()}));
-	}
-	
-	function _mulgeonFormLoad() {
-		var tForm = hotplace.dom.getTemplate('mulgeonForm');
-		//$('#dvMulgeon').append(tForm());
-		$('#menu-search-list').append(tForm());
-	}
-	
-	function _heatmapFormLoad() {
-		var tForm = hotplace.dom.getTemplate('heatmapForm');
-		//$('#dvMulgeon').append(tForm());
-		$('#menu-cell-list').append(tForm());
-	}
-	
-	function _gyeonggongSearchFormLoad() {
-		var root = hotplace.getContextUrl() + 'resources/img/gyeonggong_search';
-		var tForm = hotplace.dom.getTemplate('gyeonggongSearchForm');
-		$('#menu-search-gyeonggong-list').append(tForm({path: root}));
-		
-	}
-	
-	/*function _btnCallback($this, e, targetId, isUseDiv, onFn, offFn) {
-		var sw = $this.data('switch');
-		$this.data('switch', ((sw == 'on') ? 'off' : 'on'));
-		
-		if(sw == 'off') {
-			if(isUseDiv) {
-				var padding = 5;
-				var top  = $('#btnNews').get(0).offsetTop;//e.currentTarget.offsetTop;
-				var left = e.currentTarget.offsetLeft + e.currentTarget.offsetWidth + padding;
-				
-				hotplace.dom.openLayer(targetId, {top:top, left:left});
-			}
-			if(onFn) onFn();
-		}
-		else {
-			if(isUseDiv) hotplace.dom.closeLayer(targetId);
-			if(offFn) offFn();
-		}
-		
-		$this.toggleClass('button-on');
 	}*/
 	
-	/*function _btnOnlyToggle($this) {
-		var sw = $this.data('switch');
-		$this.data('switch', ((sw == 'on') ? 'off' : 'on'));
-		$this.toggleClass('button-on');
-	}*/
 	
 	function _tick() {
 		$('#newsTicker li:first').slideUp(function() {
@@ -536,187 +484,10 @@ $(document).ready(function() {
 		});
 	});
 	
-	//물건보기 체크 이벤트
-	//$('#btnSearchSalesView').on('click', function(e) {
-	$(document).on('click', '#btnSearchSalesView', function(e) {
-		var obj = {}
-		$('#dvSalesView input[type="checkbox"]:not(:disabled)').each(function() {
-			var type = $(this).data('value');
-			obj[type] = $(this).prop('checked') ? 1 : 0;
-		})
-		.promise()
-		.done(function() {
-			hotplace.maps.setMarkers(obj);
-			
-			//선택해지된 마커를 지운다.
-			for(var m in obj) {
-				if(obj[m] == 0) {
-					hotplace.maps.destroyMarkerType(m);
-				}
-			}
-			
-			hotplace.maps.showMarkers();
-			
-			$('#btnSalesView').trigger('click');
-		});
-	});
-	
-	//검색변경
-	$(document).on('keydown', '#txtMulgeon', function(e) {
-		if (e.which == 13) {
-			var txt = e.target.value;
-			$('#btnMulgeon').trigger('click', $.trim(txt)); 
-	    }
-	});
-	
-	$(document).on('click', '#btnMulgeon', function(e, arg) {
-		var $list = $('#menu-search-list');
-		if(arg == undefined) {
-			arg = $.trim($('#txtMulgeon').val());
-		}
-		
-		if(arg) {
-			var param = {san:'1'};
-			
-			var beonji, beonjiF, beonjiS, beonjiArr, beonjiArrLen;
-			
-			var token = arg.split(' ');
-			var tokenLen = token.length;
-			var t;
-			var arr = [];
-			
-			for(var i=0; i<tokenLen; i++) {
-				t = token[i];
-				if(t == ' ') continue;
-				arr.push(t);
-			}
-			
-			var arrLen = arr.length;
-			for(var k=0; k<arrLen; k++) {
-				if(arr[k] == '산') {
-					param.san = '2';
-				}
-				else if(beonji = arr[k].match(/[0-9]+\-?[0-9]*/g)){
-					if(beonji) {
-						beonjiArr = beonji.toString().split('-');
-						beonjiArrLen = beonjiArr.length;
-						
-						if(beonjiArrLen == 1) {
-							param.beonjiF = $.trim(beonjiArr[0]);
-							param.beonjiS = '0';
-						}
-						else {
-							param.beonjiF = $.trim(beonjiArr[0]);
-							param.beonjiS = $.trim(beonjiArr[1]);
-						}
-					}
-				}
-				else {
-					param.detail = arr[k];
-				}
-			}
-			
-			hotplace.getPlainTextFromJson('mulgeon/search', JSON.stringify(param), function(data) {
-				var output = $('#dvMulgeonResult');
-				var dataForm = {
-					'addresses': data,
-					'rdoId': 'addr'
-				}
-				
-				var result = (_dom.getTemplate('addressResult2'))(dataForm);
-				output.html(result);
-				if(data.length > 1) {
-					$list.removeClass('list');
-					$list.addClass('list-expand');
-					$('#dvMulgeonContainer').show();
-				}
-				else {
-					$('#dvMulgeonContainer').hide();
-					$list.removeClass('list-expand');
-					$list.addClass('list');
-					
-					if(data.length == 1) {
-						console.log(data);
-						$('#btnMulgeonMap').trigger('click', {
-							address: data[0][1],
-							lng: data[0][3],
-							lat: data[0][2],
-						});
-						
-						
-					}
-					
-				}
-				
-			}, true, '#dvMulgeon');
-		}
-		else {
-			console.log('b');
-		}
-	});
-	
-	$(document).on('click', '#btnMulgeonMap', function(e, arg) {
-		//이미 열려있는 물건검색 마커  윈도우 삭제
-		hotplace.maps.destroyMarkerType(hotplace.maps.MarkerTypes.MULGEON_SEARCH);
-		hotplace.maps.destroyMarkerWindow(hotplace.maps.MarkerTypes.MULGEON_SEARCH);
-		
-		var $sel = $('input:radio[name="' + /*addrObj.rdoId*/'addr' + '"]:checked');
-		var lng = arg ? arg.lng : $sel.data('lng');
-		var lat = arg ? arg.lat : $sel.data('lat');
-		var address = arg ? arg.address : $sel.data('address');
-		
-		if(lng == undefined || lat == undefined) return;
-		//$('#btnNews').trigger('click');
-		
-		hotplace.maps.destroyMarkerType(hotplace.maps.MarkerTypes.MULGEON_SEARCH);
-		hotplace.maps.destroyMarkerWindow(hotplace.maps.MarkerTypes.MULGEON_SEARCH);
-		
-		hotplace.maps.panToBounds(lat, lng, function() {
-			hotplace.maps.getMarker(hotplace.maps.MarkerTypes.MULGEON_SEARCH, {location:[lng, lat]}, {
-				'click' : function(map, newMarker, newInfoWindow) {
-					 if(newInfoWindow.getMap()) {
-						 newInfoWindow.close();
-				     }
-					 else {
-						 newInfoWindow.open(map, newMarker);
-				     }
-				}
-			}, {
-				hasInfoWindow: true,
-				infoWinFormName: 'pinpointForm',
-				radius: 0,
-				datas: {
-					params : $.extend({address:address}, {defaultValue:hotplace.calc.profit.defaultValue}, {
-						jimok: '전',
-						valPerPyeung:21000000,
-						area: 132,
-						gongsi: 4040000,
-						limitChange:'Y'
-					})
-				},
-				icon: hotplace.maps.getMarkerIcon(hotplace.maps.MarkerTypes.MULGEON_SEARCH),
-				size: {
-					x: 26,
-					y: 36
-				}
-			});
-		});
-	});
-	
-	//heatmap 선택 라디오
-	$(document).on('change', 'input[name=rdoHeatmap]', function(e, isTrigger) {
-		var cellType = 'OFF';
-		
-		if(isTrigger) {
-			$('#heatmapOff').prop('checked', true);
-			hotplace.maps.setActiveCell(cellType);
-		}
-		else {
-			cellType = $(this).data('value');
-			hotplace.maps.setActiveCell(cellType);
-			hotplace.maps.cellStart();
-		}
-		
+	//지적도 버튼
+	$('#btnJijeok').on('click', function() {
+		var onOff = $(this).data('switch');
+		hotplace.maps.showJijeokLayer(onOff, $(this));
 	});
 	
 	//공지사항
@@ -724,32 +495,6 @@ $(document).ready(function() {
 		hotplace.dom.showNotice();
 	});
 	
-	//경공매 검색
-	(function _searchGyeonggong() {
-		
-		var root = hotplace.getContextUrl() + 'resources/img/gyeonggong_search/';
-		
-		function _handler(targetId, imgName) {
-			
-			return function() {
-				var sw = $(this).data('switch');
-				if(sw == 'off') {
-					$('#' + targetId).show();
-					$(this).children('img').prop('src', root + imgName + '_over.png');
-					$(this).data('switch', 'on');
-				}
-				else {
-					$('#' + targetId).hide();
-					$(this).children('img').prop('src', root + imgName + '.png');
-					$(this).data('switch', 'off');
-				}
-			}
-		}
-		
-		$(document).on('click', '#pIlbansahang', _handler('tbIlbansahang', 'ilbansahang'));
-		$(document).on('click', '#pLandUseLimit', _handler('tbLandUseLimit', 'landuselimit'));
-		$(document).on('click', '#pHopefulTooja', _handler('tbHopefulTooja', 'hopefultooja'));
-	})();
 	
 	/*****************************************************************************************************/
 	
@@ -897,16 +642,6 @@ $(document).ready(function() {
 		callbackOn: hotplace.dom.rightMenuUserCallback
 	}]);
 	
-	_mulgeonFormLoad();
-	_salesViewFormLoad();
-	_heatmapFormLoad();
-	_gyeonggongSearchFormLoad();
-	
-	$('#btnJijeok').on('click', function() {
-		var onOff = $(this).data('switch');
-		hotplace.maps.showJijeokLayer(onOff, $(this));
-	});
-	
 	
 	hotplace.validation.numberOnly('.numberOnly');
 	hotplace.validation.numberNdot('.numberNdot');
@@ -915,4 +650,5 @@ $(document).ready(function() {
 	hotplace.dom.initTooltip('mBtnTooltip',{side: 'right', trigger: 'hover'});
 	
 	hotplace.calc.profit.init();
+	hotplace.search.formInit();
 });

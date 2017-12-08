@@ -669,5 +669,16 @@ input[type=radio]:focus + label::before {
 	position:relative;
 	top: -20px;
 	text-align: left !important;
-	height: 10px;
+	height: 7px;
 }
+
+#dvGyeonggongSearch .ui-rangeSlider-container  { top: -60px; }
+#dvGyeonggongSearch .ui-rangeSlider-arrow.ui-rangeSlider-leftArrow,
+#dvGyeonggongSearch .ui-rangeSlider-arrow.ui-rangeSlider-rightArrow { top: -37px; }
+#dvGyeonggongSearch .ui-rangeSlider-label-value { top: -20px; }
+#dvGyeonggongSearch .ui-rangeSlider-label { bottom: 35px; height: 35px; }
+#dvGyeonggongSearch .ui-rangeSlider-bar { top:-1px !important; }
+#dvGyeonggongSearch .ui-rangeSlider-handle.ui-rangeSlider-leftHandle,
+#dvGyeonggongSearch .ui-rangeSlider-handle.ui-rangeSlider-rightHandle { top: -2px !important; }
+
+

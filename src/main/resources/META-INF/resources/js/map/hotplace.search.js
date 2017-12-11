@@ -6,6 +6,43 @@
 	//rangeSlider 설정
 	var _sliderGrp = {}; 
 	
+	var _tabulatorSelectFilter = function(arr) {
+		return function(cell, onRendered, success, cancel) {
+			var len = arr.length;
+			
+			var htmlStr = '';
+				
+			for(var i=0; i<len; i++) {
+				htmlStr += '<option value="' + arr[i] + '">' + arr[i] + '</option>';
+				console.log(htmlStr);
+			}
+				
+			var editor = $('<select><option value=""></option>' + htmlStr + '</select>');
+			editor.css({
+				'padding':'3px',
+		        'width':'100%',
+		        'box-sizing':'border-box',
+		    });
+			 
+			//Set value of editor to the current value of the cell
+			editor.val(cell.getValue());
+			  
+			//set focus on the select box when the editor is selected (timeout allows for editor to be added to DOM)
+			onRendered(function(){
+				editor.focus();
+				editor.css('height','100%');
+			});
+			 
+			//when the value has been set, trigger the cell to update
+			editor.on('change blur', function(e){
+				success(editor.val());
+			});
+	
+			//return the editor element
+			return editor;
+		}
+	}
+	
 	function _sliderInit(gName, targetIds) {
 		if(_sliderGrp[gName]) return;
 		
@@ -56,6 +93,82 @@
 		//_sliderGrpInit[gName] = true;
 	}
 	
+	
+	function _getSearchGyeonggongParam() {
+		var param = {
+			'jiyeog' : []
+		}
+		
+		$('#tdJiyeog input[type=checkbox]').each(function(index, value) {
+			
+			if($(this).is(':checked')) {
+				console.log($(this).val());
+				param.jiyeog.push($(this).val()) 
+			}
+		});
+		
+		return param;
+	}
+	
+	function _searchGyeonggong(fn) {
+		var param = _getSearchGyeonggongParam();
+		
+		hotplace.ajax({
+			url: 'search/gyeonggong',
+			data: JSON.stringify(param),
+			contentType: 'application/json; charset=UTF-8',
+			success: function(data, textStatus, jqXHR) {
+				$('#ulGyeonggongSearchForm').hide();
+				$('#dvGyeonggongSearchResult').show();
+				console.log(data);
+				
+				_makeGyeonggongTabulator(data.datas);
+				fn();
+			}
+		})
+	}
+	
+	function _makeGyeonggongTabulator(tbData) {
+		$('#dvGyeonggongSearchResult').tabulator({
+		    height:826, // set height of table
+		    fitColumns:true, //fit columns to width of table (optional)
+		    columns:_tabulatorColumns.gyeonggong,
+		    rowClick:function(e, row){ //trigger an alert message when the row is clicked
+		       var data = row.getData();
+		       console.log(data)
+		       
+		       if(data.lng == 0) {
+		    	   alert('위경도 정보가 존재하지 않습니다.')
+		    	   return;
+		       }
+		       _moveMulgeon(data.lng, data.lat, data.address);
+		    },
+		});
+		
+		$('#dvGyeonggongSearchResult').tabulator('setData', tbData);
+		
+		/*var tabledata = [
+		                 {gubun:'G', type:'대',  address:'서울시 강남구 도곡동 963', lng:37.539648921, lat:127.152615967},
+		                 {id:2, favor:false, gubun:'K', type:'임야',  address:'서울시 강남구 도곡동 963', lng:37.539648921, lat:127.152615967},
+		                 {id:3, favor:false, gubun:'G', type:'전',  address:'서울시 강남구 도곡동 963', lng:37.539648921, lat:127.152615967},
+		                 {id:4, favor:true, gubun:'K', type:'답',  address:'서울시 강남구 대치동  963', lng:37.539648921, lat:127.152615967},
+		                 {id:5, favor:true, gubun:'R', type:'도로',  address:'서울시 강남구 역삼동 963', lng:37.539648921, lat:127.152615967},
+		                 {id:6, favor:true, gubun:'G', type:'임야',  address:'서울시 강남구 도곡동 963', lng:37.539648921, lat:127.152615967},
+		                 {id:7, favor:true, gubun:'R', type:'하천',  address:'서울시 강남구 도곡동 963', lng:37.539648921, lat:127.152615967},
+		                 {id:8, favor:true, gubun:'G', type:'건물',  address:'서울시 강남구 도곡동 963', lng:37.539648921, lat:127.152615967},
+		                 {id:9, favor:true, gubun:'G', type:'건물',  address:'서울시 강남구 도곡동 963', lng:37.539648921, lat:127.152615967},
+		                 {id:10, favor:true, gubun:'G', type:'건물',  address:'서울시 강남구 도곡동 963', lng:37.539648921, lat:127.152615967},
+		                 {id:11, favor:true, gubun:'G', type:'건물',  address:'서울시 강남구 도곡동 963', lng:37.539648921, lat:127.152615967},
+		                 {id:12, favor:true, gubun:'G', type:'건물',  address:'서울시 강남구 도곡동 963', lng:37.539648921, lat:127.152615967},
+		                 {id:13, favor:true, gubun:'G', type:'건물',  address:'서울시 강남구 도곡동 963', lng:37.539648921, lat:127.152615967},
+		                 {id:14, favor:true, gubun:'G', type:'건물',  address:'서울시 강남구 도곡동 963', lng:37.539648921, lat:127.152615967}, 
+		             ];*/
+		
+		
+			
+
+	}
+	
 	function _gyeonggongSearchFormLoad() {
 		var root = hotplace.getContextUrl() + 'resources/img/gyeonggong_search';
 		var tForm = hotplace.dom.getTemplate('gyeonggongSearchForm');
@@ -64,6 +177,22 @@
 		$(document).on('click', '#pIlbansahang', _bindGyeonggongSearchFormHandler('tbIlbansahang', 'ilbansahang', root));
 		$(document).on('click', '#pLandUseLimit', _bindGyeonggongSearchFormHandler('tbLandUseLimit', 'landuselimit', root));
 		$(document).on('click', '#pHopefulTooja', _bindGyeonggongSearchFormHandler('tbHopefulTooja', 'hopefultooja', root));
+		$(document).on('click', '.btn-gyeonggong-state', function() {
+			var step = $(this).data('step');
+			if(step == 'search'){
+				_searchGyeonggong(function($btn) {
+					var $btn = $('.btn-gyeonggong-state');
+					$btn.data('step', 'prev');
+				});
+			}
+			else {
+				$('#ulGyeonggongSearchForm').show();
+				$('#dvGyeonggongSearchResult').hide();
+				
+				var $btn = $('.btn-gyeonggong-state');
+				$(this).data('step', 'search');
+			}
+		});
 		
 		_sliderInit('gyeonggong', ['hopefulToojaHpGrade', 'environmentPyeonggaGrade']);
 	}
@@ -234,6 +363,42 @@
 		});
 	}
 	
+	function _moveMulgeon(lat, lng, address) {
+		hotplace.maps.destroyMarkerType(hotplace.maps.MarkerTypes.MULGEON_SEARCH);
+		hotplace.maps.destroyMarkerWindow(hotplace.maps.MarkerTypes.MULGEON_SEARCH);
+		
+		hotplace.maps.panToBounds(lat, lng, function() {
+			hotplace.maps.getMarker(hotplace.maps.MarkerTypes.MULGEON_SEARCH, {location:[lng, lat]}, {
+				'click' : function(map, newMarker, newInfoWindow) {
+					 if(newInfoWindow.getMap()) {
+						 newInfoWindow.close();
+				     }
+					 else {
+						 newInfoWindow.open(map, newMarker);
+				     }
+				}
+			}, {
+				hasInfoWindow: true,
+				infoWinFormName: 'pinpointForm',
+				radius: 0,
+				datas: {
+					params : $.extend({address:address}, {defaultValue:hotplace.calc.profit.defaultValue}, {
+						jimok: '전',
+						valPerPyeung:21000000,
+						area: 132,
+						gongsi: 4040000,
+						limitChange:'Y'
+					})
+				},
+				icon: hotplace.maps.getMarkerIcon(hotplace.maps.MarkerTypes.MULGEON_SEARCH),
+				size: {
+					x: 26,
+					y: 36
+				}
+			});
+		});
+	}
+	
 	function _salesViewFormLoad() {
 		var tForm = hotplace.dom.getTemplate('salesViewForm');
 		$('#menu-mulgeon-list').append(tForm({url: hotplace.getContextUrl()}));
@@ -289,6 +454,32 @@
 			}
 		}
 	}
+	
+	function _getTabulatorColumns() {
+		
+		return [{
+			title:'구분', field:'gubun', width:150, headerFilter:true, editor:_selFilter(['G', 'K', 'R'])},
+			        {title:'물건유형', field:'type', width:150,  headerFilter:true, editor:_selFilter(['대','전','답','임야','하천','도로','건물'])},
+			        {title:'주소', field:'addr', width:200,  headerFilter:'input', headerFilterPlaceholder:'주소검색'},
+			        {title:'감정평가액', field:'gamjeong', formatter:'money', width:100},
+			        {title:'최소입찰가', field:'minBid', formatter:'money', width:100},
+			        {title:'최소입찰가율', field:'minBidRate', width:100},
+			        {title:'종료일', field:'endDate', sorter:'date', width:100},
+			        {title:'등록일', field:'regDate', sorter:'date', width:100},
+			        {title:'RQ지수', field:'jisu', formatter:'star', formatterParams:{stars:10}, width:200, headerFilter:'number', headerFilterPlaceholder:'1 ~ 10'},];
+	}
+	
+	var _tabulatorColumns = {
+		'gyeonggong': [
+		    { title:'구분', field:'gubun', width:150, headerFilter:true, editor:_tabulatorSelectFilter(['G', 'K', 'R']) },
+		    { title:'물건유형', field:'type', width:150,  headerFilter:true, editor:_tabulatorSelectFilter(['대','전','답','임야','하천','도로','건물']) },
+		    { title:'주소', field:'address',   headerFilter:'input', headerFilterPlaceholder:'주소검색' },
+		    { title:'위도', field:'lat', visible: false },
+		    { title:'경도', field:'lng', visible: false }
+		],
+	}
+	
+	
 	
 	search.formInit = function() {
 		_mulgeonFormLoad();

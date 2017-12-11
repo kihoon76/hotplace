@@ -424,11 +424,12 @@ input[readonly] {
 /*
 web-kit scrollbar style hide
 */
+
 ::-webkit-scrollbar {
   width: 0px;
-  /* remove scrollbar space */
   background: transparent;
-  /* optional: just make scrollbar invisible */ }
+  
+}
 
 /*
 모달창에서 ie scrollbar style hide
@@ -637,7 +638,7 @@ input[type=radio]:focus + label::before {
 #dvGyeonggongSearch	ul{width:950px; height:850px; margin-left:70px; overflow:auto; }
 #dvGyeonggongSearch ul li{margin-top:20px;}
 #dvGyeonggongSearch	ul li p{width:162px; height:48px; cursor:pointer;}
-#dvGyeonggongSearch div{text-align:center; position:relative; margin-top:24px;}
+#dvGyeonggongSearch div{/*text-align:center;*/ position:relative; margin-top:24px;}
 #dvGyeonggongSearch	button{position:relative; top:-20px; margin-left:20px; cursor:pointer; background:none; border:none;}
 #dvGyeonggongSearch	table{width:875px; margin:0 auto; font-size:13px; border:1px solid #666; border-collapse:collapse; margin-top:20px;}
 #dvGyeonggongSearch	tr{padding-bottom:30px; }
@@ -681,4 +682,14 @@ input[type=radio]:focus + label::before {
 #dvGyeonggongSearch .ui-rangeSlider-handle.ui-rangeSlider-leftHandle,
 #dvGyeonggongSearch .ui-rangeSlider-handle.ui-rangeSlider-rightHandle { top: -2px !important; }
 
+#dvGyeonggongSearchResult { text-align: left !important; width:90%; left:80px; overflow-x: auto; display:none; }
+#dvGyeonggongSearchResult div { margin:0; }
+#dvGyeonggongSearchResult.tabulator { cursor: default; }
+#dvGyeonggongSearchResult .tabulator-table div { margin:0; }
 
+#dvGyeonggongSearchResult.tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-arrow,
+#dvGyeonggongSearchResult.tabulator .tabulator-col-resize-handle {
+	position: absolute !important;
+}
+
+.div-search { position:relative; top:15px; left:700px; }

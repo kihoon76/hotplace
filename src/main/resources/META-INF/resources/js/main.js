@@ -328,7 +328,7 @@ $(document).ready(function() {
 		});
 	});
 	
-	var _selFilter = function(arr) {
+	/*var _selFilter = function(arr) {
 		return function(cell, onRendered, success, cancel) {
 			var len = arr.length;
 			
@@ -363,10 +363,10 @@ $(document).ready(function() {
 			//return the editor element
 			return editor;
 		}
-	}
+	}*/
 	
 	//매물검색
-	$('#btnSalesSearch').on('click', function() {
+	/*$('#btnSalesSearch').on('click', function() {
 		hotplace.dom.insertFormInmodal('<div id="tbSales"></div>');
 		hotplace.dom.openModal('매물(경매/공매/등록매물) 검색결과', 'fullsize');
 		
@@ -406,7 +406,7 @@ $(document).ready(function() {
 			$("#tbSales").tabulator("setData", tabledata);
 				hotplace.dom.hideMask();
 		}, 1000);
-	});
+	});*/
 	
 	//HP grade 검색폼 돌아가기
 	$('#btnHPgradeBack').on('click', function() {

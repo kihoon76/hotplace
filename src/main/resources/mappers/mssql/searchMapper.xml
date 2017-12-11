@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.mssql.searchMapper">
+
+	<select id="selectGyeongGongList" parameterType="GyeongGongmaeIn" resultType="GyeongGongmaeOut">
+		select PNU, 'G' as gubun, 지목 as type, 소재지 as address, 위도 as lng, 경도 as lat
+		  from [데이터수집].[dbo].[경매_목록]
+		  <if test="jiyeog != null">
+		  where	 
+		  		<foreach collection="jiyeog" item="p" separator="or">
+		  		PNU like #{p} + '%'
+		  		</foreach>
+		  </if> 
+	</select>
+</mapper>

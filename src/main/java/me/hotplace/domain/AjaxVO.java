@@ -17,6 +17,18 @@ public class AjaxVO<T> {
 	public boolean isSuccess() {
 		return success;
 	}
+	public List<T> getDatas() {
+		return datas;
+	}
+
+	public void setDatas(List<T> datas) {
+		this.datas = datas;
+	}
+
+	public String getErrCode() {
+		return errCode;
+	}
+
 	public void setErrCode(String errCode) {
 		this.errCode = errCode;
 	}

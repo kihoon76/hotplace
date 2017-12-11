@@ -9,6 +9,7 @@ public class GyeongGongmaeOut {
 	private String type;
 	private String address;
 	private String pnu;
+	private String unu;
 	private float lat;
 	private float lng;
 	
@@ -47,5 +48,11 @@ public class GyeongGongmaeOut {
 	}
 	public void setPnu(String pnu) {
 		this.pnu = pnu;
+	}
+	public String getUnu() {
+		return unu;
+	}
+	public void setUnu(String unu) {
+		this.unu = unu;
 	}
 }

@@ -141,7 +141,23 @@
 		    	   alert('위경도 정보가 존재하지 않습니다.')
 		    	   return;
 		       }
-		       _moveMulgeon(data.lng, data.lat, data.address);
+		       
+		       var formName, icon = '', callbak = null;
+		       
+		       if(data.gubun == 'G') {
+		    	   formName = 'gyeongmaeForm';
+		    	   icon = hotplace.maps.MarkerTypes.GYEONGMAE;
+		    	   callback = function(map, marker, win) {
+			    	   marker._data = {info:{unu:data.unu}};
+			    	   hotplace.gyeongmae.markerClick(map, marker, win);
+			       }
+		       }
+		       else {
+		    	   formName = 'gongmaeForm';
+		    	   icon = hotplace.maps.MarkerTypes.GONGMAE;
+		       }
+		       
+		       _moveMulgeon(data.lng, data.lat, data.address, formName, callback, icon);
 		    },
 		});
 		
@@ -180,17 +196,18 @@
 		$(document).on('click', '.btn-gyeonggong-state', function() {
 			var step = $(this).data('step');
 			if(step == 'search'){
-				_searchGyeonggong(function($btn) {
+				_searchGyeonggong(function() {
 					var $btn = $('.btn-gyeonggong-state');
 					$btn.data('step', 'prev');
+					$btn.find('img').prop('src', root + '/search_prev.png');
 				});
 			}
 			else {
 				$('#ulGyeonggongSearchForm').show();
 				$('#dvGyeonggongSearchResult').hide();
 				
-				var $btn = $('.btn-gyeonggong-state');
 				$(this).data('step', 'search');
+				$(this).find('img').prop('src', root + '/search.png');
 			}
 		});
 		
@@ -363,23 +380,18 @@
 		});
 	}
 	
-	function _moveMulgeon(lat, lng, address) {
+	function _moveMulgeon(lat, lng, address, formName, clickHandler, icon) {
 		hotplace.maps.destroyMarkerType(hotplace.maps.MarkerTypes.MULGEON_SEARCH);
 		hotplace.maps.destroyMarkerWindow(hotplace.maps.MarkerTypes.MULGEON_SEARCH);
 		
 		hotplace.maps.panToBounds(lat, lng, function() {
 			hotplace.maps.getMarker(hotplace.maps.MarkerTypes.MULGEON_SEARCH, {location:[lng, lat]}, {
 				'click' : function(map, newMarker, newInfoWindow) {
-					 if(newInfoWindow.getMap()) {
-						 newInfoWindow.close();
-				     }
-					 else {
-						 newInfoWindow.open(map, newMarker);
-				     }
+					if(clickHandler) clickHandler(map, newMarker, newInfoWindow);
 				}
 			}, {
 				hasInfoWindow: true,
-				infoWinFormName: 'pinpointForm',
+				infoWinFormName: formName,
 				radius: 0,
 				datas: {
 					params : $.extend({address:address}, {defaultValue:hotplace.calc.profit.defaultValue}, {
@@ -390,11 +402,7 @@
 						limitChange:'Y'
 					})
 				},
-				icon: hotplace.maps.getMarkerIcon(hotplace.maps.MarkerTypes.MULGEON_SEARCH),
-				size: {
-					x: 26,
-					y: 36
-				}
+				icon: hotplace.maps.getMarkerIcon(icon),
 			});
 		});
 	}
@@ -471,11 +479,13 @@
 	
 	var _tabulatorColumns = {
 		'gyeonggong': [
+		    { title:'고유번호', field:'unu', width:150 },
 		    { title:'구분', field:'gubun', width:150, headerFilter:true, editor:_tabulatorSelectFilter(['G', 'K', 'R']) },
 		    { title:'물건유형', field:'type', width:150,  headerFilter:true, editor:_tabulatorSelectFilter(['대','전','답','임야','하천','도로','건물']) },
 		    { title:'주소', field:'address',   headerFilter:'input', headerFilterPlaceholder:'주소검색' },
 		    { title:'위도', field:'lat', visible: false },
-		    { title:'경도', field:'lng', visible: false }
+		    { title:'경도', field:'lng', visible: false },
+		    
 		],
 	}
 	

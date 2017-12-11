@@ -635,7 +635,7 @@ input[type=radio]:focus + label::before {
 /*
 	경,공매 검색
 */
-#dvGyeonggongSearch	ul{width:950px; height:850px; margin-left:70px; overflow:auto; }
+#dvGyeonggongSearch	ul{width:950px; height:850px; margin-left:50px; overflow:auto; }
 #dvGyeonggongSearch ul li{margin-top:20px;}
 #dvGyeonggongSearch	ul li p{width:162px; height:48px; cursor:pointer;}
 #dvGyeonggongSearch div{/*text-align:center;*/ position:relative; margin-top:24px;}
@@ -692,4 +692,4 @@ input[type=radio]:focus + label::before {
 	position: absolute !important;
 }
 
-.div-search { position:relative; top:15px; left:700px; }
+.div-search { position:relative; top:15px; left:840px; }

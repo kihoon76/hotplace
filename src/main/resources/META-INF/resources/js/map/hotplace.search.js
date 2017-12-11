@@ -96,7 +96,10 @@
 	
 	function _getSearchGyeonggongParam() {
 		var param = {
-			'jiyeog' : []
+			'jiyeog': [],
+			'jimok': [],
+			'gamjeongga':[],
+			'minIbchalga': [],
 		}
 		
 		$('#tdJiyeog input[type=checkbox]').each(function(index, value) {
@@ -104,6 +107,54 @@
 			if($(this).is(':checked')) {
 				console.log($(this).val());
 				param.jiyeog.push($(this).val()) 
+			}
+		});
+		
+		$('#tdJimok input[type=checkbox]').each(function(index, value) {
+			
+			if($(this).is(':checked')) {
+				console.log($(this).val());
+				param.jimok.push($(this).val()) 
+			}
+		});
+		
+		$('#tdGamjeongga input[type=checkbox]').each(function(index, value) {
+			var v = null;
+			var sMin, sMax, arr = '';
+			if($(this).is(':checked')) {
+				v = $(this).val();
+				if(v.startsWith('m')) {
+					param.gamjeongga.push({min: parseInt(v.substring(1)), max:-1});
+				}
+				else if(v.startsWith('M')) {
+					param.gamjeongga.push({max: parseInt(v.substring(1)), min:-1});
+				}
+				else if(v.indexOf('|') > 0) {
+					arr = v.split('|');
+					sMin = arr[0];
+					sMax = arr[1];
+					param.gamjeongga.push({min: parseInt(sMin), max: parseInt(sMax)});
+				}
+			}
+		});
+		
+		$('#tdMinIbchalga input[type=checkbox]').each(function(index, value) {
+			var v = null;
+			var sMin, sMax, arr = '';
+			if($(this).is(':checked')) {
+				v = $(this).val();
+				if(v.startsWith('m')) {
+					param.minIbchalga.push({min: parseInt(v.substring(1)), max:-1});
+				}
+				else if(v.startsWith('M')) {
+					param.minIbchalga.push({max: parseInt(v.substring(1)), min:-1});
+				}
+				else if(v.indexOf('|') > 0) {
+					arr = v.split('|');
+					sMin = arr[0];
+					sMax = arr[1];
+					param.minIbchalga.push({min: parseInt(sMin), max: parseInt(sMax)});
+				}
 			}
 		});
 		
@@ -479,9 +530,10 @@
 	
 	var _tabulatorColumns = {
 		'gyeonggong': [
-		    { title:'고유번호', field:'unu', width:150 },
-		    { title:'구분', field:'gubun', width:150, headerFilter:true, editor:_tabulatorSelectFilter(['G', 'K', 'R']) },
+		    { title:'고유번호', field:'unu', width:100 },
+		    { title:'구분', field:'gubun', width:100, headerFilter:true, editor:_tabulatorSelectFilter(['G', 'K', 'R']) },
 		    { title:'물건유형', field:'type', width:150,  headerFilter:true, editor:_tabulatorSelectFilter(['대','전','답','임야','하천','도로','건물']) },
+		    { title:'감정평가액', field:'gamjeongga', width:150, formatter:'money', formatterParams: {thousand: ',', decimal: ''}},
 		    { title:'주소', field:'address',   headerFilter:'input', headerFilterPlaceholder:'주소검색' },
 		    { title:'위도', field:'lat', visible: false },
 		    { title:'경도', field:'lng', visible: false },

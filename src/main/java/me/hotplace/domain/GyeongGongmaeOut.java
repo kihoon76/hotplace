@@ -10,6 +10,7 @@ public class GyeongGongmaeOut {
 	private String address;
 	private String pnu;
 	private String unu;
+	private String gamjeongga;
 	private float lat;
 	private float lng;
 	
@@ -54,5 +55,11 @@ public class GyeongGongmaeOut {
 	}
 	public void setUnu(String unu) {
 		this.unu = unu;
+	}
+	public String getGamjeongga() {
+		return gamjeongga;
+	}
+	public void setGamjeongga(String gamjeongga) {
+		this.gamjeongga = gamjeongga;
 	}
 }

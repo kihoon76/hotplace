@@ -3,13 +3,40 @@
 <mapper namespace="mappers.mssql.searchMapper">
 
 	<select id="selectGyeongGongList" parameterType="GyeongGongmaeIn" resultType="GyeongGongmaeOut">
-		select PNU, 'G' as gubun, 지목 as type, 소재지 as address, 위도 as lng, 경도 as lat, 고유번호 as unu
+		select PNU, 'G' as gubun, 지목 as type, 소재지 as address, 위도 as lng, 경도 as lat, 고유번호 as unu, 감정평가액 as gamjeongga
 		  from [데이터수집].[dbo].[경매_목록]
-		  <if test="jiyeog != null">
-		  where	 
-		  		<foreach collection="jiyeog" item="p" separator="or">
-		  		PNU like #{p} + '%'
-		  		</foreach>
+		  <where>
+		  <if test="jiyeog.length > 0">
+		  (<foreach collection="jiyeog" item="p" separator="or">
+		  	PNU like #{p} + '%'
+		  </foreach>)
 		  </if> 
+		  <if test="jimok.length > 0">
+		  	and 지목 in
+		  	<foreach collection="jimok" item="j" open="(" close=")" separator=",">
+		  	#{j}
+		  	</foreach>
+		  </if>
+		  <if test="gamjeongga.size() > 0">
+		  	and
+		  	(<foreach collection="gamjeongga" item="g"  separator="or">
+		  		<choose>
+		  			<when test="g.min == -1">감정평가액  >= (#{g.max} * 10000)</when>
+		  			<when test="g.max == -1">감정평가액  <![CDATA[<]]> (#{g.min} * 10000)</when>
+		  			<otherwise>(감정평가액  >= (#{g.min} * 10000) and 감정평가액  <![CDATA[<]]> (#{g.max} * 10000)) </otherwise>
+		  		</choose>
+		  	</foreach>)
+		  </if>
+		  <if test="minIbchalga.size() > 0">
+		  	and
+		  	(<foreach collection="minIbchalga" item="m"  separator="or">
+		  		<choose>
+		  			<when test="m.min == -1">최저매각가격  >= (#{m.max} * 10000)</when>
+		  			<when test="m.max == -1">최저매각가격  <![CDATA[<]]> (#{m.min} * 10000)</when>
+		  			<otherwise>(최저매각가격  >= (#{m.min} * 10000) and 최저매각가격  <![CDATA[<]]> (#{m.max} * 10000)) </otherwise>
+		  		</choose>
+		  	</foreach>)
+		  </if>
+		  </where>
 	</select>
 </mapper>

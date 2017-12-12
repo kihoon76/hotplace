@@ -70,10 +70,10 @@
 	<div class="map-buttons" id="mapButtons"></div>
 	<div id="menu"><ul></ul></div>
 	<div id="rightMenu"></div>
-	<div id="dvMulgeon"    class="layer-popup" style="width:600px;"></div>
+	<!-- <div id="dvMulgeon"    class="layer-popup" style="width:600px;"></div>
 	<div id="dvAddrSearch" class="layer-popup" style="width:600px; height:810px"></div>
 	<div id="dvInfo"       class="layer-popup" style="width:600px; height:800px"></div>
-	<div id="dvSalesView"  class="layer-popup" style="width:250px; height:355px"></div>
+	<div id="dvSalesView"  class="layer-popup" style="width:250px; height:355px"></div>-->
 	<div id="dvTimeview">
 		<div id="dvAutoYearRange" class="layer-year-range-auto">
 	        <input type="checkbox" id="btnAutoYear" data-toggle="toggle" data-on="<i class='fa fa-play'></i>" data-off="<i class='fa fa-pause'></i>">

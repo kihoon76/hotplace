@@ -4,6 +4,11 @@
 (function(login, $) {
 	var _btnId = '#btnLogin',
 		_btnLogoutYes = '#btnLogoutYes',
+		_btnJoinPrev = '#dvJoinBtnPrev',
+		_btnJoinNext = '#btnJoinNext',
+		_btnjoinCheck = '#dvJoinBtnCheck',
+		_btnJoinCheckSubmit = '#dvJoinCheckBtnSubmit',
+		_btnJoinCheckCancel = '#dvJoinCheckBtnCancel',
 		_btnLogoutNo = '#btnLogoutNo';
 	
 //	function _changeLoginMenu($btn) {
@@ -71,6 +76,12 @@
 		});
 	});
 	
+	function _joinInit() {
+		$('#dvJoinService').show();
+		$('#dvJoinForm').hide();
+		$('#dvJoinCheck').hide();
+		$('#dvJoinResult').hide();
+	}
 	//로그아웃 YES버튼
 	$(document).on('click', _btnLogoutYes, function() {
 		hotplace.dom.logout(function() {
@@ -92,6 +103,64 @@
 			$(_btnId).trigger('click'); 
 	    }
 	});
+	
+	$(document).on('click', _btnJoinNext, function() {
+		$('#dvJoinService').hide();
+		$('#dvJoinForm').show();
+	});
+	
+	$(document).on('click', _btnJoinPrev, function() {
+		$('#dvJoinService').show();
+		$('#dvJoinForm').hide();
+	});
+	
+	//회원가입
+	$(document).on('click', _btnjoinCheck, function() {
+		$('#dvJoinForm').hide();
+		$('#dvJoinCheck').show();
+	});
+	
+	$(document).on('click', _btnJoinCheckCancel, function() {
+		_joinInit();
+	});
+	
+	$(document).on('click', _btnJoinCheckSubmit, function() {
+		var param = {};
+		
+		param.id = $('#joinUserId').val();
+		param.userName = $('#joinUserName').val();
+		param.password = $('#joinPw').val();
+		param.phone = $('#joinUserPhoneF').val() + '-' + $('#joinUserPhoneM').val() + '-' + $('#joinUserPhoneL').val();
+		param.email = $('#joinUserEmailA').val() + '@' + $('#joinUserEmailV').val();
+		
+		hotplace.ajax({
+			url: 'user/join',
+			data: JSON.stringify(param),
+			contentType: 'application/json; charset=UTF-8',
+			success: function(data, textStatus, jqXHR) {
+				if(data.success) {
+					$('#pJoinResultMsg').text('회원가입이 완료되었습니다.');
+					$('#dvJoinResultBtn').html('<button class="btn-success">로그인 화면으로</button>');
+				}
+				else {
+					$('#pJoinResultMsg').text('오류가 발생했습니다.');
+				}
+				
+				$('#dvJoinCheck').hide();
+				$('#dvJoinResult').show();
+			},
+		})
+	});
+	
+	$(document).on('click', '#dvJoinResultBtn button', function() {
+		if($(this).hasClass('btn-success')) {
+			$('#btnTabLogin').trigger('click');
+			setTimeout(function() {
+				_joinInit();
+			}, 500);
+		}
+	});
+	
 }(
 		hotplace.login = hotplace.login || {},
 		jQuery

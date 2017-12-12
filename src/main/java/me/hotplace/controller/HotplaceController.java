@@ -282,8 +282,6 @@ public class HotplaceController {
 		
 		
 		pdfItext.make(response, jsonObject);
-		
-
 	}
 	
 	@GetMapping("gyeongmae/thumb")

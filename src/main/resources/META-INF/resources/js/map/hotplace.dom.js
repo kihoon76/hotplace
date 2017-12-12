@@ -1016,9 +1016,10 @@
 	
 	dom.showLoginForm = function(gubun, fn) {
 		var tForm = (gubun == 'IN') ? dom.getTemplate('loginForm') : dom.getTemplate('logoutForm');
-		$('#dvCenterModalContent').html(tForm());
 		
-		dom.openCenterModal('', {width: '500px', height:'350px'}, fn);
+		$('#dvCenterModalContent').html(tForm({path: hotplace.getContextUrl()}));
+		
+		dom.openCenterModal('', {width: '700px', height:'650px'}, fn);
 	}
 	
 	dom.toggleOnlyMenuButton = function(btnId) {

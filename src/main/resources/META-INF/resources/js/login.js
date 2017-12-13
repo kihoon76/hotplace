@@ -64,7 +64,7 @@
 						notEmpty: {
 							message: '비밀번호를 확인하세요'
 						},
-						different: {
+						identical: {
 							field: 'joinPw',
 							message: '비밀번호가 일치하지 않습니다.'
 						}

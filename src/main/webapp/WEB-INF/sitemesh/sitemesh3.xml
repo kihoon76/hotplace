@@ -9,4 +9,6 @@
 	<mapping path="/preview/*" decorator="/WEB-INF/views/layout/default.jsp" />
 	<mapping path="/*" decorator="/WEB-INF/views/layout/template.jsp" />
 	
+	<mapping path="/handlebar/*" exclude="true" />
+	
 </sitemesh>

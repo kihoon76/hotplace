@@ -613,7 +613,7 @@ input[type=radio]:focus + label::before {
 /****************************************************
 	로그인, 회원가입 
 ****************************************************/
-#dvLoginJoin.well { padding: 0; height: 530px; background-color: #ffffff; }
+#dvLoginJoin.well { padding: 0; height: 650px; background-color: #ffffff; }
 #dvLoginJoin .card-container.card { max-width: 350px; padding: 40px 40px; }
 #dvLoginJoin .card {
     background-color: #fff;
@@ -668,7 +668,7 @@ input[type=radio]:focus + label::before {
 #dvJoinForm table { width:100%; border:1px solid #aaa; border-collapse:collapse; margin-top:10px; }
 #dvJoinForm table tr { border-bottom:1px solid #aaa; }
 #dvJoinForm table th { width:20%; border-right:1px solid #aaa; font-size:13px; padding:0 12px; text-align:left; background-color:#eee; }
-#dvJoinForm table td { width:80%; padding:10px; }
+#dvJoinForm table td { width:80%; padding:10px 10px 0px 10px; height:60px !important; }
 #dvJoinForm .btn-prev { 
 	background-image:url('../img/login/prev.png'); 
 	background-size:100%;
@@ -690,8 +690,8 @@ input[type=radio]:focus + label::before {
 	width: 70px;
 	height: 40px;
 }
-#dvJoinServiceBtn {	padding-left: 565px; padding-top: 100px; }
-#dvJoinBtns { padding-left: 490px; padding-top: 83px; }
+#dvJoinServiceBtn {	padding-left: 565px; padding-top: 6px; }
+#dvJoinBtns { padding-left: 490px; }
 #joinUserPhoneF { width: 75px; }
 #dvJoinCheck, #dvJoinResult { 
 	display: none;
@@ -725,3 +725,5 @@ input[type=radio]:focus + label::before {
 	background-color:#0E328A;  color:#fff;
 	font-size:16px; font-weight:700;
 }
+
+.dv-join-content { height: 550px; overflow: auto; }

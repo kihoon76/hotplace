@@ -32,6 +32,60 @@
 //		$btn.tooltipster('content', title);
 //	}
 	
+	login.init = function() {
+		_validateJoin();
+		console.log($('#fmJoin')[0]);
+	}
+	
+	function _validateJoin() {
+		$('#fmJoin').bootstrapValidator({
+			submitButtons: 'button[type="submit"]',
+			live: 'enabled',
+			trigger: null,
+			message: 'ㅎㅎ',
+			fields: {
+				joinUserId: {
+					message: '유효하지 않은 아이디 값입니다.',
+					validators: {
+						notEmpty: {
+							message: '아이디값을 입력하세요'
+						}
+					}
+				},
+				joinPw: {
+					validators: {
+						notEmpty: {
+							message: '비밀번호를 입력하세요'
+						}
+					}
+				},
+				joinPwConfirm: {
+					validators: {
+						notEmpty: {
+							message: '비밀번호를 확인하세요'
+						},
+						different: {
+							field: 'joinPw',
+							message: '비밀번호가 일치하지 않습니다.'
+						}
+					}
+				},
+				joinUserName: {
+					validators: {
+						notEmpty: {
+							message: '이름을 입력하세요'
+						}
+					}
+				}
+			}
+		})
+		.on('success.form.bv', function(e) {
+            // Prevent submit form
+            e.preventDefault();
+            console.log(e.target)
+        });
+	}
+	
 	function _changeLoginMenu($menu) {
 		
 		var sw = $menu.data('gubun');
@@ -47,6 +101,28 @@
 		}
 		
 		$menu.data('gubun', gubun);
+	}
+	
+	function _initJoin() {
+		$('#dvJoinService').show();
+		$('#dvJoinForm').hide();
+		$('#dvJoinCheck').hide();
+		$('#dvJoinResult').hide();
+	}
+	
+	function _checkYaggwanAgree(fn) {
+		var v = true;
+		
+		$('#dvLoginJoin .tos input[type=checkbox]').each(function() {
+			if(!$(this).is(':checked')) {
+				v = false;
+				return false;
+			}
+		})
+		.promise()
+		.done(function() {
+			if(fn) fn(v);
+		});;
 	}
 	
 	$(document).on('click', _btnId, function() {
@@ -76,12 +152,7 @@
 		});
 	});
 	
-	function _joinInit() {
-		$('#dvJoinService').show();
-		$('#dvJoinForm').hide();
-		$('#dvJoinCheck').hide();
-		$('#dvJoinResult').hide();
-	}
+
 	//로그아웃 YES버튼
 	$(document).on('click', _btnLogoutYes, function() {
 		hotplace.dom.logout(function() {
@@ -105,9 +176,28 @@
 	});
 	
 	$(document).on('click', _btnJoinNext, function() {
-		$('#dvJoinService').hide();
-		$('#dvJoinForm').show();
+		_checkYaggwanAgree(function(v) {
+			if(v) {
+				$('#dvJoinService').hide();
+				$('#dvJoinForm').show();
+			}
+		});
 	});
+	
+	$(document).on('click', '#dvLoginJoin .tos', function(e) {
+		if(e.target.nodeName == 'INPUT') {
+			_checkYaggwanAgree(function(v) {
+				if(v) {
+					$(_btnJoinNext).prop('disabled', false);
+				}
+				else {
+					$(_btnJoinNext).prop('disabled', true);
+				}
+			});
+		}
+	});
+	
+	
 	
 	$(document).on('click', _btnJoinPrev, function() {
 		$('#dvJoinService').show();
@@ -115,14 +205,23 @@
 	});
 	
 	//회원가입
-	$(document).on('click', _btnjoinCheck, function() {
+	/*$(document).on('click', _btnjoinCheck, function() {
+		alert('oo');
 		$('#dvJoinForm').hide();
 		$('#dvJoinCheck').show();
-	});
+	});*/
+	
+
+	
 	
 	$(document).on('click', _btnJoinCheckCancel, function() {
-		_joinInit();
+		_initJoin();
 	});
+	
+	login.test = function() {
+		return
+	}
+	
 	
 	$(document).on('click', _btnJoinCheckSubmit, function() {
 		var param = {};
@@ -156,7 +255,7 @@
 		if($(this).hasClass('btn-success')) {
 			$('#btnTabLogin').trigger('click');
 			setTimeout(function() {
-				_joinInit();
+				_initJoin();
 			}, 500);
 		}
 	});

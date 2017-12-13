@@ -15,6 +15,10 @@
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/resources/bootstrap/3.3.7-1/css/bootstrap.min.css" />
     
+    <!-- Bootstrap Validator -->
+    <!-- http://bootstrapvalidator.votintsev.ru/getting-started/ -->
+    <link rel="stylesheet" href="/resources/vendors/bootstrapvalidator-0.5.2/css/bootstrapValidator.min.css" />
+    
     <!-- slider -->
     <!-- http://ghusse.github.io/jQRangeSlider/documentation.html -->
     <link rel="stylesheet" href="/resources/vendors/jQRangeSlider-5.7.2/css/classic.css" />
@@ -120,6 +124,7 @@
 <script type="text/javascript" src="/resources/handlebars/4.0.5/handlebars.min.js"></script>
 <script type="text/javascript" src="/resources/jquery/1.11.1/jquery.min.js"></script>
 <script type="text/javascript" src="/resources/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/resources/vendors/bootstrapvalidator-0.5.2/js/bootstrapValidator.min.js"></script>
 
 <script type="text/javascript" src="/resources/jquery-ui/1.10.3/ui/minified/jquery-ui.min.js"></script>
 <script type="text/javascript" src="/resources/vendors/jQRangeSlider-5.7.2/jQAllRangeSliders-min.js"></script>

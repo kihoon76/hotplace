@@ -444,7 +444,6 @@
 	 * @function getTemplate
 	 * @param {string} name 저장할 template의 키값
 	 * @returns {object} - Handlebars.compile() 결과값
-	 * @desc waitMe mask hide
 	 */
 	dom.getTemplate = function(name) {
 		if(_templates[name] === undefined) {
@@ -644,7 +643,8 @@
 		hotplace.ajax({
 			url: 'checkSession',
 			method: 'GET',
-			dataType: 'text', 
+			dataType: 'text',
+			activeMask: false,
 			success: function(data, textStatus, jqXHR) {
 				var jo = $.parseJSON(data);
 				cb(jo.success);
@@ -1015,11 +1015,35 @@
 	}
 	
 	dom.showLoginForm = function(gubun, fn) {
-		var tForm = (gubun == 'IN') ? dom.getTemplate('loginForm') : dom.getTemplate('logoutForm');
+		var tForm = ''; //(gubun == 'IN') ? dom.getTemplate('loginForm') : dom.getTemplate('logoutForm');
+		
+		if(gubun == 'IN') {
+			if(_templates['loginForm'] == undefined) {
+				hotplace.ajax({
+					async: false,
+					url: 'handlebar/login',
+					dataType : 'html',
+					method : 'GET',
+					activeMask : false,
+					success : function(data, textStatus, jqXHR) {
+						_templates['loginForm'] = Handlebars.compile(data);
+					},
+					error: function() {
+						throw new Error('html template error')
+					}
+				});
+			}
+			
+			tForm = _templates['loginForm'];
+		}
+		else {
+			tForm = dom.getTemplate('logoutForm');
+		}
 		
 		$('#dvCenterModalContent').html(tForm({path: hotplace.getContextUrl()}));
+		hotplace.login.init();
 		
-		dom.openCenterModal('', {width: '700px', height:'650px'}, fn);
+		dom.openCenterModal('', {width: '700px', height:'800px'}, fn);
 	}
 	
 	dom.toggleOnlyMenuButton = function(btnId) {

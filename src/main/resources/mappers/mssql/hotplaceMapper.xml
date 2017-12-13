@@ -447,6 +447,12 @@
 		 where 고유번호 = #{unu}
 	</select>
 	
+	<!-- 약관 -->
+	<select id="selectYaggwanList" resultType="Yaggwan">
+		select 카테고리명 as categoryName, 내용 as content
+		  from [웹].[dbo].[약관]
+		 order by 순서 asc
+	</select>
 </mapper>
 <!-- 
 		select 

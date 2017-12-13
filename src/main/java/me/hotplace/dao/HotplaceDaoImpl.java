@@ -16,6 +16,7 @@ import me.hotplace.domain.Gongmae;
 import me.hotplace.domain.Gyeongmae;
 import me.hotplace.domain.Notice;
 import me.hotplace.domain.Silgeolae;
+import me.hotplace.domain.Yaggwan;
 
 @Repository("hotplaceDao")
 public class HotplaceDaoImpl implements HotplaceDao {
@@ -117,5 +118,10 @@ public class HotplaceDaoImpl implements HotplaceDao {
 	public List<String> selectBosangPyeonibGroupList(HashMap gunus) {
 		
 		return msSqlSession.selectList(namespace + ".selectBosangPyeonibGroupList", gunus);
+	}
+
+	@Override
+	public List<Yaggwan> selectYaggwanList() {
+		return msSqlSession.selectList(namespace + ".selectYaggwanList");
 	}
 }

@@ -409,16 +409,16 @@ $(document).ready(function() {
 	});*/
 	
 	//HP grade 검색폼 돌아가기
-	$('#btnHPgradeBack').on('click', function() {
+	/*$('#btnHPgradeBack').on('click', function() {
 		$('#fmPin').show();
 		$('#btnHPgradeSearch').show();
 		
 		$('#fmPinResult').hide();
 		$('#btnHPgradeBack').hide();
-	});
+	});*/
 
 	//HP grade 검색
-	$('#btnHPgradeSearch').on('click', function() {
+	/*$('#btnHPgradeSearch').on('click', function() {
 		hotplace.ajax({
 			url: 'hpgrade/search',
 			contentType: 'application/json',
@@ -482,7 +482,7 @@ $(document).ready(function() {
 				//console.log('ii')
 			}
 		});
-	});
+	});*/
 	
 	//지적도 버튼
 	$('#btnJijeok').on('click', function() {
@@ -518,7 +518,6 @@ $(document).ready(function() {
 				hotplace.maps.showMarkers();
 				hotplace.maps.showCellLayer();
 				hotplace.dom.removeBodyAllMask();
-				//_enableMapButton(level, 'btnSalesView');
 				_enableMenu(level, 'li_menu_mulgeon');
 			},500);
 			

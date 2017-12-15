@@ -43,7 +43,7 @@
 		}
 	}
 	
-	function _sliderInit(gName, targetIds) {
+	function _sliderInit(gName, targetIds, bounds, defaultValues) {
 		if(_sliderGrp[gName]) return;
 		
 		_sliderGrp[gName] = [];
@@ -55,9 +55,9 @@
 			var t = $('#' + targetIds[i]);
 			
 			_sliderGrp[gName][_sliderGrp[gName].length - 1].rangeSlider({
-				  bounds: {min: -10, max: -1},
+				  bounds: bounds || {min: -10, max: -1},
 				  step: 1,
-				  defaultValues: {min:-4, max:-1},
+				  defaultValues: defaultValues || {min:-4, max:-1},
 				  formatter: function(val) {
 					  //console.log(val)
 					  return Math.abs(val) + '등급';
@@ -239,11 +239,13 @@
 	function _gyeonggongSearchFormLoad() {
 		var root = hotplace.getContextUrl() + 'resources/img/gyeonggong_search';
 		var tForm = hotplace.dom.getTemplate('gyeonggongSearchForm');
-		$('#menu-search-gyeonggong-list').append(tForm({path: root}));
+		$('#menu-search-gyeonggong-list').append(tForm({path: root})); 
 		
-		$(document).on('click', '#pIlbansahang', _bindGyeonggongSearchFormHandler('tbIlbansahang', 'ilbansahang', root));
-		$(document).on('click', '#pLandUseLimit', _bindGyeonggongSearchFormHandler('tbLandUseLimit', 'landuselimit', root));
-		$(document).on('click', '#pHopefulTooja', _bindGyeonggongSearchFormHandler('tbHopefulTooja', 'hopefultooja', root));
+		$(document).on('click', '#pIlbansahang', _bindFormHandler('tbIlbansahang', 'ilbansahang', root, 'gyeonggong'));
+		$(document).on('click', '#pLandUseLimit',_bindFormHandler('tbLandUseLimit', 'landuselimit', root, 'gyeonggong'));
+		$(document).on('click', '#pHopefulTooja', _bindFormHandler('tbHopefulTooja', 'hopefultooja', root, 'gyeonggong'));
+		
+		
 		$(document).on('click', '.btn-gyeonggong-state', function() {
 			var step = $(this).data('step');
 			if(step == 'search'){
@@ -431,6 +433,26 @@
 		});
 	}
 	
+	
+	function _toojaFormLoad() {
+		var root = hotplace.getContextUrl() + 'resources/img/tooja_search';
+		var tForm = hotplace.dom.getTemplate('toojaForm');
+		$('#menu-search-tooja-list').append(tForm({path: root}));
+		
+		$(document).on('click', '#pJangMi', _bindFormHandler('tbJangMi', 'jangmi', root));
+		$(document).on('click', '#pJangMiIlbanjogeon', _bindFormHandler('tbJangMiIlbanjogeon', 'ilbanjogeon', root));
+		$(document).on('click', '#pJangMiLimitLandUse', _bindFormHandler('tbJangMiLimitLandUse', 'limitlanduse', root));
+		$(document).on('click', '#pJangMiDevPilji', _bindFormHandler('tbJangMiDevPilji', 'devpilji', root, 'tooja'));
+		
+		$(document).on('click', '#pLimitLandUse', _bindFormHandler('tbLimitLandUse', 'limitlanduse', root));
+		$(document).on('click', '#pLimitLandUseIlban', _bindFormHandler('tbLimitLandUseIlban', 'ilbanjogeon', root));
+		$(document).on('click', '#pLimitLandUsePilji', _bindFormHandler('tbLimitLandUsePilji', 'devpilji', root, 'tooja'));
+		
+		$(document).on('click', '#pDevPilji', _bindFormHandler('tbDevPilji', 'devpilji', root, 'tooja'));
+		
+		_sliderInit('tooja', ['jangmiToojaHpGrade', 'limitLandUseToojaHpGrade', 'devPiljiToojaHpGrade']);
+	}
+	
 	function _moveMulgeon(lat, lng, address, formName, clickHandler, icon) {
 		hotplace.maps.destroyMarkerType(hotplace.maps.MarkerTypes.MULGEON_SEARCH);
 		hotplace.maps.destroyMarkerWindow(hotplace.maps.MarkerTypes.MULGEON_SEARCH);
@@ -505,6 +527,24 @@
 		}
 	}
 	
+	function _bindFormHandler(targetId, imgName, imgRoot, sliderKey) {
+		return function() {
+			var sw = $(this).data('switch');
+			if(sw == 'off') {
+				$('#' + targetId).show();
+				$(this).children('img').prop('src', imgRoot + '/' + imgName + '_over.png');
+				$(this).data('switch', 'on');
+				
+				if(sliderKey) _rangeResize(sliderKey);
+			}
+			else {
+				$('#' + targetId).hide();
+				$(this).children('img').prop('src', imgRoot + '/' + imgName + '.png');
+				$(this).data('switch', 'off');
+			}
+		}
+	}
+	
 	function _rangeResize(gName) {
 		if(_sliderGrp[gName]) {
 			var len = _sliderGrp[gName].length;
@@ -548,6 +588,7 @@
 		_gyeonggongSearchFormLoad();
 		_heatmapFormLoad();
 		_salesViewFormLoad();
+		_toojaFormLoad();
 	}
 }(
 	hotplace.search = hotplace.search || {},

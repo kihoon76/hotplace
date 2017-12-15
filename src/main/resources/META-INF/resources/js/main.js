@@ -594,7 +594,8 @@ $(document).ready(function() {
 			
 		}
 	}, {
-		menu: 'menu_search_bosang',
+		menu: 'menu_search_tooja',
+		listDv: 'menu-search-tooja-list',
 		callbackAll: function() {
 			
 		}

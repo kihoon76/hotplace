@@ -11,44 +11,59 @@
 		_btnJoinCheckCancel = '#dvJoinCheckBtnCancel',
 		_btnLogoutNo = '#btnLogoutNo';
 	
-//	function _changeLoginMenu($btn) {
-//		var rmClass = $btn.hasClass('glyphicon-log-in') ? 'glyphicon-log-in' : 'glyphicon-log-out';
-//		var addClass = '',	title = '', gubun = '';
-//		
-//		if(rmClass == 'glyphicon-log-in') {
-//			gubun = 'OUT'
-//			addClass = 'glyphicon-log-out';
-//			title = '로그아웃';
-//		}
-//		else {
-//			gubun = 'IN';
-//			addClass = 'glyphicon-log-in';
-//			title = '로그인';
-//		}
-//		
-//		$btn.data('gubun', gubun);
-//		$btn.removeClass(rmClass);
-//		$btn.addClass(addClass);
-//		$btn.tooltipster('content', title);
-//	}
+	var _doJoinIdDuplicate = false;
 	
 	login.init = function() {
 		_validateJoin();
-		console.log($('#fmJoin')[0]);
 	}
 	
 	function _validateJoin() {
-		$('#fmJoin').bootstrapValidator({
+		$('#joinUserEmailV').on('change', function() {
+			$('#fmJoin').bootstrapValidator('revalidateField', 'joinUserEmailA');
+			var v = $(this).val();
+			
+			if(v) {
+				
+			}
+		});
+		
+		$('#joinUserPhoneL').on('keyup', function() {
+			$('#fmJoin').bootstrapValidator('revalidateField', 'joinUserPhoneM');
+		});
+		
+		
+		$('#fmJoin')
+		/*.find('[name="joinUserPhoneF"]')	
+		.selectpicker()
+			.change(function(e) {
+				$('#fmJoin').bootstrapValidator('revalidateField', 'joinUserPhoneF');
+			})
+			.end()*/
+		.bootstrapValidator({
 			submitButtons: 'button[type="submit"]',
 			live: 'enabled',
 			trigger: null,
-			message: 'ㅎㅎ',
+			message: '유효하지 않은 값입니다.',
+			excluded: ':disabled',
+			/*feedbackIcons: {
+	            valid: 'glyphicon glyphicon-ok',
+	            invalid: 'glyphicon glyphicon-remove',
+	            validating: 'glyphicon glyphicon-refresh'
+	        },*/
 			fields: {
 				joinUserId: {
 					message: '유효하지 않은 아이디 값입니다.',
 					validators: {
 						notEmpty: {
 							message: '아이디값을 입력하세요'
+						},
+						callback: {
+							message:'아이디 중복체크를 하세요',
+							callback: function(value, validator) {
+								if(_doJoinIdDuplicate) return true;
+								
+								return false;
+							}
 						}
 					}
 				},
@@ -62,7 +77,7 @@
 				joinPwConfirm: {
 					validators: {
 						notEmpty: {
-							message: '비밀번호를 확인하세요'
+							message: '비밀번호를 입력하세요'
 						},
 						identical: {
 							field: 'joinPw',
@@ -76,13 +91,60 @@
 							message: '이름을 입력하세요'
 						}
 					}
+				},
+				joinUserEmailA: {
+					validators: {
+						notEmpty: {
+							message: 'email을 입력하세요'
+						},
+						regexp: {
+	                        regexp: /[^@]*/g,
+	                        message: '@문자는 입력하실 수 없습니다.'
+	                    },
+						callback: {
+							message: 'email을 선택하세요',
+							callback: function(value, validator) {
+								if($('#joinUserEmailV').val()) return true;
+								
+								return false;
+							}
+						}
+					}
+				},
+				joinUserPhoneM: {
+					message: '숫자를 입력해 주세요',
+					validators: {
+						notEmpty: {
+							message: '숫자를 입력해 주세요'
+						},
+						digits: {
+							message: '숫자만 입력해 주세요'
+						},
+						stringLength: {
+	                        min: 3,
+	                        max: 4,
+	                        message: '3~4자리 숫자를 입력하세요'
+	                    },
+						callback: {
+							message: '4자리 숫자를 입력해 주세요',
+							callback: function(value, validator) {
+								var last = $.trim($('#joinUserPhoneL').val());
+								var pattern = /[0-9]/g;
+								
+								if(last && pattern.test(last) && last.length == 4) return true;
+								return false;
+							}
+						}
+						
+					}
 				}
 			}
 		})
 		.on('success.form.bv', function(e) {
             // Prevent submit form
             e.preventDefault();
-            console.log(e.target)
+            $('#dvJoinForm').hide();
+    		$('#dvJoinCheck').show();
         });
 	}
 	
@@ -175,6 +237,29 @@
 	    }
 	});
 	
+	
+	
+	$(document).on('click', '#btnJoinIdCheck', function() {
+		hotplace.ajax({
+			url: 'user/checkId?id=' + $('#joinUserId').val(),
+			method: 'GET',
+			loadEl: '#dvLoginJoin',
+			success: function(data) {
+				if(data.success) {
+					if(data.errCode == '300') {
+						alert('중복된 아이디입니다.');
+					}
+					else {
+						_doJoinIdDuplicate = true;
+						$('#fmJoin').bootstrapValidator('revalidateField', 'joinUserId');
+					}
+				}
+				console.log(data);
+			}
+			
+		});
+	});
+	
 	$(document).on('click', _btnJoinNext, function() {
 		_checkYaggwanAgree(function(v) {
 			if(v) {
@@ -240,6 +325,7 @@
 				if(data.success) {
 					$('#pJoinResultMsg').text('회원가입이 완료되었습니다.');
 					$('#dvJoinResultBtn').html('<button class="btn-success">로그인 화면으로</button>');
+					$('#fmJoin')[0].reset();
 				}
 				else {
 					$('#pJoinResultMsg').text('오류가 발생했습니다.');

@@ -518,7 +518,7 @@
 	 * @param {function} params.callback 버튼 클릭이벤트 리스너
 	 * @desc 지도에 메뉴 버튼을 생성함
 	 */
-	dom.addButtonInMap = function(params) {
+	/*dom.addButtonInMap = function(params) {
 		
 		var template = function(disabled){
 			
@@ -548,9 +548,9 @@
 				}
 			}
 		}
-	}
+	}*/
 	
-	var _exceptPreventBubblingDivs = ['dvGyeonggongSearch', 'dvAddressSearch', 'dvSalesView', 'dvHeatmap'];
+	var _exceptPreventBubblingDivs = ['dvGyeonggongSearch', 'dvAddressSearch', 'dvSalesView', 'dvHeatmap', 'dvTooja'];
 	
 	function _isExceptPreventBubbingDiv(id) {
 		var len = _exceptPreventBubblingDivs.length;

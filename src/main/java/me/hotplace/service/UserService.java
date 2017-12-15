@@ -16,5 +16,14 @@ public class UserService {
 	public Account getUserInfo(String username) {
 		return userDao.getAccount(username);
 	}
+
+	public boolean checkDuplicateId(String id) {
+		int cnt = userDao.selectIdCount(id);
+		return cnt > 0;
+	}
+
+	public void join(Account account) {
+		userDao.insertJoin(account);
+	}
 	
 }

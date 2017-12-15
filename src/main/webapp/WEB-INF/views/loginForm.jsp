@@ -66,7 +66,7 @@
 				        					<div class="input-group" id="dvJoinId">
 				    							<input type="text" class="form-control" id="joinUserId" name="joinUserId"/>
 				    							<span class="input-group-btn">
-													<button class="btn btn-default">중복확인</button>
+													<button type="button" id="btnJoinIdCheck" class="btn btn-default" title="uu"><span>중복확인</span></button>
 												</span>
 											</div>
 										</div>
@@ -101,10 +101,10 @@
 			        				<td>
 			        					<div class="form-group">
 				        					<div class="input-group">
-												<input type="text" id="joinUserEmailA" class="form-control">
+												<input type="text" id="joinUserEmailA" class="form-control" name="joinUserEmailA">
 												<span class="input-group-addon">@</span>
 												<select id="joinUserEmailV" name="joinUserEmailV" class="form-control">
-				                					<option value="선택">---선택하세요---</option>
+				                					<option value="">---선택하세요---</option>
 				                					<option value="naver.com">naver.com</option>
 				                					<option value="daum.net">daum.net</option>
 				                					<option value="nate.com">nate.com</option>
@@ -120,7 +120,7 @@
 			        				<td>
 			        					<div class="form-group">
 			        						<div class="input-group">
-												<select id="joinUserPhoneF" class="form-control">
+												<select id="joinUserPhoneF" class="form-control" name="joinUserPhoneF">
 				                					<option value="010">010</option>
 				                					<option value="011">011</option>
 				                					<option value="016">016</option>
@@ -129,7 +129,7 @@
 				                					<option value="070">070</option>
 				            					</select>
 												<span class="input-group-addon">-</span>
-												<input type="text" id="joinUserPhoneM" class="form-control">
+												<input type="text" id="joinUserPhoneM" name="joinUserPhoneM" class="form-control">
 												<span class="input-group-addon">-</span>
 												<input type="text"  id="joinUserPhoneL" class="form-control">
 			            					</div>

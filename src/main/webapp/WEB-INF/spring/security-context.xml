@@ -16,6 +16,7 @@
 		<sec:intercept-url pattern="/logout" access="permitAll"/>
 		<sec:intercept-url pattern="/preview/**" access="permitAll"/>
 		<sec:intercept-url pattern="/user/join" access="permitAll"/>
+		<sec:intercept-url pattern="/user/checkId" access="permitAll"/>
 		<sec:intercept-url pattern="/handlebar/**" access="permitAll"/>
 		<sec:intercept-url pattern="/**" access="hasRole('ROLE_JOINED')"/>
 		<sec:form-login login-page="/signin/100"

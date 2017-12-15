@@ -26,4 +26,11 @@
 		 where a.[계정_아이디] = #{id}  
 	</select>
 	
+	<select id="selectIdCount" parameterType="string" resultType="int">
+		select count(*) from [웹].[dbo].[계정] where 아이디 = #{id}
+	</select> 
+	
+	<insert id="insertJoin" parameterType="Account">
+		insert into [웹].[dbo].[계정](아이디, 이름, 비번, 연락처, 이메일) values (#{id}, #{userName}, #{password}, #{phone}, #{email})
+	</insert>
 </mapper>

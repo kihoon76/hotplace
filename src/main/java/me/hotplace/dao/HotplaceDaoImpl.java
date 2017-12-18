@@ -55,17 +55,17 @@ public class HotplaceDaoImpl implements HotplaceDao {
 	
 	@Override
 	public List<String> selectGyeongmaeMarker(Map<String, String> param) {
-		return msSqlSession.selectList(namespace + ".selectGyeongmaeMarker", param);
+		return msSqlSessionAgent2.selectList(namespace + ".selectGyeongmaeMarker", param);
 	}
 
 	@Override
 	public Gyeongmae selectGyeongmaeThumb(String unu) {
-		return msSqlSession.selectOne(namespace + ".selectGyeongmaeThumb", unu);
+		return msSqlSessionAgent2.selectOne(namespace + ".selectGyeongmaeThumb", unu);
 	}
 
 	@Override
 	public Gyeongmae selectGyeongmaeDetail(Map<String, String> param) {
-		return msSqlSession.selectOne(namespace + ".selectGyeongmaeDetail", param);
+		return msSqlSessionAgent2.selectOne(namespace + ".selectGyeongmaeDetail", param);
 	}
 
 	@Override

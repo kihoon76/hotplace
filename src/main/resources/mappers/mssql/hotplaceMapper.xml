@@ -145,7 +145,7 @@
            and a.경도 between convert(float, #{swx}) and convert(float, #{nex})
            and a.용도 != '자동차'
          order by a.경도 asc -->
-         { call [데이터수집].[dbo].[SEL_경매_목록] (
+         { call [경매].[dbo].[SEL_경매_목록] (
    		 	#{swy, mode=IN, jdbcType=FLOAT, javaType=string},
 			#{ney, mode=IN, jdbcType=FLOAT, javaType=string},
 			#{swx, mode=IN, jdbcType=FLOAT, javaType=string},
@@ -222,10 +222,10 @@
 	
 	<select id="selectGyeongmaeThumb" parameterType="string" resultMap="RM_selectGyeongmaeThumb">
 		select  top 1 a.고유번호, a.등록번호, a.PNU, a.소재지, a.용도, a.감정평가액, a.유찰회수, CONVERT(char(19), a.매각기일, 120) as 매각기일, CONVERT(varchar(max), c.이미지 ,2) as imgThumb, c.확장자 as imgThumbExt
-  		  from [데이터수집].[dbo].[경매_목록] a
-  		  left outer join [데이터수집].[dbo].[경매_이미지_목록] b
+  		  from [경매].[dbo].[경매_목록] a
+  		  left outer join [경매].[dbo].[경매_이미지_목록] b
   		    on a.고유번호 = b.경매_목록_고유번호
-  		 left outer join [데이터수집].[dbo].[경매_이미지_Bin] c
+  		 left outer join [경매].[dbo].[경매_이미지_별도수집] c
   		 	on b.이미지명 = c.이미지명 and b.확장자 = c.확장자 
  		 where a.고유번호 = #{unu}
 	</select>
@@ -234,15 +234,15 @@
 		select a.고유번호, a.등록번호, a.PNU, a.사건번호, concat(a.법원명, ' | ', a.담당계) as 담당, a.소재지, a.용도, a.감정평가액, a.유찰회수,
 			   CONVERT(char(19), a.매각기일, 120) as 매각기일, CONVERT(char(10), a.사건접수일, 23) as 사건접수일, CONVERT(char(10), a.배당요구종기일, 23) as 배당요구종기일,
 			   a.입찰방법, a.최저매각가격, a.청구금액, a.비고
-  		  from [데이터수집].[dbo].[경매_목록] a
+  		  from [경매].[dbo].[경매_목록] a
  		 where a.고유번호 = #{goyubeonho}
 	</select>
 	
 	<!-- 경매이미지 -->
 	<select id="selectGyeongmaeImages" resultType="GyeongmaeImage">
 		select a.이미지구분 as gubun, a.이미지명 as name, a.확장자 as ext, CONVERT(varchar(max), b.이미지 ,2) as image
-  		  from [데이터수집].[dbo].[경매_이미지_목록] a
-  		 inner join [데이터수집].[dbo].[경매_이미지_Bin] b
+  		  from [경매].[dbo].[경매_이미지_목록] a
+  		 inner join [경매].[dbo].[경매_이미지_별도수집] b
   		 	on a.이미지명 = b.이미지명 and a.확장자 = b.확장자
   		 where a.경매_목록_고유번호 = #{goyubeonho}
 	</select>
@@ -250,14 +250,14 @@
 	<!-- 경매기일내역 -->
 	<select id="selectGyeongmaeGiilHistory" resultType="GyongmaeGiilHistory">
 		select CONVERT(char(19), 기일, 120) as giil, 기일종류 as giiljonglyu, 기일장소 as giiljangso, 최저매각가격 as minmaegaggagyeog, 기일결과 as giilresult
-		  from [데이터수집].[dbo].[경매_기일내역]
+		  from [경매].[dbo].[경매_기일내역]
 		 where 경매_목록_고유번호 = #{goyubeonho}
 	</select>
 	
 	<!-- 경매목록내역 -->
 	<select id="selectGyeongmaeListHistory" resultType="GyeongmaeListHistory">
 		select 목록번호 as listnum, 목록구분 as listgubun, 상세내역 as detailhistory
-		  from [데이터수집].[dbo].[경매_목록내역]
+		  from [경매].[dbo].[경매_목록내역]
 		 where 경매_목록_고유번호 = #{goyubeonho}
 	</select>
 	
@@ -268,7 +268,7 @@
 		       LTRIM(STR(Round(평균매각가, 0), 25, 0)) as avgmaegagga,
 		       Round(매각가율, 1) as maegaggaratio,
 		       Round(평균유찰회수,1) as avgyuchal
-		  from [데이터수집].[dbo].[경매_인근매각통계]
+		  from [경매].[dbo].[경매_인근매각통계]
 		 where 경매_목록_고유번호 = #{goyubeonho}
 		 order by 평균감정가 asc
 	</select>
@@ -277,7 +277,7 @@
 	<select id="selectGyeongmaeMaegagmulgeon" resultType="GyeongmaeMaegagmulgeon">
 		select 사건번호 as sageonbeonho, 용도 as yongdo, 소재지 as sojaeji, 
 			      감정평가액 as gamjeongpyeongga, 매각월 as maegagmonth, 매각대금 as maegagdaegeum
-		  from [데이터수집].[dbo].[경매_인근매각물건] 
+		  from [경매].[dbo].[경매_인근매각물건] 
 		 where 경매_목록_고유번호 = #{goyubeonho}
 	</select>
 	
@@ -286,7 +286,7 @@
 		select 사건번호 as sageonbeonho, 물건번호용도 as numyongdo, 소재지및내역 as sojaejinaeyeog,
 			      비고 as bigo, 감정평가액 as gamjeongpyeongga, 최저매각가격 as minmaegaggagyeog,
 			     담당계매각기일 as damdangmaegaggiil, 진행상태 as status
-		  from [데이터수집].[dbo].[경매_인근진행물건]
+		  from [경매].[dbo].[경매_인근진행물건]
 		 where 경매_목록_고유번호 = #{goyubeonho}
 	</select>
 	

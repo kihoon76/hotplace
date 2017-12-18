@@ -690,7 +690,84 @@
 				}]
 			});
 		} 
-	};        
+	};   
+	
+	function  _makePie(containerId, datas, options, dataStyle, placeHolderStyle) {
+		if($('#' + containerId).length) {
+			if(dataStyle == undefined) {
+				dataStyle = {
+					normal: {
+						label: {
+							show: false
+						},
+						labelLine: {
+							show: false
+						}
+					}
+				};
+			} 
+			
+			if(placeHolderStyle == undefined) {
+				placeHolderStyle = {
+					normal: {
+						color: 'rgba(0,0,0,0)',
+						label: {
+							show: false
+						},
+						labelLine: {
+							show: false
+						}
+					},
+					emphasis: {
+						color: 'rgba(0,0,0,0)'
+					}	
+				};
+			}
+			
+			var _pie = echarts.init($('#' + containerId)[0]);
+			_pie.setOption(options || {
+			    tooltip : {
+			        trigger: 'item',
+			        formatter: "{b}"
+			    },
+			    series : [
+			        {
+			            name: '카테고리',
+			            type: 'pie',
+			            radius: ['50%', '80%'],
+			            avoidLabelOverlap: false,
+			            data:[
+			                {value:100, name:'수지분석'},
+			                {value:100, name:'물건등록'},
+			                {value:100, name:'인근중개업소'},
+			                {value:100, name:'대출문의'},
+			                {value:100, name:'설계의뢰'}
+			            ],
+			            itemStyle: {
+			                emphasis: {
+			                    shadowBlur: 10,
+			                    shadowOffsetX: 0,
+			                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+			                }
+			            }
+			        }
+			    ]
+			}, true);
+			
+			_pie.on('click', function(params) {
+				console.log(datas)
+				switch(params.data.name) {
+				case '수지분석' : 
+					hotplace.dom.viewProfit(datas);
+					break;
+				}
+			})
+		}
+	} 
+	
+	chart.infoCate = function(containerId, datas) {
+		_makePie(containerId, datas);
+	}
 }(
 	hotplace.chart = hotplace.chart || {},
 	jQuery

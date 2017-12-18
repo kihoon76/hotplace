@@ -393,6 +393,15 @@
 			var lng = arg ? arg.lng : $sel.data('lng');
 			var lat = arg ? arg.lat : $sel.data('lat');
 			var address = arg ? arg.address : $sel.data('address');
+			var datas = {
+				params : $.extend({address:address}, {defaultValue:hotplace.calc.profit.defaultValue}, {
+					jimok: '전',
+					valPerPyeung:21000000,
+					area: 132,
+					gongsi: 4040000,
+					limitChange:'Y'
+				})
+			};
 			
 			if(lng == undefined || lat == undefined) return;
 			//$('#btnNews').trigger('click');
@@ -408,11 +417,12 @@
 					     }
 						 else {
 							 newInfoWindow.open(map, newMarker);
+							 hotplace.chart.infoCate('chartInfoCate', datas);
 					     }
 					}
 				}, {
 					hasInfoWindow: true,
-					infoWinFormName: 'pinpointForm',
+					infoWinFormName: 'mulgeonInfosForm',
 					radius: 0,
 					datas: {
 						params : $.extend({address:address}, {defaultValue:hotplace.calc.profit.defaultValue}, {

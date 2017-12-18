@@ -730,7 +730,8 @@ input[type=radio]:focus + label::before {
 #btnJoinIdCheck { width: 120px; }
 /****************************************************
 	투자 유망지역 검색
-****************************************************/#menu-search-tooja-list {
+****************************************************/
+#menu-search-tooja-list {
 	width:975px;
 	height:932px; 
 	border:2px solid #0E328A; 
@@ -757,9 +758,10 @@ input[type=radio]:focus + label::before {
 	margin:0 auto; 
 	border:1px solid #ccc; 
 	border-radius:5px; 
-	overflow:auto; 
+	overflow:auto;
+	padding-bottom: 20px; 
 }
-#dvTooja ul { margin-left:10px; }
+#dvTooja ul { margin-left:-20px; }
 #dvTooja ul li { margin-top:16px; }
 #dvTooja ul li p { cursor:pointer; }
 

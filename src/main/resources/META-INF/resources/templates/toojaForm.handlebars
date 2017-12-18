@@ -1,17 +1,17 @@
 <div id="dvTooja">
     <div id="dvTabBtn" class="btn-pref btn-group btn-group-justified btn-group-lg" role="group" aria-label="...">
         <div class="btn-group" role="group">
-            <button type="button"  id="btn1" class="btn btn-primary" href="#tab1" data-toggle="tab">
+            <button type="button"  id="toojaTabBtn1" class="btn btn-primary" href="#tab1" data-toggle="tab">
                 <div class="hidden-xs">장기 미집행<br/>도시계획시설</div>
             </button>
         </div>
         <div class="btn-group" role="group">
-            <button type="button" id="btn2" class="btn btn-default" href="#tab2" data-toggle="tab">
+            <button type="button" id="toojaTabBtn2" class="btn btn-default" href="#tab2" data-toggle="tab">
                 <div class="hidden-xs">토지이용규제<br/>해소물건</div>
             </button>
         </div>
         <div class="btn-group" role="group">
-            <button type="button"  id="btn3" class="btn btn-default" href="#tab3" data-toggle="tab">
+            <button type="button"  id="toojaTabBtn3" class="btn btn-default" href="#tab3" data-toggle="tab">
                 <div class="hidden-xs">개발적성<br/>필지 검색</div>
             </button>
         </div>
@@ -25,70 +25,70 @@
                         <p class="titleBtn" id="pJangMi"><img src="{{path}}/jangmi_over.png" alt="장기미집행도시계획시설물건조건"></p>
                         <table id="tbJangMi">
                   			<tr>
-                            	<th><img src="{{path}}/jangmi/cityplansiseol.png" alt="도시계획시설"></th>
-                            	<td>
+                            	<th><img src="{{path}}/cityplansiseol.png" alt="도시계획시설"></th>
+                            	<td id="tdJangMi">
                             	<div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 도로</label>
+                                        <input id="chkJangMi1" class="styled" type="checkbox" value="도로">
+                                        <label for="chkJangMi1"> 도로</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 철도</label>
+                                        <input id="chkJangMi2" class="styled" type="checkbox" value="철도">
+                                        <label for="chkJangMi2"> 철도</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 기타교통</label>
+                                        <input id="chkJangMi3" class="styled" type="checkbox" value="기타교통">
+                                        <label for="chkJangMi3"> 기타교통</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 공원</label>
+                                        <input id="chkJangMi4" class="styled" type="checkbox" value="공원">
+                                        <label for="chkJangMi4"> 공원</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 기타공간시설</label>
+                                        <input id="chkJangMi5" class="styled" type="checkbox" value="기타공간시설">
+                                        <label for="chkJangMi5"> 기타공간시설</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 공공문화체육시설</label>
+                                        <input id="chkJangMi6" class="styled" type="checkbox" value="공공문화체육시설">
+                                        <label for="chkJangMi6"> 공공문화체육시설</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 방재시설</label>
+                                        <input id="chkJangMi7" class="styled" type="checkbox" value="방재시설">
+                                        <label for="chkJangMi7"> 방재시설</label>
                                     </div>
                            		</div>
                            		
                            		<div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 보건위생시설</label>
+                                        <input id="chkJangMi8" class="styled" type="checkbox" value="보건위생시설">
+                                        <label for="chkJangMi8"> 보건위생시설</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 유통공급시설</label>
+                                        <input id="chkJangMi9" class="styled" type="checkbox" value="유통공급시설">
+                                        <label for="chkJangMi9"> 유통공급시설</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 환경기초시설</label>
+                                        <input id="chkJangMi10" class="styled" type="checkbox" value="환경기초시설">
+                                        <label for="chkJangMi10"> 환경기초시설</label>
                                     </div>
                             	</div>
                             	</td>
                      		</tr>
                         	<tr>
-                        		<th><img src="{{path}}/jangmi/cityplansiseol_state.png" alt="도시계획시설저촉상태"></th>
+                        		<th><img src="{{path}}/cityplansiseol_state.png" alt="도시계획시설저촉상태"></th>
                                 <td>
                                 <div class="check-custom-group">
                                    	<div class="checkbox checkbox-primary checkbox-inline">
-                                	   	<input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                       	<label for="etcchamgosahangAcceptTojiGeolae"> 전필</label>
+                                	   	<input id="chkJangMi11" class="styled" type="checkbox" value="전필">
+                                       	<label for="chkJangMi11"> 전필</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                       	<input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                       	<label for="etcchamgosahangAcceptTojiGeolae"> 저촉</label>
+                                       	<input id="chkJangMi12" class="styled" type="checkbox" value="저촉">
+                                       	<label for="chkJangMi12"> 저촉</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                       	<input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                       	<label for="etcchamgosahangAcceptTojiGeolae"> 접함</label>
+                                       	<input id="chkJangMi13" class="styled" type="checkbox" value="접함">
+                                       	<label for="chkJangMi13"> 접함</label>
                                     </div>
                                 </div>
                                 </td>
@@ -98,12 +98,12 @@
                                 <td>
                                 <div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 보상</label>
+                                        <input id="chkJangMi14" class="styled" type="checkbox" value="보상">
+                                        <label for="chkJangMi14"> 보상</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 편입</label>
+                                        <input id="chkJangMi15" class="styled" type="checkbox" value="편입">
+                                        <label for="chkJangMi15"> 편입</label>
                                     </div>
                                 </div>
                                 </td>
@@ -114,81 +114,81 @@
                         <p class="titleBtn" id="pJangMiIlbanjogeon" data-switch="on"><img src="{{path}}/ilbanjogeon_over.png" alt="일반조건"></p>
                         <table id="tbJangMiIlbanjogeon">
                             <tr>
-                                <th><img src="{{path}}/jangmi/jiyeog.png" alt="지역"></th>
+                                <th><img src="{{path}}/jiyeog.png" alt="지역"></th>
                                 <td>
                                 <div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 서울특별시</label>
+                                        <input id="chkJangMi16" class="styled" type="checkbox" value="11">
+                                        <label for="chkJangMi16"> 서울특별시</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 부산광역시</label>
+                                        <input id="chkJangMi17" class="styled" type="checkbox" value="26">
+                                        <label for="chkJangMi17"> 부산광역시</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 대구광역시</label>
+                                        <input id="chkJangMi18" class="styled" type="checkbox" value="27">
+                                        <label for="chkJangMi18"> 대구광역시</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 인천광역시</label>
+                                        <input id="chkJangMi19" class="styled" type="checkbox" value="28">
+                                        <label for="chkJangMi19"> 인천광역시</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 광주광역시</label>
+                                        <input id="chkJangMi20" class="styled" type="checkbox" value="29">
+                                        <label for="chkJangMi20"> 광주광역시</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 대전광역시</label>
+                                        <input id="chkJangMi21" class="styled" type="checkbox" value="30">
+                                        <label for="chkJangMi21"> 대전광역시</label>
                                     </div>
                          		</div>
                          		
                          		<div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 울산광역시</label>
+                                        <input id="chkJangMi22" class="styled" type="checkbox" value="31">
+                                        <label for="chkJangMi22"> 울산광역시</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 세종특별자치시</label>
+                                        <input id="chkJangMi23" class="styled" type="checkbox" value="36">
+                                        <label for="chkJangMi23"> 세종특별자치시</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 경기도</label>
+                                        <input id="chkJangMi24" class="styled" type="checkbox" value="41">
+                                        <label for="chkJangMi24"> 경기도</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 강원도</label>
+                                        <input id="chkJangMi25" class="styled" type="checkbox" value="42">
+                                        <label for="chkJangMi25"> 강원도</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 충청북도</label>
+                                        <input id="chkJangMi26" class="styled" type="checkbox" value="43">
+                                        <label for="chkJangMi26"> 충청북도</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 충청남도</label>
+                                        <input id="chkJangMi27" class="styled" type="checkbox" value="44">
+                                        <label for="chkJangMi27"> 충청남도</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 전라북도</label>
+                                        <input id="chkJangMi28" class="styled" type="checkbox" value="45">
+                                        <label for="chkJangMi28"> 전라북도</label>
                                     </div>
                             	</div>
                             	<div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 전라남도</label>
+                                        <input id="chkJangMi29" class="styled" type="checkbox" value="46">
+                                        <label for="chkJangMi29"> 전라남도</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 경상북도</label>
+                                        <input id="chkJangMi30" class="styled" type="checkbox" value="47">
+                                        <label for="chkJangMi30"> 경상북도</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 경상남도</label>
+                                        <input id="chkJangMi31" class="styled" type="checkbox" value="48">
+                                        <label for="chkJangMi31"> 경상남도</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 제주도</label>
+                                        <input id="chkJangMi32" class="styled" type="checkbox" value="50">
+                                        <label for="chkJangMi32"> 제주도</label>
                                     </div>
                                 </div>
                                 </td>
@@ -198,122 +198,122 @@
                                 <td>
                                 <div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 전</label>
+                                        <input id="chkJangMi33" class="styled" type="checkbox" value="전">
+                                        <label for="chkJangMi33"> 전</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 임야</label>
+                                        <input id="chkJangMi34" class="styled" type="checkbox" value="임야">
+                                        <label for="chkJangMi34"> 임야</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 공장</label>
+                                        <input id="chkJangMi35" class="styled" type="checkbox" value="공장">
+                                        <label for="chkJangMi35"> 공장</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 도로</label>
+                                        <input id="chkJangMi36" class="styled" type="checkbox" value="도로">
+                                        <label for="chkJangMi36"> 도로</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 구거</label>
+                                        <input id="chkJangMi37" class="styled" type="checkbox" value="구거">
+                                        <label for="chkJangMi37"> 구거</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 공원</label>
+                                        <input id="chkJangMi38" class="styled" type="checkbox" value="공원">
+                                        <label for="chkJangMi38"> 공원</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 사적지</label>
+                                        <input id="chkJangMi39" class="styled" type="checkbox" value="사적지">
+                                        <label for="chkJangMi39"> 사적지</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 답</label>
+                                        <input id="chkJangMi40" class="styled" type="checkbox" value="답">
+                                        <label for="chkJangMi40"> 답</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 광천지</label>
+                                        <input id="chkJangMi41" class="styled" type="checkbox" value="광천지">
+                                        <label for="chkJangMi41"> 광천지</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 학교</label>
+                                        <input id="chkJangMi42" class="styled" type="checkbox" value="학교">
+                                        <label for="chkJangMi42"> 학교</label>
                                     </div>
                             	</div>
                             	
                             	<div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 철도</label>
+                                        <input id="chkJangMi43" class="styled" type="checkbox" value="철도">
+                                        <label for="chkJangMi43"> 철도</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 유지</label>
+                                        <input id="chkJangMi44" class="styled" type="checkbox" value="유지">
+                                        <label for="chkJangMi44"> 유지</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 체육용지</label>
+                                        <input id="chkJangMi45" class="styled" type="checkbox" value="체육용지">
+                                        <label for="chkJangMi45"> 체육용지</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 묘지</label>
+                                        <input id="chkJangMi46" class="styled" type="checkbox" value="묘지">
+                                        <label for="chkJangMi46"> 묘지</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 과수원</label>
+                                        <input id="chkJangMi47" class="styled" type="checkbox" value="과수원">
+                                        <label for="chkJangMi47"> 과수원</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 염전</label>
+                                        <input id="chkJangMi48" class="styled" type="checkbox" value="염전">
+                                        <label for="chkJangMi49"> 염전</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 주차장</label>
+                                        <input id="chkJangMi50" class="styled" type="checkbox" value="주차장">
+                                        <label for="chkJangMi50"> 주차장</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 제방</label>
+                                        <input id="chkJangMi51" class="styled" type="checkbox" value="제방">
+                                        <label for="chkJangMi51"> 제방</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 양어장</label>
+                                        <input id="chkJangMi52" class="styled" type="checkbox" value="양어장">
+                                        <label for="chkJangMi52"> 양어장</label>
                                     </div>
                                	</div>
                                	
                                	<div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 유원지</label>
+                                        <input id="chkJangMi53" class="styled" type="checkbox" value="유원지">
+                                        <label for="chkJangMi53"> 유원지</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 잡종지</label>
+                                        <input id="chkJangMi54" class="styled" type="checkbox" value="잡종지">
+                                        <label for="chkJangMi54"> 잡종지</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 목장</label>
+                                        <input id="chkJangMi55" class="styled" type="checkbox" value="목장">
+                                        <label for="chkJangMi55"> 목장</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 대</label>
+                                        <input id="chkJangMi56" class="styled" type="checkbox" value="대">
+                                        <label for="chkJangMi56"> 대</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 주유소</label>
+                                        <input id="chkJangMi57" class="styled" type="checkbox" value="주유소">
+                                        <label for="chkJangMi57"> 주유소</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 하천</label>
+                                        <input id="chkJangMi58" class="styled" type="checkbox" value="하천">
+                                        <label for="chkJangMi58"> 하천</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 수도용지</label>
+                                        <input id="chkJangMi59" class="styled" type="checkbox" value="수도용지">
+                                        <label for="chkJangMi59"> 수도용지</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 종교용지</label>
+                                        <input id="chkJangMi60" class="styled" type="checkbox" value="종교용지">
+                                        <label for="chkJangMi60"> 종교용지</label>
                                     </div>
                                     <div class="checkbox checkbox-primary checkbox-inline">
-                                        <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
-                                        <label for="etcchamgosahangAcceptTojiGeolae"> 창고</label>
+                                        <input id="chkJangMi61" class="styled" type="checkbox" value="ckdrh">
+                                        <label for="chkJangMi61"> 창고</label>
                                     </div>
                                 </div>    
                                 </td>
@@ -481,7 +481,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th><img src="{{path}}/jangmi/etclaw.png" alt="기타법률상규제"></th>
+                                <th><img src="{{path}}/etclaw.png" alt="기타법률상규제"></th>
                                 <td>
                                 <div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
@@ -569,7 +569,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th><img src="{{path}}/jangmi/etcchamgo.png" alt="기타참고사항"></th>
+                                <th><img src="{{path}}/etcchamgo.png" alt="기타참고사항"></th>
                                 <td>
                                 <div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
@@ -735,7 +735,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th><img src="{{path}}/jangmi/etclaw.png" alt="기타법률상규제"></th>
+                                <th><img src="{{path}}/etclaw.png" alt="기타법률상규제"></th>
                                 <td>
                                     <div class="checkbox checkbox-primary checkbox-inline">
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
@@ -744,7 +744,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th><img src="{{path}}/jangmi/cityplansiseol.png" alt="도시계획시설"></th>
+                                <th><img src="{{path}}/cityplansiseol.png" alt="도시계획시설"></th>
                                 <td>
                                     <div class="checkbox checkbox-primary checkbox-inline">
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
@@ -758,7 +758,7 @@
                         <p class="titleBtn" id="pLimitLandUseIlban" data-switch="on"><img src="{{path}}/ilbanjogeon_over.png" alt="일반조건"></p>
                         <table id="tbLimitLandUseIlban">
                             <tr>
-                            <th><img src="{{path}}/limitlanduse/gwonyeog.png" alt="권역선택"></th>
+                            <th><img src="{{path}}/gwonyeog.png" alt="권역선택"></th>
                             <td>
                             	<div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
@@ -1326,11 +1326,12 @@
                         </table>
                     </li>
                     <li>
-                        <p class="titleBtn"><img src="{{path}}/ilbanjogeon_over.png" alt="일반조건"></p>
-                        <table class="tooja0303-table">
+                        <p class="titleBtn" id="pDevPiljiIlban"><img src="{{path}}/ilbanjogeon_over.png" alt="일반조건"></p>
+                        <table id="tbDevPiljiIlban">
                             <tr>
-                                <th><img src="img/tooja_06_01.png" alt="일반조건"></th>
-                                <td>
+                            <th><img src="{{path}}/gwonyeog.png" alt="권역선택"></th>
+                            <td>
+                            	<div class="check-custom-group">    
                                     <div class="checkbox checkbox-primary checkbox-inline">
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 서울특별시</label>
@@ -1355,6 +1356,9 @@
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 대전광역시</label>
                                     </div>
+                              	</div>
+                              	
+                              	<div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 울산광역시</label>
@@ -1383,6 +1387,9 @@
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 전라북도</label>
                                     </div>
+                            	</div>
+                            	
+                            	<div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 전라남도</label>
@@ -1399,11 +1406,13 @@
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 제주도</label>
                                     </div>
+                                </div>
                                 </td>
                             </tr>
                             <tr>
-                                <th><img src="img/tooja_02_02.png" alt="지목"></th>
-                                <td>
+                            <th><img src="{{path}}/jimok.png" alt="지목"></th>
+                            <td>
+                            	<div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 전</label>
@@ -1444,6 +1453,9 @@
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 학교</label>
                                     </div>
+                               	</div>
+                               	
+                               	<div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 철도</label>
@@ -1480,6 +1492,9 @@
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 양어장</label>
                                     </div>
+                             	</div>
+                             	
+                             	<div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 유원지</label>
@@ -1516,11 +1531,13 @@
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 창고</label>
                                     </div>
-                                </td>
+                            	</div>
+                            </td>
                             </tr>
                             <tr>
-                                <th><img src="img/tooja_02_03.png" alt="공시지가"></th>
-                                <td>
+                            <th><img src="{{path}}/gongsi.png" alt="공시지가"></th>
+                            <td>
+                            	<div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 0~1,000원</label>
@@ -1541,16 +1558,18 @@
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 1천만원 이상</label>
                                     </div>
-                                </td>
+                            	</div>
+                            </td>
                             </tr>
                         </table>
                     </li>
                     <li>
-                        <p class="titleBtn"><img src="{{path}}/limitlanduse_over.png" alt="토지이용규제"></p>
-                        <table class="tooja0304-table">
+                        <p class="titleBtn" id="pDevPiljiLimitLandUse"><img src="{{path}}/limitlanduse_over.png" alt="토지이용규제"></p>
+                        <table id="tbDevPiljiLimitLandUse">
                             <tr>
-                                <th><img src="img/tooja_03_01.png" alt="용도지역"></th>
-                                <td>
+                            <th><img src="{{path}}/yongdojiyeog.png" alt="용도지역"></th>
+                            <td>
+                            	<div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 주거지역</label>
@@ -1579,11 +1598,13 @@
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 자연환경보전지역</label>
                                     </div>
-                                </td>
+                            	</div>
+                            </td>
                             </tr>
                             <tr>
-                                <th><img src="img/tooja_03_02.png" alt="용도지구"></th>
-                                <td>
+                            <th><img src="{{path}}/yongdojigu.png" alt="용도지구"></th>
+                            <td>
+                            	<div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 경관지구</label>
@@ -1612,6 +1633,9 @@
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 시설보호지구</label>
                                     </div>
+                             	</div>
+                             	
+                             	<div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 취락지구</label>
@@ -1632,11 +1656,13 @@
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 리모델링지구</label>
                                     </div>
-                                </td>
+                            	</div>
+                            </td>
                             </tr>
                             <tr>
-                                <th><img src="img/tooja_03_03.png" alt="용도구역"></th>
-                                <td>
+                            <th><img src="{{path}}/yongdoguyeog.png" alt="용도구역"></th>
+                            <td>
+                            	<div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 시가화조정구역</label>
@@ -1657,15 +1683,20 @@
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 입지규제최소구역</label>
                                     </div>
+                               	</div>
+                               	
+                               	<div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 지구단위계획구역</label>
                                     </div>
-                                </td>
+                            	</div>
+                            </td>
                             </tr>
                             <tr>
-                                <th><img src="img/tooja_03_04.png" alt="기타법률상규제"></th>
-                                <td>
+                            <th><img src="{{path}}/etclaw.png" alt="기타법률상규제"></th>
+                            <td>
+                            	<div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 보전산지</label>
@@ -1690,6 +1721,9 @@
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 농업진흥구역</label>
                                     </div>
+                                </div>
+                                
+                                <div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 상수원보호구역</label>
@@ -1710,6 +1744,9 @@
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 공장설립제한구역</label>
                                     </div>
+                               	</div>
+                               	
+                               	<div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 비오톱</label>
@@ -1734,15 +1771,20 @@
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 제한보호구역</label>
                                     </div>
+                            	</div>
+                            	
+                            	<div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 문화재보존영향검토대상구역</label>
                                     </div>
-                                </td>
+                            	</div>
+                            </td>
                             </tr>
                             <tr>
-                                <th><img src="img/tooja_03_05.png" alt="기타참고사항"></th>
-                                <td>
+                            <th><img src="{{path}}/etcchamgo.png" alt="기타참고사항"></th>
+                            <td>
+                            	<div class="check-custom-group">
                                     <div class="checkbox checkbox-primary checkbox-inline">
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 영농여건불리농지</label>
@@ -1751,7 +1793,8 @@
                                         <input id="etcchamgosahangAcceptTojiGeolae" class="styled" type="checkbox" value="">
                                         <label for="etcchamgosahangAcceptTojiGeolae"> 토지거래허가구역</label>
                                     </div>
-                                </td>
+                            	</div>
+                            </td>
                             </tr>
                         </table>
                     </li>
@@ -1761,7 +1804,7 @@
     </div>
 
     <div class="tooja-btnForm">
-        <button><img src="img/search.png" alt=""/></button>
+        <button><img src="{{path}}/search.png" alt=""/></button>
         <button><img src="img/cancel.png" alt=""/></button>
     </div>
 </div>

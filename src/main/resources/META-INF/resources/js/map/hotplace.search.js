@@ -451,6 +451,29 @@
 		$(document).on('click', '#pDevPilji', _bindFormHandler('tbDevPilji', 'devpilji', root, 'tooja'));
 		
 		_sliderInit('tooja', ['jangmiToojaHpGrade', 'limitLandUseToojaHpGrade', 'devPiljiToojaHpGrade']);
+		
+		//tab click handler
+		//tab change시  range bar가 보여야 함
+		$(document).on('shown.bs.tab', '#toojaTabBtn1', function() {
+			//개발적성 필지가 open 되어 있을 경우
+			if($('#pJangMiDevPilji').data('switch') == 'on') {
+				$('#jangmiToojaHpGrade').rangeSlider('resize');
+			}
+		});
+		
+		$(document).on('shown.bs.tab', '#toojaTabBtn2', function() {
+			//개발적성 필지가 open 되어 있을 경우
+			if($('#pLimitLandUse').data('switch') == 'on') {
+				$('#limitLandUseToojaHpGrade').rangeSlider('resize');
+			}
+		});
+		
+		$(document).on('shown.bs.tab', '#toojaTabBtn3', function() {
+			//개발적성 필지가 open 되어 있을 경우
+			if($('#pDevPilji').data('switch') == 'on') {
+				$('#devPiljiToojaHpGrade').rangeSlider('resize');
+			}
+		});
 	}
 	
 	function _moveMulgeon(lat, lng, address, formName, clickHandler, icon) {

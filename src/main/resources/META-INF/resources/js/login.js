@@ -274,9 +274,13 @@
 			_checkYaggwanAgree(function(v) {
 				if(v) {
 					$(_btnJoinNext).prop('disabled', false);
+					$(_btnJoinNext).removeClass('btn-next-dis');
+					$(_btnJoinNext).addClass('btn-next');
 				}
 				else {
 					$(_btnJoinNext).prop('disabled', true);
+					$(_btnJoinNext).addClass('btn-next-dis');
+					$(_btnJoinNext).removeClass('btn-next');
 				}
 			});
 		}

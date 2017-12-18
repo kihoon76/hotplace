@@ -433,10 +433,116 @@
 		});
 	}
 	
+	function _getToojaParam(cate) {
+		var param = null;
+		
+		switch(cate) {
+		case 'jangmi' :
+			param = {
+				'cityPlan': [],
+				'cityPlanState' : []
+			};
+			break;
+		case 'llu' :
+			param = {};
+			break;
+		case 'devPilji' :
+			param = {};
+			break;
+		}
+		
+		return param;
+	}
+	
+	function _searchTooja(cate, fn) {
+		var param = _getToojaParam(cate);
+		param =  {
+				'jiyeog': ['42'],
+				'jimok': [],
+				'gamjeongga':[],
+				'minIbchalga': [],
+			}
+		var containerId, resultId = null;
+		
+		hotplace.ajax({
+			url: 'search/gyeonggong',
+			data: JSON.stringify(param),
+			contentType: 'application/json; charset=UTF-8',
+			success: function(data, textStatus, jqXHR) {
+				switch(cate) {
+				case 'jangmi' :
+					$('#dvJangmi').hide();
+					$('#dvJangmiResult').show();
+					containerId = 'dvJangmi';
+					resultId = 'dvJangmiResult';
+					break;
+				case 'llu' :
+					$('#dvLlu').hide();
+					$('#dvLluResult').show();
+					containerId = 'dvLlu';
+					resultId = 'dvLluResult';
+					break;
+				case 'devPilji' :
+					$('#dvDevPilji').hide();
+					$('#dvDevPiljiResult').show();
+					containerId = 'dvDevPilji';
+					resultId = 'dvDevPiljiResult';
+					break;
+					
+				}
+				
+				_makeToojaTabulator(containerId, resultId, data.datas);
+				fn();
+			}
+		})
+	}
+	
+	function _makeToojaTabulator(containerId, resultId, tbData) {
+		$('#' + resultId).tabulator({
+		    height:760, // set height of table
+		    fitColumns:true, //fit columns to width of table (optional)
+		    columns:_tabulatorColumns.gyeonggong,
+		    rowClick:function(e, row){ //trigger an alert message when the row is clicked
+		       var data = row.getData();
+		       console.log(data)
+		       
+		       if(data.lng == 0) {
+		    	   alert('위경도 정보가 존재하지 않습니다.')
+		    	   return;
+		       }
+		       
+		       var formName, icon = '', callbak = null;
+		       
+		       if(data.gubun == 'G') {
+		    	   formName = 'gyeongmaeForm';
+		    	   icon = hotplace.maps.MarkerTypes.GYEONGMAE;
+		    	   callback = function(map, marker, win) {
+			    	   marker._data = {info:{unu:data.unu}};
+			    	   hotplace.gyeongmae.markerClick(map, marker, win);
+			       }
+		       }
+		       else {
+		    	   formName = 'gongmaeForm';
+		    	   icon = hotplace.maps.MarkerTypes.GONGMAE;
+		       }
+		       
+		       _moveMulgeon(data.lng, data.lat, data.address, formName, callback, icon);
+		    },
+		});
+		
+		$('#' + resultId).tabulator('setData', tbData);
+	}
 	
 	function _toojaFormLoad() {
 		var root = hotplace.getContextUrl() + 'resources/img/tooja_search';
 		var tForm = hotplace.dom.getTemplate('toojaForm');
+		var activeTab = 1;
+		var btnState = {
+			'jangmi': 'search',
+			'llu': 'search',
+			'devPilji': 'search'
+		}
+		
 		$('#menu-search-tooja-list').append(tForm({path: root}));
 		
 		$(document).on('click', '#pJangMi', _bindFormHandler('tbJangMi', 'jangmi', root));
@@ -459,6 +565,16 @@
 			if($('#pJangMiDevPilji').data('switch') == 'on') {
 				$('#jangmiToojaHpGrade').rangeSlider('resize');
 			}
+			
+			activeTab = 1;
+			
+			if(btnState.jangmi == 'search') {
+				$('#btnToojaSearch').removeClass('btn-search  btn-prev').addClass('btn-search');
+			}
+			else {
+				$('#btnToojaSearch').removeClass('btn-search  btn-prev').addClass('btn-prev');
+			}
+			
 		});
 		
 		$(document).on('shown.bs.tab', '#toojaTabBtn2', function() {
@@ -466,12 +582,91 @@
 			if($('#pLimitLandUse').data('switch') == 'on') {
 				$('#limitLandUseToojaHpGrade').rangeSlider('resize');
 			}
+			
+			activeTab = 2;
+			
+			if(btnState.llu == 'search') {
+				$('#btnToojaSearch').removeClass('btn-search  btn-prev').addClass('btn-search');
+			}
+			else {
+				$('#btnToojaSearch').removeClass('btn-search  btn-prev').addClass('btn-prev');
+			}
 		});
 		
 		$(document).on('shown.bs.tab', '#toojaTabBtn3', function() {
 			//개발적성 필지가 open 되어 있을 경우
 			if($('#pDevPilji').data('switch') == 'on') {
 				$('#devPiljiToojaHpGrade').rangeSlider('resize');
+			}
+			
+			activeTab = 3;
+			
+			if(btnState.devPilji == 'search') {
+				$('#btnToojaSearch').removeClass('btn-search  btn-prev').addClass('btn-search');
+			}
+			else {
+				$('#btnToojaSearch').removeClass('btn-search  btn-prev').addClass('btn-prev');
+			}
+		});
+		
+		//검색
+		$(document).on('click', '#btnToojaSearch', function() {
+			var $this = $(this);
+			switch(activeTab) {
+			case 1 :
+				if(btnState.jangmi == 'search') {
+					_searchTooja('jangmi', function() {
+						btnState.jangmi = 'prev';
+						$this.removeClass('btn-search');
+						$this.addClass('btn-prev');
+					});
+				}
+				else {
+					$('#dvJangmi').show();
+					$('#dvJangmiResult').hide();
+					btnState.jangmi = 'search';
+					
+					$this.removeClass('btn-prev');
+					$this.addClass('btn-search');
+				}
+				
+				break;
+			case 2 :
+				if(btnState.llu == 'search') {
+					_searchTooja('llu', function() {
+						btnState.llu = 'prev';
+						$this.removeClass('btn-search');
+						$this.addClass('btn-prev');
+					});
+				}
+				else {
+					$('#dvLlu').show();
+					$('#dvLluResult').hide();
+					btnState.llu = 'search';
+					
+					$this.removeClass('btn-prev');
+					$this.addClass('btn-search');
+				}
+				
+				break;
+			case 3 :
+				if(btnState.devPilji == 'search') {
+					_searchTooja('devPilji', function() {
+						btnState.devPilji = 'prev';
+						$this.removeClass('btn-search');
+						$this.addClass('btn-prev');
+					});
+				}
+				else {
+					$('#dvDevPilji').show();
+					$('#dvDevPiljiResult').hide();
+					btnState.devPilji = 'search';
+					
+					$this.removeClass('btn-prev');
+					$this.addClass('btn-search');
+				}
+				
+				break;
 			}
 		});
 	}

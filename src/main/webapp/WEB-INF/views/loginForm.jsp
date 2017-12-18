@@ -50,7 +50,7 @@
 	        		</c:forEach>
 	        		</div>
 	    			<div id="dvJoinServiceBtn">
-	        			<button id="btnJoinNext" class="btn-next" disabled></button>
+	        			<button id="btnJoinNext" class="btn-next-dis" disabled></button>
 	    			</div>
 	        	</div>
         	

@@ -606,11 +606,6 @@ $(document).ready(function() {
 			
 		}
 	}, {
-		menu: 'menu_search_expectdev',
-		callbackAll: function() {
-			
-		}
-	}, {
 		menu: 'menu_mulgeon',
 		listDv: 'menu-mulgeon-list',
 		disabled:true,
@@ -622,6 +617,11 @@ $(document).ready(function() {
 		listDv: 'menu-cell-list',
 		callbackAll: function() {
 			//hotplace.maps.cellToggle();
+		}
+	}, {
+		menu: 'menu_suji',
+		callbackAll: function() {
+			
 		}
 	}/*, {
 		menu: 'menu_login',

@@ -168,3 +168,71 @@
 :focus {
 	outline: 0;
 }
+
+/********************************************************************
+	inline-radio group
+********************************************************************/
+form.rdo-inline-modal {
+  background: #fff;
+  width: 100%;
+  margin: auto;
+  /*padding: 30px;*/
+  padding-bottom: 30px;
+  min-width: 320px;
+  max-width: 540px;
+  /*-webkit-box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.16), 0 2px 5px 0 rgba(0, 0, 0, 0.26);*/
+  /*        box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.16), 0 2px 5px 0 rgba(0, 0, 0, 0.26);*/
+ /* border-radius: 3px;*/
+}
+
+form.rdo-inline-modal group + group {
+  margin-top: 20px;
+}
+form.rdo-inline-modal .inline-radio {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid #b6b6b6;
+}
+form.rdo-inline-modal .inline-radio div {
+  position: relative;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+form.rdo-inline-modal .inline-radio input {
+  width: 100%;
+  height: 20px;
+  opacity: 0;
+}
+form.rdo-inline-modal .inline-radio label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: #b6b6b6;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  pointer-events: none;
+  border-right: 1px solid #b6b6b6;
+  cursor: Pointer;
+}
+form.rdo-inline-modal .inline-radio div:last-child label {
+  border-right: 0;
+}
+form.rdo-inline-modal .inline-radio input:checked + label {
+  background: #d81b60;
+  font-weight: 500;
+  color: #fff;
+}

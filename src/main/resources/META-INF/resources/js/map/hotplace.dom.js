@@ -70,6 +70,13 @@
 	/**
 	 * @private
 	 * @type {function}
+	 * @desc 모달창이 열린후 실행되는 함수 
+	 */
+	var _modalOpenAfterFn = function() {};
+	
+	/**
+	 * @private
+	 * @type {function}
 	 * @desc 메인화면 버튼메뉴 id값 설정 
 	 */
 	var _menuBtnIdCfg = function() {
@@ -185,6 +192,16 @@
 	 */
 	function _bindModalCloseEvent(closeFn) {
 		_modalCloseAfterFn = closeFn;
+	}
+	
+	/**
+	 * @private
+	 * @function _bindModalOpenEvent
+	 * @param {function} openFn close event handler
+	 * @desc modal창이 열린직후 실행될 함수를 저장
+	 */
+	function _bindModalOpenEvent(openFn) {
+		_modalOpenAfterFn = openFn;
 	}
 	
 	
@@ -348,7 +365,7 @@
 	 * @param {function} closeFn modal창 close handler
 	 * @desc 모달창 open
 	 */
-	dom.openModal = function(title, modalSize, closeFn) {
+	dom.openModal = function(title, modalSize, closeFn, openFn) {
 		$('#spModalTitle').text(title);
 		
 		if(!modalSize) modalSize = 'fullsize';
@@ -361,10 +378,11 @@
 		
 		
 		$('#containerModal').modal('show');
-		_bindModalCloseEvent(closeFn);
+		_bindModalCloseEvent(closeFn  || function() {});
+		_bindModalOpenEvent(openFn || function() {});
 	}
 	
-	dom.openCenterModal = function(title, size, closeFn) {
+	dom.openCenterModal = function(title, size, closeFn, openFn) {
 		$('#spCenterModalTitle').text(title);
 		
 		if(size) {
@@ -374,6 +392,7 @@
 		
 		$('#centerModal').modal('show');
 		_bindModalCloseEvent(closeFn || function() {});
+		_bindModalOpenEvent(openFn  || function() {});
 	}
 	
 	/**
@@ -835,7 +854,13 @@
 		
 		dom.openModal('HP등급보기 (소재지: ' + params.address + ')', 'fullsize', function() {
 			
+		}, function() {
+			hotplace.chart.drawLineChart('dvHpGradeDefault', [
+			    //["2000-06-05",116],["2000-06-06",129],["2000-06-07",135],["2000-06-08",86],["2000-06-09",73],["2000-06-10",85],["2000-06-11",73],["2000-06-12",68],["2000-06-13",92],["2000-06-14",130],["2000-06-15",245],["2000-06-16",139],["2000-06-17",115],["2000-06-18",111],["2000-06-19",309],["2000-06-20",206],["2000-06-21",137],["2000-06-22",128],["2000-06-23",85],["2000-06-24",94],["2000-06-25",71],["2000-06-26",106],["2000-06-27",84],["2000-06-28",93],["2000-06-29",85],["2000-06-30",73],["2000-07-01",83],["2000-07-02",125],["2000-07-03",107],["2000-07-04",82],["2000-07-05",44],["2000-07-06",72],["2000-07-07",106],["2000-07-08",107],["2000-07-09",66],["2000-07-10",91],["2000-07-11",92],["2000-07-12",113],["2000-07-13",107],["2000-07-14",131],["2000-07-15",111],["2000-07-16",64],["2000-07-17",69],["2000-07-18",88],["2000-07-19",77],["2000-07-20",83],["2000-07-21",111],["2000-07-22",57],["2000-07-23",55],["2000-07-24",60]
+			    ["5년전",2],["4년전",3],["3년전",6],["2년전",8],["1년전",9],["오늘",10]
+			]);
 		});
+		
 	}
 	
 	dom.viewLimitLandUse = function(params) {
@@ -1210,6 +1235,10 @@
 	
 	$(document).on('hidden.bs.modal', '#containerModal,#centerModal', function() {
 		_modalCloseAfterFn();
+	});
+	
+	$(document).on('shown.bs.modal', '#containerModal,#centerModal', function() {
+		_modalOpenAfterFn();
 	});
 	
 	//user menu tab

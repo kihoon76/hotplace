@@ -724,8 +724,8 @@
 				};
 			}
 			
-			var _pie = echarts.init($('#' + containerId)[0]);
-			_pie.setOption(options || {
+			var pie = echarts.init($('#' + containerId)[0]);
+			pie.setOption(options || {
 			    tooltip : {
 			        trigger: 'item',
 			        formatter: "{b}"
@@ -754,7 +754,7 @@
 			    ]
 			}, true);
 			
-			_pie.on('click', function(params) {
+			pie.on('click', function(params) {
 				console.log(datas)
 				switch(params.data.name) {
 				case '수지분석' : 
@@ -777,8 +777,113 @@
 		}
 	} 
 	
+	// data = [['x', 'y'], []]
+	function _makeLine(containerId, datas) {
+		if($('#' + containerId).length) {
+			
+			var line = echarts.init($('#' + containerId)[0]);
+			if(datas) {
+				
+				var dataList = datas.map(function(item) {
+					return item[0];
+				});
+				
+				var valueList = datas.map(function(item) {
+					return item[1];
+				});
+				
+				line.setOption({
+					// Make gradient line here
+					visualMap: [{
+						show: false,
+						type: 'continuous',
+						seriesIndex: 0,
+						min: 0,
+						max: 10
+					}, {
+						show: false,
+						type: 'continuous',
+						seriesIndex: 1,
+						dimension: 0,
+						min: 0,
+						max: dataList.length - 1
+					}],
+					title: [{
+						left: 'center',
+						text: 'HP등급(1~10)',
+					}, {
+						top: '20%',
+						left: 'center',
+						text: '건축허가면적 증가율'
+					}, {
+						top: '40%',
+						left: 'center',
+						text: '영업허가면적 증가율'
+					}],
+					tooltip: {
+						trigger: 'axis',
+						formatter: function(param) {
+							return param[0].name + '<br/>' + param[0].data + '등급';
+						}
+					},
+					xAxis: [{
+						data:dataList
+					}, {
+						data:dataList,
+						gridIndex: 1
+					}, {
+						data:dataList,
+						gridIndex: 2
+					}],
+					yAxis: [{
+						splitLine: {show: false}
+					}, {
+						splitLine: {show: false},
+						gridIndex: 1
+					}, {
+						splitLine: {show: false},
+						gridIndex: 2
+					}],
+					grid: [{
+						//top: '10%',
+						height: '200px'
+					}, {
+						top: '20%',
+						height: '200px'
+					}, {
+						top: '40%',
+						height: '200px'
+					}],
+					series: [{
+						type: 'line',
+						showSymbol: false,
+						data: valueList
+					}, {
+						type: 'line',
+						showSymbol: false,
+						data: valueList,
+						xAxisIndex: 1,
+						yAxisIndex: 1
+					}, {
+						type: 'line',
+						showSymbol: false,
+						data: valueList,
+						xAxisIndex: 2,
+						yAxisIndex: 2
+					}]
+				}, true);
+				
+			}
+			
+		}  
+	}
+	
 	chart.infoCate = function(containerId, datas) {
 		_makePie(containerId, datas);
+	}
+	
+	chart.drawLineChart = function(containerId, datas) {
+		_makeLine(containerId, datas);
 	}
 }(
 	hotplace.chart = hotplace.chart || {},

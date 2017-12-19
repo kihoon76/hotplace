@@ -354,10 +354,10 @@
 		if(!modalSize) modalSize = 'fullsize';
 		
 		$('#containerModal > .modal-dialog').removeClass('modal-fullsize modal-bigsize modal-center');
-		$('#containerModal > .modal-content').removeClass('modal-fullsize modal-bigsize modal-center'); 
+		$('#containerModal > .modal-dialog > .modal-content').removeClass('modal-fullsize modal-bigsize modal-center'); 
 		
 		$('#containerModal > .modal-dialog').addClass('modal-' + modalSize);
-		$('#containerModal > .modal-content').addClass('modal-' + modalSize);
+		$('#containerModal > .modal-dialog > .modal-content').addClass('modal-' + modalSize);
 		
 		
 		$('#containerModal').modal('show');
@@ -824,6 +824,50 @@
 				dom.closeTooltip('.profitTooltip');
 			}
 			catch(e) {} //툴팁을 한번도 open 하지 않은 상태에서 close하면 error 발생
+		});
+	}
+	
+	dom.viewHpGrade = function(params) {
+		var tForm = dom.getTemplate('cate_fn/hpgradeForm');
+		
+		console.log(params)
+		$('#dvModalContent').html(tForm(params));
+		
+		dom.openModal('HP등급보기 (소재지: ' + params.address + ')', 'fullsize', function() {
+			
+		});
+	}
+	
+	dom.viewLimitLandUse = function(params) {
+		var tForm = dom.getTemplate('cate_fn/lluForm');
+		
+		console.log(params)
+		$('#dvModalContent').html(tForm(params));
+		
+		dom.openModal('토지이용규제현황보기 (소재지: ' + params.address + ')', 'fullsize', function() {
+			
+		});
+	}
+	
+	dom.viewRegGwansim = function(params) {
+		var tForm = dom.getTemplate('cate_fn/gwansimForm');
+		
+		console.log(params)
+		$('#dvModalContent').html(tForm(params));
+		
+		dom.openModal('관심물건등록 (소재지: ' + params.address + ')', 'fullsize', function() {
+			
+		});
+	}
+	
+	dom.viewRegMaemul = function(params) {
+		var tForm = dom.getTemplate('cate_fn/maemulForm');
+		
+		console.log(params)
+		$('#dvModalContent').html(tForm(params));
+		
+		dom.openModal('매물등록 (소재지: ' + params.address + ')', 'fullsize', function() {
+			
 		});
 	}
 	

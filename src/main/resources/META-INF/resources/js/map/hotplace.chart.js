@@ -738,10 +738,10 @@
 			            avoidLabelOverlap: false,
 			            data:[
 			                {value:100, name:'수지분석'},
-			                {value:100, name:'물건등록'},
-			                {value:100, name:'인근중개업소'},
-			                {value:100, name:'대출문의'},
-			                {value:100, name:'설계의뢰'}
+			                {value:100, name:'HP등급보기'},
+			                {value:100, name:'토지이용규제현황보기'},
+			                {value:100, name:'관심물건등록'},
+			                {value:100, name:'매물등록'}
 			            ],
 			            itemStyle: {
 			                emphasis: {
@@ -759,6 +759,18 @@
 				switch(params.data.name) {
 				case '수지분석' : 
 					hotplace.dom.viewProfit(datas);
+					break;
+				case 'HP등급보기' :
+					hotplace.dom.viewHpGrade(datas);
+					break;
+				case '토지이용규제현황보기' :
+					hotplace.dom.viewLimitLandUse(datas);
+					break;
+				case '관심물건등록' :
+					hotplace.dom.viewRegGwansim(datas);
+					break;
+				case '매물등록' :
+					hotplace.dom.viewRegMaemul(datas);
 					break;
 				}
 			})

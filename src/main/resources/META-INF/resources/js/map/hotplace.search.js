@@ -417,7 +417,7 @@
 					     }
 						 else {
 							 newInfoWindow.open(map, newMarker);
-							 hotplace.chart.infoCate('chartInfoCate', datas);
+							 hotplace.chart.infoCate('chartInfoCate', datas.params);
 					     }
 					}
 				}, {
@@ -425,13 +425,7 @@
 					infoWinFormName: 'mulgeonInfosForm',
 					radius: 0,
 					datas: {
-						params : $.extend({address:address}, {defaultValue:hotplace.calc.profit.defaultValue}, {
-							jimok: '전',
-							valPerPyeung:21000000,
-							area: 132,
-							gongsi: 4040000,
-							limitChange:'Y'
-						})
+						params : {address:address}
 					},
 					icon: hotplace.maps.getMarkerIcon(hotplace.maps.MarkerTypes.MULGEON_SEARCH),
 					size: {

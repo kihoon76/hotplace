@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
 <head>
-	<title>25cell.com</title>
+	<title>핫플레이스</title>
 	<!-- Font Awesome -->
 	<link href="/resources/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 	<!-- NProgress -->

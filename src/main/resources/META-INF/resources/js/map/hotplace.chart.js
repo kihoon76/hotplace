@@ -812,11 +812,11 @@
 						left: 'center',
 						text: 'HP등급(1~10)',
 					}, {
-						top: '20%',
+						top: '35%',
 						left: 'center',
 						text: '건축허가면적 증가율'
 					}, {
-						top: '40%',
+						top: '70%',
 						left: 'center',
 						text: '영업허가면적 증가율'
 					}],
@@ -848,10 +848,10 @@
 						//top: '10%',
 						height: '200px'
 					}, {
-						top: '20%',
+						top: '40%',
 						height: '200px'
 					}, {
-						top: '40%',
+						top: '80%',
 						height: '200px'
 					}],
 					series: [{

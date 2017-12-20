@@ -1,4 +1,4 @@
-<div id="dvGyeongmae" class="container body" style="width:300px;height:450px; ">
+<!--<div id="dvGyeongmae" class="container body" style="width:300px;height:450px; ">
 	<div style="padding-top:10px">
 		<button type="button" id="btnGyeongmaeClose" class="glyphicon glyphicon-remove close" aria-label="Close"></button>
 	</div>
@@ -41,5 +41,47 @@
 			</td>
 		</tr>
 	</tbody>
+	</table>
+</div>-->
+
+<div id="dvGyeongmae" class="naver-info-win">
+
+	<div>
+		<button type="button" id="btnGyeongmaeClose" class="btn-close">&times;</button>
+	</div>
+	
+	<table id="tbGyeongmae">
+		<tr>
+			<th><span></span> 소재지</th>
+			<td><span id="gSojaeji"></span></td>
+		</tr>
+		<tr>
+			<th><span></span> 용도</th>
+			<td><span id="gYongdo"></span></td>
+		</tr>
+		<tr>
+			<th><span></span> 감정평가액</th>
+			<td><span id="gGamjeongpyeongga"></span></td>
+		</tr>
+		<tr>
+			<th><span></span> 유 찰</td>
+			<td><span id="gYuchal"></span></td>
+		</tr>
+		<tr>
+			<th><span></span> 매각기일</th>
+			<td><span id="gMaegaggiil"></span></td>
+		</tr>
+		<tr>
+			<th><span></span> 사진</th>
+			<td>
+				<img id="gImgThumb" src="http://placehold.it/100x100/E8117F/ffffff?text=NoImage" style="width:100px; height:100px"/>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<button id="btnGyeongmaeDetail">물건상세조회</button>
+			</td>
+		</tr>
+		<p><img src="{{path}}img/logo/infowin/gyeongmae.png" alt="경매"></p>
 	</table>
 </div>

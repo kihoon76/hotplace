@@ -798,3 +798,53 @@ input[type=radio]:focus + label::before {
 	width: 119px;
 	height: 42px;
 }
+/****************************************************
+	물건 infoWindow 테이블
+****************************************************/
+div.naver-info-win { width: 340px; height:500px; /*border:1px solid #666;*/ position:relative; font-size: 0.9em; }
+div.naver-info-win button.btn-close {
+	border:none; 
+	background-color:#0E328A; 
+	color:#fff; 
+	/*padding:4px;*/ 
+	border-radius:5px; 
+	border:1px solid #0e328a;
+	cursor:pointer;
+	margin: 10px 10px 0px 300px;
+	font-size: 2em;
+}
+
+div.naver-info-win table { 
+	width:320px; 
+	height:420px; 
+	margin:10px auto;
+	border:1px solid #ccc; 
+	border-collapse:collapse; 
+	font-size:14px;
+}
+div.naver-info-win table th {
+	border-right:1px solid #ccc; 
+	border-bottom:1px solid #ccc; 
+	width:34%; 
+	padding:10px;
+	font-weight:normal; 
+	text-align:left;
+	background-color:#eee; 
+}
+div.naver-info-win table td { border-bottom:1px solid #ccc; width:70%; padding:10px; }
+div.naver-info-win table button { 
+	border:none; 
+	background-color:#0E328A; 
+	color:#fff; 
+	padding:4px; 
+	border-radius:5px; 
+	border:1px solid #0e328a;
+	cursor:pointer;
+	margin-left:80px;
+	width:120px;
+	height:34px;
+}
+div.naver-info-win table button:hover { background-color:#fff; color:#0e328a; border:1px solid #0e328a; }
+div.naver-info-win th span { display:inline-block; width:5px; height:5px; border-radius:2.5px; background-color:#0e328a; }
+div.naver-info-win p { position:absolute; left:-33px; top:-25px; }
+

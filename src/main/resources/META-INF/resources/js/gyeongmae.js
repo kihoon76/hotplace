@@ -370,8 +370,8 @@
 		var tForm = hotplace.dom.getTemplate('gyeongmaeForm');
 		
 		//win.setOptions('anchorSkew', true);
-		win.setOptions('maxWidth', 300);
-		win.setOptions('content', tForm());
+		win.setOptions('maxWidth', 400);
+		win.setOptions('content', tForm({path: hotplace.getContextUrl() + 'resources/'}));
 		
 		$('#btnGyeongmaeClose').on('click', function() {
 			win.close();

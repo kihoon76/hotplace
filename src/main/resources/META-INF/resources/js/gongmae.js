@@ -62,8 +62,8 @@
 		var tForm = hotplace.dom.getTemplate('gongmaeForm');
 		
 		//win.setOptions('anchorSkew', true);
-		win.setOptions('maxWidth', 300);
-		win.setOptions('content', tForm());
+		//win.setOptions('maxWidth', 300);
+		win.setOptions('content', tForm({path: hotplace.getContextUrl() + 'resources/'}));
 		
 		$('#btnGongmaeClose').on('click', function() {
 			win.close();

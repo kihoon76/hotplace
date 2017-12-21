@@ -1,4 +1,4 @@
-<div id="dvGongmae" class="container body" style="width:300px;height:450px; ">
+<!--<div id="dvGongmae" class="container body" style="width:300px;height:450px; ">
 	<div style="padding-top:10px">
 		<button type="button" id="btnGongmaeClose" class="glyphicon glyphicon-remove close" aria-label="Close"></button>
 	</div>
@@ -56,4 +56,60 @@
 		</tr>
 	</tbody>
 	</table>
+</div>-->
+
+
+
+<div id="dvGongmae" class="naver-info-win">
+	<div>
+		<button type="button" id="btnGongmaeClose" class="btn-close"></button>
+	</div>
+
+	<table id="tbGongmaeThumb">
+		<tr>
+			<th><span></span> 물건주소지</th>
+			<td><span id="gongMulgeonAddress"></span></td>
+		</tr>
+		<tr>
+			<th><span></span> 용도</th>
+			<td><span id="gongYongdo"></span></td>
+		</tr>
+		<tr>
+			<th><span></span> 지목</th>
+			<td><span id="gongJimok"></span></td>
+		</tr>
+		<tr>
+			<th><span></span> 면적구분</th>
+			<td><span id="gongAreagubun"></span></td>
+		</tr>
+		<tr>
+			<th><span></span> 물건상태</th>
+			<td><span id="gongMulgeonstatus"></span></td>
+		</tr>
+		<tr>
+			<th><span></span> 유찰횟수</th>
+			<td><span id="gongYuchal"></span></td>
+		</tr>
+		<tr>
+			<td colspan="2" class="center">
+				<button id="btnGongmaePano">위치보기</button> <button class="multi gongmae-detail">물건상세조회</button>
+			</td>
+		</tr>
+		<p><img src="{{path}}img/logo/infowin/gongmae.png" alt="공매"></p>
+	</table>
+	
+	<table id="tbGongmaePano">
+		<tr>
+			<td>
+				<div id="dvGongmaePano" style="width:95%; height:300px;"></div>
+				<div id="dvGongmaePanoInfo" class="pano-info"></div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" class="center">
+				<button id="btnGongmaeThumb">정보보기</button> <button class="gongmae-detail">물건상세조회</button>
+			</td>
+		</tr>
+	</table>
 </div>
+

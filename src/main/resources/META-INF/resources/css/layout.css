@@ -261,7 +261,8 @@ html, body, #map {
 	width: 80%;
 	height: 50%;
 	margin: 0 auto;
-}   
+}  
+
 /***********************************************************/
 input[readonly] {
   	background-color: transparent;
@@ -804,14 +805,18 @@ input[type=radio]:focus + label::before {
 div.naver-info-win { width: 340px; height:500px; /*border:1px solid #666;*/ position:relative; font-size: 0.9em; }
 div.naver-info-win button.btn-close {
 	border:none; 
-	background-color:#0E328A; 
+	/*background-color:#0E328A;*/
+	background-image:url('../img/close_icon.png'); 
+	background-size:100%; 
+	background-repeat: no-repeat;
 	color:#fff; 
 	/*padding:4px;*/ 
 	border-radius:5px; 
 	border:1px solid #0e328a;
 	cursor:pointer;
-	margin: 10px 10px 0px 300px;
-	font-size: 2em;
+	margin: 10px 10px 0px 305px;
+	width: 25px;
+	height: 25px;
 }
 
 div.naver-info-win table { 
@@ -832,6 +837,8 @@ div.naver-info-win table th {
 	background-color:#eee; 
 }
 div.naver-info-win table td { border-bottom:1px solid #ccc; width:70%; padding:10px; }
+div.naver-info-win table td.right { text-align:right; }
+div.naver-info-win table td.center { text-align:center; }
 div.naver-info-win table button { 
 	border:none; 
 	background-color:#0E328A; 
@@ -840,11 +847,110 @@ div.naver-info-win table button {
 	border-radius:5px; 
 	border:1px solid #0e328a;
 	cursor:pointer;
-	margin-left:80px;
+	/*margin-left:80px;*/
 	width:120px;
 	height:34px;
 }
+
 div.naver-info-win table button:hover { background-color:#fff; color:#0e328a; border:1px solid #0e328a; }
 div.naver-info-win th span { display:inline-block; width:5px; height:5px; border-radius:2.5px; background-color:#0e328a; }
 div.naver-info-win p { position:absolute; left:-33px; top:-25px; }
+/****************************************************
+	물건 search 카테고리 - 토지이용규제 현황
+****************************************************/
+#dvCateLlu { width:975px; /*height:1200px; border:2px solid #0E328A; border-radius:10px; margin:50px; padding:26px;*/ }
+#dvCateLlu .btn-group-justified { width:56%; } 
+#dvCateLlu .btn-primary { background-color:#0E328A; }
+#dvCateLlu .btn { padding:14px 0; outline:none; border-bottom:none; }
+#dvCateLlu .tojiTable {
+	padding:20px;
+	border:1px solid #aaa; 
+	border-collapse:collapse; 
+	border-radius:4px; 
+}
+#dvCateLlu table {
+	width:100%; 
+	font-size:13px; 
+	text-align:center;
+	border:1px solid #ccc; 
+	border-top:2px solid #0E328A; 
+	border-bottom:1px solid #0E328A; 
+	border-collapse:collapse; 
+	padding:10px; 
+	margin:40px 0;
+}
+#dvCateLlu td { border-right:1px solid #ccc; border-bottom:1px solid #ccc; padding:10px; }
+#dvCateLlu th { border-right:1px solid #ccc; border-bottom:1px solid #ccc; width:11%; padding:1%; background-color:#eee; text-align:center; }
+#dvCateLlu td.smallTitle { background-color:#eef1f8; }
+/****************************************************
+	물건 search 카테고리 - 관심물건 등록
+****************************************************/
+#dvCateGwansim { position:relative; /*margin:50px;*/ }
+#dvCateGwansim .tableArea, .message { 
+	width:420px; 
+	height:360px; 
+	border:1px solid #aaa; 
+	border-radius:5px; 
+	padding:0 20px; 
+}
+#dvCateGwansim .message { display:none; }
+#dvCateGwansim .tableArea table {
+	width:100%; 
+	font-size:13px; 
+	text-align:center;
+	border:1px solid #ccc; 
+	border-top:2px solid #0E328A; 
+	border-bottom:1px solid #0E328A; 
+	border-collapse:collapse; 
+	padding:10px; 
+	margin:20px 0;
+}
+#dvCateGwansim .tableArea th,td {border-right:1px solid #aaa; border-bottom:1px solid #aaa; padding:20px 10px; }
+#dvCateGwansim .tableArea th { background-color:#eef1f8; }
+#dvCateGwansim .btnArea { position:absolute; left:100px; top:315px; }
+#dvCateGwansim .btnArea button, .message button {
+	width:100px; 
+	height:34px; 
+	line-height:34px; 
+	border:1px solid #0E328A; 
+	border-radius:5px;
+	background-color:#0E328A; 
+	color:#fff; 
+	font-size:15px;
+	cursor:pointer; 
+	margin:0 6px;
+	outline:none;
+}
+#dvCateGwansim .btnArea button:hover { background-color:#fff; color:#000; }
+#dvCateGwansim .message button:hover { background-color:#fff; color:#000; }
+#dvCateGwansim .message{position:absolute; left:0; top:0; background-color:#fff;}
+#dvCateGwansim .message p{text-align:center; margin-top:130px;}
+#dvCateGwansim .message button{margin:20px 0; margin-left:140px;}
+/****************************************************
+	물건 search 카테고리 - 매물물건 등록
+****************************************************/
+#interestWrap { width:420px; height:370px; /*margin:50px;*/ border:1px solid #aaa; border-radius:5px; padding:0 20px; overflow-y: auto;}
+		#interestWrap .tableArea table{
+			width:100%; 
+			font-size:13px; text-align:center;
+			border:1px solid #ccc; 
+			border-top:2px solid #0E328A; border-bottom:1px solid #0E328A; 
+			border-collapse:collapse; 
+			padding:10px; margin:20px 0;
+			}
+		#interestWrap .tableArea th,td{border-right:1px solid #aaa; border-bottom:1px solid #aaa; padding:20px 10px;}
+		#interestWrap .tableArea th{background-color:#eef1f8;}
+
+		#interestWrap .btnArea{width:100%; margin:0 auto; text-align:center;}
+		#interestWrap .btnArea button{
+			width:100px; height:34px; line-height:34px; 
+			border:1px solid #0E328A; border-radius:5px;
+			background-color:#0E328A; color:#fff; 
+			font-size:15px;
+			cursor:pointer; 
+			margin:0 6px;
+			outline:none;
+			}
+		#interestWrap .btnArea button:hover{background-color:#fff; color:#000;}
+		.smallTitle{background-color:#eee;}
 

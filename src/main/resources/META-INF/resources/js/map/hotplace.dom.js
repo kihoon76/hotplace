@@ -204,7 +204,16 @@
 		_modalOpenAfterFn = openFn;
 	}
 	
-	
+	function _toggleMinimap(sw) {
+		$('.minimap').each(function() {
+			if(sw == 'on') {
+				$(this).show();
+			}
+			else {
+				$(this).hide();
+			}
+		});
+	}
 	
 	/**
 	 * @memberof hotplace.dom
@@ -867,9 +876,9 @@
 		var tForm = dom.getTemplate('cate_fn/lluForm');
 		
 		console.log(params)
-		$('#dvModalContent').html(tForm(params));
+		$('#dvCenterModalContent').html(tForm(params));
 		
-		dom.openModal('토지이용규제현황보기 (소재지: ' + params.address + ')', 'fullsize', function() {
+		dom.openCenterModal('토지이용규제현황보기 (소재지: ' + params.address + ')', {width: '1000px', height: '800px'}, function() {
 			
 		});
 	}
@@ -878,20 +887,22 @@
 		var tForm = dom.getTemplate('cate_fn/gwansimForm');
 		
 		console.log(params)
-		$('#dvModalContent').html(tForm(params));
+		$('#dvCenterModalContent').html(tForm(params));
 		
-		dom.openModal('관심물건등록 (소재지: ' + params.address + ')', 'fullsize', function() {
+		dom.openCenterModal('관심물건등록 (소재지: ' + params.address + ')', {width: '450px', height: '450px'}, function() {
 			
 		});
+		
+		hotplace.location.viewGwansim.init();
 	}
 	
 	dom.viewRegMaemul = function(params) {
 		var tForm = dom.getTemplate('cate_fn/maemulForm');
 		
 		console.log(params)
-		$('#dvModalContent').html(tForm(params));
+		$('#dvCenterModalContent').html(tForm(params));
 		
-		dom.openModal('매물등록 (소재지: ' + params.address + ')', 'fullsize', function() {
+		dom.openCenterModal('매물등록 (소재지: ' + params.address + ')', {width: '450px', height: '450px'}, function() {
 			
 		});
 	}
@@ -1222,16 +1233,7 @@
 		});
 	}
 	
-	function _toggleMinimap(sw) {
-		$('.minimap').each(function() {
-			if(sw == 'on') {
-				$(this).show();
-			}
-			else {
-				$(this).hide();
-			}
-		});
-	}
+
 	
 	$(document).on('hidden.bs.modal', '#containerModal,#centerModal', function() {
 		_modalCloseAfterFn();

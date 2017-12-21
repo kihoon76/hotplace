@@ -19,6 +19,7 @@
 <script type="text/javascript" src="/resources/js/acceptbuilding.js"></script>
 <script type="text/javascript" src="/resources/js/notice.js"></script>
 <script type="text/javascript" src="/resources/js/login.js"></script>
+<script type="text/javascript" src="/resources/js/location.js"></script>
 
 <!-- FastClick -->
 <script type="text/javascript" src="/resources/vendors/fastclick/lib/fastclick.js"></script>

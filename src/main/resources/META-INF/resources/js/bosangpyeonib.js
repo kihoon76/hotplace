@@ -96,7 +96,7 @@
 		
 		var tForm = hotplace.dom.getTemplate('bosangpyeonibForm');
 		
-		win.setOptions('maxWidth', 300);
+		//win.setOptions('maxWidth', 300);
 		win.setOptions('content', tForm({kind:kind}));
 		
 		_changeView(isGrouped);

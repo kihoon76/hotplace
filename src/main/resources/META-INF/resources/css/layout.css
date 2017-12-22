@@ -929,28 +929,43 @@ div.naver-info-win p { position:absolute; left:-33px; top:-25px; }
 /****************************************************
 	물건 search 카테고리 - 매물물건 등록
 ****************************************************/
-#interestWrap { width:420px; height:370px; /*margin:50px;*/ border:1px solid #aaa; border-radius:5px; padding:0 20px; overflow-y: auto;}
-		#interestWrap .tableArea table{
-			width:100%; 
-			font-size:13px; text-align:center;
-			border:1px solid #ccc; 
-			border-top:2px solid #0E328A; border-bottom:1px solid #0E328A; 
-			border-collapse:collapse; 
-			padding:10px; margin:20px 0;
-			}
-		#interestWrap .tableArea th,td{border-right:1px solid #aaa; border-bottom:1px solid #aaa; padding:20px 10px;}
-		#interestWrap .tableArea th{background-color:#eef1f8;}
-
-		#interestWrap .btnArea{width:100%; margin:0 auto; text-align:center;}
-		#interestWrap .btnArea button{
-			width:100px; height:34px; line-height:34px; 
-			border:1px solid #0E328A; border-radius:5px;
-			background-color:#0E328A; color:#fff; 
-			font-size:15px;
-			cursor:pointer; 
-			margin:0 6px;
-			outline:none;
-			}
-		#interestWrap .btnArea button:hover{background-color:#fff; color:#000;}
-		.smallTitle{background-color:#eee;}
-
+#dvCateRegMaemul .dvFrame { 
+	width:420px; 
+	height:370px; 
+	border:1px solid #aaa; 
+	border-radius:5px; 
+	padding:0 20px; 
+	overflow-y: auto;
+}
+#dvCateRegMaemul .dvFrame .tableArea table{
+	width:100%; 
+	font-size:13px; 
+	text-align:center;
+	border:1px solid #ccc; 
+	border-top:2px solid #0E328A; 
+	border-bottom:1px solid #0E328A; 
+	border-collapse:collapse; 
+	padding:10px; 
+	margin:20px 0;
+}
+#dvCateRegMaemul .dvFrame .tableArea th,td { border-right:1px solid #aaa; border-bottom:1px solid #aaa; padding:20px 10px; }
+#dvCateRegMaemul .dvFrame .tableArea th { background-color:#eef1f8; }
+#dvCateRegMaemul .btnArea { width:100%; margin:0 auto; text-align:center; padding-top: 10px; }
+#dvCateRegMaemul .btnArea button {
+	width:100px; 
+	height:34px; 
+	line-height:34px; 
+	border:1px solid #0E328A; 
+	border-radius:5px;
+	background-color:#0E328A; 
+	color:#fff; 
+	font-size:15px;
+	cursor:pointer; 
+	margin:0 6px;
+	outline:none;
+}
+#dvCateRegMaemul .btnArea button:hover { background-color:#fff; color:#000; }
+.smallTitle { background-color:#eee; }
+#dvCateRegMaemul .ajax-file-upload-filename { margin:5px 5px 5px -70px; }
+#dvCateRegMaemul .ajax-file-upload-statusbar { width: 250px !important; margin:0; }
+#dvCateRegMaemul .ajax-file-upload-progress { width:210px !important; }

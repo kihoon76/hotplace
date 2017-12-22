@@ -367,6 +367,7 @@
 						if(data.length == 1) {
 							console.log(data);
 							$('#btnMulgeonMap').trigger('click', {
+								pnu: data[0][0],
 								address: data[0][1],
 								lng: data[0][3],
 								lat: data[0][2],
@@ -393,8 +394,9 @@
 			var lng = arg ? arg.lng : $sel.data('lng');
 			var lat = arg ? arg.lat : $sel.data('lat');
 			var address = arg ? arg.address : $sel.data('address');
+			var pnu = arg ? arg.pnu : $sel.data('pnu');
 			var datas = {
-				params : $.extend({address:address}, {defaultValue:hotplace.calc.profit.defaultValue}, {
+				params : $.extend({address:address, pnu:pnu}, {defaultValue:hotplace.calc.profit.defaultValue}, {
 					jimok: '전',
 					valPerPyeung:21000000,
 					area: 132,

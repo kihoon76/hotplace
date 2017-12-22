@@ -7,6 +7,9 @@
 	<link href="/resources/vendors/nprogress/nprogress.css" rel="stylesheet">
 	<!-- bootstrap toggle -->
 	<link href="/resources/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+	<!-- uploadify -->
+	<link href="/resources/vendors/jQuery-Upload-File/4.0.11/uploadfile.css" rel="stylesheet">
+	
 </head>
 <body>
 <content tag="script">
@@ -31,6 +34,8 @@
 
 <!-- bootstrap toggle -->
 <script type="text/javascript" src="/resources/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+<!-- uploadify -->
+<script type="text/javascript" src="/resources/vendors/jQuery-Upload-File/4.0.11/jquery.uploadfile.js"></script>
 
 </content>
 

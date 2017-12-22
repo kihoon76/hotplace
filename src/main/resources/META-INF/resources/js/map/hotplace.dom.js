@@ -902,9 +902,13 @@
 		console.log(params)
 		$('#dvCenterModalContent').html(tForm(params));
 		
-		dom.openCenterModal('매물등록 (소재지: ' + params.address + ')', {width: '450px', height: '450px'}, function() {
+		dom.openCenterModal('매물등록 (소재지: ' + params.address + ')', {width: '450px', height: '500px'}, function() {
 			
+		}, function() {
+			hotplace.location.viewMaemul.init();
 		});
+		
+		
 	}
 	
 	var _yearRangeMode = 'manual';

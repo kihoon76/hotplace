@@ -1,5 +1,6 @@
-<div id="interestWrap">
-    <div class="tableArea">
+<div id="dvCateRegMaemul">
+	<div class="dvFrame">
+    	<div class="tableArea">
         <table>
             <tr>
                 <th>등록물건지번</th>
@@ -15,9 +16,11 @@
             </tr>
             <tr>
                 <th>사진등록</th>
-                <td colspan="5"><input type="file"></td>
+                <td colspan="5">
+                	<div id="fileUp" style="width: 250px;">등록</div>
+                </td>
             </tr>
-            <tr>
+            <!--<tr>
                 <th rowspan="5">사진설명</th>
                 <td class="smallTitle" style="width:60px;">전면</td>
                 <td><textarea name="" id="" cols="22" rows="3" style="resize:none;"></textarea></td>
@@ -37,7 +40,7 @@
             <tr>
                 <td class="smallTitle">내부3</td>
                 <td><textarea name="" id="" cols="22" rows="3" style="resize:none;"></textarea></td>
-            </tr>
+            </tr>-->
             <tr>
                 <th rowspan="2">연락처</th>
                 <td class="smallTitle">소속/성명</td>
@@ -52,9 +55,10 @@
                 </td>
             </tr>
         </table>
-    </div>
-    <div class="btnArea">
-        <button>저장</button>
+    	</div>
+	</div>
+	<div class="btnArea">
+        <button id="btnRegMaemulSave">저장</button>
         <button>닫기</button>
     </div>
 </div>

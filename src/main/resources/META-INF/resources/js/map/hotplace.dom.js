@@ -1275,6 +1275,8 @@
 		});
 	}
 	
+	
+	
 }(
 	hotplace.dom = hotplace.dom || {},
 	jQuery

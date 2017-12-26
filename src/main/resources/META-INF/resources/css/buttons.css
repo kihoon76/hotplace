@@ -45,7 +45,8 @@
 .jijeok {
 	height:30px;
 	position:absolute; 
-	top:10px; right:128px;
+	top:10px; 
+	right:205px;
 	z-index:1000; 
 	padding:5px; 
 	background-color:#fff; 
@@ -55,14 +56,42 @@
 	display:none;
 }
 
- .jijeok-on {
+.jijeok-on {
  	background-color:rgb(42, 124, 221);
  	color:#fff;
  	border:1px solid #333;
  	/*transition:all .5s;*/
  	opacity:1;
- }
+}
 
+.area {
+	height:30px;
+	width:66px;
+	position:absolute; 
+	top:10px; 
+	right:140px;
+	z-index:1000; 
+	padding:5px; 
+	background-color:#fff; 
+	color:#333; 
+	border:1px solid #333;
+	font-family: Helvetica, AppleSDGothicNeo-Light, nanumgothic, NanumGothic, 나눔고딕, Dotum, 돋움, sans-serif;
+	font-size:0.9em;
+}
+.area-on {
+	background-color:rgb(42, 124, 221);
+ 	color:#fff;
+ 	border:1px solid #333;
+ 	opacity:1;
+}
+
+.naver-area-div {
+	display:inline-block;
+	padding:5px;
+	text-align:center;
+	background-color:#fff;
+	border:1px solid #000;
+}
 
 .mulgeon-txt {
 	position:absolute;
@@ -138,7 +167,8 @@
 .btn-timeview { position:absolute; right:-1px; top:-1px; height:30px; background-color:#fff; border:1px solid #333; }
 #dvTimeview {
 	position:absolute;
-	right:180px; top:10px; 
+	right:258px; 
+	top:10px; 
 	z-index:4;
 	width:60px;
 	height:30px; 

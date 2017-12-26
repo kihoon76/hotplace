@@ -392,6 +392,8 @@
 	hotplace.getContextUrl = function() {
 		return _ROOT_CONTEXT;
 	} 
+	
+	
 }(
 	window.hotplace = window.hotplace || {},
 	jQuery	

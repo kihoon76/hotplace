@@ -1282,6 +1282,13 @@
 		dom.openCenterModal('', {width: '450px', height: '450px'});
 	}
 	
+	dom.showContactUs = function(closeFn) {
+		var tForm = dom.getTemplate('contactusForm');
+		$('#dvCenterModalContent').html(tForm({path: hotplace.getContextUrl()}));
+		
+		dom.openCenterModal('', {width: '800px', height: '800px'}, closeFn);
+	}
+	
 }(
 	hotplace.dom = hotplace.dom || {},
 	jQuery

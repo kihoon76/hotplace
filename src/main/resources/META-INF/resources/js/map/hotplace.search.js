@@ -236,6 +236,11 @@
 
 	}
 	
+	function _contactUsFormLoad() {
+		//var root = hotplace.getContextUrl() + 'resources/img/gyeonggong_search';
+		var tForm = hotplace.dom.getTemplate('contactusForm');
+	}
+	
 	function _gyeonggongSearchFormLoad() {
 		var root = hotplace.getContextUrl() + 'resources/img/gyeonggong_search';
 		var tForm = hotplace.dom.getTemplate('gyeonggongSearchForm');

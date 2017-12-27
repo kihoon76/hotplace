@@ -619,9 +619,12 @@ $(document).ready(function() {
 			//hotplace.maps.cellToggle();
 		}
 	}, {
-		menu: 'menu_suji',
-		callbackAll: function() {
-			
+		menu: 'menu_contactus',
+		callbackOn: function() {
+			var m = this.menu;
+			hotplace.dom.showContactUs(function() {
+				$('#li_' + m).trigger('click');
+			});
 		}
 	}/*, {
 		menu: 'menu_login',

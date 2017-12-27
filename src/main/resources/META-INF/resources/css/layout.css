@@ -540,7 +540,7 @@ input[type=radio]:focus + label::before {
 
 #dvBosangPyeonibList table { cursor: pointer; }
 
-.minimap { width: 200px; height: 200px; display:none;}
+.minimap { width: 200px; height: 200px; display:none; margin-top: 50px; }
 /****************************************************
 	공지사항 테이블 
 ****************************************************/
@@ -798,6 +798,9 @@ input[type=radio]:focus + label::before {
 	border: none;
 	width: 119px;
 	height: 42px;
+}
+#dvTooja .btn-group button {
+	border-radius: 10px 10px 0px 0px;
 }
 /****************************************************
 	물건 infoWindow 테이블

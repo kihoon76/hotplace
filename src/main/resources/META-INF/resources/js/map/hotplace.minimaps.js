@@ -49,7 +49,7 @@
 		for(var i=0; i<cnt; i++) {
 			var id = 'minimap' + (i + 1), $id = $('#' + id);
 			var year = $id.data('year');
-			_getData(map.getBounds(), mmaps[i], 'GONGSI', year, id);
+			_getData({_min: {x:123.9430885, y:32.8818273}, _max: {x:132.0901521, y:38.8616489}}, mmaps[i], 'GONGSI', year, id);
 		}
 	}
 	

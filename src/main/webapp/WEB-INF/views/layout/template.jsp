@@ -90,7 +90,8 @@
 		<button class="btn-timeview" data-switch="off">타임뷰</button>
 	</div>
 	<button id="btnJijeok" class="jijeok" data-switch="off">지적도</button>
-	<button id="btnCalcArea" class="area" data-switch="off">면적재기</button>
+	<button id="btnCalcArea" class="area">면적재기</button>
+	<button id="btnCalcDistance" class="distance" disabled>거리재기</button>
 </div>
 
 <!-- modal -->

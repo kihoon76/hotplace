@@ -990,6 +990,7 @@
 		    this.$btnDistance = buttons.distance;
 		    this.$btnArea = buttons.area;
 		    this._mode = null;
+		    this._objStorage = {};
 		    this._bindDOMEvents();
 		};
 		
@@ -1014,7 +1015,7 @@
 		            _venderEvent.addListener(_venderMap, 'click', this._onClickDistance.bind(this))
 		        ];
 
-		        _venderMap.setCursor("url('"+ HOME_PATH +"/img/rule.cur'), default");
+		        _venderMap.setCursor("url('"+ hotplace.getContextUrl() +"resources/img/rule.cur'), default");
 		    },
 
 		    _startArea: function() {
@@ -1088,17 +1089,18 @@
 		                    'font-size': '14px',
 		                    'font-weight': 'bold',
 		                    'color': '#00f'
-		                });
+		                }, this._polygon);
 		            }
 
 		            delete this._polygon;
 		        }
 
-		        this.$btnArea.removeClass('area-on').blur();
+		        this.$btnArea.removeClass('calc-on').blur();
 
 		        _venderMap.setCursor('auto');
 
 		        this._mode = null;
+		        
 		        
 		    },
 
@@ -1142,13 +1144,14 @@
 		        return text;
 		    },
 
-		    _addMileStone: function(coord, text, css) {
+		    _addMileStone: function(coord, text, css, obj) {
 		        if (!this._ms) this._ms = [];
-
+		        var uuid = hotplace.createUuid();
+		        
 		        var ms = new naver.maps.Marker({
 		            position: coord,
 		            icon: {
-		                content: '<a href="#"><img src="' + hotplace.getContextUrl() + 'resources/img/close_icon.png" /></a>&nbsp;<div class="naver-area-div"><span>'+ text +'</span></div>',
+		                content: '<a href="#" class="calc-link" data-uuid="' + uuid + '"><img src="' + hotplace.getContextUrl() + 'resources/img/close_icon.png" /></a>&nbsp;<div class="naver-area-div"><span>'+ text +'</span></div>',
 		                anchor: new naver.maps.Point(-5, -5)
 		            },
 		            map: _venderMap
@@ -1163,6 +1166,7 @@
 		        }
 
 		        this._ms.push(ms);
+		        this._objStorage[uuid] = obj;
 		    },
 
 		    _onClickDistance: function(e) {
@@ -1201,7 +1205,7 @@
 		            // 폴리라인의 거리를 미터 단위로 반환합니다.
 		            var distance = this._polyline.getDistance();
 
-		            this._addMileStone(coord, this._fromMetersToText(distance - this._lastDistance));
+		            this._addMileStone(coord, this._fromMetersToText(distance - this._lastDistance), null, this._polyline);
 
 		            this._lastDistance = distance;
 		        }
@@ -1262,10 +1266,15 @@
 		    },
 
 		    _bindDOMEvents: function() {
-		        //this.$btnDistance.on('click.measure', this._onClickButton.bind(this, 'distance'));
+		    	var that = this;
+		        this.$btnDistance.on('click.measure', this._onClickButton.bind(this, 'distance'));
 		        this.$btnArea.on('click.measure', this._onClickButton.bind(this, 'area'));
-		        
-
+		        $(document).on('click', 'a.calc-link', function() {
+		        	var uuid = $(this).data('uuid');
+		        	that._objStorage[uuid].setMap(null);
+		        	delete that._objStorage[uuid];
+		        	$(this).parent().remove();
+		        });
 		    },
 
 		    _onClickButton: function(newMode, e) {
@@ -1274,10 +1283,10 @@
 		        var btn = $(e.target),
 		            mode = this._mode;
 
-		        if (btn.hasClass('area-on')) {
-		            btn.removeClass('area-on');
+		        if (btn.hasClass('calc-on')) {
+		            btn.removeClass('calc-on');
 		        } else {
-		            btn.addClass('area-on');
+		            btn.addClass('calc-on');
 		        }
 
 		        this._clearMode(mode);

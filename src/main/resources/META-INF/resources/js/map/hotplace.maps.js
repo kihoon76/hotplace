@@ -578,16 +578,15 @@
 			
 			rec.data = cellData;
 			
-			_venderEvent.addListener(rec, 'click', function(e) {
+			/*_venderEvent.addListener(rec, 'click', function(e) {
 				var r = e.overlay;
 				
-				/** cell center 구하기 */
 				var xcDiff = parseFloat((r.data.location[2] - r.data.location[0])/2).toFixed(11);
 				var ycDiff = parseFloat((r.data.location[3] - r.data.location[1])/2).toFixed(11);
 				var xc = r.data.location[0] + parseFloat(xcDiff);
 				var yc = r.data.location[1] + parseFloat(ycDiff);
 				var location = new _vender.LatLng(yc, xc);
-				/** */
+				
 				
 				hotplace.dom.openInfoWindowForCell(_venderMap, location, _vender, _venderEvent, {'weight' : r.data.weight[0]},{
 					'open' : function(win, obj) {
@@ -609,9 +608,9 @@
 						
 					}
 				});
-			});
+			});*/
 			
-			if(triggerable)	_venderEvent.trigger(rec, 'click');
+			//if(triggerable)	_venderEvent.trigger(rec, 'click');
 			
 			break;
 		}

@@ -561,6 +561,9 @@
 		$(document).on('click', '#pLimitLandUsePilji', _bindFormHandler('tbLimitLandUsePilji', 'devpilji', root, 'tooja'));
 		
 		$(document).on('click', '#pDevPilji', _bindFormHandler('tbDevPilji', 'devpilji', root, 'tooja'));
+		$(document).on('click', '#pDevPiljiJangMi', _bindFormHandler('tbDevPiljiJangMi', 'jangmi', root));
+		$(document).on('click', '#pDevPiljiIlban', _bindFormHandler('tbDevPiljiIlban', 'ilbanjogeon', root));
+		$(document).on('click', '#pDevPiljiLimitLandUse', _bindFormHandler('tbDevPiljiLimitLandUse', 'limitlanduse', root));
 		
 		_sliderInit('tooja', ['jangmiToojaHpGrade', 'limitLandUseToojaHpGrade', 'devPiljiToojaHpGrade']);
 		

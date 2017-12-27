@@ -1275,7 +1275,12 @@
 		});
 	}
 	
-	
+	dom.showEventAlarm = function() {
+		var tForm = dom.getTemplate('alarmForm');
+		$('#dvCenterModalContent').html(tForm({path: hotplace.getContextUrl()}));
+		
+		dom.openCenterModal('', {width: '450px', height: '450px'});
+	}
 	
 }(
 	hotplace.dom = hotplace.dom || {},

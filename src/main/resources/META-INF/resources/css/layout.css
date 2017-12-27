@@ -754,11 +754,15 @@ input[type=radio]:focus + label::before {
 	display: none;
 }
 #dvTooja .btn-group-justified { width:56%; } 
-#dvTooja .btn-primary { background-color:#fff; color:#333; border-bottom:none; border-color:#ccc; }
+/*#dvTooja .btn-primary { background-color:#fff; color:#333; border-bottom:none; border-color:#ccc; }*/
+/*#dvTooja .btn-primary { background-color:#5e7496; color:#fff; border-bottom:none; border-color:#ccc; }
 #dvTooja .btn-primary:hover { border-color:#ccc; }
 #dvTooja .btn { padding:14px 0; }
-#dvTooja .btn:hover { background-color:#eee; color:#333; }
-#dvTooja .btn-default { border-bottom:none; background-color:#5e7496; color:#fff; }
+#dvTooja .btn:hover { background-color:#eee; color:#333; }*/
+/*#dvTooja .btn-default { border-bottom:none; background-color:#5e7496; color:#fff; }*/
+/*#dvTooja .btn-default { border-bottom:none; background-color:#fff; color:#333; }*/
+#dvTooja .btn-primary, #dvTooja .btn-primary:hover,  #dvTooja .btn-default { border-bottom:none; }
+
 
 #dvTooja .tableArea, #dvTooja .tooja-result {
 	width:920px; 
@@ -784,7 +788,9 @@ input[type=radio]:focus + label::before {
 .tooja-btnForm { text-align:center; margin:14px 0; }
 .tooja-btnForm button { margin:0 auto; margin-left:20px; cursor:pointer; background:none; border:none; }
 #dvTooja .check-custom-group { top: 0px; height: 25px; }
-#tbJangMiLimitLandUse, #tbJangMiDevPilji, #tbLimitLandUsePilji { display:none; }
+#tbJangMiLimitLandUse, #tbJangMiDevPilji, #tbLimitLandUsePilji, 
+#tbJangMiIlbanjogeon, #tbLimitLandUseIlban, #tbDevPiljiJangMi,
+#tbDevPiljiIlban, #tbDevPiljiLimitLandUse { display:none; }
 #dvTooja .btn-search {
 	background-image:url('../img/tooja_search/search.png'); 
 	background-size:100%;

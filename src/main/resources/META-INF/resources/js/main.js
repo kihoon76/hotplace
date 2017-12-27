@@ -651,4 +651,5 @@ $(document).ready(function() {
 	
 	hotplace.calc.profit.init();
 	hotplace.search.formInit();
+	hotplace.dom.showEventAlarm();
 });

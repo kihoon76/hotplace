@@ -18,10 +18,13 @@ public class SearchDaoImpl implements SearchDao {
 	@Resource(name = "msSqlSession")
 	SqlSession msSqlSession;
 	
+	@Resource(name = "msSqlSessionAgent2")
+	SqlSession msSqlSessionAgent2;
+	
 	@Override
 	public List<GyeongGongmaeOut> selectGyeongGongList(GyeongGongmaeIn gyeongGongIn) {
 		
-		return msSqlSession.selectList(namespace + ".selectGyeongGongList", gyeongGongIn);
+		return msSqlSessionAgent2.selectList(namespace + ".selectGyeongGongList", gyeongGongIn);
 	}
 
 }

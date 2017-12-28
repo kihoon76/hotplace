@@ -1279,7 +1279,7 @@
 		var tForm = dom.getTemplate('alarmForm');
 		$('#dvCenterModalContent').html(tForm({path: hotplace.getContextUrl()}));
 		
-		dom.openCenterModal('', {width: '450px', height: '450px'});
+		dom.openCenterModal('', {width: '580px', height: '750px'});
 	}
 	
 	dom.showContactUs = function(closeFn) {

@@ -21,7 +21,13 @@
 			<mvc:exclude-mapping path="/checkSession"/>
 			<mvc:exclude-mapping path="/signin/**"/>
 			<beans:bean class="me.hotplace.interceptor.LogInterceptor" />
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/resources/**"/>
+			<beans:bean class="me.hotplace.interceptor.NoticeInterceptor" />
 		</mvc:interceptor> 
+		 
         <beans:bean  id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
             <beans:property name="paramName" value="lang" />
         </beans:bean>

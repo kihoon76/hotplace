@@ -10,5 +10,5 @@
 	<mapping path="/*" decorator="/WEB-INF/views/layout/template.jsp" />
 	
 	<mapping path="/handlebar/*" exclude="true" />
-	
+	<mapping path="/system/notice" exclude="true" />
 </sitemesh>

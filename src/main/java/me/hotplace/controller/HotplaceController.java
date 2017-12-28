@@ -51,6 +51,12 @@ public class HotplaceController {
 	@Resource(name="pdfItext")
 	PdfItext pdfItext;
 	
+	@GetMapping("system/notice")
+	public String noticeSystemError() {
+	
+		return "noticeError";
+	}
+	
 	@GetMapping("main")
 	public String layout(@RequestParam(name="mType", required=false) String mType, HttpServletRequest request) {
 		MapTypes mapType = StringUtils.isNullOrEmpty(mType) ? MapTypes.HEAT_MAP : MapTypes.getMapTypes(mType);

@@ -11,4 +11,5 @@
 	
 	<mapping path="/handlebar/*" exclude="true" />
 	<mapping path="/system/notice" exclude="true" />
+	<mapping path="/errors/*" exclude="true" />
 </sitemesh>

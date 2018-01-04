@@ -45,4 +45,17 @@ public class HttpHeaderUtil {
 		
 		return ip;
 	}
+	
+	public static boolean isByPassIP(String[] ips, HttpServletRequest request) {
+		if(ips == null) return true;
+		
+		String myIp = getClientIP(request);
+		int len = ips.length;
+		
+		for(int i=0; i<len; i++) {
+			if(myIp.equals(ips[i].trim())) return true;
+		}
+		
+		return false;
+	}
 }

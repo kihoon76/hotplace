@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c"	uri="http://java.sun.com/jsp/jstl/core" %>
 <head>
 	<title>핫플레이스</title>
 	<!-- Font Awesome -->
@@ -12,6 +13,9 @@
 	
 </head>
 <body>
+<c:if test="${jangeagongji == 'on'}">
+<div class="jangea">장애공지!!</div>
+</c:if>
 <content tag="script">
 <script type="text/javascript" src="/resources/js/main.js"></script>
 <script type="text/javascript" src="/resources/js/gyeongmae.js"></script>

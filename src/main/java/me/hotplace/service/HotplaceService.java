@@ -18,6 +18,7 @@ import me.hotplace.domain.Gyeongmae;
 import me.hotplace.domain.GyeongmaeImage;
 import me.hotplace.domain.Notice;
 import me.hotplace.domain.Silgeolae;
+import me.hotplace.domain.SystemConfig;
 import me.hotplace.domain.Yaggwan;
 import me.hotplace.utils.DataUtil;
 

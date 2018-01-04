@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.mssql.systemMapper">
+	<resultMap id="RM_SystemConfig" type="SystemConfig">
+		<result column="고유번호" property="num" javaType="string"/>
+		<result column="설정내용" property="name" javaType="string" />
+		<result column="설정값" property="value" javaType="string"/>
+		<result column="비고" property="bigo" javaType="string"/>
+	</resultMap>
+	
+	<sql id="configColumn">
+		select 고유번호, 설정내용, 설정값, 비고 
+		  from [웹].[dbo].[시스템설정]
+	</sql>
+	
+	<select id="selectSystemConfigAll" resultMap="RM_SystemConfig">
+		<include refid="configColumn" />
+	</select>
+	
+	<select id="selectSystemConfig" parameterType="string" resultMap="RM_SystemConfig">
+		<include refid="configColumn" />
+		where 고유번호 = #{code}
+	</select>
+</mapper>

@@ -21,11 +21,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mysql.jdbc.StringUtils;
 
 import me.hotplace.domain.AcceptBuilding;
 import me.hotplace.domain.Address;
 import me.hotplace.domain.AjaxVO;
+import me.hotplace.domain.ApplicationConfig;
 import me.hotplace.domain.BosangPyeonib;
 import me.hotplace.domain.Gongmae;
 import me.hotplace.domain.Gyeongmae;
@@ -35,7 +35,6 @@ import me.hotplace.domain.Silgeolae;
 import me.hotplace.reporter.PdfItext;
 import me.hotplace.service.HotplaceService;
 import me.hotplace.service.NoticeService;
-import me.hotplace.types.MapTypes;
 import me.hotplace.utils.DataUtil;
 
 @Controller
@@ -51,19 +50,15 @@ public class HotplaceController {
 	@Resource(name="pdfItext")
 	PdfItext pdfItext;
 	
-	@GetMapping("system/notice")
-	public String noticeSystemError() {
-	
-		return "noticeError";
-	}
+	@Resource(name="applicationConfig")
+	ApplicationConfig applicationConfig;
 	
 	@GetMapping("main")
-	public String layout(@RequestParam(name="mType", required=false) String mType, HttpServletRequest request) {
-		MapTypes mapType = StringUtils.isNullOrEmpty(mType) ? MapTypes.HEAT_MAP : MapTypes.getMapTypes(mType);
+	public String layout(HttpServletRequest request) {
 		List<Notice> notices = noticeService.getNoticeList();
 		
-		request.setAttribute("mType", mapType.getType());
 		request.setAttribute("notices", notices);
+		request.setAttribute("jangeagongji", applicationConfig.getValue("C1"));
 		return "main";
 	}
 	
@@ -333,6 +328,12 @@ public class HotplaceController {
 	public AjaxVO getCellDetail() throws InterruptedException {
 		Thread.sleep(2000);
 		return new AjaxVO();
+	}
+	
+	@GetMapping("errors/{errCode}")
+	public String redirectPage(@PathVariable("errCode") String errCode) {
+		
+		return "errors/" + errCode;
 	}
 	
 	private Map<String, String> getBoundsParam(String nex, String swx, String swy, String ney, String stopGrouping) {

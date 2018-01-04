@@ -56,7 +56,7 @@
 	<sitemesh:write property="head" />
 </head>
 
-<body data-mtype="<c:out value='${mType}' />" data-url="${fn:substring(url, 0, fn:length(url) - fn:length(uri))}${req.contextPath}/">
+<body data-url="${fn:substring(url, 0, fn:length(url) - fn:length(uri))}${req.contextPath}/">
 <div id="map" data-vender="naver">
 	<div id="minimap1" class="minimap" style="top:150px; right:-110px;" data-year="201601">
 		<label id="minimap1Lbl" class="minimap-label"></label>

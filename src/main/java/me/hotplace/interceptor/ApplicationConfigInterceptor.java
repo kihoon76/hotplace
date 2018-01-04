@@ -15,7 +15,7 @@ public class ApplicationConfigInterceptor extends HandlerInterceptorAdapter {
 		
 		String ip = HttpHeaderUtil.getClientIP(request);
 		
-		if(!ip.startsWith("192.168.0.58")) {
+		if(!ip.startsWith("192.168.")) {
 			response.sendRedirect("/errors/403");
 			return false;
 		}

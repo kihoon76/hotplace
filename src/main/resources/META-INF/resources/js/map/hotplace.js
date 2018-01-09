@@ -344,7 +344,8 @@
 					hotplace.dom.showAuthMsg(function() {
 						window.location.reload();
 					},'중복 로그인');
-					
+				case '900' :
+					window.location.reload();
 					break;
 				}
 			}

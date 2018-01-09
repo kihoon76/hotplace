@@ -336,7 +336,8 @@
 				
 			},
 			complete: function(jqXHR) {
-				switch(jqXHR.errCode) {
+				var errCode = jqXHR.errCode || ($.parseJSON(jqXHR.responseText)).errCode;
+				switch(errCode) {
 				case '100' :
 					hotplace.dom.showAuthMsg(completeFn);
 					break;

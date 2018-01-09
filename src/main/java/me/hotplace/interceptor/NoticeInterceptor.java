@@ -22,8 +22,9 @@ public class NoticeInterceptor extends HandlerInterceptorAdapter {
 		
 		if(url.indexOf("/system/notice") > -1)  return true;
 		
-		System.err.println(applicationConfig.getValue("C1"));
 		if("on".equals(applicationConfig.getValue("C1"))) {
+			String[] s = applicationConfig.getBigo("C1").split(",");
+			System.err.println(s[0]);
 			if(HttpHeaderUtil.isByPassIP(applicationConfig.getBigo("C1").split(","), request)) {
 				return true;
 			}

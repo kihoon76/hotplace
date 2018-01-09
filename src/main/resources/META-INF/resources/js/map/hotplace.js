@@ -288,7 +288,13 @@
 				} 
 			},
 			complete: function(jqXHR, textStatus) {
-				if(params.complete) params.complete(jqXHR);
+				if(params.complete) {
+					params.complete(jqXHR);
+				}
+				else {
+					//장애공지
+					console.log(jqXHR);
+				}
 			},
 			timeout: params.timeout || 300000
 		});

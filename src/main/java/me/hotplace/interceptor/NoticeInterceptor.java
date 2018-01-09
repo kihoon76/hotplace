@@ -28,7 +28,14 @@ public class NoticeInterceptor extends HandlerInterceptorAdapter {
 				return true;
 			}
 			
-			response.sendRedirect("/system/notice");
+			//ajax call 처리
+			if("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
+				response.getWriter().write("something");
+			}
+			else {
+				response.sendRedirect("/system/notice");
+			}
+			
 			return false;
 		}
 		

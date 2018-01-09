@@ -28,7 +28,6 @@ public class NoticeInterceptor extends HandlerInterceptorAdapter {
 				return true;
 			}
 			
-			System.out.println(request.getHeader("X-Requested-With"));
 			//ajax call 처리
 			if("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
 				response.getWriter().write("{\"success\":false, \"errCode\":\"900\"}");

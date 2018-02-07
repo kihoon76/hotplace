@@ -131,8 +131,16 @@
    		 	#{year, mode=IN, jdbcType=NVARCHAR, javaType=string}
          )}
         </if> 
-       
-         
+       <if test="type == 'ACCEPT_BUILDING'">
+        { call [Ranking].[dbo].[SEL_PNU10_건축허가면적] (
+        	#{level, mode=IN, jdbcType=TINYINT, javaType=string},
+   		 	#{swx, mode=IN, jdbcType=DECIMAL, javaType=string},
+			#{nex, mode=IN, jdbcType=DECIMAL, javaType=string},
+			#{swy, mode=IN, jdbcType=DECIMAL, javaType=string},
+   		 	#{ney, mode=IN, jdbcType=DECIMAL, javaType=string},
+   		 	#{year, mode=IN, jdbcType=NVARCHAR, javaType=string}
+         )}
+        </if> 
 	</select>
 	
 	<select id="selectGyeongmaeMarker" statementType="CALLABLE" resultType="string" parameterType="hashmap">

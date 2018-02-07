@@ -138,6 +138,10 @@ public class HotplaceController {
 									@RequestParam(name="year") String year,
 									@RequestParam(name="type") String type) throws Exception  {
 		
+		if("ACCEPT_BUILDING".equals(type)) {
+			year = year.substring(0, 4);
+		}
+		
 		Map<String, String> param = getBoundsParam(nex, swx, swy, ney, "");
 		param.put("level", level);
 		param.put("year", year);

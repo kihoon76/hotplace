@@ -71,7 +71,7 @@
 	 */
 	var _locationBounds = {'swy' : 0, 'swx' : 0, 'ney' : 0,	'nex' : 0};	  
 	
-	var _cellTypes = {DEFAULT:'HP', GONGSI:'GONGSI', GONGSI_GR: 'GONGSI_GR'};
+	var _cellTypes = {DEFAULT:'HP', GONGSI:'GONGSI', GONGSI_GR: 'GONGSI_GR', ACCEPT_BUILDING: 'ACCEPT_BUILDING'};
 	
 	/** 
 	 * @private 
@@ -81,7 +81,7 @@
 	 * @property {string} GONGSI  - 공시지가
 	 * @property {string} GONGSI_GR  - 공시지가 증가율
 	 */
-	var _cellLayerOnOff = {DEFAULT:0, GONGSI:0, GONGSI_GR:0};
+	var _cellLayerOnOff = {DEFAULT:0, GONGSI:0, GONGSI_GR:0, ACCEPT_BUILDING:0};
 	
 	/** 
 	 * @private 
@@ -808,6 +808,9 @@
 			colorFn = _getColorByGongsiWeight;
 			break;
 		case _cellTypes.GONGSI_GR :
+			colorFn = _getColorByGongsiWeight;
+			break;
+		case _cellTypes.ACCEPT_BUILDING:
 			colorFn = _getColorByGongsiWeight;
 			break;
 		default :

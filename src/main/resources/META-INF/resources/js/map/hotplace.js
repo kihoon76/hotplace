@@ -399,7 +399,11 @@
      */
 	hotplace.getContextUrl = function() {
 		return _ROOT_CONTEXT;
-	} 
+	}
+	
+	hotplace.isExistJqDom = function($el) {
+		return ($el && $el.get(0).length > 0);
+	}
 	
 	
 }(

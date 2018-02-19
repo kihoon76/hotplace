@@ -6,7 +6,8 @@
 	var _loadEl;
 	var _loadTxt = '';//'로딩 중입니다';
 	var _loadEndCount = 0;
-	
+	//rangeSlider 설정
+	var _sliderGrp = {};
 	/**
 	 * @private
 	 * @typedef {object} loadEffects
@@ -1287,6 +1288,35 @@
 		$('#dvCenterModalContent').html(tForm({path: hotplace.getContextUrl()}));
 		
 		dom.openCenterModal('', {width: '800px', height: '800px'}, closeFn);
+	}
+	
+	dom.initSlider = function(gName, isNew, targetIds, bounds, defaultValues) {
+		if(isNew && _sliderGrp[gName]) return;
+		_sliderGrp[gName] = [];
+		
+		var len = targetIds.length;
+		
+		for(var i=0; i<len; i++) {
+			_sliderGrp[gName].push($('#' + targetIds[i]));
+			
+			var t = $('#' + targetIds[i]);
+			
+			_sliderGrp[gName][_sliderGrp[gName].length - 1].rangeSlider({
+				  bounds: bounds || {min: -10, max: -1},
+				  step: 1,
+				  defaultValues: defaultValues || {min:-4, max:-1},
+				  formatter: function(val) {
+					  //console.log(val)
+					  return Math.abs(val) + '등급';
+				  }
+			});
+						
+			_sliderGrp[gName][_sliderGrp[gName].length - 1].bind('valuesChanged', function(e, data) {
+				var id = e.currentTarget.id;
+				var values = data.values;
+			});
+			
+		}
 	}
 	
 }(

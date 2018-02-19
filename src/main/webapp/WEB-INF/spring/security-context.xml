@@ -20,8 +20,9 @@
 		<sec:intercept-url pattern="/handlebar/**" access="permitAll"/>
 		<sec:intercept-url pattern="/system/notice" access="permitAll"/> 
 		<sec:intercept-url pattern="/system/config/**" access="permitAll"/>
-		<sec:intercept-url pattern="/errors/**" access="permitAll"/>  
-		<sec:intercept-url pattern="/**" access="hasRole('ROLE_JOINED')"/>
+		<sec:intercept-url pattern="/errors/**" access="permitAll"/> 
+		<sec:intercept-url pattern="/**" access="permitAll"/> 
+<!-- 		<sec:intercept-url pattern="/**" access="hasRole('ROLE_JOINED')"/> -->
 		<sec:form-login login-page="/signin/100"
 						username-parameter="id"
 						password-parameter="pw"
